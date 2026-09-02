@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  base: './',
+  base: '/THE-CHEF/',
   plugins: [
     react(),
     VitePWA({
@@ -17,13 +17,18 @@ export default defineConfig({
         background_color: '#f7f1e6',
         display: 'standalone',
         orientation: 'portrait-primary',
-        scope: '.',
-        start_url: '.',
+        scope: '/THE-CHEF/',
+        start_url: '/THE-CHEF/',
+        lang: 'es',
         icons: [
-          { src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }
+          { src: '/THE-CHEF/favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }
         ]
       },
-      workbox: { globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,svg}'] }
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,svg}'],
+        cleanupOutdatedCaches: true,
+        navigateFallback: '/THE-CHEF/index.html'
+      }
     })
   ]
 });
