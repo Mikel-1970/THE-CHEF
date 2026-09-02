@@ -49,7 +49,7 @@ export function HomePage() {
             <div className="reference-action-text">
               <h3>¿Qué hay<br />en la nevera?</h3>
               <span className="reference-action-line" />
-              <p>Mira a ver</p>
+              <p>Mira a ver qué encuentras</p>
             </div>
             <div
               className="reference-action-photo reference-pantry-photo"
