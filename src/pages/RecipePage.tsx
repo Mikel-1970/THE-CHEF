@@ -66,7 +66,7 @@ export function RecipePage() {
 
   const isFavorite = favorites.includes(recipe.id);
   const total = recipe.prepMinutes + recipe.cookMinutes;
-  const missingCount = Object.values(availability).filter(status => status === 'missing').length;
+  const missingCount = recipe.ingredients.filter(ingredient => availability[ingredient.name] === 'missing' && !ingredient.optional).length;
 
   const setIngredientAvailability = (ingredient: RecipeIngredient, status: IngredientAvailability) => {
     setAvailability(current => ({ ...current, [ingredient.name]: status }));
