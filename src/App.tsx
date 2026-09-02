@@ -4,6 +4,7 @@ import { CookPage } from './pages/CookPage';
 import { DesirePage } from './pages/DesirePage';
 import { HomePage } from './pages/HomePage';
 import { MyRecipesPage } from './pages/MyRecipesPage';
+import { NoticesPage } from './pages/NoticesPage';
 import { PantryPage } from './pages/PantryPage';
 import { RecipePage } from './pages/RecipePage';
 import { ResultsPage } from './pages/ResultsPage';
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/nevera" element={<PantryPage />} />
           <Route path="/antojo" element={<DesirePage />} />
           <Route path="/buscar" element={<SearchPage />} />
+          <Route path="/avisos" element={<NoticesPage />} />
           <Route path="/propuestas" element={<ResultsPage />} />
           <Route path="/receta/:id" element={<RecipePage />} />
           <Route path="/cocinar/:id" element={<CookPage />} />
