@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.svg', 'home-pantry.jpg', 'home-desire.jpg'],
       manifest: {
         name: 'El Chef · Cocina inteligente',
         short_name: 'El Chef',
@@ -20,15 +20,10 @@ export default defineConfig({
         scope: '.',
         start_url: '.',
         icons: [
-          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+          { src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }
         ]
       },
-      workbox: {
-        navigateFallbackDenylist: [/^\/api\//],
-        globPatterns: ['**/*.{js,css,html,ico,png,jpg,jpeg,svg}']
-      }
+      workbox: { globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,svg}'] }
     })
   ]
 });
