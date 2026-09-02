@@ -1,4 +1,18 @@
-import { ArrowRight, Bell, BookOpen, ChefHat, Clock3, Heart, Menu, Refrigerator, Settings2, Sparkles, UtensilsCrossed, X } from 'lucide-react';
+import {
+  Bell,
+  BookOpen,
+  ChefHat,
+  Clock3,
+  Heart,
+  Home,
+  ListChecks,
+  Menu,
+  Refrigerator,
+  Search,
+  Settings2,
+  UserRound,
+  X
+} from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
@@ -12,115 +26,115 @@ export function HomePage() {
   const [noticeOpen, setNoticeOpen] = useState(false);
 
   return (
-    <AppShell>
-      <section className="home-v04">
-        <div className="home-v04-toolbar">
-          <button className="home-round-button" onClick={() => setMenuOpen(value => !value)} aria-label="Abrir menú">
-            {menuOpen ? <X size={22} /> : <Menu size={23} />}
+    <AppShell hideNav>
+      <section className="reference-home">
+        <div className="reference-decor reference-decor-left" aria-hidden="true" />
+        <div className="reference-decor reference-decor-right" aria-hidden="true" />
+
+        <div className="reference-topbar">
+          <button className="reference-top-icon" onClick={() => setMenuOpen(value => !value)} aria-label="Abrir menú">
+            {menuOpen ? <X size={27} /> : <Menu size={29} />}
           </button>
-
-          <div className="home-v04-mini-brand" aria-label="El Chef">
-            <ChefHat size={22} strokeWidth={1.65} />
-            <span>El Chef</span>
-          </div>
-
-          <button className="home-round-button notification-button" onClick={() => setNoticeOpen(value => !value)} aria-label="Notificaciones">
-            <Bell size={22} />
-            <span className="notification-dot" />
+          <button className="reference-top-icon reference-bell" onClick={() => setNoticeOpen(value => !value)} aria-label="Notificaciones">
+            <Bell size={29} />
+            <span />
           </button>
         </div>
 
         {menuOpen && (
-          <div className="home-popover menu-popover">
+          <div className="reference-popover reference-menu-popover">
             <button onClick={() => navigate('/mis-recetas')}><BookOpen size={18} /> Mis recetas</button>
             <button onClick={() => navigate('/ajustes')}><Settings2 size={18} /> Ajustes</button>
           </div>
         )}
 
         {noticeOpen && (
-          <div className="home-popover notice-popover">
+          <div className="reference-popover reference-notice-popover">
             <strong>Todo al día</strong>
             <span>En esta versión privada no hay avisos pendientes.</span>
           </div>
         )}
 
-        <header className="home-v04-hero">
-          <div className="home-v04-brand-mark">
-            <ChefHat size={61} strokeWidth={1.45} />
-            <Heart className="brand-heart" size={13} fill="currentColor" />
+        <header className="reference-brand">
+          <div className="reference-chef-logo">
+            <ChefHat size={68} strokeWidth={1.55} />
+            <Heart size={13} strokeWidth={2.3} className="reference-chef-heart" />
           </div>
-          <h1 className="home-v04-title">El Chef</h1>
-          <div className="home-v04-kicker"><Sparkles size={13} /> Cocina a tu manera</div>
-          <p className="home-v04-intro">Dime qué tienes en casa o qué te apetece. Yo me encargo de convertirlo en un plato.</p>
+          <h1>El Chef</h1>
+          <div className="reference-divider" aria-hidden="true"><span /><i>◇</i><span /></div>
+          <h2>¡Bienvenido de nuevo!</h2>
+          <p>Vamos a cocinar algo delicioso.</p>
+          <Heart className="reference-doodle-heart" size={31} strokeWidth={1.65} />
         </header>
 
-        <section className="home-v04-actions" aria-label="¿Qué quieres cocinar?">
-          <button
-            className="home-v04-primary"
-            onClick={() => navigate('/nevera')}
-            style={{
-              backgroundImage: "linear-gradient(180deg, rgba(34,48,21,.06) 0%, rgba(34,48,21,.22) 45%, rgba(31,42,21,.86) 100%), url('./home-pantry.jpg')"
-            }}
-          >
-            <div className="home-v04-primary-copy">
-              <span className="home-v04-action-label"><Refrigerator size={16} /> Cocina con lo que tienes</span>
-              <h2>¿Qué tenemos por ahí?</h2>
-              <p>Aprovecha lo que hay en casa y encuentra la mejor forma de cocinarlo.</p>
-              <span className="home-v04-go"><ArrowRight size={20} /></span>
+        <section className="reference-main-actions" aria-label="Modos principales">
+          <button className="reference-action-card reference-pantry-card" onClick={() => navigate('/nevera')}>
+            <div className="reference-action-text">
+              <h3>¿Qué<br />tenemos<br />por ahí?</h3>
+              <span className="reference-action-line" />
+              <p>Abre la nevera.</p>
             </div>
+            <div className="reference-action-photo reference-pantry-photo" aria-hidden="true" />
+            <span className="reference-card-icon reference-card-icon-green"><Refrigerator size={34} strokeWidth={1.7} /></span>
           </button>
 
-          <button className="home-v04-secondary" onClick={() => navigate('/antojo')}>
-            <div className="home-v04-secondary-copy">
-              <span className="home-v04-action-label"><UtensilsCrossed size={16} /> Elige el plato</span>
-              <h2>¿Qué te apetece hoy?</h2>
-              <p>Cuéntame la idea y la convertimos en una receta.</p>
+          <button className="reference-action-card reference-desire-card" onClick={() => navigate('/antojo')}>
+            <div className="reference-action-text">
+              <h3>¿Qué te<br />apetece<br />hoy?</h3>
+              <span className="reference-action-line reference-action-line-gold" />
+              <p>El Chef se<br />encarga.</p>
             </div>
-            <div
-              className="home-v04-secondary-photo"
-              style={{
-                backgroundImage: "linear-gradient(90deg, #fff8eb 0%, rgba(255,248,235,.18) 38%, rgba(255,248,235,0) 100%), url('./home-desire.jpg')"
-              }}
-              aria-hidden="true"
-            />
+            <div className="reference-action-photo reference-desire-photo" aria-hidden="true" />
+            <span className="reference-card-icon reference-card-icon-gold"><ChefHat size={38} strokeWidth={1.55} /></span>
           </button>
         </section>
 
-        <section aria-label="Accesos rápidos">
-          <div className="home-v04-section-head">
-            <h3>Tu cocina</h3>
-            <span>Todo a mano</span>
-          </div>
-
-          <div className="home-v04-quick-grid">
-            <button className="home-v04-quick-card" onClick={() => navigate('/mis-recetas')}>
-              <BookOpen size={27} strokeWidth={1.75} />
+        <section className="reference-quick-section" aria-label="Accesos rápidos">
+          <div className="reference-quick-title"><span>❧</span><h2>Accesos rápidos</h2><span>❧</span></div>
+          <div className="reference-quick-grid">
+            <button onClick={() => navigate('/mis-recetas')}>
+              <BookOpen size={37} strokeWidth={1.65} />
               <strong>Mis recetas</strong>
             </button>
-
-            <button className="home-v04-quick-card favorite" onClick={() => navigate('/mis-recetas?tab=favorites')}>
-              <Heart size={27} strokeWidth={1.75} fill={favorites.length ? 'currentColor' : 'none'} />
-              <small>{favorites.length}</small>
+            <button className="reference-favorite" onClick={() => navigate('/mis-recetas?tab=favorites')}>
+              <Heart size={39} strokeWidth={1.55} fill="currentColor" />
               <strong>Favoritas</strong>
+              {favorites.length > 0 && <small>{favorites.length}</small>}
             </button>
-
-            <button className="home-v04-quick-card" onClick={() => navigate('/mis-recetas?tab=history')}>
-              <Clock3 size={27} strokeWidth={1.75} />
-              <small>{history.length}</small>
+            <button onClick={() => navigate('/mis-recetas?tab=history')}>
+              <Clock3 size={39} strokeWidth={1.55} />
               <strong>Historial</strong>
+              {history.length > 0 && <small>{history.length}</small>}
             </button>
-
-            <button className="home-v04-quick-card" onClick={() => navigate('/ajustes')}>
-              <Settings2 size={27} strokeWidth={1.75} />
+            <button onClick={() => navigate('/ajustes')}>
+              <Settings2 size={39} strokeWidth={1.55} />
               <strong>Ajustes</strong>
             </button>
           </div>
         </section>
 
-        <div className="home-v04-footer-note">
-          <Sparkles size={13} />
-          <span>Menos decisiones. Más ganas de cocinar.</span>
-        </div>
+        <nav className="reference-bottom-nav" aria-label="Navegación principal">
+          <button className="reference-nav-item reference-nav-active" onClick={() => navigate('/')}>
+            <Home size={25} fill="currentColor" strokeWidth={1.8} />
+            <span>Inicio</span>
+            <i />
+          </button>
+          <button className="reference-nav-item" onClick={() => navigate('/buscar')}>
+            <Search size={26} strokeWidth={1.75} />
+            <span>Buscar</span>
+          </button>
+          <button className="reference-nav-item reference-chef-nav" onClick={() => navigate('/antojo')} aria-label="Abrir El Chef">
+            <b><ChefHat size={35} strokeWidth={1.55} /></b>
+          </button>
+          <button className="reference-nav-item" onClick={() => navigate('/lista-compra')}>
+            <ListChecks size={25} strokeWidth={1.75} />
+            <span>Lista</span>
+          </button>
+          <button className="reference-nav-item" onClick={() => navigate('/ajustes')}>
+            <UserRound size={25} strokeWidth={1.65} />
+            <span>Perfil</span>
+          </button>
+        </nav>
       </section>
     </AppShell>
   );
