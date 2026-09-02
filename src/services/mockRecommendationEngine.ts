@@ -1,25 +1,18 @@
-import type { CookingRequest, Difficulty, IngredientInput, Proposal, Recipe, RecipeIngredient } from '../domain/types';
+import type { CookingRequest, Difficulty, Proposal, Recipe } from '../domain/types';
 import { mockRecipes } from '../data/mockRecipes';
-import { findAvailableSubstitute } from './substitutions';
-import { formatQuantity, scaleQuantity } from '../utils/scaling';
+import {
+  evaluateRecipePantry,
+  formatInsufficientIngredient,
+  ingredientMatch,
+  type PantryIngredientEvaluation
+} from './pantryEvaluation';
 
 const difficultyRank: Record<Difficulty, number> = { 'Fácil': 1, 'Media': 2, 'Avanzada': 3 };
-
-type PantryStatus = 'available' | 'substituted' | 'insufficient' | 'missing';
-
-type IngredientEvaluation = {
-  ingredient: RecipeIngredient;
-  status: PantryStatus;
-  requiredQuantity: number;
-  pantryItem?: IngredientInput;
-  substitute?: string;
-  shortage?: number;
-};
 
 type RankedRecipe = {
   recipe: Recipe;
   score: number;
-  evaluations: IngredientEvaluation[];
+  evaluations: PantryIngredientEvaluation[];
 };
 
 export function getMockProposals(request: CookingRequest, excludeRecipeIds: string[] = []): Proposal[] {
@@ -29,7 +22,9 @@ export function getMockProposals(request: CookingRequest, excludeRecipeIds: stri
   const pool = candidates.length >= 3 ? candidates : mockRecipes;
 
   const ranked: RankedRecipe[] = pool.map(recipe => {
-    const evaluations = request.mode === 'pantry' ? evaluateRecipe(recipe, request) : [];
+    const evaluations = request.mode === 'pantry'
+      ? evaluateRecipePantry(recipe, request).filter(entry => !entry.ingredient.optional)
+      : [];
     let score = 0;
 
     if (request.mode === 'pantry') {
@@ -45,7 +40,7 @@ export function getMockProposals(request: CookingRequest, excludeRecipeIds: stri
 
       score += available * 10;
       score += substituted * 5;
-      score += insufficient * 1;
+      score += insufficient;
       score -= missing * 8;
       score += coverage * 12;
       score += priorityUsed * 24;
@@ -67,68 +62,7 @@ export function getMockProposals(request: CookingRequest, excludeRecipeIds: stri
     return { recipe, score, evaluations };
   }).sort((a, b) => b.score - a.score);
 
-  const selected = selectDiverse(ranked, 3);
-  return selected.map((item, index) => toProposal(item, request, index));
-}
-
-function evaluateRecipe(recipe: Recipe, request: CookingRequest): IngredientEvaluation[] {
-  const pantryItems: IngredientInput[] = [
-    ...(request.pantryIngredients ?? []),
-    ...(request.pantryBasics ?? []).map(name => ({ name }))
-  ];
-  const pantryNames = pantryItems.map(item => item.name);
-
-  return recipe.ingredients
-    .filter(ingredient => !ingredient.optional)
-    .map(ingredient => {
-      const requiredQuantity = scaleQuantity(ingredient, recipe.baseServings, request.servings);
-      const pantryItem = pantryItems.find(item => ingredientMatch(ingredient.name, item.name));
-
-      if (pantryItem) {
-        const shortage = getShortage(pantryItem, ingredient, requiredQuantity);
-        if (shortage !== undefined && shortage > 0) {
-          return { ingredient, status: 'insufficient' as const, requiredQuantity, pantryItem, shortage };
-        }
-        return { ingredient, status: 'available' as const, requiredQuantity, pantryItem };
-      }
-
-      const substitute = findAvailableSubstitute(ingredient.name, pantryNames);
-      if (substitute) {
-        return { ingredient, status: 'substituted' as const, requiredQuantity, substitute };
-      }
-
-      return { ingredient, status: 'missing' as const, requiredQuantity };
-    });
-}
-
-function getShortage(pantryItem: IngredientInput, ingredient: RecipeIngredient, requiredQuantity: number): number | undefined {
-  if (pantryItem.quantity === undefined || !pantryItem.unit) return undefined;
-  const available = comparableQuantity(pantryItem.quantity, pantryItem.unit);
-  const required = comparableQuantity(requiredQuantity, ingredient.unit);
-  if (!available || !required || available.kind !== required.kind) return undefined;
-  if (available.value >= required.value) return 0;
-
-  const shortageBase = required.value - available.value;
-  return fromBaseQuantity(shortageBase, ingredient.unit);
-}
-
-function comparableQuantity(quantity: number, unit: string): { kind: 'mass' | 'volume' | 'count'; value: number } | undefined {
-  const normalizedUnit = normalize(unit);
-  if (['g', 'gr', 'gramo', 'gramos'].includes(normalizedUnit)) return { kind: 'mass', value: quantity };
-  if (normalizedUnit === 'kg') return { kind: 'mass', value: quantity * 1000 };
-  if (normalizedUnit === 'ml') return { kind: 'volume', value: quantity };
-  if (normalizedUnit === 'cl') return { kind: 'volume', value: quantity * 10 };
-  if (normalizedUnit === 'l') return { kind: 'volume', value: quantity * 1000 };
-  if (['ud', 'uds', 'u', 'unidad', 'unidades'].includes(normalizedUnit)) return { kind: 'count', value: quantity };
-  return undefined;
-}
-
-function fromBaseQuantity(quantity: number, unit: string): number {
-  const normalizedUnit = normalize(unit);
-  if (normalizedUnit === 'kg') return quantity / 1000;
-  if (normalizedUnit === 'l') return quantity / 1000;
-  if (normalizedUnit === 'cl') return quantity / 10;
-  return quantity;
+  return selectDiverse(ranked, 3).map((item, index) => toProposal(item, request, index));
 }
 
 function selectDiverse(ranked: RankedRecipe[], limit: number): RankedRecipe[] {
@@ -213,18 +147,11 @@ function toProposal(item: RankedRecipe, request: CookingRequest, index: number):
     classification,
     usedIngredients: available.map(entry => entry.pantryItem?.name ?? entry.ingredient.name).slice(0, 5),
     missingIngredients: missing.map(entry => entry.ingredient.name).slice(0, 4),
-    insufficientIngredients: insufficient.map(formatInsufficient).slice(0, 3),
+    insufficientIngredients: insufficient.map(formatInsufficientIngredient).slice(0, 3),
     substitutionNotes: substituted.map(entry => `${entry.substitute} en lugar de ${entry.ingredient.name}`).slice(0, 3),
     reason: pantryReason(prioritiesUsed.map(item => item.name), substituted.length, issueCount, index),
     recipeId: recipe.id
   };
-}
-
-function formatInsufficient(entry: IngredientEvaluation): string {
-  const available = entry.pantryItem?.quantity;
-  const unit = entry.ingredient.unit;
-  if (available === undefined || entry.shortage === undefined) return entry.ingredient.name;
-  return `${entry.ingredient.name}: tienes ${formatQuantity(available)} ${entry.pantryItem?.unit ?? unit}; necesitas ${formatQuantity(entry.requiredQuantity)} ${unit}; faltan ${formatQuantity(entry.shortage)} ${unit}`;
 }
 
 function pantryReason(prioritiesUsed: string[], substitutionCount: number, issueCount: number, index: number): string {
@@ -249,16 +176,6 @@ function desireReason(index: number): string {
   return reasons[index] ?? reasons[0];
 }
 
-function normalize(value: string) {
-  return value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
-}
-
-function ingredientMatch(a: string, b: string) {
-  const x = normalize(a);
-  const y = normalize(b);
-  return x.includes(y) || y.includes(x);
-}
-
 function textAffinity(recipe: Recipe, query: string) {
   if (!query) return 0;
   const words = query.split(/\s+/).filter(word => word.length > 3);
@@ -270,4 +187,8 @@ function textAffinity(recipe: Recipe, query: string) {
     ...recipe.ingredients.map(ingredient => ingredient.name)
   ].join(' '));
   return words.filter(word => haystack.includes(word)).length;
+}
+
+function normalize(value: string) {
+  return value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 }
