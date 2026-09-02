@@ -11,6 +11,7 @@ import { TopBar } from '../components/TopBar';
 import { RECIPE_STYLES } from '../data/cookingOptions';
 import type { Difficulty, IngredientInput } from '../domain/types';
 import { getMockProposals } from '../services/mockRecommendationEngine';
+import { parseIngredientInput } from '../utils/ingredientInput';
 import { formatDuration } from '../utils/time';
 
 const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
@@ -34,9 +35,21 @@ export function PantryPage() {
 
   const addIngredient = (e?: FormEvent) => {
     e?.preventDefault();
-    const clean = draft.trim();
-    if (!clean || ingredients.some(i => i.name.toLowerCase() === clean.toLowerCase())) return;
-    setIngredients([...ingredients, { name: clean }]);
+    const parsed = parseIngredientInput(draft);
+    if (!parsed.name) return;
+
+    const existingIndex = ingredients.findIndex(item => normalize(item.name) === normalize(parsed.name));
+    if (existingIndex >= 0) {
+      if (parsed.quantity !== undefined) {
+        setIngredients(ingredients.map((item, index) => index === existingIndex
+          ? { ...item, quantity: parsed.quantity, unit: parsed.unit }
+          : item));
+      }
+      setDraft('');
+      return;
+    }
+
+    setIngredients([...ingredients, parsed]);
     setDraft('');
   };
 
@@ -69,14 +82,17 @@ export function PantryPage() {
         <section className="form-section">
           <div className="section-label"><span>Ingredientes</span><small>Pulsa ★ para priorizar</small></div>
           <form className="ingredient-input" onSubmit={addIngredient}>
-            <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Ej. tomate, salmón, pasta…" />
+            <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Ej. pollo 300 g, 4 huevos, arroz…" />
             <button type="submit" aria-label="Añadir ingrediente"><Plus size={19} /></button>
           </form>
+          <div className="pantry-basics-note" style={{ marginTop: 8 }}>
+            Puedes escribir solo el producto o añadir una cantidad. Si no indicas cantidad, El Chef no la inventará.
+          </div>
           <div className="ingredient-pills">
             {ingredients.map((item, index) => (
               <div className={`ingredient-pill ${item.priority ? 'priority' : ''}`} key={`${item.name}-${index}`}>
                 <button className="star-toggle" onClick={() => setIngredients(ingredients.map((x, i) => i === index ? { ...x, priority: !x.priority } : x))}><Star size={15} fill={item.priority ? 'currentColor' : 'none'} /></button>
-                <span>{item.name}{item.quantity ? ` · ${item.quantity}${item.unit ?? ''}` : ''}</span>
+                <span>{item.name}{item.quantity !== undefined ? ` · ${formatIngredientQuantity(item)}` : ''}</span>
                 <button onClick={() => setIngredients(ingredients.filter((_, i) => i !== index))}><Trash2 size={14} /></button>
               </div>
             ))}
@@ -90,11 +106,21 @@ export function PantryPage() {
           <div className="control-stack"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Tiempo total de elaboración</small></div></div><div className="range-row"><input type="range" min="15" max="120" step="5" value={maxMinutes} onChange={e => setMaxMinutes(Number(e.target.value))} /><span>{formatDuration(maxMinutes)}</span></div></div>
         </section>
 
-        <div className="helper-note"><Sparkles size={17} /> Si a una buena receta le falta algún ingrediente, no se descarta: te indicaremos qué falta y qué alternativas razonables existen.</div>
+        <div className="helper-note"><Sparkles size={17} /> Antes de considerar que falta un ingrediente, comprobaremos si tienes una sustitución razonable. Si una cantidad no alcanza, te indicaremos cuánto falta.</div>
         <button className="advanced-toggle" onClick={() => setAdvanced(v => !v)}><span>Más opciones</span>{advanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
         {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(v => <Chip key={v} selected={style === v} onClick={() => setStyle(style === v ? undefined : v)}>{v}</Chip>)}</div></div><div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(v => <Chip key={v} selected={difficulty === v} onClick={() => setDifficulty(difficulty === v ? undefined : v)}>{v}</Chip>)}</div></div></section>}
         <div className="sticky-action"><PrimaryButton onClick={search} disabled={ingredients.length === 0}>Buscar 3 propuestas</PrimaryButton></div>
       </div>
     </AppShell>
   );
+}
+
+function formatIngredientQuantity(item: IngredientInput): string {
+  if (item.quantity === undefined) return '';
+  const value = Number.isInteger(item.quantity) ? String(item.quantity) : item.quantity.toLocaleString('es-ES', { maximumFractionDigits: 1 });
+  return `${value}${item.unit ? ` ${item.unit}` : ''}`;
+}
+
+function normalize(value: string): string {
+  return value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 }
