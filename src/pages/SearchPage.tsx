@@ -7,10 +7,12 @@ import { CuisineSelect } from '../components/CuisineSelect';
 import { RECIPE_STYLES } from '../data/cookingOptions';
 import { mockRecipes } from '../data/mockRecipes';
 import type { Difficulty } from '../domain/types';
+import { validRecipes } from '../services/recipeValidator';
 import { formatDuration } from '../utils/time';
 
 const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
 const difficultyRank: Record<Difficulty, number> = { Fácil: 1, Media: 2, Avanzada: 3 };
+const searchableRecipes = validRecipes(mockRecipes);
 
 export function SearchPage() {
   const [query, setQuery] = useState('');
@@ -23,7 +25,7 @@ export function SearchPage() {
   const recipes = useMemo(() => {
     const words = normalize(query).split(/\s+/).filter(Boolean);
 
-    return mockRecipes
+    return searchableRecipes
       .filter(recipe => {
         const haystack = normalize([
           recipe.title,
