@@ -1,28 +1,32 @@
-import { BookOpen, ChefHat, Home, Search, ShoppingBasket } from 'lucide-react';
+import { Bell, ChefHat, Home, Search, UserRound } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 export function BottomNav() {
   return (
-    <nav className="bottom-nav bottom-nav-v03" aria-label="Navegación principal">
+    <nav className="bottom-nav bottom-nav-consistent" aria-label="Navegación principal">
       <NavLink to="/" end className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-        <Home size={22} strokeWidth={1.9} />
+        <Home size={23} strokeWidth={1.9} fill="currentColor" />
         <span>Inicio</span>
       </NavLink>
+
       <NavLink to="/buscar" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-        <Search size={22} strokeWidth={1.9} />
+        <Search size={24} strokeWidth={1.8} />
         <span>Buscar</span>
       </NavLink>
-      <NavLink to="/antojo" className={({ isActive }) => `nav-item chef-nav ${isActive ? 'active' : ''}`}>
-        <span className="chef-nav-circle"><ChefHat size={30} strokeWidth={1.75} /></span>
+
+      <NavLink to="/antojo" className={({ isActive }) => `nav-item chef-nav ${isActive ? 'active' : ''}`} aria-label="Abrir El Chef">
+        <span className="chef-nav-circle"><ChefHat size={31} strokeWidth={1.7} /></span>
         <span className="chef-nav-label">Chef</span>
       </NavLink>
-      <NavLink to="/lista-compra" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-        <ShoppingBasket size={22} strokeWidth={1.9} />
-        <span>Lista</span>
+
+      <NavLink to="/avisos" className={({ isActive }) => `nav-item nav-alerts ${isActive ? 'active' : ''}`}>
+        <span className="nav-alert-icon"><Bell size={24} strokeWidth={1.8} /><i aria-hidden="true" /></span>
+        <span>Avisos</span>
       </NavLink>
-      <NavLink to="/mis-recetas" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-        <BookOpen size={22} strokeWidth={1.9} />
-        <span>Recetas</span>
+
+      <NavLink to="/ajustes" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+        <UserRound size={24} strokeWidth={1.75} />
+        <span>Perfil</span>
       </NavLink>
     </nav>
   );
