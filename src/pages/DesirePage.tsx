@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, Clock3, Mic, MicOff, Sparkles, UsersRound, WandSparkles } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock3, Mic, MicOff, Sparkles, UsersRound, WandSparkles, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
@@ -80,6 +80,11 @@ export function DesirePage() {
     setMaxMinutes(value);
   };
 
+  const clearText = () => {
+    voice.stop();
+    setText('');
+  };
+
   return (
     <AppShell hideNav>
       <TopBar eyebrow="¡OÍDO COCINA!" title="¡Pregúntale al Chef!" />
@@ -90,17 +95,24 @@ export function DesirePage() {
           <div className="desire-box">
             <WandSparkles size={22} />
             <textarea rows={5} value={text} onChange={e => setText(e.target.value)} placeholder="Ej. somos cuatro, algo italiano con pollo, fácil y en menos de 40 minutos…" />
-            <button
-              type="button"
-              className={`voice-button ${voice.isListening ? 'listening' : ''}`}
-              onClick={voice.toggle}
-              disabled={!voice.isSupported}
-              aria-label={voice.isListening ? 'Detener dictado' : 'Dictar lo que te apetece'}
-              aria-pressed={voice.isListening}
-              title={voice.isSupported ? 'Dictar lo que te apetece' : 'Dictado no disponible en este navegador'}
-            >
-              {voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}
-            </button>
+            <div className="voice-action-stack">
+              {text.trim() && (
+                <button type="button" className="clear-input-button" onClick={clearText} aria-label="Borrar petición" title="Borrar texto">
+                  <X size={18} />
+                </button>
+              )}
+              <button
+                type="button"
+                className={`voice-button ${voice.isListening ? 'listening' : ''}`}
+                onClick={voice.toggle}
+                disabled={!voice.isSupported}
+                aria-label={voice.isListening ? 'Detener dictado' : 'Dictar lo que te apetece'}
+                aria-pressed={voice.isListening}
+                title={voice.isSupported ? 'Dictar lo que te apetece' : 'Dictado no disponible en este navegador'}
+              >
+                {voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}
+              </button>
+            </div>
           </div>
           {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… cuéntale al Chef lo que te apetece.</div>}
           {voice.error && <div className="voice-status error">{voice.error}</div>}
