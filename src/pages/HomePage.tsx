@@ -19,8 +19,8 @@ export function HomePage() {
   const navigate = useNavigate();
   const { favorites, history } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
-  const pantryImage = `${import.meta.env.BASE_URL}home-pantry.jpg`;
-  const desireImage = `${import.meta.env.BASE_URL}home-desire.jpg`;
+  const pantryImage = `${import.meta.env.BASE_URL}home-pantry.webp`;
+  const desireImage = `${import.meta.env.BASE_URL}home-desire.webp`;
 
   return (
     <AppShell>
