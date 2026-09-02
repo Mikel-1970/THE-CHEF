@@ -1,0 +1,20 @@
+.recipe-source-note {
+  margin-top: 12px;
+}
+
+.recipe-source-note > div {
+  min-width: 0;
+}
+
+.recipe-source-note a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #9b6d16;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.recipe-source-note a:active {
+  opacity: .7;
+}
