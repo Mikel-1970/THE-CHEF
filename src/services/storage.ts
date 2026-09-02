@@ -1,17 +1,20 @@
-import type { Difficulty, HistoryEntry } from '../domain/types';
+import type { Difficulty, HistoryEntry, ShoppingListItem } from '../domain/types';
 
 const FAVORITES_KEY = 'chef:favorites';
 const HISTORY_KEY = 'chef:history';
 const SETTINGS_KEY = 'chef:settings';
+const SHOPPING_LIST_KEY = 'chef:shopping-list';
 
 export type CookingLevel = 'Principiante' | 'Intermedio' | 'Avanzado';
 export type SpiceLevel = 'Nada' | 'Suave' | 'Medio' | 'Alto';
+export type FontScale = 'normal' | 'large' | 'xlarge';
 
 export type AppSettings = {
   defaultServings: number;
   compactMode: boolean;
   cookingLevel: CookingLevel;
   spiceLevel: SpiceLevel;
+  fontScale: FontScale;
   defaultDifficulty?: Difficulty;
   pantryBasics: string[];
 };
@@ -21,6 +24,7 @@ export const defaultSettings: AppSettings = {
   compactMode: false,
   cookingLevel: 'Intermedio',
   spiceLevel: 'Medio',
+  fontScale: 'large',
   pantryBasics: ['Aceite de oliva', 'Sal', 'Pimienta', 'Ajo']
 };
 
@@ -60,4 +64,12 @@ export function loadSettings(): AppSettings {
 
 export function saveSettings(settings: AppSettings): void {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+}
+
+export function loadShoppingList(): ShoppingListItem[] {
+  return parse<ShoppingListItem[]>(SHOPPING_LIST_KEY, []);
+}
+
+export function saveShoppingList(items: ShoppingListItem[]): void {
+  localStorage.setItem(SHOPPING_LIST_KEY, JSON.stringify(items));
 }
