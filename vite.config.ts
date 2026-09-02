@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+// GitHub Pages se publica únicamente mediante GitHub Actions.
 export default defineConfig({
   base: '/THE-CHEF/',
   plugins: [
