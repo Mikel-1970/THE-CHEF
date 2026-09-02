@@ -31,6 +31,8 @@ export type Proposal = {
   classification: DishClassification;
   usedIngredients: string[];
   missingIngredients: string[];
+  insufficientIngredients?: string[];
+  substitutionNotes?: string[];
   reason: string;
   recipeId: string;
 };
