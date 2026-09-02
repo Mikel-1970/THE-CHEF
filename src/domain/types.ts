@@ -1,6 +1,16 @@
 export type MealType = 'Desayuno' | 'Brunch' | 'Comida' | 'Merienda' | 'Cena';
 export type Difficulty = 'Fácil' | 'Media' | 'Avanzada';
 export type DishClassification = 'Con lo que tienes' | 'Te falta muy poco' | 'Buena opción si compras algunas cosas';
+export type RecipeSourceKind = 'local' | 'web' | 'ai' | 'user';
+
+export type RecipeSource = {
+  kind: RecipeSourceKind;
+  label: string;
+  url?: string;
+  publisher?: string;
+  retrievedAt?: string;
+  adapted?: boolean;
+};
 
 export type IngredientInput = {
   name: string;
@@ -78,6 +88,7 @@ export type Recipe = {
     carbsG: number;
     fatG: number;
   };
+  source?: RecipeSource;
 };
 
 export type HistoryEntry = {
