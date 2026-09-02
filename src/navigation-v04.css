@@ -94,6 +94,27 @@
   box-shadow: 0 0 0 2px #fffaf1;
 }
 
+.floating-back-button {
+  position: fixed;
+  z-index: 85;
+  top: max(14px, calc(env(safe-area-inset-top) + 8px));
+  left: max(14px, calc(50% - 296px));
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(63,84,36,.13);
+  border-radius: 50%;
+  background: rgba(255,252,245,.96);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 24px rgba(72,62,38,.14);
+  color: #405626;
+  display: grid;
+  place-items: center;
+}
+
+.floating-back-button:active {
+  transform: scale(.96);
+}
+
 @media (max-width: 390px) {
   .bottom-nav.bottom-nav-consistent {
     width: calc(100% - 16px);
@@ -117,5 +138,11 @@
 
   .bottom-nav-consistent .chef-nav-label {
     margin-top: 39px;
+  }
+
+  .floating-back-button {
+    width: 44px;
+    height: 44px;
+    left: 12px;
   }
 }
