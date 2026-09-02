@@ -58,7 +58,7 @@ export function PantryPage() {
 
   return (
     <AppShell hideNav>
-      <TopBar eyebrow="ABRE LA NEVERA" title="¿Qué tenemos por ahí?" />
+      <TopBar eyebrow="MIRA A VER QUÉ ENCUENTRAS" title="¿Qué hay en la nevera?" />
       <div className="page-content">
         <section className="editorial-card intro-card olive-intro">
           <span className="eyebrow">APROVECHA LO QUE HAY</span>
@@ -87,7 +87,7 @@ export function PantryPage() {
         <section className="control-card">
           <div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Somos</strong><small>Comensales</small></div></div><NumberStepper value={servings} onChange={setServings} /></div>
           <div className="divider" />
-          <div className="control-stack"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Tiempo total de elaboración</small></div></div><div className="range-row"><input type="range" min="15" max="300" step="5" value={maxMinutes} onChange={e => setMaxMinutes(Number(e.target.value))} /><span>{formatDuration(maxMinutes)}</span></div></div>
+          <div className="control-stack"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Tiempo total de elaboración</small></div></div><div className="range-row"><input type="range" min="15" max="120" step="5" value={maxMinutes} onChange={e => setMaxMinutes(Number(e.target.value))} /><span>{formatDuration(maxMinutes)}</span></div></div>
         </section>
 
         <div className="helper-note"><Sparkles size={17} /> Si a una buena receta le falta algún ingrediente, no se descarta: te indicaremos qué falta y qué alternativas razonables existen.</div>
