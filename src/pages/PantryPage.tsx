@@ -1,18 +1,18 @@
-import { ChevronDown, ChevronUp, Clock3, Plus, ShoppingBasket, Star, Trash2, UsersRound } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock3, Plus, Sparkles, Star, Trash2, UsersRound } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
 import { Chip } from '../components/Chip';
+import { CuisineSelect } from '../components/CuisineSelect';
 import { NumberStepper } from '../components/NumberStepper';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
-import { useApp } from '../AppContext';
-import type { Difficulty, IngredientInput, MealType } from '../domain/types';
+import { RECIPE_STYLES } from '../data/cookingOptions';
+import type { Difficulty, IngredientInput } from '../domain/types';
 import { getMockProposals } from '../services/mockRecommendationEngine';
+import { formatDuration } from '../utils/time';
 
-const mealTypes: MealType[] = ['Comida', 'Cena', 'Brunch'];
-const styles = ['Casera', 'Moderna', 'Rápida', 'Saludable'];
-const cuisines = ['Mediterránea', 'Italiana', 'Asiática', 'Mexicana'];
 const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
 
 export function PantryPage() {
@@ -26,9 +26,7 @@ export function PantryPage() {
   ]);
   const [draft, setDraft] = useState('');
   const [servings, setServings] = useState(settings.defaultServings);
-  const [mealType, setMealType] = useState<MealType>('Cena');
-  const [maxMinutes, setMaxMinutes] = useState(40);
-  const [maxPurchases, setMaxPurchases] = useState<0 | 1 | 2 | 3>(2);
+  const [maxMinutes, setMaxMinutes] = useState(60);
   const [advanced, setAdvanced] = useState(false);
   const [style, setStyle] = useState<string>();
   const [cuisine, setCuisine] = useState<string>();
@@ -46,9 +44,7 @@ export function PantryPage() {
     const request = {
       mode: 'pantry' as const,
       servings,
-      mealType,
       maxMinutes,
-      maxExtraPurchases: maxPurchases,
       pantryIngredients: ingredients,
       pantryBasics: settings.pantryBasics,
       style,
@@ -91,14 +87,12 @@ export function PantryPage() {
         <section className="control-card">
           <div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Somos</strong><small>Comensales</small></div></div><NumberStepper value={servings} onChange={setServings} /></div>
           <div className="divider" />
-          <div className="control-stack"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Tiempo total</small></div></div><div className="range-row"><input type="range" min="15" max="90" step="5" value={maxMinutes} onChange={e => setMaxMinutes(Number(e.target.value))} /><span>{maxMinutes} min</span></div></div>
-          <div className="divider" />
-          <div className="control-stack"><div className="control-title"><ShoppingBasket size={19} /><div><strong>Puedo comprar</strong><small>Ingredientes adicionales</small></div></div><div className="chip-row compact">{[0,1,2,3].map(n => <Chip key={n} selected={maxPurchases === n} onClick={() => setMaxPurchases(n as 0|1|2|3)}>{n === 3 ? '3+' : n}</Chip>)}</div></div>
+          <div className="control-stack"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Tiempo total de elaboración</small></div></div><div className="range-row"><input type="range" min="15" max="300" step="5" value={maxMinutes} onChange={e => setMaxMinutes(Number(e.target.value))} /><span>{formatDuration(maxMinutes)}</span></div></div>
         </section>
 
-        <section className="form-section"><div className="section-label"><span>Tipo de comida</span></div><div className="chip-row">{mealTypes.map(m => <Chip key={m} selected={mealType === m} onClick={() => setMealType(m)}>{m}</Chip>)}</div></section>
+        <div className="helper-note"><Sparkles size={17} /> Si a una buena receta le falta algún ingrediente, no se descarta: te indicaremos qué falta y qué alternativas razonables existen.</div>
         <button className="advanced-toggle" onClick={() => setAdvanced(v => !v)}><span>Más opciones</span>{advanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
-        {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{styles.map(v => <Chip key={v} selected={style === v} onClick={() => setStyle(style === v ? undefined : v)}>{v}</Chip>)}</div></div><div className="advanced-group"><strong>Cocina</strong><div className="chip-row">{cuisines.map(v => <Chip key={v} selected={cuisine === v} onClick={() => setCuisine(cuisine === v ? undefined : v)}>{v}</Chip>)}</div></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(v => <Chip key={v} selected={difficulty === v} onClick={() => setDifficulty(difficulty === v ? undefined : v)}>{v}</Chip>)}</div></div></section>}
+        {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(v => <Chip key={v} selected={style === v} onClick={() => setStyle(style === v ? undefined : v)}>{v}</Chip>)}</div></div><div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(v => <Chip key={v} selected={difficulty === v} onClick={() => setDifficulty(difficulty === v ? undefined : v)}>{v}</Chip>)}</div></div></section>}
         <div className="sticky-action"><PrimaryButton onClick={search} disabled={ingredients.length === 0}>Buscar 3 propuestas</PrimaryButton></div>
       </div>
     </AppShell>

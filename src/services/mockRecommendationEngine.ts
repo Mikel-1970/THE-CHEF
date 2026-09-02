@@ -23,7 +23,6 @@ export function getMockProposals(request: CookingRequest, excludeRecipeIds: stri
       score += matched.length * 9;
       score -= missing.length * 5;
       score += priorities.filter(p => recipe.ingredients.some(i => ingredientMatch(i.name, p))).length * 14;
-      if (request.maxExtraPurchases !== undefined && missing.length <= request.maxExtraPurchases) score += 13;
     } else {
       score += textAffinity(recipe, query) * 10;
     }
@@ -32,7 +31,6 @@ export function getMockProposals(request: CookingRequest, excludeRecipeIds: stri
       const total = recipe.prepMinutes + recipe.cookMinutes;
       score += total <= request.maxMinutes ? 10 : -Math.min(18, (total - request.maxMinutes) * 1.2);
     }
-    if (request.mealType) score += recipe.mealType === request.mealType ? 7 : 0;
     if (request.cuisine) score += normalize(recipe.cuisine) === normalize(request.cuisine) ? 11 : 0;
     if (request.style) score += normalize(recipe.style) === normalize(request.style) ? 9 : 0;
     if (request.difficulty) {
@@ -67,7 +65,6 @@ function textAffinity(recipe: Recipe, query: string) {
     recipe.description,
     recipe.cuisine,
     recipe.style,
-    recipe.mealType,
     ...recipe.ingredients.map(i => i.name)
   ].join(' '));
   return words.filter(word => haystack.includes(word)).length;
@@ -86,7 +83,7 @@ function toProposal(recipe: Recipe, used: string[], missing: string[], request: 
   const reasons = request.mode === 'pantry'
     ? [
         'Es la que mejor aprovecha los ingredientes que has indicado.',
-        'Aporta una alternativa distinta manteniendo pocas compras.',
+        'Aprovecha bien lo disponible y mantiene coherencia culinaria.',
         'Equilibra bien aprovechamiento, tiempo y dificultad.'
       ]
     : [

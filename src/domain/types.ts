@@ -12,12 +12,10 @@ export type IngredientInput = {
 export type CookingRequest = {
   mode: 'pantry' | 'desire';
   servings: number;
-  mealType?: MealType;
   maxMinutes?: number;
   style?: string;
   cuisine?: string;
   difficulty?: Difficulty;
-  maxExtraPurchases?: 0 | 1 | 2 | 3;
   pantryIngredients?: IngredientInput[];
   pantryBasics?: string[];
   desireText?: string;
@@ -85,4 +83,14 @@ export type HistoryEntry = {
   createdAt: string;
   label: string;
   mode: CookingRequest['mode'];
+};
+
+export type ShoppingListItem = {
+  id: string;
+  name: string;
+  quantity?: number;
+  unit?: string;
+  recipeId?: string;
+  recipeTitle?: string;
+  checked: boolean;
 };

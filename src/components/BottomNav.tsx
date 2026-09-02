@@ -1,4 +1,4 @@
-import { ChefHat, Home, ListChecks, Search, UserRound } from 'lucide-react';
+import { BookOpen, ChefHat, Home, Search, ShoppingBasket } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 export function BottomNav() {
@@ -8,21 +8,21 @@ export function BottomNav() {
         <Home size={22} strokeWidth={1.9} />
         <span>Inicio</span>
       </NavLink>
-      <NavLink to="/antojo" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+      <NavLink to="/buscar" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
         <Search size={22} strokeWidth={1.9} />
         <span>Buscar</span>
       </NavLink>
-      <NavLink to="/nevera" className={({ isActive }) => `nav-item chef-nav ${isActive ? 'active' : ''}`}>
+      <NavLink to="/antojo" className={({ isActive }) => `nav-item chef-nav ${isActive ? 'active' : ''}`}>
         <span className="chef-nav-circle"><ChefHat size={30} strokeWidth={1.75} /></span>
         <span className="chef-nav-label">Chef</span>
       </NavLink>
-      <NavLink to="/mis-recetas" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-        <ListChecks size={22} strokeWidth={1.9} />
+      <NavLink to="/lista-compra" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+        <ShoppingBasket size={22} strokeWidth={1.9} />
         <span>Lista</span>
       </NavLink>
-      <NavLink to="/ajustes" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-        <UserRound size={22} strokeWidth={1.9} />
-        <span>Perfil</span>
+      <NavLink to="/mis-recetas" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+        <BookOpen size={22} strokeWidth={1.9} />
+        <span>Recetas</span>
       </NavLink>
     </nav>
   );
