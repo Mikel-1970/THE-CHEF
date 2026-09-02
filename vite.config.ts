@@ -8,6 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      selfDestroying: true,
       includeAssets: ['favicon.svg', 'home-pantry.jpg', 'home-desire.jpg'],
       manifest: {
         name: 'El Chef · Cocina inteligente',
@@ -23,11 +24,6 @@ export default defineConfig({
         icons: [
           { src: '/THE-CHEF/favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }
         ]
-      },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,svg}'],
-        cleanupOutdatedCaches: true,
-        navigateFallback: '/THE-CHEF/index.html'
       }
     })
   ]
