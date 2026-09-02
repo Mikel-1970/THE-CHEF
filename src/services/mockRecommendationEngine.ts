@@ -117,7 +117,6 @@ function toProposal(item: RankedRecipe, request: CookingRequest, index: number):
       emoji: recipe.emoji,
       minutes: recipe.prepMinutes + recipe.cookMinutes,
       difficulty: recipe.difficulty,
-      classification: 'Buena opción si compras algunas cosas',
       usedIngredients: [],
       missingIngredients: [],
       reason: desireReason(index),
