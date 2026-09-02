@@ -20,6 +20,7 @@ export function RecipePage() {
   const {
     favorites,
     toggleFavorite,
+    recordRecipeView,
     currentRequest,
     shoppingList,
     upsertShoppingItem,
@@ -38,6 +39,11 @@ export function RecipePage() {
     });
     return Array.from(grouped.entries());
   }, [recipe]);
+
+  useEffect(() => {
+    if (!recipe) return;
+    recordRecipeView(recipe.id, recipe.title);
+  }, [recipe?.id]);
 
   useEffect(() => {
     if (!recipe) return;
