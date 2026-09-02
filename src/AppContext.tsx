@@ -22,6 +22,7 @@ interface AppState {
   setSearch: (request: CookingRequest, proposals: Proposal[]) => void;
   replaceProposals: (proposals: Proposal[]) => void;
   toggleFavorite: (recipeId: string) => void;
+  recordRecipeView: (recipeId: string, recipeTitle: string) => void;
   updateSettings: (next: Partial<AppSettings>) => void;
   upsertShoppingItem: (item: ShoppingListItem) => void;
   removeShoppingItem: (id: string) => void;
@@ -58,11 +59,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
       label,
-      mode: request.mode
+      kind: 'search',
+      mode: request.mode,
+      request
     };
-    const next = [entry, ...history].slice(0, 30);
-    setHistory(next);
-    saveHistory(next);
+    setHistory(current => {
+      const next = [entry, ...current].slice(0, 30);
+      saveHistory(next);
+      return next;
+    });
   };
 
   const replaceProposals = (nextProposals: Proposal[]) => setProposals(nextProposals);
@@ -73,6 +78,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
       : [recipeId, ...favorites];
     setFavorites(next);
     saveFavorites(next);
+  };
+
+  const recordRecipeView = (recipeId: string, recipeTitle: string) => {
+    const entry: HistoryEntry = {
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+      label: recipeTitle,
+      kind: 'recipe',
+      recipeId,
+      mode: currentRequest?.mode
+    };
+    setHistory(current => {
+      const next = [
+        entry,
+        ...current.filter(item => !(item.kind === 'recipe' && item.recipeId === recipeId))
+      ].slice(0, 30);
+      saveHistory(next);
+      return next;
+    });
   };
 
   const updateSettings = (next: Partial<AppSettings>) => {
@@ -120,6 +144,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setSearch,
     replaceProposals,
     toggleFavorite,
+    recordRecipeView,
     updateSettings,
     upsertShoppingItem,
     removeShoppingItem,
