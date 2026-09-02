@@ -1,5 +1,6 @@
 import { ExternalLink, Globe2, ShieldCheck, Sparkles } from 'lucide-react';
 import type { Recipe, RecipeSource } from '../domain/types';
+import '../recipe-source.css';
 
 export function RecipeSourceNote({ recipe }: { recipe: Recipe }) {
   const source: RecipeSource = recipe.source ?? { kind: 'local', label: 'Catálogo El Chef' };
