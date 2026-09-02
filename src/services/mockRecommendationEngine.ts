@@ -1,15 +1,13 @@
 import type { CookingRequest, Difficulty, Proposal, Recipe } from '../domain/types';
-import { mockRecipes } from '../data/mockRecipes';
 import {
   evaluateRecipePantry,
   formatInsufficientIngredient,
   ingredientMatch,
   type PantryIngredientEvaluation
 } from './pantryEvaluation';
-import { validRecipes } from './recipeValidator';
+import { getAllRecipes } from './recipeCatalog';
 
 const difficultyRank: Record<Difficulty, number> = { 'Fácil': 1, 'Media': 2, 'Avanzada': 3 };
-const validatedRecipes = validRecipes(mockRecipes);
 
 type RankedRecipe = {
   recipe: Recipe;
@@ -20,8 +18,9 @@ type RankedRecipe = {
 export function getMockProposals(request: CookingRequest, excludeRecipeIds: string[] = []): Proposal[] {
   const query = normalize(request.desireText ?? '');
   const priorities = (request.pantryIngredients ?? []).filter(item => item.priority);
-  const candidates = validatedRecipes.filter(recipe => !excludeRecipeIds.includes(recipe.id));
-  const pool = candidates.length >= 3 ? candidates : validatedRecipes;
+  const catalog = getAllRecipes();
+  const candidates = catalog.filter(recipe => !excludeRecipeIds.includes(recipe.id));
+  const pool = candidates.length >= 3 ? candidates : catalog;
 
   const ranked: RankedRecipe[] = pool.map(recipe => {
     const evaluations = request.mode === 'pantry'
