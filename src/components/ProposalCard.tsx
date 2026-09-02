@@ -1,4 +1,4 @@
-import { Check, Clock3, ShoppingBasket, Sparkles, Star } from 'lucide-react';
+import { AlertTriangle, Check, Clock3, RefreshCw, ShoppingBasket, Sparkles, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { Proposal } from '../domain/types';
 
@@ -28,6 +28,12 @@ export function ProposalCard({ proposal, index }: { proposal: Proposal; index: n
         <div className="reason"><Sparkles size={16} /> {proposal.reason}</div>
         {proposal.usedIngredients.length > 0 && (
           <div className="mini-list"><Check size={15} /><span><strong>Usas:</strong> {proposal.usedIngredients.join(', ')}</span></div>
+        )}
+        {(proposal.substitutionNotes?.length ?? 0) > 0 && (
+          <div className="mini-list"><RefreshCw size={15} /><span><strong>Sustituye:</strong> {proposal.substitutionNotes?.join(' · ')}</span></div>
+        )}
+        {(proposal.insufficientIngredients?.length ?? 0) > 0 && (
+          <div className="mini-list missing"><AlertTriangle size={15} /><span><strong>No alcanza:</strong> {proposal.insufficientIngredients?.join(' · ')}</span></div>
         )}
         {proposal.missingIngredients.length > 0 && (
           <div className="mini-list missing"><ShoppingBasket size={15} /><span><strong>Falta:</strong> {proposal.missingIngredients.join(', ')}</span></div>
