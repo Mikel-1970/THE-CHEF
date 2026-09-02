@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, Clock3, Mic, MicOff, Plus, Sparkles, Star, Trash2, UsersRound } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock3, Mic, MicOff, Plus, Sparkles, Star, Trash2, UsersRound, X } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
@@ -48,6 +48,11 @@ export function PantryPage() {
     setDraft('');
   };
 
+  const clearDraft = () => {
+    voice.stop();
+    setDraft('');
+  };
+
   const search = () => {
     const request = {
       mode: 'pantry' as const,
@@ -78,6 +83,11 @@ export function PantryPage() {
           <div className="section-label"><span>Ingredientes</span><small>Pulsa ★ para priorizar</small></div>
           <form className="ingredient-input" onSubmit={addIngredient}>
             <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Ej. pollo 300 g, 4 huevos, arroz…" />
+            {draft.trim() && (
+              <button type="button" className="clear-input-button" onClick={clearDraft} aria-label="Borrar ingredientes introducidos" title="Borrar texto">
+                <X size={18} />
+              </button>
+            )}
             <button
               type="button"
               className={`voice-button ${voice.isListening ? 'listening' : ''}`}
