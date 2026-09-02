@@ -1,8 +1,8 @@
 import { ExternalLink, Globe2, ShieldCheck, Sparkles } from 'lucide-react';
-import type { Recipe } from '../domain/types';
+import type { Recipe, RecipeSource } from '../domain/types';
 
 export function RecipeSourceNote({ recipe }: { recipe: Recipe }) {
-  const source = recipe.source ?? { kind: 'local' as const, label: 'Catálogo El Chef' };
+  const source: RecipeSource = recipe.source ?? { kind: 'local', label: 'Catálogo El Chef' };
   const isWeb = source.kind === 'web';
   const isAi = source.kind === 'ai';
   const Icon = isWeb ? Globe2 : isAi ? Sparkles : ShieldCheck;
