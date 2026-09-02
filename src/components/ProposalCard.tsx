@@ -2,7 +2,7 @@ import { AlertTriangle, Check, Clock3, RefreshCw, ShoppingBasket, Sparkles, Star
 import { useNavigate } from 'react-router-dom';
 import type { Proposal } from '../domain/types';
 
-function badgeClass(classification: Proposal['classification']) {
+function badgeClass(classification: NonNullable<Proposal['classification']>) {
   if (classification === 'Con lo que tienes') return 'badge success';
   if (classification === 'Te falta muy poco') return 'badge warn';
   return 'badge neutral';
@@ -18,7 +18,7 @@ export function ProposalCard({ proposal, index }: { proposal: Proposal; index: n
         <div className="photo-shimmer" />
       </div>
       <div className="proposal-body">
-        <span className={badgeClass(proposal.classification)}>{proposal.classification}</span>
+        {proposal.classification && <span className={badgeClass(proposal.classification)}>{proposal.classification}</span>}
         <h3>{proposal.title}</h3>
         <p>{proposal.subtitle}</p>
         <div className="meta-row">
