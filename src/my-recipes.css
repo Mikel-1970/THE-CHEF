@@ -1,0 +1,42 @@
+.history-list {
+  display: grid;
+  gap: 9px;
+}
+
+.history-card {
+  width: 100%;
+  min-height: 76px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255,250,241,.94);
+  color: var(--ink);
+  box-shadow: 0 8px 20px rgba(77,68,42,.06);
+  text-align: left;
+  display: grid;
+  gap: 4px;
+  appearance: none;
+}
+
+.history-card span {
+  color: var(--olive);
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.history-card strong {
+  color: #354629;
+  font-size: .78rem;
+  line-height: 1.35;
+}
+
+.history-card small {
+  color: #777a6b;
+  font-size: .61rem;
+}
+
+.history-card:active {
+  transform: scale(.99);
+}
