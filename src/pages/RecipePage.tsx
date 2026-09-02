@@ -4,15 +4,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { Chip } from '../components/Chip';
 import { NumberStepper } from '../components/NumberStepper';
+import { RecipeSourceNote } from '../components/RecipeSourceNote';
 import { TopBar } from '../components/TopBar';
 import { useApp } from '../AppContext';
-import { mockRecipes } from '../data/mockRecipes';
 import type { RecipeIngredient } from '../domain/types';
 import {
   evaluateRecipePantry,
   formatInsufficientIngredient,
   type PantryIngredientEvaluation
 } from '../services/pantryEvaluation';
+import { getRecipeById } from '../services/recipeCatalog';
 import { getIngredientAlternatives } from '../services/substitutions';
 import { formatQuantity, scaleQuantity } from '../utils/scaling';
 import { formatDuration } from '../utils/time';
@@ -31,7 +32,7 @@ export function RecipePage() {
     upsertShoppingItem,
     removeShoppingItem
   } = useApp();
-  const recipe = mockRecipes.find(r => r.id === id);
+  const recipe = getRecipeById(id);
   const [servings, setServings] = useState(currentRequest?.servings ?? recipe?.baseServings ?? 4);
   const [availability, setAvailability] = useState<Record<string, IngredientAvailability>>({});
 
@@ -142,6 +143,7 @@ export function RecipePage() {
             <NumberStepper value={servings} onChange={setServings} />
           </section>
 
+          <RecipeSourceNote recipe={recipe} />
           <section className="trust-strip"><ShieldCheck size={18} /><div><strong>Comprueba lo que tienes</strong><span>La ficha respeta las cantidades indicadas, detecta si no alcanzan y propone sustituciones antes de añadir compras.</span></div></section>
 
           <section className="recipe-section">
