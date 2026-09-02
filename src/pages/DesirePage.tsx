@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, Clock3, Sparkles, UsersRound, WandSparkles } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock3, Mic, MicOff, Sparkles, UsersRound, WandSparkles } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
@@ -11,9 +11,11 @@ import { TopBar } from '../components/TopBar';
 import { RECIPE_STYLES } from '../data/cookingOptions';
 import { mockRecipes } from '../data/mockRecipes';
 import type { Difficulty } from '../domain/types';
+import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
 import { getMockProposals } from '../services/mockRecommendationEngine';
 import { interpretDesireText } from '../services/requestInterpreter';
 import { formatDuration } from '../utils/time';
+import '../voice-input.css';
 
 const defaultSuggestions = ['Algo italiano', 'Pollo', 'Pasta', 'Algo rápido', 'Algo ligero'];
 const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
@@ -42,6 +44,10 @@ export function DesirePage() {
   const [style, setStyle] = useState<string>();
   const [cuisine, setCuisine] = useState<string>();
   const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
+
+  const voice = useSpeechRecognition(transcript => {
+    setText(current => appendDictation(current, transcript));
+  });
 
   const suggestions = useMemo(
     () => buildSuggestions(favorites, history.map(entry => entry.label)),
@@ -79,7 +85,28 @@ export function DesirePage() {
       <TopBar eyebrow="¡OÍDO COCINA!" title="¡Pregúntale al Chef!" />
       <div className="page-content">
         <section className="editorial-card desire-intro olive-intro"><span className="eyebrow">PÍDELO A TU MANERA</span><h2>Háblame como lo harías en casa.</h2><p>Describe el plato que te apetece y usa los filtros solo cuando realmente te ayuden.</p></section>
-        <section className="form-section"><div className="section-label"><span>Hoy me apetece…</span></div><div className="desire-box"><WandSparkles size={22} /><textarea rows={5} value={text} onChange={e => setText(e.target.value)} placeholder="Ej. somos cuatro, algo italiano con pollo, fácil y en menos de 40 minutos…" /></div><div className="suggestion-row">{suggestions.map(s => <button key={s} onClick={() => setText(s)}>{s}</button>)}</div></section>
+        <section className="form-section">
+          <div className="section-label"><span>Hoy me apetece…</span></div>
+          <div className="desire-box">
+            <WandSparkles size={22} />
+            <textarea rows={5} value={text} onChange={e => setText(e.target.value)} placeholder="Ej. somos cuatro, algo italiano con pollo, fácil y en menos de 40 minutos…" />
+            <button
+              type="button"
+              className={`voice-button ${voice.isListening ? 'listening' : ''}`}
+              onClick={voice.toggle}
+              disabled={!voice.isSupported}
+              aria-label={voice.isListening ? 'Detener dictado' : 'Dictar lo que te apetece'}
+              aria-pressed={voice.isListening}
+              title={voice.isSupported ? 'Dictar lo que te apetece' : 'Dictado no disponible en este navegador'}
+            >
+              {voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}
+            </button>
+          </div>
+          {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… cuéntale al Chef lo que te apetece.</div>}
+          {voice.error && <div className="voice-status error">{voice.error}</div>}
+          {!voice.isSupported && <div className="voice-status unsupported">El dictado por voz no está disponible en este navegador. Puedes seguir escribiendo normalmente.</div>}
+          <div className="suggestion-row">{suggestions.map(s => <button key={s} onClick={() => setText(s)}>{s}</button>)}</div>
+        </section>
         <div className="helper-note"><Sparkles size={17} /> El Chef interpreta del texto comensales, tiempo, dificultad, estilo y tipo de cocina. Si eliges un filtro manualmente, ese filtro tiene prioridad.</div>
         <section className="control-card"><div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Somos</strong><small>Comensales</small></div></div><NumberStepper value={servings} onChange={changeServings} /></div><div className="divider" /><div className="control-stack"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Tiempo total de elaboración</small></div></div><div className="range-row"><input type="range" min="15" max="120" step="5" value={maxMinutes} onChange={e => changeTime(Number(e.target.value))} /><span>{formatDuration(maxMinutes)}</span></div></div></section>
         <button className="advanced-toggle" onClick={() => setAdvanced(v => !v)}><span>Más opciones</span>{advanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
@@ -89,6 +116,14 @@ export function DesirePage() {
       </div>
     </AppShell>
   );
+}
+
+function appendDictation(current: string, transcript: string): string {
+  const base = current.trimEnd();
+  const clean = transcript.trim();
+  if (!base) return clean;
+  const separator = /[.!?…]$/.test(base) ? ' ' : '. ';
+  return `${base}${separator}${clean}`;
 }
 
 function buildSuggestions(favoriteIds: string[], historyLabels: string[]): string[] {
