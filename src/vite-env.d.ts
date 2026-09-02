@@ -3,6 +3,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_RECIPE_API_URL?: string;
+  readonly VITE_RECIPE_API_KEY?: string;
 }
 
 interface ImportMeta {
