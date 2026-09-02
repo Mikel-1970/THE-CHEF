@@ -9,10 +9,10 @@ import { NumberStepper } from '../components/NumberStepper';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
 import { RECIPE_STYLES } from '../data/cookingOptions';
-import { mockRecipes } from '../data/mockRecipes';
 import type { Difficulty } from '../domain/types';
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
-import { getMockProposals } from '../services/mockRecommendationEngine';
+import { getHybridProposals } from '../services/hybridRecommendationEngine';
+import { getAllRecipes } from '../services/recipeCatalog';
 import { interpretDesireText } from '../services/requestInterpreter';
 import { formatDuration } from '../utils/time';
 import '../voice-input.css';
@@ -44,6 +44,7 @@ export function DesirePage() {
   const [style, setStyle] = useState<string>();
   const [cuisine, setCuisine] = useState<string>();
   const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
+  const [isSearching, setIsSearching] = useState(false);
 
   const voice = useSpeechRecognition(transcript => {
     setText(current => appendDictation(current, transcript));
@@ -54,7 +55,8 @@ export function DesirePage() {
     [favorites, history]
   );
 
-  const search = () => {
+  const search = async () => {
+    if (isSearching) return;
     const interpreted = interpretDesireText(text);
     const request = {
       mode: 'desire' as const,
@@ -65,9 +67,15 @@ export function DesirePage() {
       cuisine: cuisine ?? interpreted.cuisine,
       difficulty: difficulty ?? interpreted.difficulty
     };
-    const proposals = getMockProposals(request);
-    setSearch(request, proposals);
-    navigate('/propuestas');
+
+    setIsSearching(true);
+    try {
+      const result = await getHybridProposals(request);
+      setSearch(request, result.proposals);
+      navigate('/propuestas');
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const changeServings = (value: number) => {
@@ -124,7 +132,7 @@ export function DesirePage() {
         <button className="advanced-toggle" onClick={() => setAdvanced(v => !v)}><span>Más opciones</span>{advanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
         {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(v => <Chip key={v} selected={style === v} onClick={() => setStyle(style === v ? undefined : v)}>{v}</Chip>)}</div></div><div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(v => <Chip key={v} selected={difficulty === v} onClick={() => setDifficulty(difficulty === v ? undefined : v)}>{v}</Chip>)}</div></div></section>}
         <div className="helper-note"><Sparkles size={17} /> Las opciones rápidas se irán adaptando a tus búsquedas y recetas favoritas.</div>
-        <div className="sticky-action"><PrimaryButton onClick={search} disabled={!text.trim()}>Que decida el Chef</PrimaryButton></div>
+        <div className="sticky-action"><PrimaryButton onClick={search} disabled={!text.trim() || isSearching}>{isSearching ? 'Consultando al Chef…' : 'Que decida el Chef'}</PrimaryButton></div>
       </div>
     </AppShell>
   );
@@ -140,12 +148,13 @@ function appendDictation(current: string, transcript: string): string {
 
 function buildSuggestions(favoriteIds: string[], historyLabels: string[]): string[] {
   const suggestions: string[] = [];
+  const recipes = getAllRecipes();
   const push = (value?: string) => {
     if (value && !suggestions.some(existing => existing.toLocaleLowerCase('es') === value.toLocaleLowerCase('es'))) suggestions.push(value);
   };
 
   favoriteIds.forEach(id => {
-    const recipe = mockRecipes.find(item => item.id === id);
+    const recipe = recipes.find(item => item.id === id);
     if (!recipe) return;
     push(cuisinePhrases[recipe.cuisine] ?? recipe.cuisine);
     if (recipe.style === 'Rápida') push('Algo rápido');
