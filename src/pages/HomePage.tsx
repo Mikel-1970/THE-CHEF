@@ -3,22 +3,18 @@ import {
   ChefHat,
   Clock3,
   Heart,
-  Menu,
   Refrigerator,
-  ShoppingBasket,
-  Settings2,
-  X
+  ShoppingBasket
 } from 'lucide-react';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
 import '../home-v04.css';
+import '../home-v04-refinements.css';
 
 export function HomePage() {
   const navigate = useNavigate();
   const { favorites, history } = useApp();
-  const [menuOpen, setMenuOpen] = useState(false);
   const pantryImage = `${import.meta.env.BASE_URL}home-pantry.webp`;
   const desireImage = `${import.meta.env.BASE_URL}home-desire.webp`;
 
@@ -36,20 +32,6 @@ export function HomePage() {
           aria-hidden="true"
         />
 
-        <div className="reference-topbar">
-          <button className="reference-top-icon" onClick={() => setMenuOpen(value => !value)} aria-label="Abrir menú">
-            {menuOpen ? <X size={27} /> : <Menu size={29} />}
-          </button>
-          <span className="reference-top-spacer" aria-hidden="true" />
-        </div>
-
-        {menuOpen && (
-          <div className="reference-popover reference-menu-popover">
-            <button onClick={() => navigate('/mis-recetas')}><BookOpen size={18} /> Mis recetas</button>
-            <button onClick={() => navigate('/ajustes')}><Settings2 size={18} /> Ajustes</button>
-          </div>
-        )}
-
         <header className="reference-brand">
           <div className="reference-chef-logo">
             <ChefHat size={68} strokeWidth={1.55} />
@@ -65,9 +47,9 @@ export function HomePage() {
         <section className="reference-main-actions" aria-label="Modos principales">
           <button className="reference-action-card reference-pantry-card" onClick={() => navigate('/nevera')}>
             <div className="reference-action-text">
-              <h3>¿Qué<br />tenemos<br />por ahí?</h3>
+              <h3>¿Qué hay<br />en la nevera?</h3>
               <span className="reference-action-line" />
-              <p>Abre la nevera.</p>
+              <p>Mira a ver</p>
             </div>
             <div
               className="reference-action-photo reference-pantry-photo"
@@ -81,9 +63,9 @@ export function HomePage() {
 
           <button className="reference-action-card reference-desire-card" onClick={() => navigate('/antojo')}>
             <div className="reference-action-text">
-              <h3>¿Qué te<br />apetece<br />hoy?</h3>
+              <h3>¡Pregúntale<br />al Chef!</h3>
               <span className="reference-action-line reference-action-line-gold" />
-              <p>El Chef se<br />encarga.</p>
+              <p>¡Oído cocina!</p>
             </div>
             <div
               className="reference-action-photo reference-desire-photo"
