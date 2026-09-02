@@ -21,6 +21,29 @@
 }
 .voice-button:disabled { opacity: .4; cursor: default; }
 
+.clear-input-button {
+  width: 36px !important;
+  height: 36px !important;
+  flex: 0 0 36px;
+  border: 1px solid rgba(63,84,36,.10) !important;
+  border-radius: 11px !important;
+  background: #f6f1e8 !important;
+  color: #7b7d70 !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+.clear-input-button:active { transform: scale(.95); }
+
+.voice-action-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  align-self: flex-start;
+  margin-left: 2px;
+}
+
 .voice-status {
   margin-top: 7px;
   min-height: 18px;
@@ -38,7 +61,7 @@
 .desire-box { position: relative; }
 .desire-box .voice-button {
   align-self: flex-start;
-  margin-left: 2px;
+  margin-left: 0;
 }
 
 @keyframes voicePulse {
