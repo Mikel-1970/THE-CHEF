@@ -1,5 +1,6 @@
 import { Bell, ChefHat, Home, Search, UserRound } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import '../navigation-v04.css';
 
 export function BottomNav() {
   return (
