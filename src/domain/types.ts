@@ -28,7 +28,7 @@ export type Proposal = {
   emoji: string;
   minutes: number;
   difficulty: Difficulty;
-  classification: DishClassification;
+  classification?: DishClassification;
   usedIngredients: string[];
   missingIngredients: string[];
   insufficientIngredients?: string[];
