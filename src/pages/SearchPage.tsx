@@ -1,18 +1,17 @@
-import { ChevronDown, ChevronUp, Clock3, Search, SlidersHorizontal } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock3, Globe2, Search, SlidersHorizontal } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { Chip } from '../components/Chip';
 import { CuisineSelect } from '../components/CuisineSelect';
 import { RECIPE_STYLES } from '../data/cookingOptions';
-import { mockRecipes } from '../data/mockRecipes';
 import type { Difficulty } from '../domain/types';
-import { validRecipes } from '../services/recipeValidator';
+import { fetchExternalSearch, isExternalRecipeApiConfigured } from '../services/externalRecipeGateway';
+import { getAllRecipes, registerExternalRecipes } from '../services/recipeCatalog';
 import { formatDuration } from '../utils/time';
 
 const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
 const difficultyRank: Record<Difficulty, number> = { Fácil: 1, Media: 2, Avanzada: 3 };
-const searchableRecipes = validRecipes(mockRecipes);
 
 export function SearchPage() {
   const [query, setQuery] = useState('');
@@ -21,11 +20,16 @@ export function SearchPage() {
   const [style, setStyle] = useState<string>();
   const [difficulty, setDifficulty] = useState<Difficulty>();
   const [maxMinutes, setMaxMinutes] = useState(120);
+  const [catalogVersion, setCatalogVersion] = useState(0);
+  const [isSearchingExternal, setIsSearchingExternal] = useState(false);
+  const [externalMessage, setExternalMessage] = useState<string>();
+
+  const catalog = useMemo(() => getAllRecipes(), [catalogVersion]);
 
   const recipes = useMemo(() => {
     const words = normalize(query).split(/\s+/).filter(Boolean);
 
-    return searchableRecipes
+    return catalog
       .filter(recipe => {
         const haystack = normalize([
           recipe.title,
@@ -44,15 +48,34 @@ export function SearchPage() {
         return textMatches && cuisineMatches && styleMatches && difficultyMatches && timeMatches;
       })
       .sort((a, b) => (a.prepMinutes + a.cookMinutes) - (b.prepMinutes + b.cookMinutes));
-  }, [query, cuisine, style, difficulty, maxMinutes]);
+  }, [catalog, query, cuisine, style, difficulty, maxMinutes]);
 
   const activeFilters = [cuisine, style, difficulty, maxMinutes < 120 ? String(maxMinutes) : undefined].filter(Boolean).length;
+  const externalConfigured = isExternalRecipeApiConfigured();
 
   const clearFilters = () => {
     setCuisine(undefined);
     setStyle(undefined);
     setDifficulty(undefined);
     setMaxMinutes(120);
+  };
+
+  const searchExternal = async () => {
+    if (!externalConfigured || isSearchingExternal) return;
+    setIsSearchingExternal(true);
+    setExternalMessage(undefined);
+    try {
+      const received = await fetchExternalSearch({ query, cuisine, style, difficulty, maxMinutes });
+      const accepted = registerExternalRecipes(received);
+      setCatalogVersion(version => version + 1);
+      setExternalMessage(accepted.length
+        ? `Se han incorporado ${accepted.length} recetas externas validadas.`
+        : 'No se han encontrado nuevas recetas que superen los controles de calidad.');
+    } catch {
+      setExternalMessage('No se han podido consultar las fuentes online. La búsqueda local sigue disponible.');
+    } finally {
+      setIsSearchingExternal(false);
+    }
   };
 
   return (
@@ -128,6 +151,13 @@ export function SearchPage() {
           </section>
         )}
 
+        {externalConfigured && (
+          <button className="secondary-button" style={{ marginTop: 14 }} onClick={searchExternal} disabled={isSearchingExternal}>
+            <Globe2 size={17} /> {isSearchingExternal ? 'Consultando fuentes online…' : 'Buscar también en fuentes online'}
+          </button>
+        )}
+        {externalMessage && <div className="pantry-basics-note">{externalMessage}</div>}
+
         <section className="library-section">
           <div className="section-heading-row">
             <div>
@@ -144,6 +174,7 @@ export function SearchPage() {
                   <strong>{recipe.title}</strong>
                   <small>
                     <Clock3 size={13} /> {formatDuration(recipe.prepMinutes + recipe.cookMinutes)} · {recipe.cuisine} · {recipe.style}
+                    {recipe.source?.kind === 'web' ? ' · Web' : recipe.source?.kind === 'ai' ? ' · IA validada' : ''}
                   </small>
                 </div>
               </Link>
@@ -154,8 +185,10 @@ export function SearchPage() {
 
         <section className="editorial-card small-info">
           <div>
-            <strong>Búsqueda local V1</strong>
-            <p>La siguiente evolución incorporará fuentes externas como apoyo del motor de recetas, sin sustituir los controles de coherencia culinaria de la app.</p>
+            <strong>{externalConfigured ? 'Búsqueda híbrida activa' : 'Búsqueda híbrida preparada'}</strong>
+            <p>{externalConfigured
+              ? 'El catálogo local se combina con recetas externas que pasan los controles de coherencia antes de mostrarse.'
+              : 'La app ya está preparada para consultar web e IA mediante un backend seguro. Hasta conectarlo, utiliza el catálogo validado de El Chef.'}</p>
           </div>
         </section>
       </div>
