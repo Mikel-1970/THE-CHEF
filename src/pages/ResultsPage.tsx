@@ -23,7 +23,7 @@ export function ResultsPage() {
         <div className="results-summary"><div><span className="eyebrow">TU BÚSQUEDA</span><p>{currentRequest.mode === 'pantry' ? (currentRequest.pantryIngredients ?? []).map(i => i.name).join(' · ') : currentRequest.desireText}</p></div><span>{currentRequest.servings} pers.</span></div>
         <div className="proposal-stack">{proposals.map((proposal, index) => <ProposalCard key={proposal.id} proposal={proposal} index={index} />)}</div>
         <button className="secondary-button" onClick={refresh}><RefreshCw size={17} /> Dame otras 3</button>
-        <p className="prototype-note">Motor local V0.3: las propuestas se ordenan según ingredientes, prioridades, tiempo, estilo, cocina y dificultad. Aún no utiliza IA externa.</p>
+        <p className="prototype-note">Motor local V0.4: las propuestas se ordenan según ingredientes, prioridades, tiempo, estilo, cocina y dificultad. Aún no utiliza IA externa.</p>
       </div>
     </AppShell>
   );
