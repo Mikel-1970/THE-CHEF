@@ -1,6 +1,7 @@
 import { Bell, CheckCircle2 } from 'lucide-react';
 import { AppShell } from '../components/AppShell';
 import { TopBar } from '../components/TopBar';
+import '../notices.css';
 
 export function NoticesPage() {
   return (
