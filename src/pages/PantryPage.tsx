@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, Clock3, Plus, Sparkles, Star, Trash2, UsersRound } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock3, Mic, MicOff, Plus, Sparkles, Star, Trash2, UsersRound } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
@@ -10,9 +10,11 @@ import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
 import { RECIPE_STYLES } from '../data/cookingOptions';
 import type { Difficulty, IngredientInput } from '../domain/types';
+import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
 import { getMockProposals } from '../services/mockRecommendationEngine';
 import { parseIngredientInput } from '../utils/ingredientInput';
 import { formatDuration } from '../utils/time';
+import '../voice-input.css';
 
 const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
 
@@ -33,23 +35,16 @@ export function PantryPage() {
   const [cuisine, setCuisine] = useState<string>();
   const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
 
+  const voice = useSpeechRecognition(transcript => {
+    setDraft(current => appendDictation(current, transcript, ', '));
+  });
+
   const addIngredient = (e?: FormEvent) => {
     e?.preventDefault();
-    const parsed = parseIngredientInput(draft);
-    if (!parsed.name) return;
+    const entries = splitIngredientEntries(draft);
+    if (!entries.length) return;
 
-    const existingIndex = ingredients.findIndex(item => normalize(item.name) === normalize(parsed.name));
-    if (existingIndex >= 0) {
-      if (parsed.quantity !== undefined) {
-        setIngredients(ingredients.map((item, index) => index === existingIndex
-          ? { ...item, quantity: parsed.quantity, unit: parsed.unit }
-          : item));
-      }
-      setDraft('');
-      return;
-    }
-
-    setIngredients([...ingredients, parsed]);
+    setIngredients(current => mergeIngredientEntries(current, entries));
     setDraft('');
   };
 
@@ -83,10 +78,24 @@ export function PantryPage() {
           <div className="section-label"><span>Ingredientes</span><small>Pulsa ★ para priorizar</small></div>
           <form className="ingredient-input" onSubmit={addIngredient}>
             <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Ej. pollo 300 g, 4 huevos, arroz…" />
+            <button
+              type="button"
+              className={`voice-button ${voice.isListening ? 'listening' : ''}`}
+              onClick={voice.toggle}
+              disabled={!voice.isSupported}
+              aria-label={voice.isListening ? 'Detener dictado' : 'Dictar ingredientes'}
+              aria-pressed={voice.isListening}
+              title={voice.isSupported ? 'Dictar ingredientes' : 'Dictado no disponible en este navegador'}
+            >
+              {voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}
+            </button>
             <button type="submit" aria-label="Añadir ingrediente"><Plus size={19} /></button>
           </form>
+          {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… habla con normalidad.</div>}
+          {voice.error && <div className="voice-status error">{voice.error}</div>}
+          {!voice.isSupported && <div className="voice-status unsupported">El dictado por voz no está disponible en este navegador. Puedes seguir escribiendo normalmente.</div>}
           <div className="pantry-basics-note" style={{ marginTop: 8 }}>
-            Puedes escribir solo el producto o añadir una cantidad. Si no indicas cantidad, El Chef no la inventará.
+            Puedes escribir o dictar uno o varios productos. Separa los ingredientes con comas o con “y”. Si no indicas cantidad, El Chef no la inventará.
           </div>
           <div className="ingredient-pills">
             {ingredients.map((item, index) => (
@@ -113,6 +122,40 @@ export function PantryPage() {
       </div>
     </AppShell>
   );
+}
+
+function mergeIngredientEntries(current: IngredientInput[], entries: string[]): IngredientInput[] {
+  const next = [...current];
+
+  entries.forEach(entry => {
+    const parsed = parseIngredientInput(entry);
+    if (!parsed.name) return;
+
+    const existingIndex = next.findIndex(item => normalize(item.name) === normalize(parsed.name));
+    if (existingIndex >= 0) {
+      if (parsed.quantity !== undefined) {
+        next[existingIndex] = { ...next[existingIndex], quantity: parsed.quantity, unit: parsed.unit };
+      }
+      return;
+    }
+
+    next.push(parsed);
+  });
+
+  return next;
+}
+
+function splitIngredientEntries(value: string): string[] {
+  return value
+    .split(/[,;\n]+|\s+(?:y|e)\s+/i)
+    .map(item => item.trim())
+    .filter(Boolean);
+}
+
+function appendDictation(current: string, transcript: string, separator: string): string {
+  const base = current.trimEnd();
+  if (!base) return transcript.trim();
+  return `${base}${separator}${transcript.trim()}`;
 }
 
 function formatIngredientQuantity(item: IngredientInput): string {
