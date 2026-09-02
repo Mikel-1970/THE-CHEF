@@ -3,9 +3,9 @@ import { useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { useApp } from '../AppContext';
-import { mockRecipes } from '../data/mockRecipes';
-import type { CookingRequest, HistoryEntry } from '../domain/types';
-import { getMockProposals } from '../services/mockRecommendationEngine';
+import type { CookingRequest, HistoryEntry, Recipe } from '../domain/types';
+import { getHybridProposals } from '../services/hybridRecommendationEngine';
+import { getAllRecipes, getRecipeById } from '../services/recipeCatalog';
 import '../my-recipes.css';
 
 export function MyRecipesPage() {
@@ -25,16 +25,17 @@ export function MyRecipesPage() {
       ? favorites
       : Array.from(new Set([...recentRecipeIds, ...favorites]));
     const normalizedQuery = query.trim().toLocaleLowerCase('es');
+    const catalog = getAllRecipes();
     return ids
-      .map(id => mockRecipes.find(recipe => recipe.id === id))
-      .filter((recipe): recipe is (typeof mockRecipes)[number] => Boolean(recipe))
+      .map(id => catalog.find(recipe => recipe.id === id))
+      .filter((recipe): recipe is Recipe => Boolean(recipe))
       .filter(recipe => !normalizedQuery || recipe.title.toLocaleLowerCase('es').includes(normalizedQuery));
   }, [favorites, recentRecipeIds, query, tab]);
 
-  const repeatSearch = (entry: HistoryEntry) => {
+  const repeatSearch = async (entry: HistoryEntry) => {
     const request = entry.request ?? buildLegacyRequest(entry, settings.defaultServings, settings.pantryBasics);
-    const proposals = getMockProposals(request);
-    setSearch(request, proposals);
+    const result = await getHybridProposals(request);
+    setSearch(request, result.proposals);
     navigate('/propuestas');
   };
 
@@ -70,7 +71,7 @@ export function MyRecipesPage() {
             <div className="section-heading-row"><div><span className="eyebrow">HISTORIAL</span><h2>Actividad reciente</h2></div></div>
             <div className="history-list">
               {history.slice(0, 20).map(entry => {
-                const recipe = entry.recipeId ? mockRecipes.find(item => item.id === entry.recipeId) : undefined;
+                const recipe = entry.recipeId ? getRecipeById(entry.recipeId) : undefined;
                 const date = new Date(entry.createdAt).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 
                 if (recipe) {
