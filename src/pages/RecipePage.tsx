@@ -8,11 +8,16 @@ import { TopBar } from '../components/TopBar';
 import { useApp } from '../AppContext';
 import { mockRecipes } from '../data/mockRecipes';
 import type { RecipeIngredient } from '../domain/types';
+import {
+  evaluateRecipePantry,
+  formatInsufficientIngredient,
+  type PantryIngredientEvaluation
+} from '../services/pantryEvaluation';
 import { getIngredientAlternatives } from '../services/substitutions';
 import { formatQuantity, scaleQuantity } from '../utils/scaling';
 import { formatDuration } from '../utils/time';
 
-type IngredientAvailability = 'have' | 'missing';
+type IngredientAvailability = 'have' | 'missing' | 'substitute';
 
 export function RecipePage() {
   const { id } = useParams();
@@ -40,6 +45,16 @@ export function RecipePage() {
     return Array.from(grouped.entries());
   }, [recipe]);
 
+  const pantryEvaluations = useMemo(() => {
+    if (!recipe || currentRequest?.mode !== 'pantry') return [] as PantryIngredientEvaluation[];
+    return evaluateRecipePantry(recipe, { ...currentRequest, servings });
+  }, [recipe, currentRequest, servings]);
+
+  const pantryEvaluationByName = useMemo(
+    () => new Map(pantryEvaluations.map(entry => [entry.ingredient.name, entry])),
+    [pantryEvaluations]
+  );
+
   useEffect(() => {
     if (!recipe) return;
     recordRecipeView(recipe.id, recipe.title);
@@ -52,21 +67,34 @@ export function RecipePage() {
       return;
     }
 
-    const pantryNames = [
-      ...(currentRequest.pantryIngredients ?? []).map(item => item.name),
-      ...(currentRequest.pantryBasics ?? [])
-    ];
     const next: Record<string, IngredientAvailability> = {};
+    pantryEvaluations.forEach(evaluation => {
+      const ingredient = evaluation.ingredient;
+      const itemId = shoppingItemId(recipe.id, ingredient.name);
 
-    recipe.ingredients.forEach(ingredient => {
-      const status: IngredientAvailability = pantryNames.some(name => ingredientMatch(ingredient.name, name)) ? 'have' : 'missing';
-      next[ingredient.name] = status;
-      if (status === 'missing' && !ingredient.optional) {
-        upsertShoppingItem(toShoppingItem(recipe.id, recipe.title, ingredient, recipe.baseServings, servings));
+      if (evaluation.status === 'available') {
+        next[ingredient.name] = 'have';
+        removeShoppingItem(itemId);
+        return;
       }
+
+      if (evaluation.status === 'substituted') {
+        next[ingredient.name] = 'substitute';
+        removeShoppingItem(itemId);
+        return;
+      }
+
+      next[ingredient.name] = 'missing';
+      if (ingredient.optional) return;
+
+      const quantity = evaluation.status === 'insufficient' && evaluation.shortage !== undefined
+        ? evaluation.shortage
+        : evaluation.requiredQuantity;
+      upsertShoppingItem(toShoppingItem(recipe.id, recipe.title, ingredient, recipe.baseServings, servings, quantity));
     });
+
     setAvailability(next);
-  }, [recipe?.id, currentRequest?.mode]);
+  }, [recipe?.id, currentRequest?.mode, servings, pantryEvaluations]);
 
   if (!recipe) return null;
 
@@ -82,15 +110,6 @@ export function RecipePage() {
     } else {
       removeShoppingItem(itemId);
     }
-  };
-
-  const changeServings = (nextServings: number) => {
-    setServings(nextServings);
-    recipe.ingredients.forEach(ingredient => {
-      if (availability[ingredient.name] === 'missing' && !ingredient.optional) {
-        upsertShoppingItem(toShoppingItem(recipe.id, recipe.title, ingredient, recipe.baseServings, nextServings));
-      }
-    });
   };
 
   return (
@@ -120,10 +139,10 @@ export function RecipePage() {
         <div className="recipe-content">
           <section className="servings-card">
             <div><span className="eyebrow">COMENSALES</span><strong>Ajusta la receta</strong></div>
-            <NumberStepper value={servings} onChange={changeServings} />
+            <NumberStepper value={servings} onChange={setServings} />
           </section>
 
-          <section className="trust-strip"><ShieldCheck size={18} /><div><strong>Comprueba lo que tienes</strong><span>Marca cada ingrediente como disponible o faltante. Lo que falte se puede sustituir o añadir a la lista de compra.</span></div></section>
+          <section className="trust-strip"><ShieldCheck size={18} /><div><strong>Comprueba lo que tienes</strong><span>La ficha respeta las cantidades indicadas, detecta si no alcanzan y propone sustituciones antes de añadir compras.</span></div></section>
 
           <section className="recipe-section">
             <div className="section-heading"><ShoppingBasket size={20} /><div><span className="eyebrow">01</span><h2>Ingredientes</h2></div></div>
@@ -132,8 +151,11 @@ export function RecipePage() {
                 <h3>{section}</h3>
                 {ingredients.map(ingredient => {
                   const status = availability[ingredient.name];
+                  const evaluation = pantryEvaluationByName.get(ingredient.name);
                   const scaledQuantity = scaleQuantity(ingredient, recipe.baseServings, servings);
-                  const alternatives = status === 'missing' ? getIngredientAlternatives(ingredient.name, recipe.substitutions, ingredient.optional) : [];
+                  const alternatives = status === 'missing'
+                    ? getIngredientAlternatives(ingredient.name, recipe.substitutions, ingredient.optional)
+                    : [];
                   return (
                     <div key={`${section}-${ingredient.name}`}>
                       <div className="recipe-ingredient">
@@ -141,12 +163,29 @@ export function RecipePage() {
                           <span>{ingredient.name}{ingredient.optional ? <small> opcional</small> : null}</span>
                           <div className="chip-row compact" style={{ marginTop: 7 }}>
                             <Chip selected={status === 'have'} onClick={() => setIngredientAvailability(ingredient, 'have')}>Tengo</Chip>
+                            {evaluation?.substitute && (
+                              <Chip selected={status === 'substitute'} onClick={() => setIngredientAvailability(ingredient, 'substitute')}>Usar {evaluation.substitute}</Chip>
+                            )}
                             <Chip selected={status === 'missing'} onClick={() => setIngredientAvailability(ingredient, 'missing')}>Me falta</Chip>
                           </div>
                         </div>
                         <strong>{formatQuantity(scaledQuantity)} {ingredient.unit}</strong>
                       </div>
-                      {status === 'missing' && (
+
+                      {evaluation?.status === 'substituted' && status === 'substitute' && (
+                        <div className="pantry-basics-note" style={{ marginTop: 5, marginBottom: 10 }}>
+                          <span>Sustitución disponible:</span> tienes {evaluation.substitute}; puedes usarlo en lugar de {ingredient.name}.
+                        </div>
+                      )}
+
+                      {evaluation?.status === 'insufficient' && status === 'missing' && (
+                        <div className="pantry-basics-note" style={{ marginTop: 5, marginBottom: 10 }}>
+                          <span>Cantidad insuficiente:</span> {formatInsufficientIngredient(evaluation)}
+                          {!ingredient.optional && <button onClick={() => navigate('/lista-compra')}>Ver lista</button>}
+                        </div>
+                      )}
+
+                      {status === 'missing' && evaluation?.status !== 'insufficient' && (
                         <div className="pantry-basics-note" style={{ marginTop: 5, marginBottom: 10 }}>
                           <span>Alternativas:</span> {alternatives.join(' · ')}
                           {!ingredient.optional && <button onClick={() => navigate('/lista-compra')}>Ver lista</button>}
@@ -202,12 +241,6 @@ export function RecipePage() {
   );
 }
 
-function ingredientMatch(a: string, b: string): boolean {
-  const x = normalize(a);
-  const y = normalize(b);
-  return x.includes(y) || y.includes(x);
-}
-
 function normalize(value: string): string {
   return value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 }
@@ -216,11 +249,18 @@ function shoppingItemId(recipeId: string, ingredientName: string): string {
   return `${recipeId}:${normalize(ingredientName).replace(/\s+/g, '-')}`;
 }
 
-function toShoppingItem(recipeId: string, recipeTitle: string, ingredient: RecipeIngredient, baseServings: number, servings: number) {
+function toShoppingItem(
+  recipeId: string,
+  recipeTitle: string,
+  ingredient: RecipeIngredient,
+  baseServings: number,
+  servings: number,
+  quantityOverride?: number
+) {
   return {
     id: shoppingItemId(recipeId, ingredient.name),
     name: ingredient.name,
-    quantity: scaleQuantity(ingredient, baseServings, servings),
+    quantity: quantityOverride ?? scaleQuantity(ingredient, baseServings, servings),
     unit: ingredient.unit,
     recipeId,
     recipeTitle,
