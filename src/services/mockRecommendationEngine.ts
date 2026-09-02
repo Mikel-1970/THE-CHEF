@@ -1,46 +1,252 @@
-import type { CookingRequest, Difficulty, Proposal, Recipe } from '../domain/types';
+import type { CookingRequest, Difficulty, IngredientInput, Proposal, Recipe, RecipeIngredient } from '../domain/types';
 import { mockRecipes } from '../data/mockRecipes';
+import { findAvailableSubstitute } from './substitutions';
+import { formatQuantity, scaleQuantity } from '../utils/scaling';
 
 const difficultyRank: Record<Difficulty, number> = { 'Fácil': 1, 'Media': 2, 'Avanzada': 3 };
 
-export function getMockProposals(request: CookingRequest, excludeRecipeIds: string[] = []): Proposal[] {
-  const pantryNames = request.mode === 'pantry'
-    ? [...(request.pantryIngredients ?? []).map(i => i.name), ...(request.pantryBasics ?? [])].map(normalize)
-    : [];
-  const priorities = (request.pantryIngredients ?? []).filter(i => i.priority).map(i => normalize(i.name));
-  const query = normalize(request.desireText ?? '');
+type PantryStatus = 'available' | 'substituted' | 'insufficient' | 'missing';
 
+type IngredientEvaluation = {
+  ingredient: RecipeIngredient;
+  status: PantryStatus;
+  requiredQuantity: number;
+  pantryItem?: IngredientInput;
+  substitute?: string;
+  shortage?: number;
+};
+
+type RankedRecipe = {
+  recipe: Recipe;
+  score: number;
+  evaluations: IngredientEvaluation[];
+};
+
+export function getMockProposals(request: CookingRequest, excludeRecipeIds: string[] = []): Proposal[] {
+  const query = normalize(request.desireText ?? '');
+  const priorities = (request.pantryIngredients ?? []).filter(item => item.priority);
   const candidates = mockRecipes.filter(recipe => !excludeRecipeIds.includes(recipe.id));
   const pool = candidates.length >= 3 ? candidates : mockRecipes;
 
-  const ranked = pool.map(recipe => {
-    const required = recipe.ingredients.filter(i => !i.optional);
-    const matched = required.filter(i => matchesAny(i.name, pantryNames));
-    const missing = required.filter(i => !matchesAny(i.name, pantryNames));
+  const ranked: RankedRecipe[] = pool.map(recipe => {
+    const evaluations = request.mode === 'pantry' ? evaluateRecipe(recipe, request) : [];
     let score = 0;
 
     if (request.mode === 'pantry') {
-      score += matched.length * 9;
-      score -= missing.length * 5;
-      score += priorities.filter(p => recipe.ingredients.some(i => ingredientMatch(i.name, p))).length * 14;
+      const available = evaluations.filter(item => item.status === 'available').length;
+      const substituted = evaluations.filter(item => item.status === 'substituted').length;
+      const insufficient = evaluations.filter(item => item.status === 'insufficient').length;
+      const missing = evaluations.filter(item => item.status === 'missing').length;
+      const priorityUsed = priorities.filter(priority => recipe.ingredients.some(ingredient => ingredientMatch(ingredient.name, priority.name))).length;
+      const priorityNotUsed = Math.max(0, priorities.length - priorityUsed);
+      const coverage = evaluations.length
+        ? (available + substituted * 0.75 + insufficient * 0.35) / evaluations.length
+        : 0;
+
+      score += available * 10;
+      score += substituted * 5;
+      score += insufficient * 1;
+      score -= missing * 8;
+      score += coverage * 12;
+      score += priorityUsed * 24;
+      score -= priorityNotUsed * 12;
     } else {
       score += textAffinity(recipe, query) * 10;
     }
 
     if (request.maxMinutes) {
       const total = recipe.prepMinutes + recipe.cookMinutes;
-      score += total <= request.maxMinutes ? 10 : -Math.min(18, (total - request.maxMinutes) * 1.2);
+      score += total <= request.maxMinutes ? 10 : -Math.min(40, (total - request.maxMinutes) * 1.6);
     }
-    if (request.cuisine) score += normalize(recipe.cuisine) === normalize(request.cuisine) ? 11 : 0;
-    if (request.style) score += normalize(recipe.style) === normalize(request.style) ? 9 : 0;
+    if (request.cuisine) score += normalize(recipe.cuisine) === normalize(request.cuisine) ? 11 : -2;
+    if (request.style) score += normalize(recipe.style) === normalize(request.style) ? 9 : -1;
     if (request.difficulty) {
-      score += difficultyRank[recipe.difficulty] <= difficultyRank[request.difficulty] ? 6 : -8;
+      score += difficultyRank[recipe.difficulty] <= difficultyRank[request.difficulty] ? 6 : -12;
     }
 
-    return { recipe, score, matched, missing };
-  }).sort((a, b) => b.score - a.score).slice(0, 3);
+    return { recipe, score, evaluations };
+  }).sort((a, b) => b.score - a.score);
 
-  return ranked.map((item, index) => toProposal(item.recipe, item.matched.map(i => i.name), item.missing.map(i => i.name), request, index));
+  const selected = selectDiverse(ranked, 3);
+  return selected.map((item, index) => toProposal(item, request, index));
+}
+
+function evaluateRecipe(recipe: Recipe, request: CookingRequest): IngredientEvaluation[] {
+  const pantryItems: IngredientInput[] = [
+    ...(request.pantryIngredients ?? []),
+    ...(request.pantryBasics ?? []).map(name => ({ name }))
+  ];
+  const pantryNames = pantryItems.map(item => item.name);
+
+  return recipe.ingredients
+    .filter(ingredient => !ingredient.optional)
+    .map(ingredient => {
+      const requiredQuantity = scaleQuantity(ingredient, recipe.baseServings, request.servings);
+      const pantryItem = pantryItems.find(item => ingredientMatch(ingredient.name, item.name));
+
+      if (pantryItem) {
+        const shortage = getShortage(pantryItem, ingredient, requiredQuantity);
+        if (shortage !== undefined && shortage > 0) {
+          return { ingredient, status: 'insufficient' as const, requiredQuantity, pantryItem, shortage };
+        }
+        return { ingredient, status: 'available' as const, requiredQuantity, pantryItem };
+      }
+
+      const substitute = findAvailableSubstitute(ingredient.name, pantryNames);
+      if (substitute) {
+        return { ingredient, status: 'substituted' as const, requiredQuantity, substitute };
+      }
+
+      return { ingredient, status: 'missing' as const, requiredQuantity };
+    });
+}
+
+function getShortage(pantryItem: IngredientInput, ingredient: RecipeIngredient, requiredQuantity: number): number | undefined {
+  if (pantryItem.quantity === undefined || !pantryItem.unit) return undefined;
+  const available = comparableQuantity(pantryItem.quantity, pantryItem.unit);
+  const required = comparableQuantity(requiredQuantity, ingredient.unit);
+  if (!available || !required || available.kind !== required.kind) return undefined;
+  if (available.value >= required.value) return 0;
+
+  const shortageBase = required.value - available.value;
+  return fromBaseQuantity(shortageBase, ingredient.unit);
+}
+
+function comparableQuantity(quantity: number, unit: string): { kind: 'mass' | 'volume' | 'count'; value: number } | undefined {
+  const normalizedUnit = normalize(unit);
+  if (['g', 'gr', 'gramo', 'gramos'].includes(normalizedUnit)) return { kind: 'mass', value: quantity };
+  if (normalizedUnit === 'kg') return { kind: 'mass', value: quantity * 1000 };
+  if (normalizedUnit === 'ml') return { kind: 'volume', value: quantity };
+  if (normalizedUnit === 'cl') return { kind: 'volume', value: quantity * 10 };
+  if (normalizedUnit === 'l') return { kind: 'volume', value: quantity * 1000 };
+  if (['ud', 'uds', 'u', 'unidad', 'unidades'].includes(normalizedUnit)) return { kind: 'count', value: quantity };
+  return undefined;
+}
+
+function fromBaseQuantity(quantity: number, unit: string): number {
+  const normalizedUnit = normalize(unit);
+  if (normalizedUnit === 'kg') return quantity / 1000;
+  if (normalizedUnit === 'l') return quantity / 1000;
+  if (normalizedUnit === 'cl') return quantity / 10;
+  return quantity;
+}
+
+function selectDiverse(ranked: RankedRecipe[], limit: number): RankedRecipe[] {
+  const selected: RankedRecipe[] = [];
+  const remaining = [...ranked];
+
+  while (selected.length < limit && remaining.length) {
+    let bestIndex = 0;
+    let bestAdjustedScore = -Infinity;
+
+    remaining.forEach((candidate, index) => {
+      const penalty = selected.reduce((sum, chosen) => sum + similarityPenalty(candidate.recipe, chosen.recipe), 0);
+      const adjustedScore = candidate.score - penalty;
+      if (adjustedScore > bestAdjustedScore) {
+        bestAdjustedScore = adjustedScore;
+        bestIndex = index;
+      }
+    });
+
+    selected.push(remaining.splice(bestIndex, 1)[0]);
+  }
+
+  return selected;
+}
+
+function similarityPenalty(a: Recipe, b: Recipe): number {
+  let penalty = 0;
+  if (normalize(a.cuisine) === normalize(b.cuisine)) penalty += 3;
+  if (normalize(a.style) === normalize(b.style)) penalty += 2;
+
+  const aIngredients = new Set(a.ingredients.filter(item => !item.optional).map(item => normalize(item.name)));
+  const bIngredients = new Set(b.ingredients.filter(item => !item.optional).map(item => normalize(item.name)));
+  const intersection = [...aIngredients].filter(item => bIngredients.has(item)).length;
+  const union = new Set([...aIngredients, ...bIngredients]).size;
+  const overlap = union ? intersection / union : 0;
+
+  if (overlap >= 0.65) penalty += 10;
+  else if (overlap >= 0.45) penalty += 5;
+  return penalty;
+}
+
+function toProposal(item: RankedRecipe, request: CookingRequest, index: number): Proposal {
+  const { recipe, evaluations } = item;
+
+  if (request.mode === 'desire') {
+    return {
+      id: `proposal-${recipe.id}`,
+      title: recipe.title,
+      subtitle: recipe.description,
+      emoji: recipe.emoji,
+      minutes: recipe.prepMinutes + recipe.cookMinutes,
+      difficulty: recipe.difficulty,
+      classification: 'Buena opción si compras algunas cosas',
+      usedIngredients: [],
+      missingIngredients: [],
+      reason: desireReason(index),
+      recipeId: recipe.id
+    };
+  }
+
+  const available = evaluations.filter(entry => entry.status === 'available');
+  const substituted = evaluations.filter(entry => entry.status === 'substituted');
+  const insufficient = evaluations.filter(entry => entry.status === 'insufficient');
+  const missing = evaluations.filter(entry => entry.status === 'missing');
+  const issueCount = insufficient.length + missing.length;
+  const priorities = (request.pantryIngredients ?? []).filter(priority => priority.priority);
+  const prioritiesUsed = priorities.filter(priority => recipe.ingredients.some(ingredient => ingredientMatch(ingredient.name, priority.name)));
+
+  const classification = issueCount === 0
+    ? 'Con lo que tienes'
+    : issueCount === 1
+      ? 'Te falta muy poco'
+      : 'Buena opción si compras algunas cosas';
+
+  return {
+    id: `proposal-${recipe.id}`,
+    title: recipe.title,
+    subtitle: recipe.description,
+    emoji: recipe.emoji,
+    minutes: recipe.prepMinutes + recipe.cookMinutes,
+    difficulty: recipe.difficulty,
+    classification,
+    usedIngredients: available.map(entry => entry.pantryItem?.name ?? entry.ingredient.name).slice(0, 5),
+    missingIngredients: missing.map(entry => entry.ingredient.name).slice(0, 4),
+    insufficientIngredients: insufficient.map(formatInsufficient).slice(0, 3),
+    substitutionNotes: substituted.map(entry => `${entry.substitute} en lugar de ${entry.ingredient.name}`).slice(0, 3),
+    reason: pantryReason(prioritiesUsed.map(item => item.name), substituted.length, issueCount, index),
+    recipeId: recipe.id
+  };
+}
+
+function formatInsufficient(entry: IngredientEvaluation): string {
+  const available = entry.pantryItem?.quantity;
+  const unit = entry.ingredient.unit;
+  if (available === undefined || entry.shortage === undefined) return entry.ingredient.name;
+  return `${entry.ingredient.name}: tienes ${formatQuantity(available)} ${entry.pantryItem?.unit ?? unit}; necesitas ${formatQuantity(entry.requiredQuantity)} ${unit}; faltan ${formatQuantity(entry.shortage)} ${unit}`;
+}
+
+function pantryReason(prioritiesUsed: string[], substitutionCount: number, issueCount: number, index: number): string {
+  if (prioritiesUsed.length) return `Prioriza ${prioritiesUsed.slice(0, 2).join(' y ')}, que has marcado para aprovechar.`;
+  if (issueCount === 0 && substitutionCount > 0) return 'Encaja con lo que tienes gracias a una sustitución culinaria razonable.';
+  if (issueCount === 0) return 'Aprovecha bien lo disponible sin necesitar compras adicionales.';
+  if (issueCount === 1) return 'Necesita un ajuste pequeño y aprovecha bien el resto de tus ingredientes.';
+  const alternatives = [
+    'Es una opción gastronómicamente coherente aunque requiere completar algunos ingredientes.',
+    'Aporta una alternativa distinta equilibrando aprovechamiento, tiempo y dificultad.',
+    'Completa las propuestas con un enfoque diferente y un uso razonable de lo disponible.'
+  ];
+  return alternatives[index] ?? alternatives[0];
+}
+
+function desireReason(index: number): string {
+  const reasons = [
+    'Es la que mejor encaja con lo que has pedido.',
+    'Te da una alternativa diferente sin alejarse de tus criterios.',
+    'Completa las opciones con otro enfoque de cocina y técnica.'
+  ];
+  return reasons[index] ?? reasons[0];
 }
 
 function normalize(value: string) {
@@ -53,56 +259,15 @@ function ingredientMatch(a: string, b: string) {
   return x.includes(y) || y.includes(x);
 }
 
-function matchesAny(name: string, pantry: string[]) {
-  return pantry.some(p => ingredientMatch(name, p));
-}
-
 function textAffinity(recipe: Recipe, query: string) {
   if (!query) return 0;
-  const words = query.split(/\s+/).filter(w => w.length > 3);
+  const words = query.split(/\s+/).filter(word => word.length > 3);
   const haystack = normalize([
     recipe.title,
     recipe.description,
     recipe.cuisine,
     recipe.style,
-    ...recipe.ingredients.map(i => i.name)
+    ...recipe.ingredients.map(ingredient => ingredient.name)
   ].join(' '));
   return words.filter(word => haystack.includes(word)).length;
-}
-
-function toProposal(recipe: Recipe, used: string[], missing: string[], request: CookingRequest, index: number): Proposal {
-  const relevantMissing = missing.slice(0, 3);
-  const classification = request.mode === 'desire'
-    ? 'Buena opción si compras algunas cosas'
-    : relevantMissing.length === 0
-      ? 'Con lo que tienes'
-      : relevantMissing.length <= 1
-        ? 'Te falta muy poco'
-        : 'Buena opción si compras algunas cosas';
-
-  const reasons = request.mode === 'pantry'
-    ? [
-        'Es la que mejor aprovecha los ingredientes que has indicado.',
-        'Aprovecha bien lo disponible y mantiene coherencia culinaria.',
-        'Equilibra bien aprovechamiento, tiempo y dificultad.'
-      ]
-    : [
-        'Es la que mejor encaja con lo que has pedido.',
-        'Te da una alternativa diferente sin alejarse de tus criterios.',
-        'Completa las opciones con otro enfoque de cocina y técnica.'
-      ];
-
-  return {
-    id: `proposal-${recipe.id}`,
-    title: recipe.title,
-    subtitle: recipe.description,
-    emoji: recipe.emoji,
-    minutes: recipe.prepMinutes + recipe.cookMinutes,
-    difficulty: recipe.difficulty,
-    classification,
-    usedIngredients: used.slice(0, 4),
-    missingIngredients: relevantMissing,
-    reason: reasons[index] ?? reasons[0],
-    recipeId: recipe.id
-  };
 }
