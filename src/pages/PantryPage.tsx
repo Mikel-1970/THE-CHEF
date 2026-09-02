@@ -11,7 +11,7 @@ import { TopBar } from '../components/TopBar';
 import { RECIPE_STYLES } from '../data/cookingOptions';
 import type { Difficulty, IngredientInput } from '../domain/types';
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
-import { getMockProposals } from '../services/mockRecommendationEngine';
+import { getHybridProposals } from '../services/hybridRecommendationEngine';
 import { parseIngredientInput } from '../utils/ingredientInput';
 import { formatDuration } from '../utils/time';
 import '../voice-input.css';
@@ -34,6 +34,7 @@ export function PantryPage() {
   const [style, setStyle] = useState<string>();
   const [cuisine, setCuisine] = useState<string>();
   const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
+  const [isSearching, setIsSearching] = useState(false);
 
   const voice = useSpeechRecognition(transcript => {
     setDraft(current => appendDictation(current, transcript, ', '));
@@ -53,7 +54,8 @@ export function PantryPage() {
     setDraft('');
   };
 
-  const search = () => {
+  const search = async () => {
+    if (isSearching) return;
     const request = {
       mode: 'pantry' as const,
       servings,
@@ -64,9 +66,15 @@ export function PantryPage() {
       cuisine,
       difficulty
     };
-    const proposals = getMockProposals(request);
-    setSearch(request, proposals);
-    navigate('/propuestas');
+
+    setIsSearching(true);
+    try {
+      const result = await getHybridProposals(request);
+      setSearch(request, result.proposals);
+      navigate('/propuestas');
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   return (
@@ -128,7 +136,7 @@ export function PantryPage() {
         <div className="helper-note"><Sparkles size={17} /> Antes de considerar que falta un ingrediente, comprobaremos si tienes una sustitución razonable. Si una cantidad no alcanza, te indicaremos cuánto falta.</div>
         <button className="advanced-toggle" onClick={() => setAdvanced(v => !v)}><span>Más opciones</span>{advanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
         {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(v => <Chip key={v} selected={style === v} onClick={() => setStyle(style === v ? undefined : v)}>{v}</Chip>)}</div></div><div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(v => <Chip key={v} selected={difficulty === v} onClick={() => setDifficulty(difficulty === v ? undefined : v)}>{v}</Chip>)}</div></div></section>}
-        <div className="sticky-action"><PrimaryButton onClick={search} disabled={ingredients.length === 0}>Buscar 3 propuestas</PrimaryButton></div>
+        <div className="sticky-action"><PrimaryButton onClick={search} disabled={ingredients.length === 0 || isSearching}>{isSearching ? 'Buscando las mejores opciones…' : 'Buscar 3 propuestas'}</PrimaryButton></div>
       </div>
     </AppShell>
   );
