@@ -1,16 +1,12 @@
 import {
-  Bell,
   BookOpen,
   ChefHat,
   Clock3,
   Heart,
-  Home,
-  ListChecks,
   Menu,
   Refrigerator,
-  Search,
+  ShoppingBasket,
   Settings2,
-  UserRound,
   X
 } from 'lucide-react';
 import { useState } from 'react';
@@ -23,35 +19,34 @@ export function HomePage() {
   const navigate = useNavigate();
   const { favorites, history } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [noticeOpen, setNoticeOpen] = useState(false);
+  const pantryImage = `${import.meta.env.BASE_URL}home-pantry.jpg`;
+  const desireImage = `${import.meta.env.BASE_URL}home-desire.jpg`;
 
   return (
-    <AppShell hideNav>
+    <AppShell>
       <section className="reference-home">
-        <div className="reference-decor reference-decor-left" aria-hidden="true" />
-        <div className="reference-decor reference-decor-right" aria-hidden="true" />
+        <div
+          className="reference-decor reference-decor-left"
+          style={{ backgroundImage: `url(${pantryImage})` }}
+          aria-hidden="true"
+        />
+        <div
+          className="reference-decor reference-decor-right"
+          style={{ backgroundImage: `url(${desireImage})` }}
+          aria-hidden="true"
+        />
 
         <div className="reference-topbar">
           <button className="reference-top-icon" onClick={() => setMenuOpen(value => !value)} aria-label="Abrir menú">
             {menuOpen ? <X size={27} /> : <Menu size={29} />}
           </button>
-          <button className="reference-top-icon reference-bell" onClick={() => setNoticeOpen(value => !value)} aria-label="Notificaciones">
-            <Bell size={29} />
-            <span />
-          </button>
+          <span className="reference-top-spacer" aria-hidden="true" />
         </div>
 
         {menuOpen && (
           <div className="reference-popover reference-menu-popover">
             <button onClick={() => navigate('/mis-recetas')}><BookOpen size={18} /> Mis recetas</button>
             <button onClick={() => navigate('/ajustes')}><Settings2 size={18} /> Ajustes</button>
-          </div>
-        )}
-
-        {noticeOpen && (
-          <div className="reference-popover reference-notice-popover">
-            <strong>Todo al día</strong>
-            <span>En esta versión privada no hay avisos pendientes.</span>
           </div>
         )}
 
@@ -74,7 +69,13 @@ export function HomePage() {
               <span className="reference-action-line" />
               <p>Abre la nevera.</p>
             </div>
-            <div className="reference-action-photo reference-pantry-photo" aria-hidden="true" />
+            <div
+              className="reference-action-photo reference-pantry-photo"
+              style={{
+                backgroundImage: `linear-gradient(90deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.84) 38%, rgba(255,253,248,.18) 66%, rgba(255,253,248,0) 100%), url(${pantryImage})`
+              }}
+              aria-hidden="true"
+            />
             <span className="reference-card-icon reference-card-icon-green"><Refrigerator size={34} strokeWidth={1.7} /></span>
           </button>
 
@@ -84,7 +85,13 @@ export function HomePage() {
               <span className="reference-action-line reference-action-line-gold" />
               <p>El Chef se<br />encarga.</p>
             </div>
-            <div className="reference-action-photo reference-desire-photo" aria-hidden="true" />
+            <div
+              className="reference-action-photo reference-desire-photo"
+              style={{
+                backgroundImage: `linear-gradient(90deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.88) 38%, rgba(255,253,248,.14) 68%, rgba(255,253,248,0) 100%), url(${desireImage})`
+              }}
+              aria-hidden="true"
+            />
             <span className="reference-card-icon reference-card-icon-gold"><ChefHat size={38} strokeWidth={1.55} /></span>
           </button>
         </section>
@@ -106,35 +113,12 @@ export function HomePage() {
               <strong>Historial</strong>
               {history.length > 0 && <small>{history.length}</small>}
             </button>
-            <button onClick={() => navigate('/ajustes')}>
-              <Settings2 size={39} strokeWidth={1.55} />
-              <strong>Ajustes</strong>
+            <button onClick={() => navigate('/lista-compra')}>
+              <ShoppingBasket size={39} strokeWidth={1.55} />
+              <strong>Cesta compra</strong>
             </button>
           </div>
         </section>
-
-        <nav className="reference-bottom-nav" aria-label="Navegación principal">
-          <button className="reference-nav-item reference-nav-active" onClick={() => navigate('/')}>
-            <Home size={25} fill="currentColor" strokeWidth={1.8} />
-            <span>Inicio</span>
-            <i />
-          </button>
-          <button className="reference-nav-item" onClick={() => navigate('/buscar')}>
-            <Search size={26} strokeWidth={1.75} />
-            <span>Buscar</span>
-          </button>
-          <button className="reference-nav-item reference-chef-nav" onClick={() => navigate('/antojo')} aria-label="Abrir El Chef">
-            <b><ChefHat size={35} strokeWidth={1.55} /></b>
-          </button>
-          <button className="reference-nav-item" onClick={() => navigate('/lista-compra')}>
-            <ListChecks size={25} strokeWidth={1.75} />
-            <span>Lista</span>
-          </button>
-          <button className="reference-nav-item" onClick={() => navigate('/ajustes')}>
-            <UserRound size={25} strokeWidth={1.65} />
-            <span>Perfil</span>
-          </button>
-        </nav>
       </section>
     </AppShell>
   );
