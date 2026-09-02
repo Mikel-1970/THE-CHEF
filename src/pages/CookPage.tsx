@@ -1,13 +1,13 @@
 import { ArrowLeft, ChevronLeft, ChevronRight, Clock3, Pause, Play, RotateCcw, ScreenShare, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { mockRecipes } from '../data/mockRecipes';
+import { getRecipeById } from '../services/recipeCatalog';
 
 export function CookPage() {
   const { id } = useParams();
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const recipe = mockRecipes.find(r => r.id === id);
+  const recipe = getRecipeById(id);
   const [index, setIndex] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [running, setRunning] = useState(false);
