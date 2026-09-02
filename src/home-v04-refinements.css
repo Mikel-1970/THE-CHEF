@@ -1,0 +1,197 @@
+.reference-home {
+  padding-top: max(18px, env(safe-area-inset-top));
+  overflow-y: auto;
+}
+
+.reference-brand {
+  padding: 0 0 13px;
+}
+
+.reference-chef-logo {
+  width: 68px;
+  height: 58px;
+  margin-bottom: 0;
+}
+
+.reference-chef-logo > svg:first-child {
+  width: 58px;
+  height: 58px;
+}
+
+.reference-chef-heart {
+  bottom: 3px;
+  left: 28px;
+}
+
+.reference-brand h1 {
+  font-size: clamp(2.85rem, 12.5vw, 3.9rem);
+}
+
+.reference-divider {
+  margin: 10px 0 13px;
+}
+
+.reference-brand h2 {
+  margin-bottom: 4px;
+}
+
+.reference-doodle-heart {
+  bottom: 3px;
+}
+
+.reference-action-card {
+  min-height: 250px;
+}
+
+.reference-action-text {
+  left: 16px;
+  top: 17px;
+  width: 62%;
+}
+
+.reference-action-text h3 {
+  font-size: clamp(1.28rem, 5.8vw, 1.8rem);
+  line-height: 1.01;
+}
+
+.reference-action-text p {
+  color: #34382f;
+  font-size: .82rem;
+  line-height: 1.3;
+  font-weight: 650;
+}
+
+.reference-card-icon {
+  left: 15px;
+  bottom: 14px;
+  width: 58px;
+  height: 58px;
+}
+
+.reference-card-icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+.reference-quick-section {
+  margin-top: 16px;
+}
+
+.reference-quick-title {
+  margin-bottom: 9px;
+}
+
+.reference-quick-grid button {
+  min-height: 94px;
+  padding-top: 10px;
+  padding-bottom: 9px;
+  gap: 7px;
+}
+
+.reference-quick-grid button svg {
+  width: 31px;
+  height: 31px;
+}
+
+.reference-quick-grid strong {
+  color: #252923;
+  font-weight: 700;
+  font-size: .63rem;
+}
+
+@media (max-width: 390px) {
+  .reference-home {
+    padding-top: max(14px, env(safe-area-inset-top));
+  }
+
+  .reference-brand {
+    padding-bottom: 11px;
+  }
+
+  .reference-chef-logo {
+    height: 52px;
+  }
+
+  .reference-chef-logo > svg:first-child {
+    width: 52px;
+    height: 52px;
+  }
+
+  .reference-brand h1 {
+    font-size: 3rem;
+  }
+
+  .reference-divider {
+    margin: 8px 0 10px;
+  }
+
+  .reference-brand h2 {
+    font-size: 1.18rem;
+  }
+
+  .reference-brand p {
+    font-size: .79rem;
+  }
+
+  .reference-action-card {
+    min-height: 220px;
+  }
+
+  .reference-action-text {
+    left: 13px;
+    top: 14px;
+    width: 64%;
+  }
+
+  .reference-action-text h3 {
+    font-size: 1.29rem;
+  }
+
+  .reference-action-text p {
+    font-size: .76rem;
+    font-weight: 650;
+  }
+
+  .reference-action-line {
+    margin: 9px 0 8px;
+  }
+
+  .reference-card-icon {
+    left: 12px;
+    bottom: 11px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .reference-card-icon svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  .reference-quick-section {
+    margin-top: 13px;
+  }
+
+  .reference-quick-title {
+    margin-bottom: 7px;
+  }
+
+  .reference-quick-title h2 {
+    font-size: 1rem;
+  }
+
+  .reference-quick-grid button {
+    min-height: 86px;
+    padding: 8px 2px 7px;
+    gap: 6px;
+  }
+
+  .reference-quick-grid button svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .reference-quick-grid strong {
+    font-size: .59rem;
+  }
+}
