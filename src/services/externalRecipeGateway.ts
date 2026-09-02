@@ -16,25 +16,28 @@ export type ExternalSearchFilters = {
   maxMinutes?: number;
 };
 
-const API_URL = import.meta.env.VITE_RECIPE_API_URL?.trim().replace(/\/+$/, '');
+const DEFAULT_API_URL = 'https://nrtmmepynzczfdddvohh.supabase.co/functions/v1';
+const DEFAULT_PUBLIC_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydG1tZXB5bnpjemZkZGR2b2hoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzODI0MTEsImV4cCI6MjEwMzk1ODQxMX0.tk_MBFTR-DTFBIlX51raW5Ow-S5DgVZ58L_2yF20dWY';
+const API_URL = (import.meta.env.VITE_RECIPE_API_URL || DEFAULT_API_URL).trim().replace(/\/+$/, '');
+const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || DEFAULT_PUBLIC_API_KEY).trim();
 const REQUEST_TIMEOUT_MS = 12_000;
 
 export function isExternalRecipeApiConfigured(): boolean {
-  return Boolean(API_URL);
+  return Boolean(API_URL && API_KEY);
 }
 
 export async function fetchExternalRecommendations(request: CookingRequest): Promise<Recipe[]> {
-  if (!API_URL) return [];
+  if (!isExternalRecipeApiConfigured()) return [];
   return requestRecipes('/recipes/recommend', { request });
 }
 
 export async function fetchExternalSearch(filters: ExternalSearchFilters): Promise<Recipe[]> {
-  if (!API_URL) return [];
+  if (!isExternalRecipeApiConfigured()) return [];
   return requestRecipes('/recipes/search', { filters });
 }
 
 async function requestRecipes(path: string, body: unknown): Promise<Recipe[]> {
-  if (!API_URL) return [];
+  if (!isExternalRecipeApiConfigured()) return [];
 
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -42,7 +45,11 @@ async function requestRecipes(path: string, body: unknown): Promise<Recipe[]> {
   try {
     const response = await fetch(`${API_URL}${path}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: API_KEY,
+        Authorization: `Bearer ${API_KEY}`
+      },
       body: JSON.stringify(body),
       signal: controller.signal
     });
