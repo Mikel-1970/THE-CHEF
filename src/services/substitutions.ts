@@ -25,6 +25,22 @@ const genericAlternatives: Array<{ match: string[]; alternatives: string[] }> = 
   { match: ['aceite'], alternatives: ['Aceite de oliva', 'Aceite de girasol alto oleico'] }
 ];
 
+const pantrySubstitutions: Array<{ target: string[]; substitutes: string[] }> = [
+  { target: ['pechuga de pollo', 'pollo'], substitutes: ['pavo'] },
+  { target: ['calabacín'], substitutes: ['berenjena', 'champiñón', 'champiñones', 'setas'] },
+  { target: ['cebolla'], substitutes: ['puerro', 'chalota'] },
+  { target: ['caldo de pollo'], substitutes: ['caldo de verduras'] },
+  { target: ['aceite de oliva'], substitutes: ['aceite de girasol', 'aceite de girasol alto oleico'] },
+  { target: ['parmesano'], substitutes: ['grana padano', 'queso curado'] },
+  { target: ['salsa de soja'], substitutes: ['tamari'] },
+  { target: ['limón'], substitutes: ['lima'] },
+  { target: ['lima'], substitutes: ['limón'] },
+  { target: ['tomate triturado'], substitutes: ['passata', 'tomate fresco', 'tomate rallado'] },
+  { target: ['burrata'], substitutes: ['mozzarella fresca', 'stracciatella'] },
+  { target: ['tortillas de maíz'], substitutes: ['tortillas de trigo'] },
+  { target: ['garbanzos'], substitutes: ['lentejas cocidas', 'alubias blancas cocidas'] }
+];
+
 export function getIngredientAlternatives(ingredientName: string, recipeSubstitutions: string[], optional = false): string[] {
   const normalizedName = normalize(ingredientName);
   const significantWords = normalizedName.split(/\s+/).filter(word => word.length > 3);
@@ -43,6 +59,23 @@ export function getIngredientAlternatives(ingredientName: string, recipeSubstitu
   if (results.length) return results;
   if (optional) return ['Es opcional: puedes omitirlo sin sustituirlo.'];
   return ['No hay una sustitución directa fiable; es preferible comprarlo o elegir una variante de receta que no lo necesite.'];
+}
+
+export function findAvailableSubstitute(ingredientName: string, pantryNames: string[]): string | undefined {
+  const normalizedTarget = normalize(ingredientName);
+  const rule = pantrySubstitutions.find(item => item.target.some(target => {
+    const normalizedRuleTarget = normalize(target);
+    return normalizedTarget.includes(normalizedRuleTarget) || normalizedRuleTarget.includes(normalizedTarget);
+  }));
+  if (!rule) return undefined;
+
+  return pantryNames.find(name => rule.substitutes.some(substitute => ingredientMatch(name, substitute)));
+}
+
+function ingredientMatch(a: string, b: string): boolean {
+  const x = normalize(a);
+  const y = normalize(b);
+  return x.includes(y) || y.includes(x);
 }
 
 function normalize(value: string): string {
