@@ -1,6 +1,7 @@
 import type { Recipe } from '../domain/types';
+import { additionalRecipes } from './additionalRecipes';
 
-export const mockRecipes: Recipe[] = [
+const baseRecipes: Recipe[] = [
   {
     id: 'arroz-pollo-calabacin', title: 'Arroz cremoso de pollo y calabacín',
     description: 'Arroz sabroso y moderno, cremoso sin resultar pesado.', emoji: '🍚', baseServings: 4,
@@ -150,3 +151,5 @@ export const mockRecipes: Recipe[] = [
     nutritionPerServing:{kcal:420,proteinG:22,carbsG:42,fatG:18}
   }
 ];
+
+export const mockRecipes: Recipe[] = [...baseRecipes, ...additionalRecipes];
