@@ -1,12 +1,11 @@
 import { Clock3, Heart, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { useApp } from '../AppContext';
 import { mockRecipes } from '../data/mockRecipes';
 
 export function MyRecipesPage() {
-  const navigate = useNavigate();
   const { favorites, history } = useApp();
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState('');
@@ -30,10 +29,10 @@ export function MyRecipesPage() {
             <div className="section-heading-row"><div><span className="eyebrow">FAVORITAS</span><h2>{recipes.length ? 'Tus imprescindibles' : 'Todavía no hay favoritas'}</h2></div><Heart size={20} /></div>
             <div className="library-list">
               {recipes.map(recipe => (
-                <button className="library-card" key={recipe.id} onClick={() => navigate(`/receta/${recipe.id}`)}>
+                <Link className="library-card" key={recipe.id} to={`/receta/${recipe.id}`} aria-label={`Abrir receta ${recipe.title}`}>
                   <span className="library-emoji">{recipe.emoji}</span>
                   <div><strong>{recipe.title}</strong><small><Clock3 size={13} /> {recipe.prepMinutes + recipe.cookMinutes} min · {recipe.cuisine}</small></div>
-                </button>
+                </Link>
               ))}
               {!recipes.length && <div className="empty-card">Marca una receta con ♥ y aparecerá aquí.</div>}
             </div>
