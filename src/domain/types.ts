@@ -82,7 +82,10 @@ export type HistoryEntry = {
   id: string;
   createdAt: string;
   label: string;
-  mode: CookingRequest['mode'];
+  kind?: 'search' | 'recipe';
+  mode?: CookingRequest['mode'];
+  recipeId?: string;
+  request?: CookingRequest;
 };
 
 export type ShoppingListItem = {
