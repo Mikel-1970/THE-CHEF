@@ -13,7 +13,7 @@ import {
   formatInsufficientIngredient,
   type PantryIngredientEvaluation
 } from '../services/pantryEvaluation';
-import { getRecipeById } from '../services/recipeCatalog';
+import { getRecipeById, rememberActiveRecipe } from '../services/recipeCatalog';
 import { getIngredientAlternatives } from '../services/substitutions';
 import { formatQuantity, scaleQuantity } from '../utils/scaling';
 import { formatDuration } from '../utils/time';
@@ -59,6 +59,7 @@ export function RecipePage() {
   useEffect(() => {
     if (!recipe) return;
     recordRecipeView(recipe.id, recipe.title);
+    rememberActiveRecipe(recipe);
   }, [recipe?.id]);
 
   useEffect(() => {
@@ -111,6 +112,11 @@ export function RecipePage() {
     } else {
       removeShoppingItem(itemId);
     }
+  };
+
+  const startCooking = () => {
+    rememberActiveRecipe(recipe);
+    navigate(`/cocinar/${recipe.id}?servings=${servings}`);
   };
 
   return (
@@ -203,14 +209,14 @@ export function RecipePage() {
 
           <section className="recipe-section tinted">
             <div className="section-heading"><Sparkles size={20} /><div><span className="eyebrow">02</span><h2>Antes de empezar</h2></div></div>
-            <ol className="mise-list">{recipe.miseEnPlace.map((item, i) => <li key={item}><span>{i + 1}</span>{item}</li>)}</ol>
+            <ol className="mise-list">{recipe.miseEnPlace.map((item, i) => <li key={`${item}-${i}`}><span>{i + 1}</span>{item}</li>)}</ol>
           </section>
 
           <section className="recipe-section">
             <div className="section-heading"><Flame size={20} /><div><span className="eyebrow">03</span><h2>Elaboración</h2></div></div>
             <div className="steps-preview">
-              {recipe.steps.map(step => (
-                <div className="step-row" key={step.number}>
+              {recipe.steps.map((step, i) => (
+                <div className="step-row" key={`${step.number}-${i}`}>
                   <span className="step-number">{String(step.number).padStart(2, '0')}</span>
                   <div><p>{step.instruction}</p>{step.cue && <small>{step.cue}</small>}</div>
                   {step.minutes && <span className="step-time">{step.minutes}′</span>}
@@ -220,8 +226,8 @@ export function RecipePage() {
           </section>
 
           <section className="insight-grid">
-            <div className="insight-card warning"><AlertTriangle size={19} /><strong>Puntos críticos</strong>{recipe.criticalPoints.map(p => <p key={p}>{p}</p>)}</div>
-            <div className="insight-card"><Leaf size={19} /><strong>Sustituciones generales</strong>{recipe.substitutions.map(p => <p key={p}>{p}</p>)}</div>
+            <div className="insight-card warning"><AlertTriangle size={19} /><strong>Puntos críticos</strong>{recipe.criticalPoints.map((p, i) => <p key={`${p}-${i}`}>{p}</p>)}</div>
+            <div className="insight-card"><Leaf size={19} /><strong>Sustituciones generales</strong>{recipe.substitutions.map((p, i) => <p key={`${p}-${i}`}>{p}</p>)}</div>
           </section>
 
           <section className="nutrition-card">
@@ -235,7 +241,7 @@ export function RecipePage() {
           </section>
 
           <div className="cook-cta">
-            <button onClick={() => navigate(`/cocinar/${recipe.id}?servings=${servings}`)}><Play size={20} fill="currentColor" /> Empezar a cocinar</button>
+            <button onClick={startCooking}><Play size={20} fill="currentColor" /> Empezar a cocinar</button>
           </div>
         </div>
       </div>
