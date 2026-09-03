@@ -1,6 +1,6 @@
-import { Clock3, Heart, Search } from 'lucide-react';
+import { Clock3, Heart, Search, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { useApp } from '../AppContext';
 import type { CookingRequest, HistoryEntry, Recipe } from '../domain/types';
@@ -10,13 +10,13 @@ import '../my-recipes.css';
 
 export function MyRecipesPage() {
   const navigate = useNavigate();
-  const { favorites, history, settings, setSearch } = useApp();
+  const { favorites, history, settings, setSearch, toggleFavorite, removeHistoryEntry, removeRecipeFromLibrary } = useApp();
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState('');
   const tab = params.get('tab') ?? 'all';
 
   const recentRecipeIds = useMemo(
-    () => history.filter(entry => entry.recipeId).map(entry => entry.recipeId as string),
+    () => history.filter(entry => entry.kind === 'recipe' && entry.recipeId).map(entry => entry.recipeId as string),
     [history]
   );
 
@@ -39,6 +39,15 @@ export function MyRecipesPage() {
     navigate('/propuestas');
   };
 
+  const deleteRecipe = (recipe: Recipe) => {
+    const isExternal = recipe.source?.kind === 'ai' || recipe.source?.kind === 'web';
+    const message = isExternal
+      ? `¿Eliminar “${recipe.title}” de Mis recetas, Favoritos e Historial? La receta generada también se borrará de este dispositivo.`
+      : `¿Quitar “${recipe.title}” de Mis recetas, Favoritos e Historial?`;
+    if (!window.confirm(message)) return;
+    removeRecipeFromLibrary(recipe.id);
+  };
+
   return (
     <AppShell>
       <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>Favoritas, recetas consultadas y búsquedas recientes para volver a ellas cuando quieras.</p></div>
@@ -56,10 +65,20 @@ export function MyRecipesPage() {
             <div className="section-heading-row"><div><span className="eyebrow">{tab === 'favorites' ? 'FAVORITAS' : 'MIS RECETAS'}</span><h2>{recipes.length ? (tab === 'favorites' ? 'Tus imprescindibles' : 'Tus recetas recientes') : (tab === 'favorites' ? 'Todavía no hay favoritas' : 'Todavía no hay recetas consultadas')}</h2></div><Heart size={20} /></div>
             <div className="library-list">
               {recipes.map(recipe => (
-                <Link className="library-card" key={recipe.id} to={`/receta/${recipe.id}`} aria-label={`Abrir receta ${recipe.title}`}>
+                <div className="library-card" key={recipe.id} role="button" tabIndex={0} onClick={() => navigate(`/receta/${recipe.id}`)} onKeyDown={event => event.key === 'Enter' && navigate(`/receta/${recipe.id}`)}>
                   <span className="library-emoji">{recipe.emoji}</span>
-                  <div><strong>{recipe.title}</strong><small><Clock3 size={13} /> {recipe.prepMinutes + recipe.cookMinutes} min · {recipe.cuisine}</small></div>
-                </Link>
+                  <div style={{ minWidth: 0, flex: 1 }}><strong>{recipe.title}</strong><small><Clock3 size={13} /> {recipe.prepMinutes + recipe.cookMinutes} min · {recipe.cuisine}</small></div>
+                  <button
+                    type="button"
+                    className="library-delete"
+                    aria-label={tab === 'favorites' ? `Quitar ${recipe.title} de favoritos` : `Borrar ${recipe.title}`}
+                    onClick={event => {
+                      event.stopPropagation();
+                      if (tab === 'favorites') toggleFavorite(recipe.id);
+                      else deleteRecipe(recipe);
+                    }}
+                  ><Trash2 size={17} /></button>
+                </div>
               ))}
               {!recipes.length && <div className="empty-card">{tab === 'favorites' ? 'Marca una receta con ♥ y aparecerá aquí.' : 'Abre una receta y aparecerá aquí automáticamente.'}</div>}
             </div>
@@ -74,22 +93,24 @@ export function MyRecipesPage() {
                 const recipe = entry.recipeId ? getRecipeById(entry.recipeId) : undefined;
                 const date = new Date(entry.createdAt).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 
-                if (recipe) {
+                if (entry.kind === 'recipe') {
                   return (
-                    <Link className="history-card" key={entry.id} to={`/receta/${recipe.id}`} aria-label={`Abrir receta ${recipe.title}`}>
-                      <span>Receta</span>
-                      <strong>{recipe.title}</strong>
-                      <small>{date} · Abrir receta</small>
-                    </Link>
+                    <div className="history-card" key={entry.id} role={recipe ? 'button' : undefined} tabIndex={recipe ? 0 : undefined} onClick={() => recipe && navigate(`/receta/${recipe.id}`)} onKeyDown={event => recipe && event.key === 'Enter' && navigate(`/receta/${recipe.id}`)}>
+                      <span>{recipe ? 'Receta' : 'Receta no disponible'}</span>
+                      <strong>{recipe?.title ?? entry.label}</strong>
+                      <small>{date} · {recipe ? 'Abrir receta' : 'Puedes eliminar esta entrada antigua'}</small>
+                      <button className="history-delete" type="button" aria-label="Borrar del historial" onClick={event => { event.stopPropagation(); removeHistoryEntry(entry.id); }}><Trash2 size={16} /></button>
+                    </div>
                   );
                 }
 
                 return (
-                  <button className="history-card" type="button" key={entry.id} onClick={() => repeatSearch(entry)}>
+                  <div className="history-card" role="button" tabIndex={0} key={entry.id} onClick={() => repeatSearch(entry)} onKeyDown={event => event.key === 'Enter' && repeatSearch(entry)}>
                     <span>{entry.mode === 'pantry' ? 'Nevera' : 'Chef'}</span>
                     <strong>{entry.label}</strong>
                     <small>{date} · Repetir búsqueda</small>
-                  </button>
+                    <button className="history-delete" type="button" aria-label="Borrar del historial" onClick={event => { event.stopPropagation(); removeHistoryEntry(entry.id); }}><Trash2 size={16} /></button>
+                  </div>
                 );
               })}
               {!history.length && <div className="empty-card">Las recetas que consultes y tus búsquedas aparecerán aquí.</div>}
