@@ -3,6 +3,8 @@ import { fetchExternalRecommendations, isExternalRecipeApiConfigured } from './e
 import { getMockProposals } from './mockRecommendationEngine';
 import { registerExternalRecipes } from './recipeCatalog';
 
+export const HYBRID_NOTICE_STORAGE_KEY = 'the-chef:last-hybrid-notice';
+
 export type HybridRecommendationResult = {
   proposals: Proposal[];
   mode: 'local' | 'hybrid';
@@ -28,10 +30,22 @@ export async function getHybridProposals(
     }
   }
 
+  persistEngineNotice(externalError);
+
   return {
     proposals: getMockProposals(request, excludeRecipeIds),
     mode: externalRecipesAdded > 0 ? 'hybrid' : 'local',
     externalRecipesAdded,
     externalError
   };
+}
+
+function persistEngineNotice(message?: string) {
+  if (typeof sessionStorage === 'undefined') return;
+  try {
+    if (message) sessionStorage.setItem(HYBRID_NOTICE_STORAGE_KEY, message);
+    else sessionStorage.removeItem(HYBRID_NOTICE_STORAGE_KEY);
+  } catch {
+    // El aviso es informativo; no debe bloquear la búsqueda si el almacenamiento está restringido.
+  }
 }
