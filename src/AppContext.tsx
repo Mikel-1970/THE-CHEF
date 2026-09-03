@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { CookingRequest, HistoryEntry, Proposal, ShoppingListItem } from './domain/types';
+import { removeExternalRecipe } from './services/recipeCatalog';
 import {
   loadFavorites,
   loadHistory,
@@ -23,6 +24,8 @@ interface AppState {
   replaceProposals: (proposals: Proposal[]) => void;
   toggleFavorite: (recipeId: string) => void;
   recordRecipeView: (recipeId: string, recipeTitle: string) => void;
+  removeHistoryEntry: (entryId: string) => void;
+  removeRecipeFromLibrary: (recipeId: string) => void;
   updateSettings: (next: Partial<AppSettings>) => void;
   upsertShoppingItem: (item: ShoppingListItem) => void;
   removeShoppingItem: (id: string) => void;
@@ -99,6 +102,28 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const removeHistoryEntry = (entryId: string) => {
+    setHistory(current => {
+      const next = current.filter(item => item.id !== entryId);
+      saveHistory(next);
+      return next;
+    });
+  };
+
+  const removeRecipeFromLibrary = (recipeId: string) => {
+    setFavorites(current => {
+      const next = current.filter(id => id !== recipeId);
+      saveFavorites(next);
+      return next;
+    });
+    setHistory(current => {
+      const next = current.filter(item => item.recipeId !== recipeId);
+      saveHistory(next);
+      return next;
+    });
+    removeExternalRecipe(recipeId);
+  };
+
   const updateSettings = (next: Partial<AppSettings>) => {
     const merged = { ...settings, ...next };
     setSettings(merged);
@@ -145,6 +170,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     replaceProposals,
     toggleFavorite,
     recordRecipeView,
+    removeHistoryEntry,
+    removeRecipeFromLibrary,
     updateSettings,
     upsertShoppingItem,
     removeShoppingItem,
