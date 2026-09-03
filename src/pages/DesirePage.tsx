@@ -14,7 +14,6 @@ import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
 import { getHybridProposals } from '../services/hybridRecommendationEngine';
 import { getAllRecipes } from '../services/recipeCatalog';
 import { interpretDesireText } from '../services/requestInterpreter';
-import { formatDuration } from '../utils/time';
 import '../voice-input.css';
 
 const defaultSuggestions = ['Algo italiano', 'Pollo', 'Pasta', 'Algo rápido', 'Algo ligero'];
@@ -46,14 +45,8 @@ export function DesirePage() {
   const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
   const [isSearching, setIsSearching] = useState(false);
 
-  const voice = useSpeechRecognition(transcript => {
-    setText(current => appendDictation(current, transcript));
-  });
-
-  const suggestions = useMemo(
-    () => buildSuggestions(favorites, history.map(entry => entry.label)),
-    [favorites, history]
-  );
+  const voice = useSpeechRecognition(transcript => setText(current => appendDictation(current, transcript)));
+  const suggestions = useMemo(() => buildSuggestions(favorites, history.map(entry => entry.label)), [favorites, history]);
 
   const search = async () => {
     if (isSearching) return;
@@ -71,27 +64,16 @@ export function DesirePage() {
     setIsSearching(true);
     try {
       const result = await getHybridProposals(request);
-      setSearch(request, result.proposals);
+      setSearch(request, result.proposals.slice(0, 2));
       navigate('/propuestas');
     } finally {
       setIsSearching(false);
     }
   };
 
-  const changeServings = (value: number) => {
-    setServingsTouched(true);
-    setServings(value);
-  };
-
-  const changeTime = (value: number) => {
-    setTimeTouched(true);
-    setMaxMinutes(value);
-  };
-
-  const clearText = () => {
-    voice.stop();
-    setText('');
-  };
+  const changeServings = (value: number) => { setServingsTouched(true); setServings(value); };
+  const changeTime = (value: number) => { setTimeTouched(true); setMaxMinutes(value); };
+  const clearText = () => { voice.stop(); setText(''); };
 
   return (
     <AppShell hideNav>
@@ -104,22 +86,8 @@ export function DesirePage() {
             <WandSparkles size={22} />
             <textarea rows={5} value={text} onChange={e => setText(e.target.value)} placeholder="Ej. somos cuatro, algo italiano con pollo, fácil y en menos de 40 minutos…" />
             <div className="voice-action-stack">
-              {text.trim() && (
-                <button type="button" className="clear-input-button" onClick={clearText} aria-label="Borrar petición" title="Borrar texto">
-                  <X size={18} />
-                </button>
-              )}
-              <button
-                type="button"
-                className={`voice-button ${voice.isListening ? 'listening' : ''}`}
-                onClick={voice.toggle}
-                disabled={!voice.isSupported}
-                aria-label={voice.isListening ? 'Detener dictado' : 'Dictar lo que te apetece'}
-                aria-pressed={voice.isListening}
-                title={voice.isSupported ? 'Dictar lo que te apetece' : 'Dictado no disponible en este navegador'}
-              >
-                {voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}
-              </button>
+              {text.trim() && <button type="button" className="clear-input-button" onClick={clearText} aria-label="Borrar petición" title="Borrar texto"><X size={18} /></button>}
+              <button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar lo que te apetece'} aria-pressed={voice.isListening} title={voice.isSupported ? 'Dictar lo que te apetece' : 'Dictado no disponible en este navegador'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
             </div>
           </div>
           {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… cuéntale al Chef lo que te apetece.</div>}
@@ -128,11 +96,15 @@ export function DesirePage() {
           <div className="suggestion-row">{suggestions.map(s => <button key={s} onClick={() => setText(s)}>{s}</button>)}</div>
         </section>
         <div className="helper-note"><Sparkles size={17} /> El Chef interpreta del texto comensales, tiempo, dificultad, estilo y tipo de cocina. Si eliges un filtro manualmente, ese filtro tiene prioridad.</div>
-        <section className="control-card"><div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Somos</strong><small>Comensales</small></div></div><NumberStepper value={servings} onChange={changeServings} /></div><div className="divider" /><div className="control-stack"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Tiempo total de elaboración</small></div></div><div className="range-row"><input type="range" min="15" max="120" step="5" value={maxMinutes} onChange={e => changeTime(Number(e.target.value))} /><span>{formatDuration(maxMinutes)}</span></div></div></section>
+        <section className="control-card">
+          <div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Somos</strong><small>Comensales</small></div></div><NumberStepper value={servings} onChange={changeServings} /></div>
+          <div className="divider" />
+          <div className="control-row"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Saltos de 5 min · también puedes escribirlo</small></div></div><NumberStepper value={maxMinutes} min={15} max={180} step={5} suffix="min" editable onChange={changeTime} /></div>
+        </section>
         <button className="advanced-toggle" onClick={() => setAdvanced(v => !v)}><span>Más opciones</span>{advanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
         {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(v => <Chip key={v} selected={style === v} onClick={() => setStyle(style === v ? undefined : v)}>{v}</Chip>)}</div></div><div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(v => <Chip key={v} selected={difficulty === v} onClick={() => setDifficulty(difficulty === v ? undefined : v)}>{v}</Chip>)}</div></div></section>}
-        <div className="helper-note"><Sparkles size={17} /> Las opciones rápidas se irán adaptando a tus búsquedas y recetas favoritas.</div>
-        <div className="sticky-action"><PrimaryButton onClick={search} disabled={!text.trim() || isSearching}>{isSearching ? 'Consultando al Chef…' : 'Que decida el Chef'}</PrimaryButton></div>
+        <div className="helper-note"><Sparkles size={17} /> La búsqueda inicial muestra solo 2 propuestas para responder más rápido. Al elegir una se trabaja sobre esa receta.</div>
+        <div className="sticky-action"><PrimaryButton onClick={search} disabled={!text.trim() || isSearching}>{isSearching ? 'Consultando al Chef…' : 'Buscar 2 propuestas'}</PrimaryButton></div>
       </div>
     </AppShell>
   );
@@ -152,7 +124,6 @@ function buildSuggestions(favoriteIds: string[], historyLabels: string[]): strin
   const push = (value?: string) => {
     if (value && !suggestions.some(existing => existing.toLocaleLowerCase('es') === value.toLocaleLowerCase('es'))) suggestions.push(value);
   };
-
   favoriteIds.forEach(id => {
     const recipe = recipes.find(item => item.id === id);
     if (!recipe) return;
@@ -161,23 +132,15 @@ function buildSuggestions(favoriteIds: string[], historyLabels: string[]): strin
     if (recipe.style === 'Saludable') push('Algo saludable');
     if (recipe.style === 'Casera') push('Cocina casera');
     if (recipe.style === 'Moderna') push('Algo moderno');
-    ingredientSignals.forEach(signal => {
-      if (recipe.ingredients.some(ingredient => normalize(ingredient.name).includes(normalize(signal)))) push(signal);
-    });
+    ingredientSignals.forEach(signal => { if (recipe.ingredients.some(ingredient => normalize(ingredient.name).includes(normalize(signal)))) push(signal); });
   });
-
   historyLabels.forEach(label => {
     const normalized = normalize(label);
-    ingredientSignals.forEach(signal => {
-      if (normalized.includes(normalize(signal))) push(signal);
-    });
-    Object.entries(cuisinePhrases).forEach(([cuisine, phrase]) => {
-      if (normalized.includes(normalize(cuisine))) push(phrase);
-    });
+    ingredientSignals.forEach(signal => { if (normalized.includes(normalize(signal))) push(signal); });
+    Object.entries(cuisinePhrases).forEach(([cuisine, phrase]) => { if (normalized.includes(normalize(cuisine))) push(phrase); });
     if (normalized.includes('rapid')) push('Algo rápido');
     if (normalized.includes('salud')) push('Algo saludable');
   });
-
   defaultSuggestions.forEach(push);
   return suggestions.slice(0, 5);
 }
