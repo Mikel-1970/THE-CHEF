@@ -13,7 +13,6 @@ import type { Difficulty, IngredientInput } from '../domain/types';
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
 import { getHybridProposals } from '../services/hybridRecommendationEngine';
 import { parseIngredientInput } from '../utils/ingredientInput';
-import { formatDuration } from '../utils/time';
 import '../voice-input.css';
 
 const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
@@ -36,23 +35,17 @@ export function PantryPage() {
   const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
   const [isSearching, setIsSearching] = useState(false);
 
-  const voice = useSpeechRecognition(transcript => {
-    setDraft(current => appendDictation(current, transcript, ', '));
-  });
+  const voice = useSpeechRecognition(transcript => setDraft(current => appendDictation(current, transcript, ', ')));
 
   const addIngredient = (e?: FormEvent) => {
     e?.preventDefault();
     const entries = splitIngredientEntries(draft);
     if (!entries.length) return;
-
     setIngredients(current => mergeIngredientEntries(current, entries));
     setDraft('');
   };
 
-  const clearDraft = () => {
-    voice.stop();
-    setDraft('');
-  };
+  const clearDraft = () => { voice.stop(); setDraft(''); };
 
   const search = async () => {
     if (isSearching) return;
@@ -70,7 +63,7 @@ export function PantryPage() {
     setIsSearching(true);
     try {
       const result = await getHybridProposals(request);
-      setSearch(request, result.proposals);
+      setSearch(request, result.proposals.slice(0, 2));
       navigate('/propuestas');
     } finally {
       setIsSearching(false);
@@ -91,30 +84,14 @@ export function PantryPage() {
           <div className="section-label"><span>Ingredientes</span><small>Pulsa ★ para priorizar</small></div>
           <form className="ingredient-input" onSubmit={addIngredient}>
             <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Ej. pollo 300 g, 4 huevos, arroz…" />
-            {draft.trim() && (
-              <button type="button" className="clear-input-button" onClick={clearDraft} aria-label="Borrar ingredientes introducidos" title="Borrar texto">
-                <X size={18} />
-              </button>
-            )}
-            <button
-              type="button"
-              className={`voice-button ${voice.isListening ? 'listening' : ''}`}
-              onClick={voice.toggle}
-              disabled={!voice.isSupported}
-              aria-label={voice.isListening ? 'Detener dictado' : 'Dictar ingredientes'}
-              aria-pressed={voice.isListening}
-              title={voice.isSupported ? 'Dictar ingredientes' : 'Dictado no disponible en este navegador'}
-            >
-              {voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}
-            </button>
+            {draft.trim() && <button type="button" className="clear-input-button" onClick={clearDraft} aria-label="Borrar ingredientes introducidos" title="Borrar texto"><X size={18} /></button>}
+            <button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar ingredientes'} aria-pressed={voice.isListening} title={voice.isSupported ? 'Dictar ingredientes' : 'Dictado no disponible en este navegador'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
             <button type="submit" aria-label="Añadir ingrediente"><Plus size={19} /></button>
           </form>
           {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… habla con normalidad.</div>}
           {voice.error && <div className="voice-status error">{voice.error}</div>}
           {!voice.isSupported && <div className="voice-status unsupported">El dictado por voz no está disponible en este navegador. Puedes seguir escribiendo normalmente.</div>}
-          <div className="pantry-basics-note" style={{ marginTop: 8 }}>
-            Puedes escribir o dictar uno o varios productos. Separa los ingredientes con comas o con “y”. Si no indicas cantidad, El Chef no la inventará.
-          </div>
+          <div className="pantry-basics-note" style={{ marginTop: 8 }}>Puedes escribir o dictar uno o varios productos. Separa los ingredientes con comas o con “y”. Si no indicas cantidad, El Chef no la inventará.</div>
           <div className="ingredient-pills">
             {ingredients.map((item, index) => (
               <div className={`ingredient-pill ${item.priority ? 'priority' : ''}`} key={`${item.name}-${index}`}>
@@ -130,13 +107,14 @@ export function PantryPage() {
         <section className="control-card">
           <div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Somos</strong><small>Comensales</small></div></div><NumberStepper value={servings} onChange={setServings} /></div>
           <div className="divider" />
-          <div className="control-stack"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Tiempo total de elaboración</small></div></div><div className="range-row"><input type="range" min="15" max="120" step="5" value={maxMinutes} onChange={e => setMaxMinutes(Number(e.target.value))} /><span>{formatDuration(maxMinutes)}</span></div></div>
+          <div className="control-row"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Saltos de 5 min · también puedes escribirlo</small></div></div><NumberStepper value={maxMinutes} min={15} max={180} step={5} suffix="min" editable onChange={setMaxMinutes} /></div>
         </section>
 
         <div className="helper-note"><Sparkles size={17} /> Antes de considerar que falta un ingrediente, comprobaremos si tienes una sustitución razonable. Si una cantidad no alcanza, te indicaremos cuánto falta.</div>
         <button className="advanced-toggle" onClick={() => setAdvanced(v => !v)}><span>Más opciones</span>{advanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
         {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(v => <Chip key={v} selected={style === v} onClick={() => setStyle(style === v ? undefined : v)}>{v}</Chip>)}</div></div><div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(v => <Chip key={v} selected={difficulty === v} onClick={() => setDifficulty(difficulty === v ? undefined : v)}>{v}</Chip>)}</div></div></section>}
-        <div className="sticky-action"><PrimaryButton onClick={search} disabled={ingredients.length === 0 || isSearching}>{isSearching ? 'Buscando las mejores opciones…' : 'Buscar 3 propuestas'}</PrimaryButton></div>
+        <div className="helper-note"><Sparkles size={17} /> La primera búsqueda muestra 2 propuestas para responder más rápido y evitar esperas innecesarias.</div>
+        <div className="sticky-action"><PrimaryButton onClick={search} disabled={ingredients.length === 0 || isSearching}>{isSearching ? 'Buscando las mejores opciones…' : 'Buscar 2 propuestas'}</PrimaryButton></div>
       </div>
     </AppShell>
   );
@@ -144,30 +122,21 @@ export function PantryPage() {
 
 function mergeIngredientEntries(current: IngredientInput[], entries: string[]): IngredientInput[] {
   const next = [...current];
-
   entries.forEach(entry => {
     const parsed = parseIngredientInput(entry);
     if (!parsed.name) return;
-
     const existingIndex = next.findIndex(item => normalize(item.name) === normalize(parsed.name));
     if (existingIndex >= 0) {
-      if (parsed.quantity !== undefined) {
-        next[existingIndex] = { ...next[existingIndex], quantity: parsed.quantity, unit: parsed.unit };
-      }
+      if (parsed.quantity !== undefined) next[existingIndex] = { ...next[existingIndex], quantity: parsed.quantity, unit: parsed.unit };
       return;
     }
-
     next.push(parsed);
   });
-
   return next;
 }
 
 function splitIngredientEntries(value: string): string[] {
-  return value
-    .split(/[,;\n]+|\s+(?:y|e)\s+/i)
-    .map(item => item.trim())
-    .filter(Boolean);
+  return value.split(/[,;\n]+|\s+(?:y|e)\s+/i).map(item => item.trim()).filter(Boolean);
 }
 
 function appendDictation(current: string, transcript: string, separator: string): string {
