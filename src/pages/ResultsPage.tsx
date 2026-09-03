@@ -1,17 +1,22 @@
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { ProposalCard } from '../components/ProposalCard';
 import { TopBar } from '../components/TopBar';
 import { useApp } from '../AppContext';
+import type { Proposal } from '../domain/types';
+import { generateAiRecipe } from '../services/aiProposalGateway';
 import { isExternalRecipeApiConfigured } from '../services/externalRecipeGateway';
 import { getHybridProposals, HYBRID_NOTICE_STORAGE_KEY } from '../services/hybridRecommendationEngine';
-import { externalRecipeCount } from '../services/recipeCatalog';
+import { externalRecipeCount, getRecipeById, registerExternalRecipes } from '../services/recipeCatalog';
 
 export function ResultsPage() {
+  const navigate = useNavigate();
   const { proposals, currentRequest, replaceProposals } = useApp();
   const [refreshing, setRefreshing] = useState(false);
+  const [generatingId, setGeneratingId] = useState<string>();
+  const [generationError, setGenerationError] = useState<string>();
   const [engineNotice, setEngineNotice] = useState<string | undefined>(() => {
     try {
       return sessionStorage.getItem(HYBRID_NOTICE_STORAGE_KEY) ?? undefined;
@@ -23,8 +28,9 @@ export function ResultsPage() {
   if (!currentRequest || proposals.length === 0) return <Navigate to="/" replace />;
 
   const refresh = async () => {
-    if (refreshing) return;
+    if (refreshing || generatingId) return;
     setRefreshing(true);
+    setGenerationError(undefined);
     try {
       const result = await getHybridProposals(currentRequest, proposals.map(p => p.recipeId));
       replaceProposals(result.proposals.slice(0, 2));
@@ -32,6 +38,28 @@ export function ResultsPage() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setRefreshing(false);
+    }
+  };
+
+  const selectProposal = async (proposal: Proposal) => {
+    if (generatingId) return;
+    const existing = getRecipeById(proposal.recipeId);
+    if (existing) {
+      navigate(`/receta/${existing.id}`);
+      return;
+    }
+
+    setGeneratingId(proposal.id);
+    setGenerationError(undefined);
+    try {
+      const recipe = await generateAiRecipe(currentRequest, proposal);
+      const accepted = registerExternalRecipes([recipe]);
+      if (!accepted.length) throw new Error('La receta no ha superado los controles de coherencia de El Chef.');
+      navigate(`/receta/${accepted[0].id}`);
+    } catch (error) {
+      setGenerationError(error instanceof Error ? error.message : 'No se ha podido generar la receta completa.');
+    } finally {
+      setGeneratingId(undefined);
     }
   };
 
@@ -44,20 +72,16 @@ export function ResultsPage() {
       <div className="page-content results-content">
         <div className="results-summary"><div><span className="eyebrow">TU BÚSQUEDA</span><p>{currentRequest.mode === 'pantry' ? (currentRequest.pantryIngredients ?? []).map(i => i.name).join(' · ') : currentRequest.desireText}</p></div><span>{currentRequest.servings} pers.</span></div>
 
-        {engineNotice && (
-          <div className="helper-note" role="status">
-            <AlertTriangle size={17} />
-            <span><strong>IA no disponible en esta búsqueda.</strong> {engineNotice}</span>
-          </div>
-        )}
+        {engineNotice && <div className="helper-note" role="status"><AlertTriangle size={17} /><span><strong>IA no disponible en esta búsqueda.</strong> {engineNotice}</span></div>}
+        {generationError && <div className="helper-note" role="alert"><AlertTriangle size={17} /><span><strong>No se ha podido completar la receta.</strong> {generationError}</span></div>}
 
-        <div className="proposal-stack">{proposals.map((proposal, index) => <ProposalCard key={proposal.id} proposal={proposal} index={index} />)}</div>
-        <button className="secondary-button" onClick={refresh} disabled={refreshing}><RefreshCw size={17} /> {refreshing ? 'Buscando otras opciones…' : 'Dame otras 2'}</button>
+        <div className="proposal-stack">{proposals.map((proposal, index) => <ProposalCard key={proposal.id} proposal={proposal} index={index} onSelect={selectProposal} generating={generatingId === proposal.id} />)}</div>
+        <button className="secondary-button" onClick={refresh} disabled={refreshing || Boolean(generatingId)}><RefreshCw size={17} /> {refreshing ? 'Buscando otras opciones…' : 'Dame otras 2'}</button>
         <p className="prototype-note">
           {engineNotice
             ? 'Catálogo local de respaldo activo. Estas propuestas no han sido generadas por IA en esta búsqueda.'
             : externalConfigured
-              ? `Motor híbrido activo${storedExternal ? ` · ${storedExternal} recetas externas validadas disponibles` : ''}. Las recetas externas pasan primero por los controles de coherencia de El Chef.`
+              ? `Primero se generan 2 propuestas ligeras. La receta completa se crea solo al elegir una${storedExternal ? ` · ${storedExternal} recetas IA guardadas` : ''}.`
               : 'Motor híbrido preparado: por ahora se utiliza el catálogo local validado.'}
         </p>
       </div>
