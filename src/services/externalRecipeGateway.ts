@@ -17,7 +17,7 @@ export type ExternalSearchFilters = {
 };
 
 const DEFAULT_API_URL = 'https://nrtmmepynzczfdddvohh.supabase.co/functions/v1';
-const DEFAULT_PUBLIC_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydG1tZXB5bnpjemZkZGR2b2hoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzODI0MTEsImV4cCI6MjEwMzk1ODQxMX0.tk_MBFTR-DTFBIlX51raW5Ow-S5DgVZ58L_2yF20dWY';
+const DEFAULT_PUBLIC_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydG1lcHluemN6ZmRkZGR2b2hoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzODI0MTEsImV4cCI6MjEwMzk1ODQxMX0.tk_MBFTR-DTFBIlX51raW5Ow-S5DgVZ58L_2yF20dWY';
 const API_URL = (import.meta.env.VITE_RECIPE_API_URL || DEFAULT_API_URL).trim().replace(/\/+$/, '');
 const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || DEFAULT_PUBLIC_API_KEY).trim();
 const REQUEST_TIMEOUT_MS = 45_000;
@@ -54,13 +54,32 @@ async function requestRecipes(path: string, body: unknown): Promise<Recipe[]> {
       signal: controller.signal
     });
 
-    if (!response.ok) throw new Error(`Recipe API ${response.status}`);
-    const payload: unknown = await response.json();
+    const payload: unknown = await response.json().catch(() => undefined);
+    if (!response.ok) throw new Error(describeExternalError(response.status, payload));
+
     const candidates = extractRecipeArray(payload);
     return candidates.map(toRecipe).filter((recipe): recipe is Recipe => Boolean(recipe));
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw new Error('La generación con IA ha tardado demasiado. Se muestran recetas del catálogo local.');
+    }
+    throw error;
   } finally {
     window.clearTimeout(timeout);
   }
+}
+
+function describeExternalError(status: number, payload: unknown): string {
+  const data = isRecord(payload) ? payload : {};
+  const code = typeof data.errorCode === 'string' ? data.errorCode : undefined;
+  const message = typeof data.errorMessage === 'string' ? data.errorMessage : undefined;
+
+  if (code === 'missing_api_key') return 'La clave de OpenAI no está disponible en el backend. Se muestran recetas del catálogo local.';
+  if (status === 401 || status === 403) return 'OpenAI ha rechazado la clave o sus permisos. Se muestran recetas del catálogo local.';
+  if (status === 429 || code === 'insufficient_quota') return 'La API de OpenAI no tiene cuota o saldo disponible. Se muestran recetas del catálogo local.';
+  if (status === 400) return `OpenAI ha rechazado la petición${message ? `: ${message}` : ''}. Se muestran recetas del catálogo local.`;
+  if (message) return `La generación con IA ha fallado: ${message}. Se muestran recetas del catálogo local.`;
+  return `La generación con IA no está disponible ahora mismo (error ${status}). Se muestran recetas del catálogo local.`;
 }
 
 function extractRecipeArray(payload: unknown): unknown[] {
