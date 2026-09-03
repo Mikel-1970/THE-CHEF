@@ -3,6 +3,7 @@ import type { Recipe, RecipeSource } from '../domain/types';
 import { validRecipes } from './recipeValidator';
 
 const STORAGE_KEY = 'the-chef:external-recipes:v1';
+const SESSION_RECIPE_KEY = 'the-chef:active-recipe:v1';
 const MAX_EXTERNAL_RECIPES = 80;
 const localSource: RecipeSource = {
   kind: 'local',
@@ -24,6 +25,27 @@ export function getAllRecipes(): Recipe[] {
 export function getRecipeById(id?: string): Recipe | undefined {
   if (!id) return undefined;
   return getAllRecipes().find(recipe => recipe.id === id);
+}
+
+export function rememberActiveRecipe(recipe: Recipe): void {
+  if (typeof sessionStorage === 'undefined') return;
+  try {
+    sessionStorage.setItem(SESSION_RECIPE_KEY, JSON.stringify(recipe));
+  } catch {
+    // El modo cocina seguirá intentando resolver la receta desde el catálogo persistente.
+  }
+}
+
+export function getActiveRecipe(id?: string): Recipe | undefined {
+  if (!id || typeof sessionStorage === 'undefined') return undefined;
+  try {
+    const raw = sessionStorage.getItem(SESSION_RECIPE_KEY);
+    if (!raw) return undefined;
+    const recipe = JSON.parse(raw) as Recipe;
+    return recipe?.id === id && Array.isArray(recipe.steps) && recipe.steps.length > 0 ? recipe : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 export function registerExternalRecipes(recipes: Recipe[]): Recipe[] {
@@ -50,6 +72,21 @@ export function registerExternalRecipes(recipes: Recipe[]): Recipe[] {
   }
 
   return accepted;
+}
+
+export function removeExternalRecipe(recipeId: string): boolean {
+  if (typeof localStorage === 'undefined') return false;
+  const current = loadExternalRecipes();
+  const next = current.filter(recipe => recipe.id !== recipeId);
+  if (next.length === current.length) return false;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    const active = getActiveRecipe(recipeId);
+    if (active && typeof sessionStorage !== 'undefined') sessionStorage.removeItem(SESSION_RECIPE_KEY);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function externalRecipeCount(): number {
