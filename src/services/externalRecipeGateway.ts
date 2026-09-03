@@ -72,14 +72,38 @@ async function requestRecipes(path: string, body: unknown): Promise<Recipe[]> {
 function describeExternalError(status: number, payload: unknown): string {
   const data = isRecord(payload) ? payload : {};
   const code = typeof data.errorCode === 'string' ? data.errorCode : undefined;
+  const type = typeof data.errorType === 'string' ? data.errorType : undefined;
   const message = typeof data.errorMessage === 'string' ? data.errorMessage : undefined;
 
-  if (code === 'missing_api_key') return 'La clave de OpenAI no está disponible en el backend. Se muestran recetas del catálogo local.';
-  if (status === 401 || status === 403) return 'OpenAI ha rechazado la clave o sus permisos. Se muestran recetas del catálogo local.';
-  if (status === 429 || code === 'insufficient_quota') return 'La API de OpenAI no tiene cuota o saldo disponible. Se muestran recetas del catálogo local.';
-  if (status === 400) return `OpenAI ha rechazado la petición${message ? `: ${message}` : ''}. Se muestran recetas del catálogo local.`;
-  if (message) return `La generación con IA ha fallado: ${message}. Se muestran recetas del catálogo local.`;
-  return `La generación con IA no está disponible ahora mismo (error ${status}). Se muestran recetas del catálogo local.`;
+  if (code === 'missing_api_key') {
+    return 'La clave de OpenAI no está disponible en el backend. Se muestran recetas del catálogo local.';
+  }
+  if (code === 'invalid_api_key' || type === 'invalid_request_error' && status === 401) {
+    return 'La clave OPENAI_API_KEY guardada en Supabase no es válida para OpenAI. Hay que sustituirla por una API key activa creada en platform.openai.com. Se muestran recetas del catálogo local.';
+  }
+  if (code === 'insufficient_quota' || status === 429) {
+    return 'La API de OpenAI no tiene cuota o saldo disponible. Se muestran recetas del catálogo local.';
+  }
+  if (status === 403) {
+    return `OpenAI ha rechazado los permisos de la clave${code ? ` (${code})` : ''}. Se muestran recetas del catálogo local.`;
+  }
+  if (status === 401) {
+    return `OpenAI ha rechazado la autenticación${code ? ` (${code})` : ''}${message ? `: ${sanitizeProviderMessage(message)}` : ''}. Se muestran recetas del catálogo local.`;
+  }
+  if (status === 400) {
+    return `OpenAI ha rechazado la petición${code ? ` (${code})` : ''}${message ? `: ${sanitizeProviderMessage(message)}` : ''}. Se muestran recetas del catálogo local.`;
+  }
+  if (message) {
+    return `La generación con IA ha fallado${code ? ` (${code})` : ''}: ${sanitizeProviderMessage(message)}. Se muestran recetas del catálogo local.`;
+  }
+  return `La generación con IA no está disponible ahora mismo (error ${status}${code ? ` · ${code}` : ''}). Se muestran recetas del catálogo local.`;
+}
+
+function sanitizeProviderMessage(message: string): string {
+  return message
+    .replace(/sk-[A-Za-z0-9_-]+/g, 'sk-…')
+    .replace(/Bearer\s+[A-Za-z0-9._-]+/gi, 'Bearer …')
+    .slice(0, 220);
 }
 
 function extractRecipeArray(payload: unknown): unknown[] {
