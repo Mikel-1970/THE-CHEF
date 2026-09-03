@@ -21,8 +21,10 @@ export async function getHybridProposals(
     try {
       const externalRecipes = await fetchExternalRecommendations(request);
       externalRecipesAdded = registerExternalRecipes(externalRecipes).length;
-    } catch {
-      externalError = 'No se han podido consultar las fuentes externas. Se han usado las recetas disponibles en El Chef.';
+    } catch (error) {
+      externalError = error instanceof Error && error.message
+        ? error.message
+        : 'No se han podido consultar las fuentes externas. Se muestran recetas del catálogo local.';
     }
   }
 
