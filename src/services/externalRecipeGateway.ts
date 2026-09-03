@@ -20,7 +20,7 @@ const DEFAULT_API_URL = 'https://nrtmmepynzczfdddvohh.supabase.co/functions/v1';
 const DEFAULT_PUBLIC_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydG1tZXB5bnpjemZkZGR2b2hoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzODI0MTEsImV4cCI6MjEwMzk1ODQxMX0.tk_MBFTR-DTFBIlX51raW5Ow-S5DgVZ58L_2yF20dWY';
 const API_URL = (import.meta.env.VITE_RECIPE_API_URL || DEFAULT_API_URL).trim().replace(/\/+$/, '');
 const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || DEFAULT_PUBLIC_API_KEY).trim();
-const REQUEST_TIMEOUT_MS = 12_000;
+const REQUEST_TIMEOUT_MS = 45_000;
 
 export function isExternalRecipeApiConfigured(): boolean {
   return Boolean(API_URL && API_KEY);
