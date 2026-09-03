@@ -20,7 +20,7 @@ export function getMockProposals(request: CookingRequest, excludeRecipeIds: stri
   const priorities = (request.pantryIngredients ?? []).filter(item => item.priority);
   const catalog = getAllRecipes();
   const candidates = catalog.filter(recipe => !excludeRecipeIds.includes(recipe.id));
-  const pool = candidates.length >= 3 ? candidates : catalog;
+  const pool = candidates.length >= 2 ? candidates : catalog;
 
   const ranked: RankedRecipe[] = pool.map(recipe => {
     const evaluations = request.mode === 'pantry'
@@ -56,14 +56,12 @@ export function getMockProposals(request: CookingRequest, excludeRecipeIds: stri
     }
     if (request.cuisine) score += normalize(recipe.cuisine) === normalize(request.cuisine) ? 11 : -2;
     if (request.style) score += normalize(recipe.style) === normalize(request.style) ? 9 : -1;
-    if (request.difficulty) {
-      score += difficultyRank[recipe.difficulty] <= difficultyRank[request.difficulty] ? 6 : -12;
-    }
+    if (request.difficulty) score += difficultyRank[recipe.difficulty] <= difficultyRank[request.difficulty] ? 6 : -12;
 
     return { recipe, score, evaluations };
   }).sort((a, b) => b.score - a.score);
 
-  return selectDiverse(ranked, 3).map((item, index) => toProposal(item, request, index));
+  return selectDiverse(ranked, 2).map((item, index) => toProposal(item, request, index));
 }
 
 function selectDiverse(ranked: RankedRecipe[], limit: number): RankedRecipe[] {
@@ -161,8 +159,7 @@ function pantryReason(prioritiesUsed: string[], substitutionCount: number, issue
   if (issueCount === 1) return 'Necesita un ajuste pequeño y aprovecha bien el resto de tus ingredientes.';
   const alternatives = [
     'Es una opción gastronómicamente coherente aunque requiere completar algunos ingredientes.',
-    'Aporta una alternativa distinta equilibrando aprovechamiento, tiempo y dificultad.',
-    'Completa las propuestas con un enfoque diferente y un uso razonable de lo disponible.'
+    'Aporta una alternativa distinta equilibrando aprovechamiento, tiempo y dificultad.'
   ];
   return alternatives[index] ?? alternatives[0];
 }
@@ -170,8 +167,7 @@ function pantryReason(prioritiesUsed: string[], substitutionCount: number, issue
 function desireReason(index: number): string {
   const reasons = [
     'Es la que mejor encaja con lo que has pedido.',
-    'Te da una alternativa diferente sin alejarse de tus criterios.',
-    'Completa las opciones con otro enfoque de cocina y técnica.'
+    'Te da una alternativa diferente sin alejarse de tus criterios.'
   ];
   return reasons[index] ?? reasons[0];
 }
