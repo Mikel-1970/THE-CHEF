@@ -1,7 +1,6 @@
 import type { CookingRequest, Proposal } from '../domain/types';
-import { fetchExternalRecommendations, isExternalRecipeApiConfigured } from './externalRecipeGateway';
+import { fetchAiProposals, isAiProposalApiConfigured } from './aiProposalGateway';
 import { getMockProposals } from './mockRecommendationEngine';
-import { registerExternalRecipes } from './recipeCatalog';
 
 export const HYBRID_NOTICE_STORAGE_KEY = 'the-chef:last-hybrid-notice';
 
@@ -16,26 +15,33 @@ export async function getHybridProposals(
   request: CookingRequest,
   excludeRecipeIds: string[] = []
 ): Promise<HybridRecommendationResult> {
-  let externalRecipesAdded = 0;
   let externalError: string | undefined;
 
-  if (isExternalRecipeApiConfigured()) {
+  if (isAiProposalApiConfigured()) {
     try {
-      const externalRecipes = await fetchExternalRecommendations(request);
-      externalRecipesAdded = registerExternalRecipes(externalRecipes).length;
+      const proposals = await fetchAiProposals(request);
+      const filtered = proposals.filter(item => !excludeRecipeIds.includes(item.recipeId));
+      if (filtered.length) {
+        persistEngineNotice(undefined);
+        return {
+          proposals: filtered.slice(0, 2),
+          mode: 'hybrid',
+          externalRecipesAdded: 0
+        };
+      }
     } catch (error) {
       externalError = error instanceof Error && error.message
         ? error.message
-        : 'No se han podido consultar las fuentes externas. Se muestran recetas del catálogo local.';
+        : 'No se han podido obtener propuestas de IA. Se muestran recetas del catálogo local.';
     }
   }
 
   persistEngineNotice(externalError);
 
   return {
-    proposals: getMockProposals(request, excludeRecipeIds),
-    mode: externalRecipesAdded > 0 ? 'hybrid' : 'local',
-    externalRecipesAdded,
+    proposals: getMockProposals(request, excludeRecipeIds).slice(0, 2),
+    mode: 'local',
+    externalRecipesAdded: 0,
     externalError
   };
 }
