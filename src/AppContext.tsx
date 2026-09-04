@@ -1,13 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { CookingRequest, HistoryEntry, Proposal, ShoppingListItem } from './domain/types';
-import { removeExternalRecipe } from './services/recipeCatalog';
 import {
   loadFavorites,
   loadHistory,
+  loadSavedRecipes,
   loadSettings,
   loadShoppingList,
   saveFavorites,
   saveHistory,
+  saveSavedRecipes,
   saveSettings,
   saveShoppingList,
   type AppSettings
@@ -17,12 +18,14 @@ interface AppState {
   currentRequest: CookingRequest | null;
   proposals: Proposal[];
   favorites: string[];
+  savedRecipes: string[];
   history: HistoryEntry[];
   settings: AppSettings;
   shoppingList: ShoppingListItem[];
   setSearch: (request: CookingRequest, proposals: Proposal[]) => void;
   replaceProposals: (proposals: Proposal[]) => void;
   toggleFavorite: (recipeId: string) => void;
+  toggleSavedRecipe: (recipeId: string) => void;
   recordRecipeView: (recipeId: string, recipeTitle: string) => void;
   removeHistoryEntry: (entryId: string) => void;
   removeRecipeFromLibrary: (recipeId: string) => void;
@@ -39,6 +42,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [currentRequest, setCurrentRequest] = useState<CookingRequest | null>(null);
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [favorites, setFavorites] = useState<string[]>(() => loadFavorites());
+  const [savedRecipes, setSavedRecipes] = useState<string[]>(() => loadSavedRecipes());
   const [history, setHistory] = useState<HistoryEntry[]>(() => loadHistory());
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings());
   const [shoppingList, setShoppingList] = useState<ShoppingListItem[]>(() => loadShoppingList());
@@ -76,11 +80,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const replaceProposals = (nextProposals: Proposal[]) => setProposals(nextProposals);
 
   const toggleFavorite = (recipeId: string) => {
-    const next = favorites.includes(recipeId)
-      ? favorites.filter(id => id !== recipeId)
-      : [recipeId, ...favorites];
-    setFavorites(next);
-    saveFavorites(next);
+    setFavorites(current => {
+      const next = current.includes(recipeId)
+        ? current.filter(id => id !== recipeId)
+        : [recipeId, ...current];
+      saveFavorites(next);
+      return next;
+    });
+  };
+
+  const toggleSavedRecipe = (recipeId: string) => {
+    setSavedRecipes(current => {
+      const next = current.includes(recipeId)
+        ? current.filter(id => id !== recipeId)
+        : [recipeId, ...current];
+      saveSavedRecipes(next);
+      return next;
+    });
   };
 
   const recordRecipeView = (recipeId: string, recipeTitle: string) => {
@@ -111,17 +127,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const removeRecipeFromLibrary = (recipeId: string) => {
+    setSavedRecipes(current => {
+      const next = current.filter(id => id !== recipeId);
+      saveSavedRecipes(next);
+      return next;
+    });
     setFavorites(current => {
       const next = current.filter(id => id !== recipeId);
       saveFavorites(next);
       return next;
     });
-    setHistory(current => {
-      const next = current.filter(item => item.recipeId !== recipeId);
-      saveHistory(next);
-      return next;
-    });
-    removeExternalRecipe(recipeId);
   };
 
   const updateSettings = (next: Partial<AppSettings>) => {
@@ -163,12 +178,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     currentRequest,
     proposals,
     favorites,
+    savedRecipes,
     history,
     settings,
     shoppingList,
     setSearch,
     replaceProposals,
     toggleFavorite,
+    toggleSavedRecipe,
     recordRecipeView,
     removeHistoryEntry,
     removeRecipeFromLibrary,
@@ -177,7 +194,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     removeShoppingItem,
     toggleShoppingItem,
     clearShoppingList
-  }), [currentRequest, proposals, favorites, history, settings, shoppingList]);
+  }), [currentRequest, proposals, favorites, savedRecipes, history, settings, shoppingList]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
