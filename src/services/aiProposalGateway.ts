@@ -2,10 +2,11 @@ import type { CookingRequest, Difficulty, DishClassification, Proposal, Recipe }
 import { validRecipes } from './recipeValidator';
 
 const API_URL = (import.meta.env.VITE_RECIPE_API_URL || 'https://nrtmmepynzczfdddvohh.supabase.co/functions/v1').trim().replace(/\/+$/, '');
-const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydG1lcHluemN6ZmRkZGR2b2hoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzODI0MTEsImV4cCI6MjEwMzk1ODQxMX0.tk_MBFTR-DTFBIlX51raW5Ow-S5DgVZ58L_2yF20dWY').trim();
+const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6Im5ydG1lcHluemN6ZmRkZGR2b2hoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzODI0MTEsImV4cCI6MjEwMzk1ODQxMX0.tk_MBFTR-DTFBIlX51raW5Ow-S5DgVZ58L_2yF20dWY').trim();
 
-const SUGGEST_TIMEOUT_MS = 30_000;
+const SUGGEST_TIMEOUT_MS = 40_000;
 const GENERATE_TIMEOUT_MS = 90_000;
+const PROPOSAL_COUNT = 2;
 
 export function isAiProposalApiConfigured() {
   return Boolean(API_URL && API_KEY);
@@ -14,7 +15,7 @@ export function isAiProposalApiConfigured() {
 export async function fetchAiProposals(request: CookingRequest): Promise<Proposal[]> {
   const payload = await postJson('/recipes/suggest', { request }, SUGGEST_TIMEOUT_MS);
   const items = isRecord(payload) && Array.isArray(payload.proposals) ? payload.proposals : [];
-  return items.map(toProposal).filter((item): item is Proposal => Boolean(item)).slice(0, 3);
+  return items.map(toProposal).filter((item): item is Proposal => Boolean(item)).slice(0, PROPOSAL_COUNT);
 }
 
 export async function generateAiRecipe(request: CookingRequest, proposal: Proposal): Promise<Recipe> {
@@ -22,7 +23,7 @@ export async function generateAiRecipe(request: CookingRequest, proposal: Propos
   const candidates = isRecord(payload) && Array.isArray(payload.recipes) ? payload.recipes : [];
   const accepted = validRecipes(candidates as Recipe[]).filter(recipe => recipe.source?.kind === 'ai');
   if (!accepted.length) {
-    throw new Error('La receta generada no ha superado los controles de coherencia de El Chef.');
+    throw new Error('La receta generada no ha superado los controles automáticos de coherencia de El Chef.');
   }
   return accepted[0];
 }
@@ -47,7 +48,7 @@ async function postJson(path: string, body: unknown, timeoutMs: number): Promise
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw new Error(path.endsWith('/suggest')
-        ? 'La IA ha tardado demasiado en preparar las propuestas.'
+        ? 'La IA ha tardado demasiado en preparar las propuestas. Se muestran recetas locales para que puedas continuar.'
         : 'La IA ha tardado demasiado en completar la receta. Puedes volver a intentarlo sin repetir la búsqueda.');
     }
     throw error;
@@ -84,6 +85,7 @@ function describeError(status: number, payload: unknown) {
   const message = typeof data.errorMessage === 'string' ? data.errorMessage : undefined;
   if (status === 429) return 'La API de OpenAI no tiene cuota disponible ahora mismo.';
   if (status === 401 || status === 403) return `La IA ha rechazado la autenticación${code ? ` (${code})` : ''}.`;
+  if (status >= 500) return `La IA ha tenido un fallo temporal${code ? ` (${code})` : ''}. Puedes repetir la búsqueda; el catálogo local sigue disponible.`;
   if (message) return `La generación con IA ha fallado${code ? ` (${code})` : ''}: ${sanitize(message)}`;
   return `La generación con IA ha fallado (error ${status}).`;
 }
