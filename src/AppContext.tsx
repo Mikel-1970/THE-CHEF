@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { CookingRequest, HistoryEntry, Proposal, ShoppingListItem } from './domain/types';
 import {
+  loadActiveSearch,
   loadFavorites,
   loadHistory,
   loadSavedRecipes,
   loadSettings,
   loadShoppingList,
+  saveActiveSearch,
   saveFavorites,
   saveHistory,
   saveSavedRecipes,
@@ -39,8 +41,9 @@ interface AppState {
 const AppContext = createContext<AppState | null>(null);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [currentRequest, setCurrentRequest] = useState<CookingRequest | null>(null);
-  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const initialSearch = useMemo(() => loadActiveSearch(), []);
+  const [currentRequest, setCurrentRequest] = useState<CookingRequest | null>(initialSearch.request);
+  const [proposals, setProposals] = useState<Proposal[]>(initialSearch.proposals);
   const [favorites, setFavorites] = useState<string[]>(() => loadFavorites());
   const [savedRecipes, setSavedRecipes] = useState<string[]>(() => loadSavedRecipes());
   const [history, setHistory] = useState<HistoryEntry[]>(() => loadHistory());
@@ -59,6 +62,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const setSearch = (request: CookingRequest, nextProposals: Proposal[]) => {
     setCurrentRequest(request);
     setProposals(nextProposals);
+    saveActiveSearch(request, nextProposals);
     const label = request.mode === 'pantry'
       ? (request.pantryIngredients ?? []).map(i => i.name).join(', ')
       : request.desireText || 'Búsqueda por preferencias';
@@ -77,7 +81,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const replaceProposals = (nextProposals: Proposal[]) => setProposals(nextProposals);
+  const replaceProposals = (nextProposals: Proposal[]) => {
+    setProposals(nextProposals);
+    saveActiveSearch(currentRequest, nextProposals);
+  };
 
   const toggleFavorite = (recipeId: string) => {
     setFavorites(current => {
@@ -147,7 +154,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const upsertShoppingItem = (item: ShoppingListItem) => {
     setShoppingList(current => {
-      const next = [item, ...current.filter(existing => existing.id !== item.id)];
+      const existing = current.find(entry => entry.id === item.id);
+      if (existing && existing.name === item.name && existing.quantity === item.quantity && existing.unit === item.unit && existing.recipeId === item.recipeId && existing.recipeTitle === item.recipeTitle && existing.checked === item.checked) {
+        return current;
+      }
+      const next = [item, ...current.filter(entry => entry.id !== item.id)];
       saveShoppingList(next);
       return next;
     });
@@ -155,6 +166,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const removeShoppingItem = (id: string) => {
     setShoppingList(current => {
+      if (!current.some(item => item.id === id)) return current;
       const next = current.filter(item => item.id !== id);
       saveShoppingList(next);
       return next;
