@@ -3,6 +3,7 @@ import { fetchAiProposals, isAiProposalApiConfigured } from './aiProposalGateway
 import { getMockProposals } from './mockRecommendationEngine';
 
 export const HYBRID_NOTICE_STORAGE_KEY = 'the-chef:last-hybrid-notice';
+const PROPOSAL_COUNT = 2;
 
 export type HybridRecommendationResult = {
   proposals: Proposal[];
@@ -23,7 +24,7 @@ export async function getHybridProposals(
       if (proposals.length) {
         persistEngineNotice(undefined);
         return {
-          proposals: proposals.slice(0, 3),
+          proposals: proposals.slice(0, PROPOSAL_COUNT),
           mode: 'hybrid',
           externalRecipesAdded: 0
         };
@@ -38,7 +39,7 @@ export async function getHybridProposals(
 
   persistEngineNotice(externalError);
   return {
-    proposals: getMockProposals(request, excludeRecipeIds).slice(0, 3),
+    proposals: getMockProposals(request, excludeRecipeIds).slice(0, PROPOSAL_COUNT),
     mode: 'local',
     externalRecipesAdded: 0,
     externalError
