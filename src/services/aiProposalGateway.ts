@@ -1,5 +1,4 @@
 import type { CookingRequest, Difficulty, DishClassification, Proposal, Recipe } from '../domain/types';
-import { validRecipes } from './recipeValidator';
 
 const API_URL = (import.meta.env.VITE_RECIPE_API_URL || 'https://nrtmmepynzczfdddvohh.supabase.co/functions/v1').trim().replace(/\/+$/, '');
 const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'sb_publishable_b08-tfZCh2pEBGK0lBH-1g_oB3RwvV8').trim();
@@ -21,11 +20,12 @@ export async function fetchAiProposals(request: CookingRequest): Promise<Proposa
 export async function generateAiRecipe(request: CookingRequest, proposal: Proposal): Promise<Recipe> {
   const payload = await postJson('/recipes/generate', { request, proposal }, GENERATE_TIMEOUT_MS);
   const candidates = isRecord(payload) && Array.isArray(payload.recipes) ? payload.recipes : [];
-  const accepted = validRecipes(candidates as Recipe[]).filter(recipe => recipe.source?.kind === 'ai');
-  if (!accepted.length) {
-    throw new Error('La receta generada no ha superado los controles automáticos de coherencia de El Chef.');
+  const candidate = candidates.find(item => isRecord(item) && isRecord(item.source) && item.source.kind === 'ai');
+  if (!candidate) {
+    throw new Error('La IA no ha devuelto una receta completa utilizable.');
   }
-  return accepted[0];
+  // La normalización y validación definitiva se hacen al registrarla en recipeCatalog.
+  return candidate as Recipe;
 }
 
 async function postJson(path: string, body: unknown, timeoutMs: number): Promise<unknown> {
