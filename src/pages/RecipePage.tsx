@@ -13,7 +13,7 @@ import {
   formatInsufficientIngredient,
   type PantryIngredientEvaluation
 } from '../services/pantryEvaluation';
-import { getRecipeById, rememberActiveRecipe } from '../services/recipeCatalog';
+import { getRecipeById, rememberActiveRecipe, rememberLibraryRecipe } from '../services/recipeCatalog';
 import { getIngredientAlternatives } from '../services/substitutions';
 import { formatQuantity, scaleQuantity } from '../utils/scaling';
 import { formatDuration } from '../utils/time';
@@ -77,6 +77,7 @@ export function RecipePage() {
     if (!recipe) return;
     recordRecipeView(recipe.id, recipe.title);
     rememberActiveRecipe(recipe);
+    rememberLibraryRecipe(recipe);
   }, [recipe?.id]);
 
   useEffect(() => {
@@ -167,7 +168,7 @@ export function RecipePage() {
           </button>
 
           <RecipeSourceNote recipe={recipe} />
-          <section className="trust-strip"><ShieldCheck size={18} /><div><strong>Comprueba lo que tienes</strong><span>Puedes corregir manualmente cada ingrediente. Los cambios se reflejan en la lista de compra sin duplicados.</span></div></section>
+          <section className="trust-strip"><ShieldCheck size={18} /><div><strong>Comprueba lo que tienes</strong><span>La ficha respeta las cantidades indicadas, detecta si no alcanzan y propone sustituciones antes de añadir compras.</span></div></section>
 
           <section className="recipe-section">
             <div className="section-heading"><ShoppingBasket size={20} /><div><span className="eyebrow">01</span><h2>Ingredientes</h2></div></div>
@@ -203,17 +204,17 @@ export function RecipePage() {
                         </div>
                       )}
 
-                      {evaluation?.status === 'insufficient' && status === 'missing' && !availabilityOverrides[ingredient.name] && (
+                      {evaluation?.status === 'insufficient' && status === 'missing' && (
                         <div className="pantry-basics-note" style={{ marginTop: 5, marginBottom: 10 }}>
                           <span>Cantidad insuficiente:</span> {formatInsufficientIngredient(evaluation)}
-                          {!ingredient.optional && <button type="button" onClick={() => navigate('/lista-compra')}>Ver lista</button>}
+                          {!ingredient.optional && <button onClick={() => navigate('/lista-compra')}>Ver lista</button>}
                         </div>
                       )}
 
-                      {status === 'missing' && (evaluation?.status !== 'insufficient' || Boolean(availabilityOverrides[ingredient.name])) && (
+                      {status === 'missing' && evaluation?.status !== 'insufficient' && (
                         <div className="pantry-basics-note" style={{ marginTop: 5, marginBottom: 10 }}>
-                          <span>Alternativas:</span> {alternatives.length ? alternatives.join(' · ') : 'No hay una sustitución clara configurada.'}
-                          {!ingredient.optional && <button type="button" onClick={() => navigate('/lista-compra')}>Ver lista</button>}
+                          <span>Alternativas:</span> {alternatives.join(' · ')}
+                          {!ingredient.optional && <button onClick={() => navigate('/lista-compra')}>Ver lista</button>}
                         </div>
                       )}
                     </div>
@@ -221,7 +222,7 @@ export function RecipePage() {
                 })}
               </div>
             ))}
-            {missingCount > 0 && <button type="button" className="advanced-toggle" onClick={() => navigate('/lista-compra')}><ShoppingBasket size={17} /> Ver lista de compra ({shoppingList.filter(item => item.recipeId === recipe.id).length})</button>}
+            {missingCount > 0 && <button className="advanced-toggle" onClick={() => navigate('/lista-compra')}><ShoppingBasket size={17} /> Ver lista de compra ({shoppingList.length})</button>}
           </section>
 
           <section className="recipe-section tinted">
@@ -258,7 +259,7 @@ export function RecipePage() {
           </section>
 
           <div className="cook-cta">
-            <button type="button" onClick={startCooking}><Play size={20} fill="currentColor" /> Empezar a cocinar</button>
+            <button onClick={startCooking}><Play size={20} fill="currentColor" /> Empezar a cocinar</button>
           </div>
         </div>
       </div>
