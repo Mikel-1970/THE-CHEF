@@ -36,7 +36,7 @@ export function RecipePage() {
   } = useApp();
   const recipe = getRecipeById(id);
   const [servings, setServings] = useState(currentRequest?.servings ?? recipe?.baseServings ?? 4);
-  const [availability, setAvailability] = useState<Record<string, IngredientAvailability>>({});
+  const [availabilityOverrides, setAvailabilityOverrides] = useState<Record<string, IngredientAvailability>>({});
 
   const sections = useMemo(() => {
     if (!recipe) return [] as Array<[string, RecipeIngredient[]]>;
@@ -58,6 +58,21 @@ export function RecipePage() {
     [pantryEvaluations]
   );
 
+  const automaticAvailability = useMemo(() => {
+    const next: Record<string, IngredientAvailability> = {};
+    pantryEvaluations.forEach(evaluation => {
+      next[evaluation.ingredient.name] = evaluation.status === 'available'
+        ? 'have'
+        : evaluation.status === 'substituted'
+          ? 'substitute'
+          : 'missing';
+    });
+    return next;
+  }, [pantryEvaluations]);
+
+  const availabilityFor = (ingredientName: string): IngredientAvailability | undefined =>
+    availabilityOverrides[ingredientName] ?? automaticAvailability[ingredientName];
+
   useEffect(() => {
     if (!recipe) return;
     recordRecipeView(recipe.id, recipe.title);
@@ -65,56 +80,51 @@ export function RecipePage() {
   }, [recipe?.id]);
 
   useEffect(() => {
-    if (!recipe) return;
-    if (currentRequest?.mode !== 'pantry') {
-      setAvailability({});
-      return;
-    }
+    if (!recipe || currentRequest?.mode !== 'pantry') return;
 
-    const next: Record<string, IngredientAvailability> = {};
     pantryEvaluations.forEach(evaluation => {
       const ingredient = evaluation.ingredient;
       const itemId = shoppingItemId(recipe.id, ingredient.name);
+      const override = availabilityOverrides[ingredient.name];
+      const status = override ?? automaticAvailability[ingredient.name];
 
-      if (evaluation.status === 'available') {
-        next[ingredient.name] = 'have';
+      if (status === 'have' || status === 'substitute') {
         removeShoppingItem(itemId);
         return;
       }
 
-      if (evaluation.status === 'substituted') {
-        next[ingredient.name] = 'substitute';
-        removeShoppingItem(itemId);
-        return;
+      if (status === 'missing' && !ingredient.optional) {
+        const quantity = override === 'missing'
+          ? scaleQuantity(ingredient, recipe.baseServings, servings)
+          : evaluation.status === 'insufficient' && evaluation.shortage !== undefined
+            ? evaluation.shortage
+            : evaluation.requiredQuantity;
+        upsertShoppingItem(toShoppingItem(recipe.id, recipe.title, ingredient, recipe.baseServings, servings, quantity));
       }
-
-      next[ingredient.name] = 'missing';
-      if (ingredient.optional) return;
-
-      const quantity = evaluation.status === 'insufficient' && evaluation.shortage !== undefined
-        ? evaluation.shortage
-        : evaluation.requiredQuantity;
-      upsertShoppingItem(toShoppingItem(recipe.id, recipe.title, ingredient, recipe.baseServings, servings, quantity));
     });
+  }, [recipe?.id, currentRequest?.mode, servings, pantryEvaluations, automaticAvailability, availabilityOverrides]);
 
-    setAvailability(next);
-  }, [recipe?.id, currentRequest?.mode, servings, pantryEvaluations]);
-
-  if (!recipe) return null;
+  if (!recipe) {
+    return (
+      <AppShell>
+        <div className="page-content nav-safe">
+          <section className="editorial-card">
+            <h2>Esta receta no está disponible.</h2>
+            <p>Vuelve a tus propuestas o a Mis recetas para continuar.</p>
+            <button className="secondary-button" type="button" onClick={() => navigate('/propuestas')}>Volver a propuestas</button>
+          </section>
+        </div>
+      </AppShell>
+    );
+  }
 
   const isFavorite = favorites.includes(recipe.id);
   const isSaved = savedRecipes.includes(recipe.id);
   const total = recipe.prepMinutes + recipe.cookMinutes;
-  const missingCount = recipe.ingredients.filter(ingredient => availability[ingredient.name] === 'missing' && !ingredient.optional).length;
+  const missingCount = recipe.ingredients.filter(ingredient => availabilityFor(ingredient.name) === 'missing' && !ingredient.optional).length;
 
   const setIngredientAvailability = (ingredient: RecipeIngredient, status: IngredientAvailability) => {
-    setAvailability(current => ({ ...current, [ingredient.name]: status }));
-    const itemId = shoppingItemId(recipe.id, ingredient.name);
-    if (status === 'missing' && !ingredient.optional) {
-      upsertShoppingItem(toShoppingItem(recipe.id, recipe.title, ingredient, recipe.baseServings, servings));
-    } else {
-      removeShoppingItem(itemId);
-    }
+    setAvailabilityOverrides(current => ({ ...current, [ingredient.name]: status }));
   };
 
   const startCooking = () => {
@@ -157,7 +167,7 @@ export function RecipePage() {
           </button>
 
           <RecipeSourceNote recipe={recipe} />
-          <section className="trust-strip"><ShieldCheck size={18} /><div><strong>Comprueba lo que tienes</strong><span>La ficha respeta las cantidades indicadas, detecta si no alcanzan y propone sustituciones antes de añadir compras.</span></div></section>
+          <section className="trust-strip"><ShieldCheck size={18} /><div><strong>Comprueba lo que tienes</strong><span>Puedes corregir manualmente cada ingrediente. Los cambios se reflejan en la lista de compra sin duplicados.</span></div></section>
 
           <section className="recipe-section">
             <div className="section-heading"><ShoppingBasket size={20} /><div><span className="eyebrow">01</span><h2>Ingredientes</h2></div></div>
@@ -165,7 +175,7 @@ export function RecipePage() {
               <div className="ingredient-section" key={section}>
                 <h3>{section}</h3>
                 {ingredients.map(ingredient => {
-                  const status = availability[ingredient.name];
+                  const status = availabilityFor(ingredient.name);
                   const evaluation = pantryEvaluationByName.get(ingredient.name);
                   const scaledQuantity = scaleQuantity(ingredient, recipe.baseServings, servings);
                   const alternatives = status === 'missing'
@@ -193,17 +203,17 @@ export function RecipePage() {
                         </div>
                       )}
 
-                      {evaluation?.status === 'insufficient' && status === 'missing' && (
+                      {evaluation?.status === 'insufficient' && status === 'missing' && !availabilityOverrides[ingredient.name] && (
                         <div className="pantry-basics-note" style={{ marginTop: 5, marginBottom: 10 }}>
                           <span>Cantidad insuficiente:</span> {formatInsufficientIngredient(evaluation)}
-                          {!ingredient.optional && <button onClick={() => navigate('/lista-compra')}>Ver lista</button>}
+                          {!ingredient.optional && <button type="button" onClick={() => navigate('/lista-compra')}>Ver lista</button>}
                         </div>
                       )}
 
-                      {status === 'missing' && evaluation?.status !== 'insufficient' && (
+                      {status === 'missing' && (evaluation?.status !== 'insufficient' || Boolean(availabilityOverrides[ingredient.name])) && (
                         <div className="pantry-basics-note" style={{ marginTop: 5, marginBottom: 10 }}>
-                          <span>Alternativas:</span> {alternatives.join(' · ')}
-                          {!ingredient.optional && <button onClick={() => navigate('/lista-compra')}>Ver lista</button>}
+                          <span>Alternativas:</span> {alternatives.length ? alternatives.join(' · ') : 'No hay una sustitución clara configurada.'}
+                          {!ingredient.optional && <button type="button" onClick={() => navigate('/lista-compra')}>Ver lista</button>}
                         </div>
                       )}
                     </div>
@@ -211,7 +221,7 @@ export function RecipePage() {
                 })}
               </div>
             ))}
-            {missingCount > 0 && <button className="advanced-toggle" onClick={() => navigate('/lista-compra')}><ShoppingBasket size={17} /> Ver lista de compra ({shoppingList.length})</button>}
+            {missingCount > 0 && <button type="button" className="advanced-toggle" onClick={() => navigate('/lista-compra')}><ShoppingBasket size={17} /> Ver lista de compra ({shoppingList.filter(item => item.recipeId === recipe.id).length})</button>}
           </section>
 
           <section className="recipe-section tinted">
@@ -238,7 +248,7 @@ export function RecipePage() {
           </section>
 
           <section className="nutrition-card">
-            <div><span className="eyebrow">VALORES APROXIMADOS</span><h2>Por ración</h2></div>
+            <div><span className="eyebrow">INFORMACIÓN NUTRICIONAL APROXIMADA</span><h2>Por ración</h2></div>
             <div className="nutrition-grid">
               <div><strong>{recipe.nutritionPerServing.kcal}</strong><span>kcal</span></div>
               <div><strong>{recipe.nutritionPerServing.proteinG} g</strong><span>proteína</span></div>
@@ -248,7 +258,7 @@ export function RecipePage() {
           </section>
 
           <div className="cook-cta">
-            <button onClick={startCooking}><Play size={20} fill="currentColor" /> Empezar a cocinar</button>
+            <button type="button" onClick={startCooking}><Play size={20} fill="currentColor" /> Empezar a cocinar</button>
           </div>
         </div>
       </div>
