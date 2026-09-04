@@ -19,20 +19,16 @@ const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
 
 export function PantryPage() {
   const navigate = useNavigate();
-  const { settings, setSearch } = useApp();
-  const [ingredients, setIngredients] = useState<IngredientInput[]>([
-    { name: 'Pollo', priority: true },
-    { name: 'Arroz' },
-    { name: 'Calabacín' },
-    { name: 'Huevos', quantity: 4, unit: 'ud' }
-  ]);
+  const { settings, currentRequest, setSearch } = useApp();
+  const previousPantryRequest = currentRequest?.mode === 'pantry' ? currentRequest : undefined;
+  const [ingredients, setIngredients] = useState<IngredientInput[]>(() => previousPantryRequest?.pantryIngredients ?? []);
   const [draft, setDraft] = useState('');
-  const [servings, setServings] = useState(settings.defaultServings);
-  const [maxMinutes, setMaxMinutes] = useState(60);
-  const [advanced, setAdvanced] = useState(false);
-  const [style, setStyle] = useState<string>();
-  const [cuisine, setCuisine] = useState<string>();
-  const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
+  const [servings, setServings] = useState(previousPantryRequest?.servings ?? settings.defaultServings);
+  const [maxMinutes, setMaxMinutes] = useState(previousPantryRequest?.maxMinutes ?? 60);
+  const [advanced, setAdvanced] = useState(Boolean(previousPantryRequest?.style || previousPantryRequest?.cuisine || previousPantryRequest?.difficulty));
+  const [style, setStyle] = useState<string | undefined>(previousPantryRequest?.style);
+  const [cuisine, setCuisine] = useState<string | undefined>(previousPantryRequest?.cuisine);
+  const [difficulty, setDifficulty] = useState<Difficulty | undefined>(previousPantryRequest?.difficulty ?? settings.defaultDifficulty);
   const [isSearching, setIsSearching] = useState(false);
 
   const voice = useSpeechRecognition(transcript => setDraft(current => appendDictation(current, transcript, ', ')));
