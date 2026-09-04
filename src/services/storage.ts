@@ -1,6 +1,7 @@
 import type { Difficulty, HistoryEntry, ShoppingListItem } from '../domain/types';
 
 const FAVORITES_KEY = 'chef:favorites';
+const SAVED_RECIPES_KEY = 'chef:saved-recipes';
 const HISTORY_KEY = 'chef:history';
 const SETTINGS_KEY = 'chef:settings';
 const SHOPPING_LIST_KEY = 'chef:shopping-list';
@@ -43,6 +44,14 @@ export function loadFavorites(): string[] {
 
 export function saveFavorites(ids: string[]): void {
   localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids));
+}
+
+export function loadSavedRecipes(): string[] {
+  return parse<string[]>(SAVED_RECIPES_KEY, []);
+}
+
+export function saveSavedRecipes(ids: string[]): void {
+  localStorage.setItem(SAVED_RECIPES_KEY, JSON.stringify(ids));
 }
 
 export function loadHistory(): HistoryEntry[] {
