@@ -1,4 +1,4 @@
-import { AlertTriangle, ChefHat, Clock3, Flame, Heart, Leaf, Play, ShieldCheck, ShoppingBasket, Sparkles, UsersRound } from 'lucide-react';
+import { AlertTriangle, Bookmark, ChefHat, Clock3, Flame, Heart, Leaf, Play, ShieldCheck, ShoppingBasket, Sparkles, UsersRound } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
@@ -25,7 +25,9 @@ export function RecipePage() {
   const navigate = useNavigate();
   const {
     favorites,
+    savedRecipes,
     toggleFavorite,
+    toggleSavedRecipe,
     recordRecipeView,
     currentRequest,
     shoppingList,
@@ -101,6 +103,7 @@ export function RecipePage() {
   if (!recipe) return null;
 
   const isFavorite = favorites.includes(recipe.id);
+  const isSaved = savedRecipes.includes(recipe.id);
   const total = recipe.prepMinutes + recipe.cookMinutes;
   const missingCount = recipe.ingredients.filter(ingredient => availability[ingredient.name] === 'missing' && !ingredient.optional).length;
 
@@ -148,6 +151,10 @@ export function RecipePage() {
             <div><span className="eyebrow">COMENSALES</span><strong>Ajusta la receta</strong></div>
             <NumberStepper value={servings} onChange={setServings} />
           </section>
+
+          <button className="secondary-button" type="button" onClick={() => toggleSavedRecipe(recipe.id)}>
+            <Bookmark size={18} fill={isSaved ? 'currentColor' : 'none'} /> {isSaved ? 'Guardada en Mis recetas' : 'Guardar receta'}
+          </button>
 
           <RecipeSourceNote recipe={recipe} />
           <section className="trust-strip"><ShieldCheck size={18} /><div><strong>Comprueba lo que tienes</strong><span>La ficha respeta las cantidades indicadas, detecta si no alcanzan y propone sustituciones antes de añadir compras.</span></div></section>
