@@ -6,14 +6,15 @@ import { ProposalCard } from '../components/ProposalCard';
 import { TopBar } from '../components/TopBar';
 import { useApp } from '../AppContext';
 import type { Proposal } from '../domain/types';
-import { isExternalRecipeApiConfigured } from '../services/externalRecipeGateway';
+import { generateAiRecipe, isAiProposalApiConfigured } from '../services/aiProposalGateway';
 import { getHybridProposals, HYBRID_NOTICE_STORAGE_KEY } from '../services/hybridRecommendationEngine';
-import { externalRecipeCount, getRecipeById } from '../services/recipeCatalog';
+import { getRecipeById, registerExternalRecipes } from '../services/recipeCatalog';
 
 export function ResultsPage() {
   const navigate = useNavigate();
   const { proposals, currentRequest, replaceProposals } = useApp();
   const [refreshing, setRefreshing] = useState(false);
+  const [generatingId, setGeneratingId] = useState<string>();
   const [selectionError, setSelectionError] = useState<string>();
   const [engineNotice, setEngineNotice] = useState<string | undefined>(() => {
     try {
@@ -26,12 +27,12 @@ export function ResultsPage() {
   if (!currentRequest || proposals.length === 0) return <Navigate to="/" replace />;
 
   const refresh = async () => {
-    if (refreshing) return;
+    if (refreshing || generatingId) return;
     setRefreshing(true);
     setSelectionError(undefined);
     try {
       const result = await getHybridProposals(currentRequest, proposals.map(p => p.recipeId));
-      replaceProposals(result.proposals.slice(0, 2));
+      replaceProposals(result.proposals.slice(0, 3));
       setEngineNotice(result.externalError);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
@@ -39,7 +40,26 @@ export function ResultsPage() {
     }
   };
 
-  const selectProposal = (proposal: Proposal) => {
+  const selectProposal = async (proposal: Proposal) => {
+    if (generatingId) return;
+    setSelectionError(undefined);
+
+    if (proposal.recipeId.startsWith('ai-proposal-')) {
+      setGeneratingId(proposal.id);
+      try {
+        const recipe = await generateAiRecipe(currentRequest, proposal);
+        const accepted = registerExternalRecipes([recipe]);
+        const stored = accepted[0];
+        if (!stored) throw new Error('La receta generada no ha podido guardarse temporalmente.');
+        navigate(`/receta/${stored.id}`);
+      } catch (error) {
+        setSelectionError(error instanceof Error ? error.message : 'No se ha podido generar la receta completa.');
+      } finally {
+        setGeneratingId(undefined);
+      }
+      return;
+    }
+
     const recipe = getRecipeById(proposal.recipeId);
     if (!recipe) {
       setSelectionError('Esta propuesta no está disponible como receta completa. Prueba a solicitar otras opciones.');
@@ -48,25 +68,40 @@ export function ResultsPage() {
     navigate(`/receta/${recipe.id}`);
   };
 
-  const externalConfigured = isExternalRecipeApiConfigured();
-  const storedExternal = externalRecipeCount();
+  const aiConfigured = isAiProposalApiConfigured();
 
   return (
     <AppShell hideNav>
-      <TopBar eyebrow="2 IDEAS PARA ELEGIR" title="¿Con cuál te quedas?" />
+      <TopBar eyebrow="3 IDEAS PARA ELEGIR" title="¿Con cuál te quedas?" />
       <div className="page-content results-content">
         <div className="results-summary"><div><span className="eyebrow">TU BÚSQUEDA</span><p>{currentRequest.mode === 'pantry' ? (currentRequest.pantryIngredients ?? []).map(i => i.name).join(' · ') : currentRequest.desireText}</p></div><span>{currentRequest.servings} pers.</span></div>
 
         {engineNotice && <div className="helper-note" role="status"><AlertTriangle size={17} /><span><strong>IA no disponible en esta búsqueda.</strong> {engineNotice}</span></div>}
         {selectionError && <div className="helper-note" role="alert"><AlertTriangle size={17} /><span>{selectionError}</span></div>}
 
-        <div className="proposal-stack">{proposals.map((proposal, index) => <ProposalCard key={proposal.id} proposal={proposal} index={index} onSelect={selectProposal} />)}</div>
-        <button className="secondary-button" onClick={refresh} disabled={refreshing}><RefreshCw size={17} /> {refreshing ? 'Buscando otras opciones…' : 'Dame otras 2'}</button>
+        {!engineNotice && proposals.some(proposal => proposal.recipeId.startsWith('ai-proposal-')) && (
+          <div className="helper-note" role="status">
+            Las 3 ideas son propuestas ligeras de IA. La receta completa se genera únicamente cuando eliges una.
+          </div>
+        )}
+
+        <div className="proposal-stack">
+          {proposals.map((proposal, index) => (
+            <ProposalCard
+              key={proposal.id}
+              proposal={proposal}
+              index={index}
+              onSelect={selectProposal}
+              generating={generatingId === proposal.id}
+            />
+          ))}
+        </div>
+        <button className="secondary-button" onClick={refresh} disabled={refreshing || Boolean(generatingId)}><RefreshCw size={17} /> {refreshing ? 'Buscando otras opciones…' : 'Dame otras 3'}</button>
         <p className="prototype-note">
           {engineNotice
             ? 'Catálogo local de respaldo activo. Estas propuestas no han sido generadas por IA en esta búsqueda.'
-            : externalConfigured
-              ? `Búsqueda IA reducida a 2 opciones para mejorar el tiempo de respuesta${storedExternal ? ` · ${storedExternal} recetas IA guardadas` : ''}.`
+            : aiConfigured
+              ? 'Flujo IA en dos fases activo: primero 3 propuestas breves y después una única receta completa al elegir.'
               : 'Motor híbrido preparado: por ahora se utiliza el catálogo local validado.'}
         </p>
       </div>
