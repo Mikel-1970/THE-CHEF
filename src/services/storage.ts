@@ -1,10 +1,11 @@
-import type { Difficulty, HistoryEntry, ShoppingListItem } from '../domain/types';
+import type { CookingRequest, Difficulty, HistoryEntry, Proposal, ShoppingListItem } from '../domain/types';
 
 const FAVORITES_KEY = 'chef:favorites';
 const SAVED_RECIPES_KEY = 'chef:saved-recipes';
 const HISTORY_KEY = 'chef:history';
 const SETTINGS_KEY = 'chef:settings';
 const SHOPPING_LIST_KEY = 'chef:shopping-list';
+const ACTIVE_SEARCH_KEY = 'chef:active-search';
 
 export type CookingLevel = 'Principiante' | 'Intermedio' | 'Avanzado';
 export type SpiceLevel = 'Nada' | 'Suave' | 'Medio' | 'Alto';
@@ -20,12 +21,18 @@ export type AppSettings = {
   pantryBasics: string[];
 };
 
+export type ActiveSearchState = {
+  request: CookingRequest | null;
+  proposals: Proposal[];
+};
+
 export const defaultSettings: AppSettings = {
   defaultServings: 4,
   compactMode: false,
   cookingLevel: 'Intermedio',
   spiceLevel: 'Medio',
   fontScale: 'large',
+  defaultDifficulty: undefined,
   pantryBasics: ['Aceite de oliva', 'Sal', 'Pimienta', 'Ajo']
 };
 
@@ -81,4 +88,16 @@ export function loadShoppingList(): ShoppingListItem[] {
 
 export function saveShoppingList(items: ShoppingListItem[]): void {
   localStorage.setItem(SHOPPING_LIST_KEY, JSON.stringify(items));
+}
+
+export function loadActiveSearch(): ActiveSearchState {
+  const saved = parse<Partial<ActiveSearchState>>(ACTIVE_SEARCH_KEY, {});
+  return {
+    request: saved.request ?? null,
+    proposals: Array.isArray(saved.proposals) ? saved.proposals : []
+  };
+}
+
+export function saveActiveSearch(request: CookingRequest | null, proposals: Proposal[]): void {
+  localStorage.setItem(ACTIVE_SEARCH_KEY, JSON.stringify({ request, proposals } satisfies ActiveSearchState));
 }
