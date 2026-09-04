@@ -5,7 +5,7 @@ const API_URL = (import.meta.env.VITE_RECIPE_API_URL || 'https://nrtmmepynzczfdd
 const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydG1lcHluemN6ZmRkZGR2b2hoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzODI0MTEsImV4cCI6MjEwMzk1ODQxMX0.tk_MBFTR-DTFBIlX51raW5Ow-S5DgVZ58L_2yF20dWY').trim();
 
 const SUGGEST_TIMEOUT_MS = 30_000;
-const GENERATE_TIMEOUT_MS = 70_000;
+const GENERATE_TIMEOUT_MS = 90_000;
 
 export function isAiProposalApiConfigured() {
   return Boolean(API_URL && API_KEY);
@@ -14,15 +14,14 @@ export function isAiProposalApiConfigured() {
 export async function fetchAiProposals(request: CookingRequest): Promise<Proposal[]> {
   const payload = await postJson('/recipes/suggest', { request }, SUGGEST_TIMEOUT_MS);
   const items = isRecord(payload) && Array.isArray(payload.proposals) ? payload.proposals : [];
-  return items.map(toProposal).filter((item): item is Proposal => Boolean(item)).slice(0, 2);
+  return items.map(toProposal).filter((item): item is Proposal => Boolean(item)).slice(0, 3);
 }
 
 export async function generateAiRecipe(request: CookingRequest, proposal: Proposal): Promise<Recipe> {
   const payload = await postJson('/recipes/generate', { request, proposal }, GENERATE_TIMEOUT_MS);
-  const candidate = isRecord(payload) ? payload.recipe : undefined;
-  if (!candidate || typeof candidate !== 'object') throw new Error('La IA no ha devuelto una receta completa válida.');
-  const accepted = validRecipes([candidate as Recipe]);
-  if (!accepted.length || accepted[0].source?.kind !== 'ai') {
+  const candidates = isRecord(payload) && Array.isArray(payload.recipes) ? payload.recipes : [];
+  const accepted = validRecipes(candidates as Recipe[]).filter(recipe => recipe.source?.kind === 'ai');
+  if (!accepted.length) {
     throw new Error('La receta generada no ha superado los controles de coherencia de El Chef.');
   }
   return accepted[0];
@@ -49,7 +48,7 @@ async function postJson(path: string, body: unknown, timeoutMs: number): Promise
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw new Error(path.endsWith('/suggest')
         ? 'La IA ha tardado demasiado en preparar las propuestas.'
-        : 'La IA ha tardado demasiado en completar la receta.');
+        : 'La IA ha tardado demasiado en completar la receta. Puedes volver a intentarlo sin repetir la búsqueda.');
     }
     throw error;
   } finally {
@@ -75,7 +74,7 @@ function toProposal(value: unknown): Proposal | undefined {
     insufficientIngredients: strings(value.insufficientIngredients),
     substitutionNotes: strings(value.substitutionNotes),
     reason: value.reason.trim(),
-    recipeId: value.id.trim()
+    recipeId: text(value.recipeId) ? value.recipeId.trim() : value.id.trim()
   };
 }
 
@@ -85,8 +84,12 @@ function describeError(status: number, payload: unknown) {
   const message = typeof data.errorMessage === 'string' ? data.errorMessage : undefined;
   if (status === 429) return 'La API de OpenAI no tiene cuota disponible ahora mismo.';
   if (status === 401 || status === 403) return `La IA ha rechazado la autenticación${code ? ` (${code})` : ''}.`;
-  if (message) return `La generación con IA ha fallado${code ? ` (${code})` : ''}: ${message.slice(0, 180)}`;
+  if (message) return `La generación con IA ha fallado${code ? ` (${code})` : ''}: ${sanitize(message)}`;
   return `La generación con IA ha fallado (error ${status}).`;
+}
+
+function sanitize(message: string) {
+  return message.replace(/sk-[A-Za-z0-9_-]+/g, 'sk-…').slice(0, 180);
 }
 
 function asDifficulty(value: unknown): Difficulty | undefined {
