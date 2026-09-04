@@ -2,7 +2,7 @@ import type { CookingRequest, Difficulty, DishClassification, Proposal, Recipe }
 import { validRecipes } from './recipeValidator';
 
 const API_URL = (import.meta.env.VITE_RECIPE_API_URL || 'https://nrtmmepynzczfdddvohh.supabase.co/functions/v1').trim().replace(/\/+$/, '');
-const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6Im5ydG1lcHluemN6ZmRkZGR2b2hoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzODI0MTEsImV4cCI6MjEwMzk1ODQxMX0.tk_MBFTR-DTFBIlX51raW5Ow-S5DgVZ58L_2yF20dWY').trim();
+const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'sb_publishable_b08-tfZCh2pEBGK0lBH-1g_oB3RwvV8').trim();
 
 const SUGGEST_TIMEOUT_MS = 40_000;
 const GENERATE_TIMEOUT_MS = 90_000;
