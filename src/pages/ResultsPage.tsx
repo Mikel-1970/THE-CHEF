@@ -10,6 +10,8 @@ import { generateAiRecipe, isAiProposalApiConfigured } from '../services/aiPropo
 import { getHybridProposals, HYBRID_NOTICE_STORAGE_KEY } from '../services/hybridRecommendationEngine';
 import { getRecipeById, registerExternalRecipes } from '../services/recipeCatalog';
 
+const PROPOSAL_COUNT = 2;
+
 export function ResultsPage() {
   const navigate = useNavigate();
   const { proposals, currentRequest, replaceProposals } = useApp();
@@ -32,7 +34,7 @@ export function ResultsPage() {
     setSelectionError(undefined);
     try {
       const result = await getHybridProposals(currentRequest, proposals.map(p => p.recipeId));
-      replaceProposals(result.proposals.slice(0, 3));
+      replaceProposals(result.proposals.slice(0, PROPOSAL_COUNT));
       setEngineNotice(result.externalError);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
@@ -69,10 +71,11 @@ export function ResultsPage() {
   };
 
   const aiConfigured = isAiProposalApiConfigured();
+  const visibleCount = proposals.length;
 
   return (
     <AppShell hideNav>
-      <TopBar eyebrow="3 IDEAS PARA ELEGIR" title="¿Con cuál te quedas?" />
+      <TopBar eyebrow={`${visibleCount} IDEAS PARA ELEGIR`} title="¿Con cuál te quedas?" />
       <div className="page-content results-content">
         <div className="results-summary"><div><span className="eyebrow">TU BÚSQUEDA</span><p>{currentRequest.mode === 'pantry' ? (currentRequest.pantryIngredients ?? []).map(i => i.name).join(' · ') : currentRequest.desireText}</p></div><span>{currentRequest.servings} pers.</span></div>
 
@@ -81,7 +84,7 @@ export function ResultsPage() {
 
         {!engineNotice && proposals.some(proposal => proposal.recipeId.startsWith('ai-proposal-')) && (
           <div className="helper-note" role="status">
-            Las 3 ideas son propuestas ligeras de IA. La receta completa se genera únicamente cuando eliges una.
+            Las {visibleCount} ideas son propuestas ligeras de IA. La receta completa se genera únicamente cuando eliges una.
           </div>
         )}
 
@@ -96,12 +99,12 @@ export function ResultsPage() {
             />
           ))}
         </div>
-        <button className="secondary-button" onClick={refresh} disabled={refreshing || Boolean(generatingId)}><RefreshCw size={17} /> {refreshing ? 'Buscando otras opciones…' : 'Dame otras 3'}</button>
+        <button className="secondary-button" onClick={refresh} disabled={refreshing || Boolean(generatingId)}><RefreshCw size={17} /> {refreshing ? 'Buscando otras opciones…' : `Dame otras ${PROPOSAL_COUNT}`}</button>
         <p className="prototype-note">
           {engineNotice
             ? 'Catálogo local de respaldo activo. Estas propuestas no han sido generadas por IA en esta búsqueda.'
             : aiConfigured
-              ? 'Flujo IA en dos fases activo: primero 3 propuestas breves y después una única receta completa al elegir.'
+              ? `Flujo IA en dos fases activo: primero ${visibleCount} propuestas breves y después una única receta completa al elegir.`
               : 'Motor híbrido preparado: por ahora se utiliza el catálogo local validado.'}
         </p>
       </div>
