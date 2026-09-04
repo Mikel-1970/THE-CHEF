@@ -10,27 +10,22 @@ import '../my-recipes.css';
 
 export function MyRecipesPage() {
   const navigate = useNavigate();
-  const { favorites, history, settings, setSearch, toggleFavorite, removeHistoryEntry, removeRecipeFromLibrary } = useApp();
+  const { favorites, savedRecipes, history, settings, setSearch, toggleFavorite, removeHistoryEntry, removeRecipeFromLibrary } = useApp();
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState('');
   const tab = params.get('tab') ?? 'all';
 
-  const recentRecipeIds = useMemo(
-    () => history.filter(entry => entry.kind === 'recipe' && entry.recipeId).map(entry => entry.recipeId as string),
-    [history]
-  );
-
   const recipes = useMemo(() => {
     const ids = tab === 'favorites'
       ? favorites
-      : Array.from(new Set([...recentRecipeIds, ...favorites]));
+      : Array.from(new Set([...savedRecipes, ...favorites]));
     const normalizedQuery = query.trim().toLocaleLowerCase('es');
     const catalog = getAllRecipes();
     return ids
       .map(id => catalog.find(recipe => recipe.id === id))
       .filter((recipe): recipe is Recipe => Boolean(recipe))
       .filter(recipe => !normalizedQuery || recipe.title.toLocaleLowerCase('es').includes(normalizedQuery));
-  }, [favorites, recentRecipeIds, query, tab]);
+  }, [favorites, savedRecipes, query, tab]);
 
   const repeatSearch = async (entry: HistoryEntry) => {
     const request = entry.request ?? buildLegacyRequest(entry, settings.defaultServings, settings.pantryBasics);
@@ -40,17 +35,13 @@ export function MyRecipesPage() {
   };
 
   const deleteRecipe = (recipe: Recipe) => {
-    const isExternal = recipe.source?.kind === 'ai' || recipe.source?.kind === 'web';
-    const message = isExternal
-      ? `¿Eliminar “${recipe.title}” de Mis recetas, Favoritos e Historial? La receta generada también se borrará de este dispositivo.`
-      : `¿Quitar “${recipe.title}” de Mis recetas, Favoritos e Historial?`;
-    if (!window.confirm(message)) return;
+    if (!window.confirm(`¿Quitar “${recipe.title}” de Mis recetas y Favoritos? El historial se conservará.`)) return;
     removeRecipeFromLibrary(recipe.id);
   };
 
   return (
     <AppShell>
-      <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>Favoritas, recetas consultadas y búsquedas recientes para volver a ellas cuando quieras.</p></div>
+      <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>Recetas que has decidido guardar, favoritas e historial de actividad.</p></div>
       <div className="page-content nav-safe">
         <div className="library-tabs">
           <button className={tab === 'all' ? 'active' : ''} onClick={() => setParams({})}>Todo</button>
@@ -62,7 +53,7 @@ export function MyRecipesPage() {
 
         {tab !== 'history' && (
           <section className="library-section">
-            <div className="section-heading-row"><div><span className="eyebrow">{tab === 'favorites' ? 'FAVORITAS' : 'MIS RECETAS'}</span><h2>{recipes.length ? (tab === 'favorites' ? 'Tus imprescindibles' : 'Tus recetas recientes') : (tab === 'favorites' ? 'Todavía no hay favoritas' : 'Todavía no hay recetas consultadas')}</h2></div><Heart size={20} /></div>
+            <div className="section-heading-row"><div><span className="eyebrow">{tab === 'favorites' ? 'FAVORITAS' : 'MIS RECETAS'}</span><h2>{recipes.length ? (tab === 'favorites' ? 'Tus imprescindibles' : 'Recetas guardadas') : (tab === 'favorites' ? 'Todavía no hay favoritas' : 'Todavía no has guardado ninguna receta')}</h2></div><Heart size={20} /></div>
             <div className="library-list">
               {recipes.map(recipe => (
                 <div className="library-card" key={recipe.id} role="button" tabIndex={0} onClick={() => navigate(`/receta/${recipe.id}`)} onKeyDown={event => event.key === 'Enter' && navigate(`/receta/${recipe.id}`)}>
@@ -71,7 +62,7 @@ export function MyRecipesPage() {
                   <button
                     type="button"
                     className="library-delete"
-                    aria-label={tab === 'favorites' ? `Quitar ${recipe.title} de favoritos` : `Borrar ${recipe.title}`}
+                    aria-label={tab === 'favorites' ? `Quitar ${recipe.title} de favoritos` : `Quitar ${recipe.title} de Mis recetas`}
                     onClick={event => {
                       event.stopPropagation();
                       if (tab === 'favorites') toggleFavorite(recipe.id);
@@ -80,7 +71,7 @@ export function MyRecipesPage() {
                   ><Trash2 size={17} /></button>
                 </div>
               ))}
-              {!recipes.length && <div className="empty-card">{tab === 'favorites' ? 'Marca una receta con ♥ y aparecerá aquí.' : 'Abre una receta y aparecerá aquí automáticamente.'}</div>}
+              {!recipes.length && <div className="empty-card">{tab === 'favorites' ? 'Marca una receta con ♥ y aparecerá aquí.' : 'Abre una receta y pulsa “Guardar receta” para conservarla aquí.'}</div>}
             </div>
           </section>
         )}
