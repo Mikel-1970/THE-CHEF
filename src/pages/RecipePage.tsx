@@ -81,13 +81,18 @@ export function RecipePage() {
   }, [recipe?.id]);
 
   useEffect(() => {
-    if (!recipe || currentRequest?.mode !== 'pantry') return;
+    if (!recipe) return;
 
-    pantryEvaluations.forEach(evaluation => {
-      const ingredient = evaluation.ingredient;
+    recipe.ingredients.forEach(ingredient => {
       const itemId = shoppingItemId(recipe.id, ingredient.name);
+      const evaluation = pantryEvaluationByName.get(ingredient.name);
       const override = availabilityOverrides[ingredient.name];
       const status = override ?? automaticAvailability[ingredient.name];
+
+      // En búsquedas normales no suponemos qué tiene el usuario: solo actuamos
+      // cuando marca expresamente Tengo/Me falta. En modo despensa sí aplicamos
+      // además la evaluación automática.
+      if (!status) return;
 
       if (status === 'have' || status === 'substitute') {
         removeShoppingItem(itemId);
@@ -97,13 +102,13 @@ export function RecipePage() {
       if (status === 'missing' && !ingredient.optional) {
         const quantity = override === 'missing'
           ? scaleQuantity(ingredient, recipe.baseServings, servings)
-          : evaluation.status === 'insufficient' && evaluation.shortage !== undefined
+          : evaluation?.status === 'insufficient' && evaluation.shortage !== undefined
             ? evaluation.shortage
-            : evaluation.requiredQuantity;
+            : evaluation?.requiredQuantity ?? scaleQuantity(ingredient, recipe.baseServings, servings);
         upsertShoppingItem(toShoppingItem(recipe.id, recipe.title, ingredient, recipe.baseServings, servings, quantity));
       }
     });
-  }, [recipe?.id, currentRequest?.mode, servings, pantryEvaluations, automaticAvailability, availabilityOverrides]);
+  }, [recipe?.id, servings, pantryEvaluationByName, automaticAvailability, availabilityOverrides]);
 
   if (!recipe) {
     return (
@@ -168,7 +173,7 @@ export function RecipePage() {
           </button>
 
           <RecipeSourceNote recipe={recipe} />
-          <section className="trust-strip"><ShieldCheck size={18} /><div><strong>Comprueba lo que tienes</strong><span>La ficha respeta las cantidades indicadas, detecta si no alcanzan y propone sustituciones antes de añadir compras.</span></div></section>
+          <section className="trust-strip"><ShieldCheck size={18} /><div><strong>Comprueba lo que tienes</strong><span>Marca “Tengo” o “Me falta”. Lo que falte se añade automáticamente a la lista de compra; en modo despensa también se detectan cantidades insuficientes y sustituciones.</span></div></section>
 
           <section className="recipe-section">
             <div className="section-heading"><ShoppingBasket size={20} /><div><span className="eyebrow">01</span><h2>Ingredientes</h2></div></div>
