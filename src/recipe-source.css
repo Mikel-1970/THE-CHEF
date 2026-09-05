@@ -18,3 +18,44 @@
 .recipe-source-note a:active {
   opacity: .7;
 }
+
+.generated-recipe-photo {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 4px;
+}
+
+.generated-recipe-photo img,
+.generated-recipe-photo-placeholder {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(54, 49, 37, .13);
+  background: #eee8dc;
+}
+
+.generated-recipe-photo img {
+  display: block;
+  object-fit: cover;
+}
+
+.generated-recipe-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: #6b7251;
+  font-weight: 800;
+}
+
+.recipe-share-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin: 12px 0 4px;
+}
+
+.recipe-share-actions .secondary-button {
+  margin: 0;
+}

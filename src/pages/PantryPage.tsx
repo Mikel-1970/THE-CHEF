@@ -1,116 +1,84 @@
-import { ChevronDown, ChevronUp, Clock3, Mic, MicOff, Plus, Sparkles, Star, Trash2, UsersRound, X } from 'lucide-react';
-import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FormEvent, useMemo, useState } from 'react';
+import { Mic, MicOff, Plus, Sparkles, Star, Trash2, X } from 'lucide-react';
 import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
-import { Chip } from '../components/Chip';
-import { CuisineSelect } from '../components/CuisineSelect';
-import { NumberStepper } from '../components/NumberStepper';
-import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
-import { RECIPE_STYLES } from '../data/cookingOptions';
-import type { Difficulty, IngredientInput } from '../domain/types';
-import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
-import { getHybridProposals } from '../services/hybridRecommendationEngine';
+import type { IngredientInput } from '../domain/types';
+import { useAiDictation } from '../hooks/useAiDictation';
 import { parseIngredientInput } from '../utils/ingredientInput';
 import '../voice-input.css';
 
-const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
-
 export function PantryPage() {
-  const navigate = useNavigate();
-  const { settings, currentRequest, setSearch } = useApp();
-  const previousPantryRequest = currentRequest?.mode === 'pantry' ? currentRequest : undefined;
-  const [ingredients, setIngredients] = useState<IngredientInput[]>(() => previousPantryRequest?.pantryIngredients ?? []);
+  const { settings, updateSettings } = useApp();
   const [draft, setDraft] = useState('');
-  const [servings, setServings] = useState(previousPantryRequest?.servings ?? settings.defaultServings);
-  const [maxMinutes, setMaxMinutes] = useState(previousPantryRequest?.maxMinutes ?? 60);
-  const [advanced, setAdvanced] = useState(Boolean(previousPantryRequest?.style || previousPantryRequest?.cuisine || previousPantryRequest?.difficulty));
-  const [style, setStyle] = useState<string | undefined>(previousPantryRequest?.style);
-  const [cuisine, setCuisine] = useState<string | undefined>(previousPantryRequest?.cuisine);
-  const [difficulty, setDifficulty] = useState<Difficulty | undefined>(previousPantryRequest?.difficulty ?? settings.defaultDifficulty);
-  const [isSearching, setIsSearching] = useState(false);
+  const ingredients = settings.pantryStock ?? [];
+  const basics = settings.pantryBasics ?? [];
+  const voice = useAiDictation(transcript => setDraft(current => appendDictation(current, transcript)));
 
-  const voice = useSpeechRecognition(transcript => setDraft(current => appendDictation(current, transcript, ', ')));
+  const sortedIngredients = useMemo(
+    () => [...ingredients].sort((a, b) => Number(Boolean(b.priority)) - Number(Boolean(a.priority)) || a.name.localeCompare(b.name, 'es')),
+    [ingredients]
+  );
 
   const addIngredient = (e?: FormEvent) => {
     e?.preventDefault();
     const entries = splitIngredientEntries(draft);
     if (!entries.length) return;
-    setIngredients(current => mergeIngredientEntries(current, entries));
+    const next = mergeIngredientEntries(ingredients, entries);
+    updateSettings({ pantryStock: next });
     setDraft('');
+  };
+
+  const togglePriority = (name: string) => {
+    updateSettings({ pantryStock: ingredients.map(item => normalize(item.name) === normalize(name) ? { ...item, priority: !item.priority } : item) });
+  };
+
+  const removeIngredient = (name: string) => {
+    updateSettings({ pantryStock: ingredients.filter(item => normalize(item.name) !== normalize(name)) });
   };
 
   const clearDraft = () => { voice.stop(); setDraft(''); };
 
-  const search = async () => {
-    if (isSearching) return;
-    const request = {
-      mode: 'pantry' as const,
-      servings,
-      maxMinutes,
-      pantryIngredients: ingredients,
-      pantryBasics: settings.pantryBasics,
-      style,
-      cuisine,
-      difficulty
-    };
-
-    setIsSearching(true);
-    try {
-      const result = await getHybridProposals(request);
-      setSearch(request, result.proposals.slice(0, 2));
-      navigate('/propuestas');
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
   return (
-    <AppShell hideNav>
-      <TopBar eyebrow="MIRA A VER QUÉ ENCUENTRAS" title="¿Qué hay en la nevera?" />
-      <div className="page-content">
-        <section className="editorial-card intro-card olive-intro">
-          <span className="eyebrow">APROVECHA LO QUE HAY</span>
-          <h2>Cuéntame lo que tienes.</h2>
-          <p>Las cantidades son opcionales. Marca con ★ lo que quieras aprovechar especialmente.</p>
+    <AppShell>
+      <TopBar eyebrow="TU COCINA" title="Despensa" />
+      <div className="page-content nav-safe">
+        <section className="editorial-card olive-intro">
+          <span className="eyebrow">LO QUE TIENES EN CASA</span>
+          <h2>Guarda aquí tus productos habituales.</h2>
+          <p>El Chef podrá utilizarlos cuando le pidas que aproveche lo que tienes. Las cantidades son opcionales y nunca se inventan.</p>
         </section>
 
         <section className="form-section">
-          <div className="section-label"><span>Ingredientes</span><small>Pulsa ★ para priorizar</small></div>
+          <div className="section-label"><span>Productos disponibles</span><small>★ = priorizar</small></div>
           <form className="ingredient-input" onSubmit={addIngredient}>
-            <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Ej. pollo 300 g, 4 huevos, arroz…" />
-            {draft.trim() && <button type="button" className="clear-input-button" onClick={clearDraft} aria-label="Borrar ingredientes introducidos" title="Borrar texto"><X size={18} /></button>}
-            <button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar ingredientes'} aria-pressed={voice.isListening} title={voice.isSupported ? 'Dictar ingredientes' : 'Dictado no disponible en este navegador'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
-            <button type="submit" aria-label="Añadir ingrediente"><Plus size={19} /></button>
+            <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Ej. pollo 300 g, huevos, arroz…" />
+            {draft.trim() && <button type="button" className="clear-input-button" onClick={clearDraft} aria-label="Borrar"><X size={18} /></button>}
+            <button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar productos'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
+            <button type="submit" aria-label="Añadir producto"><Plus size={19} /></button>
           </form>
-          {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… habla con normalidad.</div>}
+          {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
+          {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado con IA…</div>}
           {voice.error && <div className="voice-status error">{voice.error}</div>}
-          {!voice.isSupported && <div className="voice-status unsupported">El dictado por voz no está disponible en este navegador. Puedes seguir escribiendo normalmente.</div>}
-          <div className="pantry-basics-note" style={{ marginTop: 8 }}>Puedes escribir o dictar uno o varios productos. Separa los ingredientes con comas o con “y”. Si no indicas cantidad, El Chef no la inventará.</div>
+
           <div className="ingredient-pills">
-            {ingredients.map((item, index) => (
-              <div className={`ingredient-pill ${item.priority ? 'priority' : ''}`} key={`${item.name}-${index}`}>
-                <button className="star-toggle" onClick={() => setIngredients(ingredients.map((x, i) => i === index ? { ...x, priority: !x.priority } : x))}><Star size={15} fill={item.priority ? 'currentColor' : 'none'} /></button>
+            {sortedIngredients.map(item => (
+              <div className={`ingredient-pill ${item.priority ? 'priority' : ''}`} key={item.name}>
+                <button className="star-toggle" onClick={() => togglePriority(item.name)} aria-label="Cambiar prioridad"><Star size={15} fill={item.priority ? 'currentColor' : 'none'} /></button>
                 <span>{item.name}{item.quantity !== undefined ? ` · ${formatIngredientQuantity(item)}` : ''}</span>
-                <button onClick={() => setIngredients(ingredients.filter((_, i) => i !== index))}><Trash2 size={14} /></button>
+                <button onClick={() => removeIngredient(item.name)} aria-label="Eliminar"><Trash2 size={14} /></button>
               </div>
             ))}
           </div>
-          <div className="pantry-basics-note"><span>Básicos activos:</span> {settings.pantryBasics.join(' · ')} <button onClick={() => navigate('/ajustes')}>Editar</button></div>
+          {!ingredients.length && <div className="pantry-basics-note">Todavía no has guardado productos. Puedes añadirlos ahora o introducirlos directamente al pedir una receta.</div>}
         </section>
 
-        <section className="control-card">
-          <div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Somos</strong><small>Comensales</small></div></div><NumberStepper value={servings} onChange={setServings} /></div>
-          <div className="divider" />
-          <div className="control-row"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Saltos de 5 min · también puedes escribirlo</small></div></div><NumberStepper value={maxMinutes} min={15} max={180} step={5} suffix="min" editable onChange={setMaxMinutes} /></div>
+        <section className="editorial-card">
+          <span className="eyebrow">BÁSICOS DE DESPENSA</span>
+          <h2>Productos que damos por disponibles</h2>
+          <p>{basics.join(' · ') || 'No hay básicos configurados.'}</p>
+          <small>Puedes editarlos desde Perfil. Se consideran básicos habituales, no ingredientes prioritarios.</small>
         </section>
-
-        <div className="helper-note"><Sparkles size={17} /> Antes de considerar que falta un ingrediente, comprobaremos si tienes una sustitución razonable. Si una cantidad no alcanza, te indicaremos cuánto falta.</div>
-        <button className="advanced-toggle" onClick={() => setAdvanced(v => !v)}><span>Más opciones</span>{advanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
-        {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(v => <Chip key={v} selected={style === v} onClick={() => setStyle(style === v ? undefined : v)}>{v}</Chip>)}</div></div><div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(v => <Chip key={v} selected={difficulty === v} onClick={() => setDifficulty(difficulty === v ? undefined : v)}>{v}</Chip>)}</div></div></section>}
-        <div className="helper-note"><Sparkles size={17} /> La primera búsqueda muestra 2 propuestas para responder más rápido y evitar esperas innecesarias.</div>
-        <div className="sticky-action"><PrimaryButton onClick={search} disabled={ingredients.length === 0 || isSearching}>{isSearching ? 'Buscando las mejores opciones…' : 'Buscar 2 propuestas'}</PrimaryButton></div>
       </div>
     </AppShell>
   );
@@ -123,7 +91,7 @@ function mergeIngredientEntries(current: IngredientInput[], entries: string[]): 
     if (!parsed.name) return;
     const existingIndex = next.findIndex(item => normalize(item.name) === normalize(parsed.name));
     if (existingIndex >= 0) {
-      if (parsed.quantity !== undefined) next[existingIndex] = { ...next[existingIndex], quantity: parsed.quantity, unit: parsed.unit };
+      next[existingIndex] = { ...next[existingIndex], ...parsed, priority: next[existingIndex].priority };
       return;
     }
     next.push(parsed);
@@ -132,13 +100,17 @@ function mergeIngredientEntries(current: IngredientInput[], entries: string[]): 
 }
 
 function splitIngredientEntries(value: string): string[] {
-  return value.split(/[,;\n]+|\s+(?:y|e)\s+/i).map(item => item.trim()).filter(Boolean);
+  return value
+    .replace(/\bademás\b/gi, ',')
+    .split(/[,;\n]+|\s+(?:y|e)\s+/i)
+    .map(item => item.replace(/^[.\-–—\s]+|[.\s]+$/g, '').trim())
+    .filter(Boolean);
 }
 
-function appendDictation(current: string, transcript: string, separator: string): string {
+function appendDictation(current: string, transcript: string): string {
   const base = current.trimEnd();
-  if (!base) return transcript.trim();
-  return `${base}${separator}${transcript.trim()}`;
+  const clean = transcript.trim();
+  return base ? `${base}, ${clean}` : clean;
 }
 
 function formatIngredientQuantity(item: IngredientInput): string {

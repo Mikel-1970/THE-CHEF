@@ -28,6 +28,7 @@ export type CookingRequest = {
   difficulty?: Difficulty;
   pantryIngredients?: IngredientInput[];
   pantryBasics?: string[];
+  pantryPolicy?: 'prioritize' | 'ignore';
   desireText?: string;
 };
 
