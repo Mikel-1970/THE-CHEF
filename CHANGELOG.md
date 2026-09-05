@@ -1,5 +1,31 @@
 # Changelog
 
+## V0.5.0 — IA estable + cierre de la V1 para prueba
+
+- Flujo IA en dos fases consolidado: 2 propuestas ligeras y generación de receta completa solo al seleccionar una.
+- Backend de recetas actualizado para reducir latencia y errores intermitentes de generación.
+- Se amplían los márgenes de espera del cliente para evitar falsos timeouts durante la generación.
+- La receta permite marcar ingredientes como “Tengo” o “Me falta” tanto desde búsquedas normales como desde “Cocina con lo que tengo”.
+- La lista de compra se vincula a la receta activa y se vacía al pasar a una receta distinta para evitar mezclar compras.
+- La lista de compra puede compartirse desde el menú nativo del móvil y dispone de acceso directo a WhatsApp.
+- “Avisos” desaparece de la navegación principal y se sustituye por acceso directo a “Compra”.
+- La descripción, trabajos previos, puntos críticos y recomendaciones incorporan paneles ampliables con tipografía mayor.
+- Se mantiene el ajuste global de tamaño de fuente.
+- Mis recetas e Historial conservan compatibilidad con entradas antiguas y permiten recuperar recetas IA guardadas.
+- El estado de búsqueda, favoritas, recetas guardadas, historial, ajustes y lista de compra se mantiene en almacenamiento local.
+- El Modo Cocina conserva temporizadores, avance paso a paso y prevención del bloqueo de pantalla cuando el navegador lo permite.
+
+### Alcance intencionadamente fuera de esta V1
+
+- Fotografía automática de ingredientes.
+- Despensa completa con caducidades y tickets.
+- Planificación semanal.
+- Nutrición detallada conectada a una base oficial.
+- Imágenes generadas dinámicamente para cada receta.
+- Foto del resultado cocinado y valoración avanzada de recetas.
+
+Estas funciones quedan previstas para fases posteriores para no comprometer la estabilidad de la versión de prueba.
+
 ## V0.4.0 — Primera revisión funcional tras prueba real
 
 - Se eliminan los filtros de tipo de comida (comida, cena, brunch): la app se centra en generar y buscar platos.
