@@ -2,6 +2,7 @@ import { Check, Circle, Share2, ShoppingBasket, Trash2 } from 'lucide-react';
 import { AppShell } from '../components/AppShell';
 import { useApp } from '../AppContext';
 import { formatQuantity } from '../utils/scaling';
+import '../recipe-enhancements.css';
 
 export function ShoppingListPage() {
   const { shoppingList, toggleShoppingItem, removeShoppingItem, clearShoppingList } = useApp();
