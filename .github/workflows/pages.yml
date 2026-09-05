@@ -26,6 +26,9 @@ jobs:
           node-version: 20
       - name: Instalar dependencias
         run: npm install
+      - name: Generar metadatos de versión
+        run: |
+          node -e "const fs=require('fs'); const pkg=require('./package.json'); fs.writeFileSync('public/version.json', JSON.stringify({version: pkg.version, commit: process.env.GITHUB_SHA}, null, 2) + '\n');"
       - name: Compilar PWA
         run: npm run build
       - name: Configurar Pages
