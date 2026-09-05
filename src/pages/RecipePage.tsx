@@ -17,6 +17,7 @@ import { getRecipeById, rememberActiveRecipe, rememberLibraryRecipe } from '../s
 import { getIngredientAlternatives } from '../services/substitutions';
 import { formatQuantity, scaleQuantity } from '../utils/scaling';
 import { formatDuration } from '../utils/time';
+import '../recipe-enhancements.css';
 
 type IngredientAvailability = 'have' | 'missing' | 'substitute';
 
