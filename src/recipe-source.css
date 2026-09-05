@@ -48,3 +48,14 @@
   color: #6b7251;
   font-weight: 800;
 }
+
+.recipe-share-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin: 12px 0 4px;
+}
+
+.recipe-share-actions .secondary-button {
+  margin: 0;
+}
