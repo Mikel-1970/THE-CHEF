@@ -4,6 +4,14 @@ const API_URL = (import.meta.env.VITE_RECIPE_API_URL || 'https://nrtmmepynzczfdd
 const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'sb_publishable_b08-tfZCh2pEBGK0lBH-1g_oB3RwvV8').trim();
 const IMAGE_CACHE = 'chef-recipe-images-v1';
 
+export type DishEvaluation = {
+  score: number;
+  verdict: 'excelente' | 'muy_bien' | 'bien' | 'mejorable';
+  summary: string;
+  strengths: string[];
+  improvements: string[];
+};
+
 export async function getRecipeImage(recipe: Recipe): Promise<string | undefined> {
   const cacheKey = new Request(`https://the-chef.local/generated-images/${encodeURIComponent(recipe.id)}`);
   if ('caches' in window) {
@@ -54,6 +62,63 @@ export async function transcribeCookingAudio(audio: Blob): Promise<string> {
   if (!response.ok) throw new Error(readError(payload, 'No se ha podido transcribir el audio.'));
   if (typeof payload?.text !== 'string' || !payload.text.trim()) throw new Error('La transcripción ha llegado vacía.');
   return payload.text.trim();
+}
+
+export async function evaluateDishPhoto(recipe: Recipe, file: File): Promise<{ evaluation: DishEvaluation; previewUrl: string }> {
+  const { base64, mimeType, previewUrl } = await prepareDishImage(file);
+  const response = await fetch(`${API_URL}/chef-media/evaluate-dish`, {
+    method: 'POST',
+    headers: headers('application/json'),
+    body: JSON.stringify({
+      imageBase64: base64,
+      mimeType,
+      recipe: {
+        title: recipe.title,
+        description: recipe.description,
+        style: recipe.style,
+        cuisine: recipe.cuisine,
+        criticalPoints: recipe.criticalPoints,
+        steps: recipe.steps.map(step => ({ instruction: step.instruction, cue: step.cue }))
+      }
+    })
+  });
+  const payload = await response.json().catch(() => undefined);
+  if (!response.ok) throw new Error(readError(payload, 'No se ha podido valorar la foto final.'));
+  const evaluation = payload?.evaluation as DishEvaluation | undefined;
+  if (!evaluation || typeof evaluation.score !== 'number' || typeof evaluation.summary !== 'string') {
+    throw new Error('La valoración visual no ha llegado completa.');
+  }
+  return { evaluation, previewUrl };
+}
+
+async function prepareDishImage(file: File): Promise<{ base64: string; mimeType: string; previewUrl: string }> {
+  const sourceUrl = URL.createObjectURL(file);
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const element = new Image();
+      element.onload = () => resolve(element);
+      element.onerror = () => reject(new Error('No se ha podido leer la fotografía.'));
+      element.src = sourceUrl;
+    });
+    const maxSide = 1280;
+    const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
+    const width = Math.max(1, Math.round(image.naturalWidth * scale));
+    const height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('No se ha podido preparar la fotografía.');
+    context.drawImage(image, 0, 0, width, height);
+    const dataUrl = canvas.toDataURL('image/jpeg', .82);
+    return {
+      base64: dataUrl.slice(dataUrl.indexOf(',') + 1),
+      mimeType: 'image/jpeg',
+      previewUrl: dataUrl
+    };
+  } finally {
+    URL.revokeObjectURL(sourceUrl);
+  }
 }
 
 function headers(contentType?: string): HeadersInit {
