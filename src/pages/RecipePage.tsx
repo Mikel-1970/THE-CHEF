@@ -1,5 +1,5 @@
-import { AlertTriangle, Bookmark, ChefHat, Clock3, Flame, Heart, Leaf, Play, ShieldCheck, ShoppingBasket, Sparkles, UsersRound } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { AlertTriangle, Bookmark, ChefHat, Clock3, Flame, Heart, Leaf, Maximize2, Play, ShieldCheck, ShoppingBasket, Sparkles, UsersRound } from 'lucide-react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { Chip } from '../components/Chip';
@@ -32,7 +32,8 @@ export function RecipePage() {
     currentRequest,
     shoppingList,
     upsertShoppingItem,
-    removeShoppingItem
+    removeShoppingItem,
+    clearShoppingList
   } = useApp();
   const recipe = getRecipeById(id);
   const [servings, setServings] = useState(currentRequest?.servings ?? recipe?.baseServings ?? 4);
@@ -82,6 +83,12 @@ export function RecipePage() {
 
   useEffect(() => {
     if (!recipe) return;
+    const hasItemsFromAnotherRecipe = shoppingList.some(item => item.recipeId !== recipe.id);
+    if (hasItemsFromAnotherRecipe) clearShoppingList();
+  }, [recipe?.id]);
+
+  useEffect(() => {
+    if (!recipe) return;
 
     recipe.ingredients.forEach(ingredient => {
       const itemId = shoppingItemId(recipe.id, ingredient.name);
@@ -89,9 +96,6 @@ export function RecipePage() {
       const override = availabilityOverrides[ingredient.name];
       const status = override ?? automaticAvailability[ingredient.name];
 
-      // En búsquedas normales no suponemos qué tiene el usuario: solo actuamos
-      // cuando marca expresamente Tengo/Me falta. En modo despensa sí aplicamos
-      // además la evaluación automática.
       if (!status) return;
 
       if (status === 'have' || status === 'substitute') {
@@ -154,6 +158,9 @@ export function RecipePage() {
             <span className="eyebrow light">{recipe.cuisine.toUpperCase()} · {recipe.style.toUpperCase()}</span>
             <h1>{recipe.title}</h1>
             <p>{recipe.description}</p>
+            <ExpandablePanel title="Descripción de la receta">
+              <p>{recipe.description}</p>
+            </ExpandablePanel>
             <div className="hero-meta">
               <span><Clock3 size={16} /> {formatDuration(total)}</span>
               <span><ChefHat size={16} /> {recipe.difficulty}</span>
@@ -233,6 +240,9 @@ export function RecipePage() {
           <section className="recipe-section tinted">
             <div className="section-heading"><Sparkles size={20} /><div><span className="eyebrow">02</span><h2>Antes de empezar</h2></div></div>
             <ol className="mise-list">{recipe.miseEnPlace.map((item, i) => <li key={`${item}-${i}`}><span>{i + 1}</span>{item}</li>)}</ol>
+            <ExpandablePanel title="Ampliar trabajos previos">
+              <ol className="expanded-list">{recipe.miseEnPlace.map((item, i) => <li key={`${item}-${i}`}><strong>{i + 1}.</strong> {item}</li>)}</ol>
+            </ExpandablePanel>
           </section>
 
           <section className="recipe-section">
@@ -249,8 +259,18 @@ export function RecipePage() {
           </section>
 
           <section className="insight-grid">
-            <div className="insight-card warning"><AlertTriangle size={19} /><strong>Puntos críticos</strong>{recipe.criticalPoints.map((p, i) => <p key={`${p}-${i}`}>{p}</p>)}</div>
-            <div className="insight-card"><Leaf size={19} /><strong>Sustituciones generales</strong>{recipe.substitutions.map((p, i) => <p key={`${p}-${i}`}>{p}</p>)}</div>
+            <div className="insight-card warning">
+              <AlertTriangle size={19} /><strong>Puntos críticos</strong>{recipe.criticalPoints.map((p, i) => <p key={`${p}-${i}`}>{p}</p>)}
+              <ExpandablePanel title="Ampliar puntos críticos">
+                {recipe.criticalPoints.map((p, i) => <p key={`${p}-${i}`}>{p}</p>)}
+              </ExpandablePanel>
+            </div>
+            <div className="insight-card">
+              <Leaf size={19} /><strong>Recomendaciones y sustituciones</strong>{recipe.substitutions.map((p, i) => <p key={`${p}-${i}`}>{p}</p>)}
+              <ExpandablePanel title="Ampliar recomendaciones">
+                {recipe.substitutions.map((p, i) => <p key={`${p}-${i}`}>{p}</p>)}
+              </ExpandablePanel>
+            </div>
           </section>
 
           <section className="nutrition-card">
@@ -269,6 +289,15 @@ export function RecipePage() {
         </div>
       </div>
     </AppShell>
+  );
+}
+
+function ExpandablePanel({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <details className="recipe-expand-panel">
+      <summary><Maximize2 size={16} /> {title}</summary>
+      <div className="recipe-expand-content">{children}</div>
+    </details>
   );
 }
 
