@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, Clock3, Mic, MicOff, Plus, Sparkles, Star, Trash2, UsersRound, WandSparkles, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Clock3, Mic, MicOff, Sparkles, Star, Trash2, UsersRound, WandSparkles, X } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
@@ -43,8 +43,14 @@ export function DesirePage() {
   const ingredientVoice = useAiDictation(transcript => setIngredientDraft(current => appendIngredientDictation(current, transcript)));
   const suggestions = useMemo(() => buildSuggestions(favorites, history.map(entry => entry.label)), [favorites, history]);
 
+  const confirmRequest = () => {
+    requestVoice.stop();
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  };
+
   const addIngredient = (e?: FormEvent) => {
     e?.preventDefault();
+    ingredientVoice.stop();
     const entries = splitIngredientEntries(ingredientDraft);
     if (!entries.length) return;
     setIngredients(current => mergeIngredientEntries(current, entries));
@@ -90,11 +96,12 @@ export function DesirePage() {
             <WandSparkles size={22} />
             <textarea rows={5} value={text} onChange={e => setText(e.target.value)} placeholder="Ej. prepárame una paella con pollo; o un postre de chocolate; o algo nuevo y rápido…" />
             <div className="voice-action-stack">
-              {text.trim() && <button type="button" className="clear-input-button" onClick={() => { requestVoice.stop(); setText(''); }} aria-label="Borrar petición"><X size={18} /></button>}
+              <button type="button" className="clear-input-button" onClick={() => { requestVoice.stop(); setText(''); }} disabled={!text.trim() && !requestVoice.isListening} aria-label="Borrar o cancelar petición"><X size={18} /></button>
               <button type="button" className={`voice-button ${requestVoice.isListening ? 'listening' : ''}`} onClick={requestVoice.toggle} disabled={!requestVoice.isSupported || requestVoice.isTranscribing} aria-label={requestVoice.isListening ? 'Detener dictado' : 'Dictar petición'}>{requestVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
+              <button type="button" className="voice-confirm-button" onClick={confirmRequest} disabled={!text.trim() || requestVoice.isTranscribing} aria-label="Confirmar petición"><Check size={19} /></button>
             </div>
           </div>
-          {requestVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
+          {requestVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… pulsa el micrófono o ✓ cuando termines.</div>}
           {requestVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado con IA…</div>}
           {requestVoice.error && <div className="voice-status error">{requestVoice.error}</div>}
           <div className="suggestion-row">{suggestions.map(s => <button key={s} onClick={() => setText(s)}>{s}</button>)}</div>
@@ -104,9 +111,9 @@ export function DesirePage() {
           <div className="section-label"><span>Productos que tienes</span><small>Opcional · ★ principal/prioritario</small></div>
           <form className="ingredient-input" onSubmit={addIngredient}>
             <input value={ingredientDraft} onChange={e => setIngredientDraft(e.target.value)} placeholder="Ej. pollo 300 g, 4 huevos, arroz…" />
-            {ingredientDraft.trim() && <button type="button" className="clear-input-button" onClick={() => { ingredientVoice.stop(); setIngredientDraft(''); }} aria-label="Borrar productos"><X size={18} /></button>}
+            <button type="button" className="clear-input-button" onClick={() => { ingredientVoice.stop(); setIngredientDraft(''); }} disabled={!ingredientDraft.trim() && !ingredientVoice.isListening} aria-label="Borrar o cancelar productos"><X size={18} /></button>
             <button type="button" className={`voice-button ${ingredientVoice.isListening ? 'listening' : ''}`} onClick={ingredientVoice.toggle} disabled={!ingredientVoice.isSupported || ingredientVoice.isTranscribing} aria-label={ingredientVoice.isListening ? 'Detener dictado' : 'Dictar productos'}>{ingredientVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
-            <button type="submit" aria-label="Añadir producto"><Plus size={19} /></button>
+            <button type="submit" className="voice-confirm-button" disabled={!ingredientDraft.trim() || ingredientVoice.isTranscribing} aria-label="Confirmar y añadir productos"><Check size={19} /></button>
           </form>
           {ingredientVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando la lista de productos…</div>}
           {ingredientVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Separando e interpretando ingredientes con IA…</div>}
