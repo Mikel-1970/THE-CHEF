@@ -13,22 +13,23 @@ export function CookPage() {
   const [running, setRunning] = useState(false);
   const wakeLock = useRef<any>(null);
   const servings = Number(params.get('servings') || recipe?.baseServings || 4);
+  const recipeId = recipe?.id;
+  const stepMinutes = recipe?.steps[index]?.minutes || 0;
 
   useEffect(() => {
-    if (!recipe) return;
-    const mins = recipe.steps[index]?.minutes || 0;
-    setSeconds(mins * 60);
+    if (!recipeId) return;
+    setSeconds(stepMinutes * 60);
     setRunning(false);
-  }, [index, recipe]);
+  }, [recipeId, index, stepMinutes]);
 
   useEffect(() => {
     if (!running) return;
-    const timer = window.setInterval(() => setSeconds(s => {
-      if (s <= 1) {
+    const timer = window.setInterval(() => setSeconds(current => {
+      if (current <= 1) {
         setRunning(false);
         return 0;
       }
-      return s - 1;
+      return current - 1;
     }), 1000);
     return () => window.clearInterval(timer);
   }, [running]);
@@ -96,8 +97,8 @@ export function CookPage() {
             <Clock3 size={19} />
             <div className="timer-time">{mins}:{secs}</div>
             <div className="timer-actions">
-              <button onClick={() => setRunning(v => !v)}>{running ? <Pause size={19} fill="currentColor" /> : <Play size={19} fill="currentColor" />}</button>
-              <button onClick={() => { setSeconds((step.minutes || 0) * 60); setRunning(false); }}><RotateCcw size={18} /></button>
+              <button type="button" onClick={() => setRunning(value => !value)} aria-label={running ? 'Pausar temporizador' : 'Iniciar temporizador'}>{running ? <Pause size={19} fill="currentColor" /> : <Play size={19} fill="currentColor" />}</button>
+              <button type="button" onClick={() => { setSeconds((step.minutes || 0) * 60); setRunning(false); }} aria-label="Reiniciar temporizador"><RotateCcw size={18} /></button>
             </div>
           </div>
         )}
