@@ -1,7 +1,8 @@
-import { AlertTriangle, Bookmark, ChefHat, Clock3, Flame, Heart, Leaf, LoaderCircle, Mic, MicOff, Play, ShieldCheck, ShoppingBasket, Sparkles, UsersRound, WandSparkles, X } from 'lucide-react';
+import { AlertTriangle, Bookmark, Check, ChefHat, Clock3, Flame, Heart, Leaf, Mic, MicOff, Play, ShieldCheck, ShoppingBasket, Sparkles, UsersRound, WandSparkles, X } from 'lucide-react';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
+import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { Chip } from '../components/Chip';
 import { NumberStepper } from '../components/NumberStepper';
 import { RecipeSourceNote } from '../components/RecipeSourceNote';
@@ -128,8 +129,13 @@ export function RecipePage() {
   useEffect(() => {
     if (!activePanel && !isRevisionOpen) return;
     const previousOverflow = document.body.style.overflow;
+    const previousTouchAction = document.body.style.touchAction;
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = previousOverflow; };
+    document.body.style.touchAction = 'none';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.body.style.touchAction = previousTouchAction;
+    };
   }, [activePanel, isRevisionOpen]);
 
   useEffect(() => {
@@ -173,13 +179,19 @@ export function RecipePage() {
     setRevisionError(undefined);
     setRevisionText('');
     setIsRevisionOpen(true);
-    if (revisionVoice.isSupported) void revisionVoice.start();
   };
 
   const closeRevision = () => {
     if (isRevising) return;
     revisionVoice.stop();
     setIsRevisionOpen(false);
+    setRevisionError(undefined);
+  };
+
+  const clearRevision = () => {
+    if (isRevising) return;
+    revisionVoice.stop();
+    setRevisionText('');
     setRevisionError(undefined);
   };
 
@@ -265,6 +277,7 @@ export function RecipePage() {
           <ShoppingBasket size={17} /> Ver lista de compra ({shoppingList.length})
         </button>
       )}
+      <div className="recipe-panel-end-spacer" aria-hidden="true" />
     </>
   );
 
@@ -291,18 +304,19 @@ export function RecipePage() {
               {step.minutes && <span className="step-time">{step.minutes}′</span>}
             </div>
           ))}
+          <div className="recipe-panel-end-spacer" aria-hidden="true" />
         </div>
       )
     },
     critical: {
       title: 'Puntos críticos',
       eyebrow: 'PARA QUE SALGA BIEN',
-      content: <div className="panel-advice warning">{recipe.criticalPoints.map((point, i) => <p key={`${point}-${i}`}><AlertTriangle size={17} /> <span>{point}</span></p>)}</div>
+      content: <div className="panel-advice warning">{recipe.criticalPoints.map((point, i) => <p key={`${point}-${i}`}><AlertTriangle size={17} /> <span>{point}</span></p>)}<div className="recipe-panel-end-spacer" aria-hidden="true" /></div>
     },
     recommendations: {
       title: 'Recomendaciones',
       eyebrow: 'CONSEJOS Y SUSTITUCIONES',
-      content: <div className="panel-advice">{recipe.substitutions.map((point, i) => <p key={`${point}-${i}`}><Leaf size={17} /> <span>{point}</span></p>)}</div>
+      content: <div className="panel-advice">{recipe.substitutions.map((point, i) => <p key={`${point}-${i}`}><Leaf size={17} /> <span>{point}</span></p>)}<div className="recipe-panel-end-spacer" aria-hidden="true" /></div>
     }
   };
 
@@ -310,6 +324,11 @@ export function RecipePage() {
 
   return (
     <AppShell hideNav>
+      <ChefLoadingOverlay
+        active={isRevising}
+        title="Rehaciendo tu receta"
+        messages={['¡Oído cocina!', 'Aplicando tus cambios…', 'Recalculando ingredientes y tiempos…', 'Guardando tu nueva versión…']}
+      />
       <TopBar eyebrow="RECETA" title="Lista para cocinar" />
       <div className="recipe-page">
         <section className="recipe-hero">
@@ -399,7 +418,7 @@ export function RecipePage() {
             </header>
             <div className="recipe-panel-body recipe-revision-body">
               <div className="panel-intro">
-                <p>Dímelo como quieras. El Chef rehace la receta completa, guarda una versión nueva en Mis recetas y conserva la original.</p>
+                <p>Escribe o dicta los cambios y confirma con ✓. El Chef creará una nueva versión y conservará la original.</p>
               </div>
 
               <div className="recipe-revision-input">
@@ -409,8 +428,12 @@ export function RecipePage() {
                   onChange={event => setRevisionText(event.target.value)}
                   disabled={isRevising}
                   placeholder="Ej. cambia las verduras por patata panadera y sustituye el falso caviar de tomate por un aceite de perejil confitado a baja temperatura."
-                  autoFocus={!revisionVoice.isListening}
+                  autoFocus
                 />
+              </div>
+
+              <div className="recipe-revision-toolbar" aria-label="Controles de personalización">
+                <button type="button" className="revision-clear-button" onClick={clearRevision} disabled={isRevising || (!revisionText && !revisionVoice.isListening)} aria-label="Borrar cambios"><X size={20} /></button>
                 <button
                   type="button"
                   className={`voice-button ${revisionVoice.isListening ? 'listening' : ''}`}
@@ -418,27 +441,24 @@ export function RecipePage() {
                   disabled={!revisionVoice.isSupported || revisionVoice.isTranscribing || isRevising}
                   aria-label={revisionVoice.isListening ? 'Detener dictado' : 'Dictar cambios'}
                 >
-                  {revisionVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}
+                  {revisionVoice.isListening ? <MicOff size={20} /> : <Mic size={20} />}
                 </button>
-              </div>
-
-              {revisionVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
-              {revisionVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
-              {revisionVoice.error && <div className="voice-status error">{revisionVoice.error}</div>}
-              {!revisionVoice.isSupported && <div className="voice-status unsupported">El dictado no está disponible en este dispositivo; puedes escribir los cambios.</div>}
-              {revisionError && <div className="recipe-revision-error"><AlertTriangle size={16} /><span>{revisionError}</span></div>}
-
-              <div className="recipe-revision-actions">
-                <button type="button" className="secondary-button" onClick={closeRevision} disabled={isRevising}>Cancelar</button>
                 <button
                   type="button"
-                  className="recipe-revision-submit"
+                  className="revision-confirm-button"
                   onClick={applyRevision}
                   disabled={!revisionText.trim() || revisionVoice.isListening || revisionVoice.isTranscribing || isRevising}
+                  aria-label="Confirmar cambios"
                 >
-                  {isRevising ? <><LoaderCircle className="recipe-spinner" size={19} /> Rehaciendo receta…</> : <><WandSparkles size={19} /> Aplicar cambios</>}
+                  <Check size={22} />
                 </button>
               </div>
+
+              {revisionVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca el micrófono otra vez cuando termines.</div>}
+              {revisionVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
+              {revisionVoice.error && <div className="voice-status error">{revisionVoice.error}</div>}
+              {!revisionVoice.isSupported && <div className="voice-status unsupported">El dictado no está disponible en este dispositivo; puedes escribir los cambios y pulsar ✓.</div>}
+              {revisionError && <div className="recipe-revision-error"><AlertTriangle size={16} /><span>{revisionError}</span></div>}
             </div>
           </section>
         </div>
