@@ -17,22 +17,33 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
     steps:
       - name: Descargar repositorio
         uses: actions/checkout@v4
+
       - name: Preparar Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Instalar dependencias
         run: npm install
+
       - name: Generar metadatos de versión
+        id: meta
         run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           node -e "const fs=require('fs'); const pkg=require('./package.json'); fs.writeFileSync('public/version.json', JSON.stringify({version: pkg.version, commit: process.env.GITHUB_SHA}, null, 2) + '\n');"
+
       - name: Compilar PWA
         run: npm run build
+
       - name: Configurar Pages
         uses: actions/configure-pages@v5
+
       - name: Subir artefacto
         uses: actions/upload-pages-artifact@v3
         with:
@@ -44,7 +55,99 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Publicar en Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  validate:
+    name: Validar versión desplegada
+    runs-on: ubuntu-latest
+    needs: [build, deploy]
+    env:
+      PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+      EXPECTED_VERSION: ${{ needs.build.outputs.version }}
+      EXPECTED_COMMIT: ${{ github.sha }}
+    steps:
+      - name: Comprobar version.json publicado
+        run: |
+          URL="${PAGE_URL%/}/version.json"
+          echo "Validando $URL"
+
+          for attempt in $(seq 1 12); do
+            echo "Intento $attempt/12"
+            if curl --fail --silent --show-error --location \
+              -H "Cache-Control: no-cache" \
+              "$URL?commit=$EXPECTED_COMMIT" \
+              -o /tmp/version.json; then
+              if python3 - <<'PY'
+          import json, os, sys
+          with open('/tmp/version.json', encoding='utf-8') as f:
+              data = json.load(f)
+          expected_version = os.environ['EXPECTED_VERSION']
+          expected_commit = os.environ['EXPECTED_COMMIT']
+          actual_version = str(data.get('version', ''))
+          actual_commit = str(data.get('commit', ''))
+          print(f"Esperado: version={expected_version} commit={expected_commit}")
+          print(f"Publicado: version={actual_version} commit={actual_commit}")
+          sys.exit(0 if actual_version == expected_version and actual_commit == expected_commit else 1)
+          PY
+              then
+                echo "Despliegue validado correctamente."
+                exit 0
+              fi
+            fi
+            sleep 5
+          done
+
+          echo "ERROR: la versión publicada no coincide con la esperada tras los reintentos."
+          exit 1
+
+  notify:
+    name: Notificar resultado
+    runs-on: ubuntu-latest
+    needs: [build, deploy, validate]
+    if: ${{ always() }}
+    env:
+      PUSHOVER_USER_KEY: ${{ secrets.PUSHOVER_USER_KEY }}
+      PUSHOVER_APP_TOKEN: ${{ secrets.PUSHOVER_APP_TOKEN }}
+      VERSION: ${{ needs.build.outputs.version }}
+      PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+      BUILD_RESULT: ${{ needs.build.result }}
+      DEPLOY_RESULT: ${{ needs.deploy.result }}
+      VALIDATE_RESULT: ${{ needs.validate.result }}
+    steps:
+      - name: Determinar estado y enviar Pushover
+        run: |
+          SHORT_SHA="${GITHUB_SHA::7}"
+          RUN_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+          if [ "$BUILD_RESULT" = "success" ] && [ "$DEPLOY_RESULT" = "success" ] && [ "$VALIDATE_RESULT" = "success" ]; then
+            TITLE="THE-CHEF · CORRECTO"
+            MESSAGE="Versión ${VERSION} desplegada y validada. Commit ${SHORT_SHA}. Disponible para probar."
+            LINK="${PAGE_URL}"
+            LINK_TITLE="Abrir THE-CHEF"
+          else
+            if [ "$BUILD_RESULT" != "success" ]; then
+              PHASE="compilación"
+            elif [ "$DEPLOY_RESULT" != "success" ]; then
+              PHASE="despliegue"
+            else
+              PHASE="validación de versión"
+            fi
+            TITLE="THE-CHEF · ERROR"
+            MESSAGE="El proceso no ha quedado validado. Fallo en ${PHASE}. Commit ${SHORT_SHA}. No se comunica como listo."
+            LINK="$RUN_URL"
+            LINK_TITLE="Ver ejecución en GitHub"
+          fi
+
+          curl --fail --silent --show-error \
+            --form-string "token=$PUSHOVER_APP_TOKEN" \
+            --form-string "user=$PUSHOVER_USER_KEY" \
+            --form-string "title=$TITLE" \
+            --form-string "message=$MESSAGE" \
+            --form-string "url=$LINK" \
+            --form-string "url_title=$LINK_TITLE" \
+            https://api.pushover.net/1/messages.json
