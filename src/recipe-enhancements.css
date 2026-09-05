@@ -95,6 +95,21 @@
   margin-top: 0;
 }
 
+.recipe-save-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.recipe-save-actions .secondary-button {
+  width: 100%;
+}
+
+.recipe-revision-launch {
+  border-color: rgba(86,114,53,.22) !important;
+  background: #eef0e3 !important;
+  color: #405626 !important;
+}
+
 .recipe-action-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -147,6 +162,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  overscroll-behavior: contain;
 }
 
 .recipe-panel-sheet {
@@ -191,8 +207,15 @@
   place-items: center;
 }
 
+.recipe-panel-header button:disabled {
+  opacity: .45;
+}
+
 .recipe-panel-body {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   padding: 18px 18px max(28px, env(safe-area-inset-bottom));
 }
@@ -246,6 +269,104 @@
   width: 100%;
   margin-top: 16px;
   justify-content: center;
+}
+
+.recipe-revision-sheet {
+  max-height: min(84dvh, 760px);
+}
+
+.recipe-revision-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.recipe-revision-input {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.recipe-revision-input textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  border: 1px solid rgba(63,84,36,.16);
+  border-radius: 16px;
+  background: #fffdf8;
+  color: #2f3825;
+  padding: 14px;
+  font: inherit;
+  line-height: 1.5;
+  outline: none;
+}
+
+.recipe-revision-input textarea:focus {
+  border-color: rgba(86,114,53,.52);
+  box-shadow: 0 0 0 3px rgba(86,114,53,.08);
+}
+
+.recipe-revision-input textarea:disabled {
+  opacity: .65;
+}
+
+.recipe-revision-input .voice-button {
+  margin-top: 2px;
+}
+
+.recipe-revision-error {
+  margin-top: 12px;
+  padding: 11px 12px;
+  border-radius: 13px;
+  background: rgba(166,108,33,.10);
+  color: #8a5518;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: .78rem;
+  line-height: 1.4;
+}
+
+.recipe-revision-error svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.recipe-revision-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.recipe-revision-actions .secondary-button,
+.recipe-revision-submit {
+  width: 100%;
+  min-height: 48px;
+  justify-content: center;
+}
+
+.recipe-revision-submit {
+  border: 0;
+  border-radius: 14px;
+  background: #405626;
+  color: white;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.recipe-revision-submit:disabled {
+  opacity: .45;
+}
+
+.recipe-spinner {
+  animation: recipe-spin .8s linear infinite;
+}
+
+@keyframes recipe-spin {
+  to { transform: rotate(360deg); }
 }
 
 @keyframes recipe-panel-in {
