@@ -1,4 +1,4 @@
-import { AlertTriangle, Bookmark, ChefHat, Clock3, Flame, Heart, Leaf, Play, ShieldCheck, ShoppingBasket, Sparkles, UsersRound, X } from 'lucide-react';
+import { AlertTriangle, Bookmark, ChefHat, Clock3, Flame, Heart, Leaf, LoaderCircle, Mic, MicOff, Play, ShieldCheck, ShoppingBasket, Sparkles, UsersRound, WandSparkles, X } from 'lucide-react';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
@@ -8,16 +8,19 @@ import { RecipeSourceNote } from '../components/RecipeSourceNote';
 import { TopBar } from '../components/TopBar';
 import { useApp } from '../AppContext';
 import type { RecipeIngredient } from '../domain/types';
+import { useAiDictation } from '../hooks/useAiDictation';
+import { reviseAiRecipe } from '../services/aiProposalGateway';
 import {
   evaluateRecipePantry,
   formatInsufficientIngredient,
   type PantryIngredientEvaluation
 } from '../services/pantryEvaluation';
-import { getRecipeById, rememberActiveRecipe, rememberLibraryRecipe } from '../services/recipeCatalog';
+import { getRecipeById, registerExternalRecipes, rememberActiveRecipe, rememberLibraryRecipe } from '../services/recipeCatalog';
 import { getIngredientAlternatives } from '../services/substitutions';
 import { formatQuantity, scaleQuantity } from '../utils/scaling';
 import { formatDuration } from '../utils/time';
 import '../recipe-enhancements.css';
+import '../voice-input.css';
 
 type IngredientAvailability = 'have' | 'missing' | 'substitute';
 type RecipePanel = 'ingredients' | 'prep' | 'steps' | 'critical' | 'recommendations' | null;
@@ -41,6 +44,11 @@ export function RecipePage() {
   const [servings, setServings] = useState(currentRequest?.servings ?? recipe?.baseServings ?? 4);
   const [availabilityOverrides, setAvailabilityOverrides] = useState<Record<string, IngredientAvailability>>({});
   const [activePanel, setActivePanel] = useState<RecipePanel>(null);
+  const [isRevisionOpen, setIsRevisionOpen] = useState(false);
+  const [revisionText, setRevisionText] = useState('');
+  const [revisionError, setRevisionError] = useState<string>();
+  const [isRevising, setIsRevising] = useState(false);
+  const revisionVoice = useAiDictation(transcript => setRevisionText(current => appendSentence(current, transcript)));
 
   const sections = useMemo(() => {
     if (!recipe) return [] as Array<[string, RecipeIngredient[]]>;
@@ -118,11 +126,19 @@ export function RecipePage() {
   }, [recipe?.id, servings, pantryEvaluationByName, automaticAvailability, availabilityOverrides]);
 
   useEffect(() => {
-    if (!activePanel) return;
+    if (!activePanel && !isRevisionOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = previousOverflow; };
-  }, [activePanel]);
+  }, [activePanel, isRevisionOpen]);
+
+  useEffect(() => {
+    setAvailabilityOverrides({});
+    setActivePanel(null);
+    setIsRevisionOpen(false);
+    setRevisionText('');
+    setRevisionError(undefined);
+  }, [recipe?.id]);
 
   if (!recipe) {
     return (
@@ -150,6 +166,43 @@ export function RecipePage() {
   const startCooking = () => {
     rememberActiveRecipe(recipe);
     navigate(`/cocinar/${recipe.id}?servings=${servings}`);
+  };
+
+  const openRevision = () => {
+    setActivePanel(null);
+    setRevisionError(undefined);
+    setRevisionText('');
+    setIsRevisionOpen(true);
+    if (revisionVoice.isSupported) void revisionVoice.start();
+  };
+
+  const closeRevision = () => {
+    if (isRevising) return;
+    revisionVoice.stop();
+    setIsRevisionOpen(false);
+    setRevisionError(undefined);
+  };
+
+  const applyRevision = async () => {
+    const instruction = revisionText.trim();
+    if (!instruction || isRevising || revisionVoice.isListening || revisionVoice.isTranscribing) return;
+    setIsRevising(true);
+    setRevisionError(undefined);
+    try {
+      const revised = await reviseAiRecipe(recipe, instruction, servings);
+      const [registered] = registerExternalRecipes([revised]);
+      if (!registered) throw new Error('La versión revisada no ha superado la validación de la receta.');
+      rememberActiveRecipe(registered);
+      rememberLibraryRecipe(registered);
+      if (!savedRecipes.includes(registered.id)) toggleSavedRecipe(registered.id);
+      setIsRevisionOpen(false);
+      setRevisionText('');
+      navigate(`/receta/${registered.id}`);
+    } catch (error) {
+      setRevisionError(error instanceof Error ? error.message : 'No se ha podido revisar la receta.');
+    } finally {
+      setIsRevising(false);
+    }
   };
 
   const ingredientPanel = (
@@ -295,9 +348,14 @@ export function RecipePage() {
             <NumberStepper value={servings} onChange={setServings} />
           </section>
 
-          <button className="secondary-button" type="button" onClick={() => toggleSavedRecipe(recipe.id)}>
-            <Bookmark size={18} fill={isSaved ? 'currentColor' : 'none'} /> {isSaved ? 'Guardada en Mis recetas' : 'Guardar receta'}
-          </button>
+          <div className="recipe-save-actions">
+            <button className="secondary-button" type="button" onClick={() => toggleSavedRecipe(recipe.id)}>
+              <Bookmark size={18} fill={isSaved ? 'currentColor' : 'none'} /> {isSaved ? 'Guardada en Mis recetas' : 'Guardar receta'}
+            </button>
+            <button className="secondary-button recipe-revision-launch" type="button" onClick={openRevision}>
+              <WandSparkles size={18} /> Personalizar receta
+            </button>
+          </div>
 
           <RecipeSourceNote recipe={recipe} />
 
@@ -331,8 +389,68 @@ export function RecipePage() {
           </section>
         </div>
       )}
+
+      {isRevisionOpen && (
+        <div className="recipe-panel-backdrop recipe-revision-backdrop" role="presentation" onClick={closeRevision}>
+          <section className="recipe-panel-sheet recipe-revision-sheet" role="dialog" aria-modal="true" aria-label="Personalizar receta" onClick={event => event.stopPropagation()}>
+            <header className="recipe-panel-header">
+              <div><span className="eyebrow">PERSONALIZA TU VERSIÓN</span><h2>¿Qué quieres cambiar?</h2></div>
+              <button type="button" onClick={closeRevision} disabled={isRevising} aria-label="Cerrar"><X size={22} /></button>
+            </header>
+            <div className="recipe-panel-body recipe-revision-body">
+              <div className="panel-intro">
+                <p>Dímelo como quieras. El Chef rehace la receta completa, guarda una versión nueva en Mis recetas y conserva la original.</p>
+              </div>
+
+              <div className="recipe-revision-input">
+                <textarea
+                  rows={6}
+                  value={revisionText}
+                  onChange={event => setRevisionText(event.target.value)}
+                  disabled={isRevising}
+                  placeholder="Ej. cambia las verduras por patata panadera y sustituye el falso caviar de tomate por un aceite de perejil confitado a baja temperatura."
+                  autoFocus={!revisionVoice.isListening}
+                />
+                <button
+                  type="button"
+                  className={`voice-button ${revisionVoice.isListening ? 'listening' : ''}`}
+                  onClick={revisionVoice.toggle}
+                  disabled={!revisionVoice.isSupported || revisionVoice.isTranscribing || isRevising}
+                  aria-label={revisionVoice.isListening ? 'Detener dictado' : 'Dictar cambios'}
+                >
+                  {revisionVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}
+                </button>
+              </div>
+
+              {revisionVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
+              {revisionVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
+              {revisionVoice.error && <div className="voice-status error">{revisionVoice.error}</div>}
+              {!revisionVoice.isSupported && <div className="voice-status unsupported">El dictado no está disponible en este dispositivo; puedes escribir los cambios.</div>}
+              {revisionError && <div className="recipe-revision-error"><AlertTriangle size={16} /><span>{revisionError}</span></div>}
+
+              <div className="recipe-revision-actions">
+                <button type="button" className="secondary-button" onClick={closeRevision} disabled={isRevising}>Cancelar</button>
+                <button
+                  type="button"
+                  className="recipe-revision-submit"
+                  onClick={applyRevision}
+                  disabled={!revisionText.trim() || revisionVoice.isListening || revisionVoice.isTranscribing || isRevising}
+                >
+                  {isRevising ? <><LoaderCircle className="recipe-spinner" size={19} /> Rehaciendo receta…</> : <><WandSparkles size={19} /> Aplicar cambios</>}
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
     </AppShell>
   );
+}
+
+function appendSentence(current: string, transcript: string): string {
+  const base = current.trimEnd();
+  const clean = transcript.trim();
+  return base ? `${base}${/[.!?…]$/.test(base) ? ' ' : '. '}${clean}` : clean;
 }
 
 function normalize(value: string): string {
