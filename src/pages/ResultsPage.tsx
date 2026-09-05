@@ -2,6 +2,7 @@ import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
+import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { ProposalCard } from '../components/ProposalCard';
 import { TopBar } from '../components/TopBar';
 import { useApp } from '../AppContext';
@@ -72,9 +73,17 @@ export function ResultsPage() {
 
   const aiConfigured = isAiProposalApiConfigured();
   const visibleCount = proposals.length;
+  const working = Boolean(generatingId || refreshing);
 
   return (
     <AppShell hideNav>
+      <ChefLoadingOverlay
+        active={working}
+        title={generatingId ? 'Preparando tu receta' : 'Buscando nuevas ideas'}
+        messages={generatingId
+          ? ['¡Oído cocina!', 'Ordenando ingredientes…', 'Afinando tiempos y puntos de cocción…', 'Emplatando la receta…']
+          : ['¡Oído cocina!', 'Mirando qué encaja mejor…', 'Descartando opciones repetidas…', 'Ya salen nuevas ideas…']}
+      />
       <TopBar eyebrow={`${visibleCount} IDEAS PARA ELEGIR`} title="¿Con cuál te quedas?" />
       <div className="page-content results-content">
         <div className="results-summary"><div><span className="eyebrow">TU BÚSQUEDA</span><p>{currentRequest.mode === 'pantry' ? (currentRequest.pantryIngredients ?? []).map(i => i.name).join(' · ') : currentRequest.desireText}</p></div><span>{currentRequest.servings} pers.</span></div>
