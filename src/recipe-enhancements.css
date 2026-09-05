@@ -1,0 +1,91 @@
+.recipe-expand-panel {
+  margin-top: 12px;
+  border: 1px solid rgba(63,84,36,.14);
+  border-radius: 16px;
+  background: rgba(255,250,241,.92);
+  overflow: hidden;
+}
+
+.recipe-expand-panel summary {
+  list-style: none;
+  min-height: 44px;
+  padding: 11px 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #405626;
+  font-size: .78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.recipe-expand-panel summary::-webkit-details-marker { display: none; }
+
+.recipe-expand-panel[open] summary {
+  border-bottom: 1px solid rgba(63,84,36,.12);
+  background: #eef0e3;
+}
+
+.recipe-expand-content {
+  padding: 16px;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #2f3825;
+}
+
+.recipe-expand-content p {
+  margin: 0 0 12px;
+  font-size: 1.05rem !important;
+  line-height: 1.65 !important;
+  color: #2f3825 !important;
+}
+
+.recipe-expand-content p:last-child { margin-bottom: 0; }
+
+.expanded-list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.expanded-list li {
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.recipe-title-block .recipe-expand-panel {
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.24);
+}
+
+.recipe-title-block .recipe-expand-panel summary {
+  color: white;
+}
+
+.recipe-title-block .recipe-expand-panel[open] summary {
+  background: rgba(255,255,255,.12);
+  border-bottom-color: rgba(255,255,255,.18);
+}
+
+.recipe-title-block .recipe-expand-content,
+.recipe-title-block .recipe-expand-content p {
+  color: white !important;
+}
+
+.shopping-share-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.shopping-share-actions .secondary-button {
+  width: 100%;
+}
+
+.whatsapp-share-button {
+  background: #405626 !important;
+  color: white !important;
+  border-color: #405626 !important;
+}
