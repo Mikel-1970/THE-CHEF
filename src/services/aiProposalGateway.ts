@@ -5,6 +5,7 @@ const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'sb_publishable_b08-tfZC
 
 const SUGGEST_TIMEOUT_MS = 65_000;
 const GENERATE_TIMEOUT_MS = 120_000;
+const REVISE_TIMEOUT_MS = 120_000;
 const PROPOSAL_COUNT = 2;
 
 export function isAiProposalApiConfigured() {
@@ -19,11 +20,24 @@ export async function fetchAiProposals(request: CookingRequest): Promise<Proposa
 
 export async function generateAiRecipe(request: CookingRequest, proposal: Proposal): Promise<Recipe> {
   const payload = await postJson('/recipes/generate', { request, proposal }, GENERATE_TIMEOUT_MS);
+  return extractAiRecipe(payload, 'La IA no ha devuelto una receta completa utilizable.');
+}
+
+export async function reviseAiRecipe(recipe: Recipe, instruction: string, servings?: number): Promise<Recipe> {
+  const cleanInstruction = instruction.trim();
+  if (!cleanInstruction) throw new Error('Indica qué quieres cambiar en la receta.');
+  const payload = await postJson('/recipes/revise', {
+    recipe,
+    instruction: cleanInstruction,
+    servings
+  }, REVISE_TIMEOUT_MS);
+  return extractAiRecipe(payload, 'La IA no ha devuelto una versión revisada utilizable.');
+}
+
+function extractAiRecipe(payload: unknown, fallbackMessage: string): Recipe {
   const candidates = isRecord(payload) && Array.isArray(payload.recipes) ? payload.recipes : [];
   const candidate = candidates.find(item => isRecord(item) && isRecord(item.source) && item.source.kind === 'ai');
-  if (!candidate) {
-    throw new Error('La IA no ha devuelto una receta completa utilizable.');
-  }
+  if (!candidate) throw new Error(fallbackMessage);
   // La normalización y validación definitiva se hacen al registrarla en recipeCatalog.
   return candidate as Recipe;
 }
@@ -47,9 +61,9 @@ async function postJson(path: string, body: unknown, timeoutMs: number): Promise
     return payload;
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
-      throw new Error(path.endsWith('/suggest')
-        ? 'La IA ha superado el tiempo máximo de respuesta. Puedes repetir la búsqueda.'
-        : 'La IA ha tardado demasiado en completar la receta. Puedes volver a intentarlo sin repetir la búsqueda.');
+      if (path.endsWith('/suggest')) throw new Error('La IA ha superado el tiempo máximo de respuesta. Puedes repetir la búsqueda.');
+      if (path.endsWith('/revise')) throw new Error('La IA ha tardado demasiado en revisar la receta. Puedes volver a intentarlo sin perder la versión original.');
+      throw new Error('La IA ha tardado demasiado en completar la receta. Puedes volver a intentarlo sin repetir la búsqueda.');
     }
     throw error;
   } finally {
