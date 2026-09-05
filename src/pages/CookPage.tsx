@@ -1,7 +1,9 @@
-import { ArrowLeft, ChevronLeft, ChevronRight, Clock3, Pause, Play, RotateCcw, ScreenShare, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { ArrowLeft, Camera, CheckCircle2, ChevronLeft, ChevronRight, Clock3, Pause, Play, RotateCcw, ScreenShare, Sparkles, Thermometer, X } from 'lucide-react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { evaluateDishPhoto, type DishEvaluation } from '../services/mediaGateway';
 import { getActiveRecipe, getRecipeById } from '../services/recipeCatalog';
+import '../cook-enhancements.css';
 
 export function CookPage() {
   const { id } = useParams();
@@ -11,16 +13,21 @@ export function CookPage() {
   const [index, setIndex] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [running, setRunning] = useState(false);
+  const [finished, setFinished] = useState(false);
+  const [evaluating, setEvaluating] = useState(false);
+  const [evaluation, setEvaluation] = useState<DishEvaluation>();
+  const [photoUrl, setPhotoUrl] = useState<string>();
+  const [photoError, setPhotoError] = useState<string>();
   const wakeLock = useRef<any>(null);
   const servings = Number(params.get('servings') || recipe?.baseServings || 4);
   const recipeId = recipe?.id;
   const stepMinutes = recipe?.steps[index]?.minutes || 0;
 
   useEffect(() => {
-    if (!recipeId) return;
+    if (!recipeId || finished) return;
     setSeconds(stepMinutes * 60);
     setRunning(false);
-  }, [recipeId, index, stepMinutes]);
+  }, [recipeId, index, stepMinutes, finished]);
 
   useEffect(() => {
     if (!running) return;
@@ -59,6 +66,68 @@ export function CookPage() {
     );
   }
 
+  const handlePhoto = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setPhotoError(undefined);
+    setEvaluation(undefined);
+    setEvaluating(true);
+    try {
+      const result = await evaluateDishPhoto(recipe, file);
+      setPhotoUrl(result.previewUrl);
+      setEvaluation(result.evaluation);
+    } catch (error) {
+      setPhotoError(error instanceof Error ? error.message : 'No se ha podido valorar la fotografía.');
+    } finally {
+      setEvaluating(false);
+      event.target.value = '';
+    }
+  };
+
+  if (finished) {
+    const celebration = evaluation && evaluation.score >= 8.5;
+    return (
+      <div className="cook-screen cook-finish-screen">
+        <header className="cook-header">
+          <button onClick={() => setFinished(false)} aria-label="Volver al último paso"><ArrowLeft size={21} /></button>
+          <div><span>Resultado final</span><strong>{recipe.title}</strong></div>
+          <button onClick={() => navigate('/')} aria-label="Cerrar"><X size={21} /></button>
+        </header>
+
+        <main className="cook-finish-main">
+          <div className={`finish-badge ${celebration ? 'celebrate' : ''}`}>
+            {evaluation ? (celebration ? '👏' : <CheckCircle2 size={34} />) : <Camera size={34} />}
+          </div>
+          <h1>{evaluation ? (celebration ? '¡Enhorabuena!' : 'Plato terminado') : '¿Cómo te ha quedado?'}</h1>
+          <p>{evaluation ? 'He comparado visualmente el resultado con lo esperable para esta receta.' : 'Haz una foto del resultado final y El Chef te dará una valoración visual con puntos fuertes y mejoras concretas.'}</p>
+
+          {photoUrl && <img className="dish-result-photo" src={photoUrl} alt={`Resultado final de ${recipe.title}`} />}
+
+          {!evaluation && (
+            <label className={`photo-capture-button ${evaluating ? 'disabled' : ''}`}>
+              <Camera size={21} /> {evaluating ? 'Analizando la foto…' : 'Hacer o elegir una foto'}
+              <input type="file" accept="image/*" capture="environment" onChange={handlePhoto} disabled={evaluating} />
+            </label>
+          )}
+
+          {photoError && <div className="dish-evaluation-error">{photoError}</div>}
+
+          {evaluation && (
+            <section className="dish-evaluation-card">
+              <div className="dish-score"><strong>{evaluation.score.toFixed(1)}</strong><span>/ 10</span></div>
+              <p className="dish-summary">{evaluation.summary}</p>
+              {evaluation.strengths.length > 0 && <div><h3>Lo mejor</h3>{evaluation.strengths.map((item, i) => <p key={`${item}-${i}`}>✓ {item}</p>)}</div>}
+              {evaluation.improvements.length > 0 && <div><h3>Para mejorarlo</h3>{evaluation.improvements.map((item, i) => <p key={`${item}-${i}`}>• {item}</p>)}</div>}
+              <label className="photo-retry-button"><Camera size={17} /> Probar con otra foto<input type="file" accept="image/*" capture="environment" onChange={handlePhoto} disabled={evaluating} /></label>
+            </section>
+          )}
+
+          <button className="finish-return-button" type="button" onClick={() => navigate(`/receta/${recipe.id}`)}>Volver a la receta</button>
+        </main>
+      </div>
+    );
+  }
+
   const safeIndex = Math.min(index, Math.max(0, recipe.steps.length - 1));
   const step = recipe.steps[safeIndex];
   if (!step) {
@@ -91,11 +160,17 @@ export function CookPage() {
         <div className="cook-step-label">PASO {safeIndex + 1} DE {recipe.steps.length}</div>
         <div className="cook-number">{String(safeIndex + 1).padStart(2, '0')}</div>
         <p className="cook-instruction">{step.instruction}</p>
+
+        <div className="cook-step-facts">
+          {step.temperatureC && <div><Thermometer size={18} /><span><small>Temperatura</small><strong>{step.temperatureC} °C</strong></span></div>}
+          {step.minutes && <div><Clock3 size={18} /><span><small>Duración de este paso</small><strong>{step.minutes} min</strong></span></div>}
+        </div>
+
         {step.cue && <div className="cook-cue"><ScreenShare size={18} /><span><strong>Fíjate en esto</strong>{step.cue}</span></div>}
         {step.minutes && (
-          <div className="timer-card">
+          <div className="timer-card timer-card-labelled">
             <Clock3 size={19} />
-            <div className="timer-time">{mins}:{secs}</div>
+            <div><small>Temporizador de este paso</small><div className="timer-time">{mins}:{secs}</div></div>
             <div className="timer-actions">
               <button type="button" onClick={() => setRunning(value => !value)} aria-label={running ? 'Pausar temporizador' : 'Iniciar temporizador'}>{running ? <Pause size={19} fill="currentColor" /> : <Play size={19} fill="currentColor" />}</button>
               <button type="button" onClick={() => { setSeconds((step.minutes || 0) * 60); setRunning(false); }} aria-label="Reiniciar temporizador"><RotateCcw size={18} /></button>
@@ -110,7 +185,7 @@ export function CookPage() {
         {safeIndex < recipe.steps.length - 1 ? (
           <button className="cook-nav primary" onClick={() => setIndex(i => Math.min(recipe.steps.length - 1, i + 1))}>Siguiente <ChevronRight size={20} /></button>
         ) : (
-          <button className="cook-nav primary" onClick={() => navigate(`/receta/${recipe.id}`)}>Terminar</button>
+          <button className="cook-nav primary" onClick={() => setFinished(true)}><Sparkles size={18} /> Terminar</button>
         )}
       </footer>
     </div>
