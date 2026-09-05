@@ -43,16 +43,25 @@ const pantrySubstitutions: Array<{ target: string[]; substitutes: string[] }> = 
 
 export function getIngredientAlternatives(ingredientName: string, recipeSubstitutions: string[], optional = false): string[] {
   const normalizedName = normalize(ingredientName);
-  const significantWords = normalizedName.split(/\s+/).filter(word => word.length > 3);
+  const ingredientTokens = tokenSet(normalizedName);
 
+  // Una sustitución específica solo se muestra si la frase identifica de forma
+  // inequívoca este ingrediente. Antes se buscaba cualquier palabra de más de
+  // cuatro letras y una frase podía acabar asociada al ingrediente de la fila
+  // siguiente por compartir términos genéricos.
   const specific = recipeSubstitutions.filter(sentence => {
     const normalizedSentence = normalize(sentence);
-    return significantWords.some(word => normalizedSentence.includes(word));
+    if (normalizedSentence.includes(normalizedName)) return true;
+
+    const sentenceTokens = tokenSet(normalizedSentence);
+    const meaningful = [...ingredientTokens].filter(token => token.length >= 5 && !GENERIC_WORDS.has(token));
+    if (!meaningful.length) return false;
+    return meaningful.every(token => sentenceTokens.has(token));
   });
 
   const generic = genericAlternatives.find(rule => rule.match.some(term => {
     const normalizedTerm = normalize(term);
-    return normalizedName.includes(normalizedTerm) || normalizedTerm.includes(normalizedName);
+    return normalizedName === normalizedTerm || normalizedName.includes(normalizedTerm) || normalizedTerm.includes(normalizedName);
   }))?.alternatives ?? [];
 
   const results = Array.from(new Set([...specific, ...generic])).slice(0, 3);
@@ -70,6 +79,12 @@ export function findAvailableSubstitute(ingredientName: string, pantryNames: str
   if (!rule) return undefined;
 
   return pantryNames.find(name => rule.substitutes.some(substitute => ingredientMatch(name, substitute)));
+}
+
+const GENERIC_WORDS = new Set(['fresco', 'fresca', 'picado', 'picada', 'molido', 'molida', 'virgen', 'extra', 'cocido', 'cocida', 'grande', 'pequeno', 'pequena']);
+
+function tokenSet(value: string): Set<string> {
+  return new Set(value.split(/[^a-z0-9ñ]+/).filter(Boolean));
 }
 
 function ingredientMatch(a: string, b: string): boolean {
