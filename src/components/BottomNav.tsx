@@ -1,4 +1,4 @@
-import { Bell, ChefHat, Home, Search, UserRound } from 'lucide-react';
+import { ChefHat, Home, Search, ShoppingBasket, UserRound } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import '../navigation-v04.css';
 
@@ -20,9 +20,9 @@ export function BottomNav() {
         <span className="chef-nav-label">Chef</span>
       </NavLink>
 
-      <NavLink to="/avisos" className={({ isActive }) => `nav-item nav-alerts ${isActive ? 'active' : ''}`}>
-        <span className="nav-alert-icon"><Bell size={24} strokeWidth={1.8} /><i aria-hidden="true" /></span>
-        <span>Avisos</span>
+      <NavLink to="/lista-compra" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+        <ShoppingBasket size={24} strokeWidth={1.8} />
+        <span>Compra</span>
       </NavLink>
 
       <NavLink to="/ajustes" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
