@@ -1,0 +1,205 @@
+.cook-step-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  margin: 4px 0 14px;
+}
+
+.cook-step-facts > div {
+  min-height: 68px;
+  padding: 11px 12px;
+  border-radius: 15px;
+  background: rgba(255,255,255,.08);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.cook-step-facts span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cook-step-facts small,
+.timer-card-labelled small {
+  font-size: .66rem;
+  opacity: .72;
+}
+
+.cook-step-facts strong {
+  font-size: .94rem;
+}
+
+.timer-card-labelled {
+  align-items: center;
+}
+
+.timer-card-labelled > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cook-finish-screen {
+  overflow-y: auto;
+}
+
+.cook-finish-main {
+  width: min(100%, 620px);
+  margin: 0 auto;
+  padding: 34px 20px max(34px, env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.finish-badge {
+  width: 74px;
+  height: 74px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.10);
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+}
+
+.finish-badge.celebrate {
+  animation: chef-celebrate .7s ease-in-out 2;
+}
+
+.cook-finish-main h1 {
+  margin: 0 0 8px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2rem;
+}
+
+.cook-finish-main > p {
+  margin: 0 auto 22px;
+  max-width: 520px;
+  line-height: 1.5;
+  opacity: .86;
+}
+
+.dish-result-photo {
+  width: 100%;
+  max-height: 380px;
+  object-fit: cover;
+  border-radius: 22px;
+  margin: 0 0 18px;
+}
+
+.photo-capture-button,
+.photo-retry-button {
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-weight: 800;
+}
+
+.photo-capture-button {
+  min-height: 54px;
+  padding: 0 18px;
+  border-radius: 16px;
+  background: white;
+  color: #334b22;
+}
+
+.photo-capture-button.disabled {
+  opacity: .65;
+  pointer-events: none;
+}
+
+.photo-capture-button input,
+.photo-retry-button input {
+  display: none;
+}
+
+.dish-evaluation-error {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(167,73,52,.18);
+  font-size: .82rem;
+}
+
+.dish-evaluation-card {
+  margin-top: 2px;
+  padding: 20px;
+  border-radius: 22px;
+  background: rgba(255,255,255,.10);
+  text-align: left;
+}
+
+.dish-score {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.dish-score strong {
+  font-size: 2.35rem;
+  line-height: 1;
+}
+
+.dish-score span {
+  opacity: .7;
+}
+
+.dish-summary {
+  margin: 0 0 17px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.dish-evaluation-card h3 {
+  margin: 16px 0 7px;
+  font-size: .85rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.dish-evaluation-card p {
+  margin: 6px 0;
+  line-height: 1.45;
+}
+
+.photo-retry-button {
+  margin-top: 18px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 13px;
+  background: rgba(255,255,255,.12);
+}
+
+.finish-return-button {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 16px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 15px;
+  background: transparent;
+  color: inherit;
+  font-weight: 750;
+}
+
+@keyframes chef-celebrate {
+  0%, 100% { transform: scale(1) rotate(0); }
+  35% { transform: scale(1.15) rotate(-8deg); }
+  70% { transform: scale(1.12) rotate(8deg); }
+}
+
+@media (max-width: 420px) {
+  .cook-step-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .cook-finish-main {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
