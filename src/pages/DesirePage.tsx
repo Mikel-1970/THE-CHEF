@@ -9,7 +9,7 @@ import { NumberStepper } from '../components/NumberStepper';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
 import { RECIPE_STYLES } from '../data/cookingOptions';
-import type { Difficulty, IngredientInput } from '../domain/types';
+import type { CookingRequest, Difficulty, IngredientInput } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { getHybridProposals } from '../services/hybridRecommendationEngine';
 import { getAllRecipes } from '../services/recipeCatalog';
@@ -55,8 +55,8 @@ export function DesirePage() {
   const search = async () => {
     if (isSearching) return;
     const interpreted = interpretDesireText(text);
-    const request = {
-      mode: 'desire' as const,
+    const request: CookingRequest = {
+      mode: usePantry ? 'pantry' : 'desire',
       servings: servingsTouched ? servings : interpreted.servings ?? servings,
       maxMinutes: timeTouched ? maxMinutes : interpreted.maxMinutes ?? maxMinutes,
       desireText: text,
@@ -65,7 +65,7 @@ export function DesirePage() {
       difficulty: difficulty ?? interpreted.difficulty,
       pantryIngredients: usePantry ? ingredients : [],
       pantryBasics: usePantry ? settings.pantryBasics : [],
-      pantryPolicy: usePantry ? 'prioritize' as const : 'ignore' as const
+      pantryPolicy: usePantry ? 'prioritize' : 'ignore'
     };
 
     setIsSearching(true);
