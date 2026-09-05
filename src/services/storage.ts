@@ -1,4 +1,4 @@
-import type { CookingRequest, Difficulty, HistoryEntry, Proposal, ShoppingListItem } from '../domain/types';
+import type { CookingRequest, Difficulty, HistoryEntry, IngredientInput, Proposal, ShoppingListItem } from '../domain/types';
 
 const FAVORITES_KEY = 'chef:favorites';
 const SAVED_RECIPES_KEY = 'chef:saved-recipes';
@@ -19,6 +19,7 @@ export type AppSettings = {
   fontScale: FontScale;
   defaultDifficulty?: Difficulty;
   pantryBasics: string[];
+  pantryStock: IngredientInput[];
 };
 
 export type ActiveSearchState = {
@@ -33,7 +34,8 @@ export const defaultSettings: AppSettings = {
   spiceLevel: 'Medio',
   fontScale: 'large',
   defaultDifficulty: undefined,
-  pantryBasics: ['Aceite de oliva', 'Sal', 'Pimienta', 'Ajo']
+  pantryBasics: ['Aceite de oliva', 'Sal', 'Pimienta', 'Ajo'],
+  pantryStock: []
 };
 
 function parse<T>(key: string, fallback: T): T {
@@ -45,57 +47,30 @@ function parse<T>(key: string, fallback: T): T {
   }
 }
 
-export function loadFavorites(): string[] {
-  return parse<string[]>(FAVORITES_KEY, []);
-}
-
-export function saveFavorites(ids: string[]): void {
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids));
-}
-
-export function loadSavedRecipes(): string[] {
-  return parse<string[]>(SAVED_RECIPES_KEY, []);
-}
-
-export function saveSavedRecipes(ids: string[]): void {
-  localStorage.setItem(SAVED_RECIPES_KEY, JSON.stringify(ids));
-}
-
-export function loadHistory(): HistoryEntry[] {
-  return parse<HistoryEntry[]>(HISTORY_KEY, []);
-}
-
-export function saveHistory(entries: HistoryEntry[]): void {
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(entries.slice(0, 30)));
-}
+export function loadFavorites(): string[] { return parse<string[]>(FAVORITES_KEY, []); }
+export function saveFavorites(ids: string[]): void { localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids)); }
+export function loadSavedRecipes(): string[] { return parse<string[]>(SAVED_RECIPES_KEY, []); }
+export function saveSavedRecipes(ids: string[]): void { localStorage.setItem(SAVED_RECIPES_KEY, JSON.stringify(ids)); }
+export function loadHistory(): HistoryEntry[] { return parse<HistoryEntry[]>(HISTORY_KEY, []); }
+export function saveHistory(entries: HistoryEntry[]): void { localStorage.setItem(HISTORY_KEY, JSON.stringify(entries.slice(0, 30))); }
 
 export function loadSettings(): AppSettings {
   const saved = parse<Partial<AppSettings>>(SETTINGS_KEY, {});
   return {
     ...defaultSettings,
     ...saved,
-    pantryBasics: Array.isArray(saved.pantryBasics) ? saved.pantryBasics : defaultSettings.pantryBasics
+    pantryBasics: Array.isArray(saved.pantryBasics) ? saved.pantryBasics : defaultSettings.pantryBasics,
+    pantryStock: Array.isArray(saved.pantryStock) ? saved.pantryStock : defaultSettings.pantryStock
   };
 }
 
-export function saveSettings(settings: AppSettings): void {
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-}
-
-export function loadShoppingList(): ShoppingListItem[] {
-  return parse<ShoppingListItem[]>(SHOPPING_LIST_KEY, []);
-}
-
-export function saveShoppingList(items: ShoppingListItem[]): void {
-  localStorage.setItem(SHOPPING_LIST_KEY, JSON.stringify(items));
-}
+export function saveSettings(settings: AppSettings): void { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+export function loadShoppingList(): ShoppingListItem[] { return parse<ShoppingListItem[]>(SHOPPING_LIST_KEY, []); }
+export function saveShoppingList(items: ShoppingListItem[]): void { localStorage.setItem(SHOPPING_LIST_KEY, JSON.stringify(items)); }
 
 export function loadActiveSearch(): ActiveSearchState {
   const saved = parse<Partial<ActiveSearchState>>(ACTIVE_SEARCH_KEY, {});
-  return {
-    request: saved.request ?? null,
-    proposals: Array.isArray(saved.proposals) ? saved.proposals : []
-  };
+  return { request: saved.request ?? null, proposals: Array.isArray(saved.proposals) ? saved.proposals : [] };
 }
 
 export function saveActiveSearch(request: CookingRequest | null, proposals: Proposal[]): void {
