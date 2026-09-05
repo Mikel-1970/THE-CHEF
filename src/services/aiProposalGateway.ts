@@ -3,8 +3,8 @@ import type { CookingRequest, Difficulty, DishClassification, Proposal, Recipe }
 const API_URL = (import.meta.env.VITE_RECIPE_API_URL || 'https://nrtmmepynzczfdddvohh.supabase.co/functions/v1').trim().replace(/\/+$/, '');
 const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'sb_publishable_b08-tfZCh2pEBGK0lBH-1g_oB3RwvV8').trim();
 
-const SUGGEST_TIMEOUT_MS = 40_000;
-const GENERATE_TIMEOUT_MS = 90_000;
+const SUGGEST_TIMEOUT_MS = 65_000;
+const GENERATE_TIMEOUT_MS = 120_000;
 const PROPOSAL_COUNT = 2;
 
 export function isAiProposalApiConfigured() {
@@ -48,7 +48,7 @@ async function postJson(path: string, body: unknown, timeoutMs: number): Promise
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw new Error(path.endsWith('/suggest')
-        ? 'La IA ha tardado demasiado en preparar las propuestas. Se muestran recetas locales para que puedas continuar.'
+        ? 'La IA ha superado el tiempo máximo de respuesta. Puedes repetir la búsqueda.'
         : 'La IA ha tardado demasiado en completar la receta. Puedes volver a intentarlo sin repetir la búsqueda.');
     }
     throw error;
@@ -85,7 +85,7 @@ function describeError(status: number, payload: unknown) {
   const message = typeof data.errorMessage === 'string' ? data.errorMessage : undefined;
   if (status === 429) return 'La API de OpenAI no tiene cuota disponible ahora mismo.';
   if (status === 401 || status === 403) return `La IA ha rechazado la autenticación${code ? ` (${code})` : ''}.`;
-  if (status >= 500) return `La IA ha tenido un fallo temporal${code ? ` (${code})` : ''}. Puedes repetir la búsqueda; el catálogo local sigue disponible.`;
+  if (status >= 500) return `La IA ha tenido un fallo temporal${code ? ` (${code})` : ''}. Puedes repetir la búsqueda.`;
   if (message) return `La generación con IA ha fallado${code ? ` (${code})` : ''}: ${sanitize(message)}`;
   return `La generación con IA ha fallado (error ${status}).`;
 }
