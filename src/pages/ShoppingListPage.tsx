@@ -1,10 +1,42 @@
-import { Check, Circle, ShoppingBasket, Trash2 } from 'lucide-react';
+import { Check, Circle, Share2, ShoppingBasket, Trash2 } from 'lucide-react';
 import { AppShell } from '../components/AppShell';
 import { useApp } from '../AppContext';
 import { formatQuantity } from '../utils/scaling';
 
 export function ShoppingListPage() {
   const { shoppingList, toggleShoppingItem, removeShoppingItem, clearShoppingList } = useApp();
+
+  const buildShareText = () => {
+    const pending = shoppingList.filter(item => !item.checked);
+    const rows = pending.map(item => {
+      const quantity = item.quantity !== undefined
+        ? `${formatQuantity(item.quantity)} ${item.unit ?? ''}`.trim()
+        : 'cantidad por revisar';
+      return `• ${item.name} — ${quantity}`;
+    });
+    return ['🛒 Lista de compra · The Chef', '', ...rows].join('\n');
+  };
+
+  const shareList = async () => {
+    const text = buildShareText();
+    if (!text.trim() || !shoppingList.some(item => !item.checked)) return;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Lista de compra · The Chef', text });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') return;
+      }
+    }
+    await navigator.clipboard?.writeText(text);
+    window.alert('Lista copiada. Ya puedes pegarla en WhatsApp o donde quieras.');
+  };
+
+  const sendWhatsApp = () => {
+    const text = buildShareText();
+    if (!text.trim() || !shoppingList.some(item => !item.checked)) return;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <AppShell>
@@ -30,7 +62,13 @@ export function ShoppingListPage() {
           ))}
         </div>
 
-        {!!shoppingList.length && <button className="advanced-toggle" onClick={clearShoppingList}><Trash2 size={17} /> Vaciar lista</button>}
+        {!!shoppingList.length && (
+          <div className="shopping-share-actions">
+            <button className="secondary-button" type="button" onClick={shareList}><Share2 size={17} /> Compartir lista</button>
+            <button className="secondary-button whatsapp-share-button" type="button" onClick={sendWhatsApp}>WhatsApp</button>
+            <button className="advanced-toggle" onClick={clearShoppingList}><Trash2 size={17} /> Vaciar lista</button>
+          </div>
+        )}
       </div>
     </AppShell>
   );
