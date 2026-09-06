@@ -1,4 +1,4 @@
-import { ArrowLeft, Camera, CheckCircle2, ChevronLeft, ChevronRight, Clock3, Pause, Play, RotateCcw, ScreenShare, Sparkles, Thermometer, X } from 'lucide-react';
+import { ArrowLeft, Camera, CheckCircle2, ChevronLeft, ChevronRight, Clock3, Pause, Play, RotateCcw, ScreenShare, Sparkles, Thermometer } from 'lucide-react';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { evaluateDishPhoto, getRecipeImage, type DishEvaluation } from '../services/mediaGateway';
@@ -78,7 +78,7 @@ export function CookPage() {
         <header className="cook-header">
           <button onClick={() => navigate(-1)} aria-label="Volver"><ArrowLeft size={21} /></button>
           <div><span>Modo Cocina</span><strong>Receta no disponible</strong></div>
-          <button onClick={() => navigate('/')} aria-label="Cerrar"><X size={21} /></button>
+          <span aria-hidden="true" />
         </header>
         <main className="cook-main">
           <p className="cook-instruction">No he podido recuperar esta receta. Vuelve a abrirla desde Mis recetas o genera una nueva propuesta.</p>
@@ -112,7 +112,7 @@ export function CookPage() {
         <header className="cook-header">
           <button onClick={() => setFinished(false)} aria-label="Volver al último paso"><ArrowLeft size={21} /></button>
           <div><span>Resultado final</span><strong>{recipe.title}</strong></div>
-          <button onClick={() => navigate('/')} aria-label="Cerrar"><X size={21} /></button>
+          <span aria-hidden="true" />
         </header>
 
         <main className="cook-finish-main">
@@ -162,7 +162,7 @@ export function CookPage() {
         <header className="cook-header">
           <button onClick={() => navigate(-1)} aria-label="Volver"><ArrowLeft size={21} /></button>
           <div><span>Modo Cocina</span><strong>{recipe.title}</strong></div>
-          <button onClick={() => navigate('/')} aria-label="Cerrar"><X size={21} /></button>
+          <span aria-hidden="true" />
         </header>
         <main className="cook-main"><p className="cook-instruction">Esta receta no contiene pasos de elaboración válidos.</p></main>
       </div>
@@ -177,7 +177,7 @@ export function CookPage() {
       <header className="cook-header">
         <button onClick={() => navigate(-1)} aria-label="Volver"><ArrowLeft size={21} /></button>
         <div><span>Modo Cocina</span><strong>{recipe.title}</strong></div>
-        <button onClick={() => navigate('/')} aria-label="Cerrar"><X size={21} /></button>
+        <span aria-hidden="true" />
       </header>
 
       <div className="cook-progress"><span style={{ width: `${((safeIndex + 1) / recipe.steps.length) * 100}%` }} /></div>
