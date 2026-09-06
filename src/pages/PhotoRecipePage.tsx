@@ -29,6 +29,7 @@ export function PhotoRecipePage() {
   const [working, setWorking] = useState<'analyse' | 'generate'>();
   const [error, setError] = useState<string>();
   const [correction, setCorrection] = useState('');
+  const [correctionOpen, setCorrectionOpen] = useState(false);
   const [servings, setServings] = useState(settings.defaultServings || 2);
   const [confirmedIngredients, setConfirmedIngredients] = useState<Set<string>>(new Set());
   const [extraIngredient, setExtraIngredient] = useState('');
@@ -46,6 +47,7 @@ export function PhotoRecipePage() {
     setProposal(undefined);
     setVisualSummary('');
     setCorrection('');
+    setCorrectionOpen(false);
     setStage('select');
     setError(undefined);
   };
@@ -77,6 +79,7 @@ export function PhotoRecipePage() {
       const ingredients = Array.from(new Set([...first.usedIngredients, ...first.missingIngredients])).filter(Boolean);
       setConfirmedIngredients(new Set(ingredients));
       setCorrection('');
+      setCorrectionOpen(false);
       setStage('identified');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se ha podido analizar el plato.');
@@ -136,7 +139,6 @@ export function PhotoRecipePage() {
       <TopBar eyebrow="MIRA, CONFIRMA Y COCINA" title="Receta desde una foto" />
       <div className="page-content nav-safe">
         <section className="editorial-card olive-intro"><span className="eyebrow">ENSÉÑAME EL PLATO</span><h2>Descubre cómo prepararlo.</h2><p>El Chef primero identificará el plato, después confirmarás los ingredientes y solo entonces generará una receta completa.</p></section>
-
         <section className="photo-recipe-upload">{previewUrl ? <img src={previewUrl} alt="Plato elegido para identificar" /> : <div><Camera size={44} /><strong>Añade la foto del plato</strong><span>Procura que tenga buena luz y se vea el plato completo.</span></div>}</section>
         <div className="photo-recipe-actions"><label className="photo-recipe-button"><Camera size={20} />Hacer una foto<input type="file" accept="image/*" capture="environment" onChange={selectPhoto} /></label><label className="photo-recipe-button secondary"><ImagePlus size={20} />Elegir de la galería<input type="file" accept="image/*" onChange={selectPhoto} /></label></div>
 
@@ -147,8 +149,8 @@ export function PhotoRecipePage() {
           <h2>Creo que es: {proposal.title}</h2>
           <p>{shortText(proposal.subtitle || visualSummary)}</p>
           <strong>¿Es este el plato que quieres reproducir?</strong>
-          <div className="photo-answer-actions"><button className="secondary-button" type="button" onClick={() => setStage('ingredients')}><Check size={18} /> Sí, correcto</button><button className="secondary-button" type="button" onClick={() => setCorrection(current => current || '')}><X size={18} /> No, corregir</button></div>
-          {correction !== '' || error?.startsWith('Corrige') ? <div className="photo-correction-box"><textarea value={correction} onChange={event => setCorrection(event.target.value)} placeholder="Ej. Es una ensalada de feta y sandía con pistachos." /><div className="recipe-revision-toolbar"><button type="button" className="revision-clear-button" onClick={() => { correctionVoice.stop(); setCorrection(''); }}><X size={19} /></button><button type="button" className={`voice-button ${correctionVoice.isListening ? 'listening' : ''}`} onClick={correctionVoice.toggle} disabled={!correctionVoice.isSupported || correctionVoice.isTranscribing}>{correctionVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button><button type="button" className="revision-confirm-button" onClick={() => void analyse(correction)} disabled={!correction.trim() || correctionVoice.isListening || correctionVoice.isTranscribing}><Check size={20} /></button></div>{correctionVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando tu corrección…</div>}{correctionVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando…</div>}</div> : null}
+          <div className="photo-answer-actions"><button className="secondary-button" type="button" onClick={() => setStage('ingredients')}><Check size={18} /> Sí, correcto</button><button className="secondary-button" type="button" onClick={() => setCorrectionOpen(true)}><X size={18} /> No, corregir</button></div>
+          {correctionOpen && <div className="photo-correction-box"><textarea value={correction} onChange={event => setCorrection(event.target.value)} placeholder="Ej. Es una ensalada de feta y sandía con pistachos." autoFocus /><div className="recipe-revision-toolbar"><button type="button" className="revision-clear-button" onClick={() => { correctionVoice.stop(); setCorrection(''); }}><X size={19} /></button><button type="button" className={`voice-button ${correctionVoice.isListening ? 'listening' : ''}`} onClick={correctionVoice.toggle} disabled={!correctionVoice.isSupported || correctionVoice.isTranscribing}>{correctionVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button><button type="button" className="revision-confirm-button" onClick={() => void analyse(correction)} disabled={!correction.trim() || correctionVoice.isListening || correctionVoice.isTranscribing}><Check size={20} /></button></div>{correctionVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando tu corrección…</div>}{correctionVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando…</div>}</div>}
         </section>}
 
         {proposal && stage === 'ingredients' && <section className="editorial-card photo-identification-card">
@@ -168,24 +170,7 @@ export function PhotoRecipePage() {
 }
 
 const visualIdentificationRecipe: Recipe = {
-  id: 'visual-identification',
-  title: 'Identificación visual de un plato',
-  description: 'Analiza exclusivamente lo observable en la fotografía e identifica el tipo de plato, ingredientes aparentes, técnica probable, textura, cocción y presentación.',
-  emoji: '🔎',
-  baseServings: 2,
-  prepMinutes: 0,
-  cookMinutes: 0,
-  difficulty: 'Media',
-  mealType: 'Comida',
-  style: 'Análisis visual',
-  cuisine: 'Por identificar',
-  ingredients: [],
-  miseEnPlace: [],
-  steps: [],
-  criticalPoints: ['Identificar solo lo visualmente razonable'],
-  substitutions: [],
-  storage: '',
-  nutritionPerServing: { kcal: 0, proteinG: 0, carbsG: 0, fatG: 0 }
+  id: 'visual-identification', title: 'Identificación visual de un plato', description: 'Analiza exclusivamente lo observable en la fotografía e identifica el tipo de plato, ingredientes aparentes, técnica probable, textura, cocción y presentación.', emoji: '🔎', baseServings: 2, prepMinutes: 0, cookMinutes: 0, difficulty: 'Media', mealType: 'Comida', style: 'Análisis visual', cuisine: 'Por identificar', ingredients: [], miseEnPlace: [], steps: [], criticalPoints: ['Identificar solo lo visualmente razonable'], substitutions: [], storage: '', nutritionPerServing: { kcal: 0, proteinG: 0, carbsG: 0, fatG: 0 }
 };
 
 function shortText(value: string) { const clean = value.trim(); return clean.length > 220 ? `${clean.slice(0, 217)}…` : clean; }
