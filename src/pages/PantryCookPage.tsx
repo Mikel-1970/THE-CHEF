@@ -20,16 +20,17 @@ const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
 
 export function PantryCookPage() {
   const navigate = useNavigate();
-  const { settings, updateSettings, setSearch } = useApp();
+  const { settings, currentRequest, updateSettings, setSearch } = useApp();
+  const previous = currentRequest?.mode === 'pantry' && !currentRequest.desireText ? currentRequest : undefined;
   const pantry = settings.pantryStock ?? [];
-  const [selected, setSelected] = useState<Set<string>>(() => new Set());
+  const [selected, setSelected] = useState<Set<string>>(() => new Set((previous?.pantryIngredients ?? []).map(item => normalize(item.name))));
   const [draft, setDraft] = useState('');
-  const [servings, setServings] = useState(settings.defaultServings);
-  const [maxMinutes, setMaxMinutes] = useState(60);
-  const [advanced, setAdvanced] = useState(false);
-  const [style, setStyle] = useState<string>();
-  const [cuisine, setCuisine] = useState<string>();
-  const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
+  const [servings, setServings] = useState(previous?.servings ?? settings.defaultServings);
+  const [maxMinutes, setMaxMinutes] = useState(previous?.maxMinutes ?? 60);
+  const [advanced, setAdvanced] = useState(Boolean(previous?.style || previous?.cuisine || previous?.difficulty));
+  const [style, setStyle] = useState<string | undefined>(previous?.style);
+  const [cuisine, setCuisine] = useState<string | undefined>(previous?.cuisine);
+  const [difficulty, setDifficulty] = useState<Difficulty | undefined>(previous?.difficulty ?? settings.defaultDifficulty);
   const [isSearching, setIsSearching] = useState(false);
   const voice = useAiDictation(transcript => setDraft(current => appendDictation(current, transcript)));
   const sortedPantry = useMemo(() => [...pantry].sort((a, b) => a.name.localeCompare(b.name, 'es')), [pantry]);

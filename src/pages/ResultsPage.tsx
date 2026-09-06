@@ -74,7 +74,7 @@ export function ResultsPage() {
   const aiConfigured = isAiProposalApiConfigured();
   const visibleCount = proposals.length;
   const working = Boolean(generatingId || refreshing);
-  const editOptions = () => navigate(currentRequest.desireText ? '/antojo' : '/nevera');
+  const editOptions = () => navigate(currentRequest.desireText ? '/antojo' : '/cocina-despensa');
 
   return (
     <AppShell hideNav>
