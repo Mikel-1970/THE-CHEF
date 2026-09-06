@@ -1,4 +1,4 @@
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, RefreshCw, SlidersHorizontal } from 'lucide-react';
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
@@ -74,6 +74,7 @@ export function ResultsPage() {
   const aiConfigured = isAiProposalApiConfigured();
   const visibleCount = proposals.length;
   const working = Boolean(generatingId || refreshing);
+  const editOptions = () => navigate(currentRequest.desireText ? '/antojo' : '/nevera');
 
   return (
     <AppShell hideNav>
@@ -108,7 +109,10 @@ export function ResultsPage() {
             />
           ))}
         </div>
-        <button className="secondary-button" onClick={refresh} disabled={refreshing || Boolean(generatingId)}><RefreshCw size={17} /> {refreshing ? 'Buscando otras opciones…' : `Dame otras ${PROPOSAL_COUNT}`}</button>
+        <div className="proposal-footer-actions">
+          <button className="secondary-button" onClick={editOptions} disabled={working}><SlidersHorizontal size={17} /> Cambiar opciones</button>
+          <button className="secondary-button" onClick={refresh} disabled={refreshing || Boolean(generatingId)}><RefreshCw size={17} /> {refreshing ? 'Buscando…' : `Dame otras ${PROPOSAL_COUNT}`}</button>
+        </div>
         <p className="prototype-note">
           {engineNotice
             ? 'Catálogo local de respaldo activo. Estas propuestas no han sido generadas por IA en esta búsqueda.'

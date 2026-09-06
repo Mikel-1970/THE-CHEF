@@ -167,6 +167,7 @@ a { color: inherit; text-decoration: none; }
 .reason { margin-top:11px;padding:10px;border-radius:13px;background:#edf0df;color:#526635;font-size:.65rem;display:flex;gap:7px;align-items:flex-start; }
 .mini-list { margin-top:8px;display:flex;gap:7px;align-items:flex-start;color:#5d6652;font-size:.63rem; }.mini-list.missing{color:#8a6725}
 .secondary-button { width:100%;margin-top:16px;min-height:48px;border:1px solid var(--line);border-radius:15px;background:#fffaf1;color:#4a5e30;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px; }
+.proposal-footer-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.proposal-footer-actions .secondary-button{min-width:0;padding:8px;margin-top:16px;font-size:.68rem}
 .prototype-note { text-align:center;color:#929285;font-size:.58rem;line-height:1.5;margin:12px 15px; }
 
 .recipe-page { background:#f7f1e6; }

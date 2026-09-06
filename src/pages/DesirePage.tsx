@@ -25,19 +25,20 @@ const cuisinePhrases: Record<string, string> = { Española: 'Algo español', Med
 
 export function DesirePage() {
   const navigate = useNavigate();
-  const { settings, favorites, history, setSearch } = useApp();
-  const [text, setText] = useState('');
-  const [ingredients, setIngredients] = useState<IngredientInput[]>(() => (settings.pantryStock ?? []).map(item => ({ ...item, priority: false })));
+  const { settings, favorites, history, currentRequest, setSearch } = useApp();
+  const previous = currentRequest?.desireText ? currentRequest : undefined;
+  const [text, setText] = useState(previous?.desireText ?? '');
+  const [ingredients, setIngredients] = useState<IngredientInput[]>(() => (settings.pantryStock ?? []).map(item => ({ ...item, priority: previous?.pantryIngredients?.some(selected => normalize(selected.name) === normalize(item.name)) ?? false })));
   const [ingredientDraft, setIngredientDraft] = useState('');
-  const [pantryOpen, setPantryOpen] = useState(false);
-  const [servings, setServings] = useState(settings.defaultServings);
+  const [pantryOpen, setPantryOpen] = useState(Boolean(previous?.pantryIngredients?.length));
+  const [servings, setServings] = useState(previous?.servings ?? settings.defaultServings);
   const [servingsTouched, setServingsTouched] = useState(false);
-  const [maxMinutes, setMaxMinutes] = useState(60);
+  const [maxMinutes, setMaxMinutes] = useState(previous?.maxMinutes ?? 60);
   const [timeTouched, setTimeTouched] = useState(false);
-  const [advanced, setAdvanced] = useState(false);
-  const [style, setStyle] = useState<string>();
-  const [cuisine, setCuisine] = useState<string>();
-  const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
+  const [advanced, setAdvanced] = useState(Boolean(previous?.style || previous?.cuisine || previous?.difficulty));
+  const [style, setStyle] = useState<string | undefined>(previous?.style);
+  const [cuisine, setCuisine] = useState<string | undefined>(previous?.cuisine);
+  const [difficulty, setDifficulty] = useState<Difficulty | undefined>(previous?.difficulty ?? settings.defaultDifficulty);
   const [isSearching, setIsSearching] = useState(false);
   const [requestConfirmed, setRequestConfirmed] = useState(false);
 
