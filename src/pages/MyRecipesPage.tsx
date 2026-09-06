@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
+import { RecipeThumbnail } from '../components/RecipeThumbnail';
 import { useApp } from '../AppContext';
 import { useAiDictation } from '../hooks/useAiDictation';
 import type { CookingRequest, HistoryEntry, Recipe } from '../domain/types';
@@ -107,7 +108,7 @@ export function MyRecipesPage() {
               <div className="library-list">
                 {recipes.map(recipe => (
                   <div className="library-card" key={recipe.id} role="button" tabIndex={0} onClick={() => navigate(`/receta/${recipe.id}`)} onKeyDown={event => event.key === 'Enter' && navigate(`/receta/${recipe.id}`)}>
-                    <span className="library-emoji">{recipe.emoji}</span>
+                    <RecipeThumbnail recipe={recipe} />
                     <div style={{ minWidth: 0, flex: 1 }}><strong>{recipe.title}</strong><small><Clock3 size={13} /> {recipe.prepMinutes + recipe.cookMinutes} min · {recipe.cuisine}</small></div>
                     <button type="button" className="library-delete" aria-label={tab === 'favorites' ? `Quitar ${recipe.title} de favoritos` : `Quitar ${recipe.title} de Mis recetas`} onClick={event => { event.stopPropagation(); if (tab === 'favorites') toggleFavorite(recipe.id); else deleteRecipe(recipe); }}><Trash2 size={17} /></button>
                   </div>
