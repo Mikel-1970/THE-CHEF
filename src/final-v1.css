@@ -1,5 +1,7 @@
 .recipe-action-grid button:last-child { grid-column: auto; min-height: 112px; }
 
+.page-content:not(.nav-safe) { padding-bottom: calc(118px + env(safe-area-inset-bottom)) !important; }
+
 .editable-stock-list { display: grid; gap: 10px; }
 .editable-stock-card { display: grid !important; grid-template-columns: 42px minmax(0, 1fr) 42px; align-items: center; gap: 10px; }
 .pantry-stock-card { grid-template-columns: minmax(0, 1fr) 42px; }
