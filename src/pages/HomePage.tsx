@@ -1,4 +1,4 @@
-import { BookOpen, ChefHat, Clock3, Heart, ShoppingBasket } from 'lucide-react';
+import { BookOpen, Camera, ChefHat, Clock3, Heart, PackageOpen, ShoppingBasket } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
@@ -9,6 +9,8 @@ export function HomePage() {
   const navigate = useNavigate();
   const { favorites, history } = useApp();
   const desireImage = `${import.meta.env.BASE_URL}home-desire.webp`;
+  const pantryImage = `${import.meta.env.BASE_URL}home-pantry-v2.png`;
+  const photoRecipeImage = `${import.meta.env.BASE_URL}home-photo-recipe.png`;
 
   return (
     <AppShell>
@@ -32,7 +34,7 @@ export function HomePage() {
             <div className="reference-action-text">
               <h3>¿Qué quieres<br />que te prepare?</h3>
               <span className="reference-action-line reference-action-line-gold" />
-              <p>Dime qué te apetece y qué tienes en casa</p>
+              <p>Dime qué te apetece</p>
             </div>
             <div
               className="reference-action-photo reference-desire-photo"
@@ -40,6 +42,17 @@ export function HomePage() {
               aria-hidden="true"
             />
             <span className="reference-card-icon reference-card-icon-gold"><ChefHat size={38} strokeWidth={1.55} /></span>
+          </button>
+        </section>
+
+        <section className="reference-secondary-actions" aria-label="Otras formas de cocinar">
+          <button className="reference-secondary-card" onClick={() => navigate('/nevera')}>
+            <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.05), rgba(24,30,18,.78)), url(${pantryImage})` }} aria-hidden="true" />
+            <span className="reference-secondary-copy"><PackageOpen size={25} /><strong>Cocina con lo que tienes</strong><small>Abre tu despensa y aprovecha sus productos con sentido.</small></span>
+          </button>
+          <button className="reference-secondary-card reference-photo-card" onClick={() => navigate('/foto')}>
+            <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.02), rgba(24,30,18,.77)), url(${photoRecipeImage})` }} aria-hidden="true" />
+            <span className="reference-secondary-copy"><Camera size={25} /><strong>Receta desde una foto</strong><small>Enséñame un plato y descubre cómo prepararlo.</small></span>
           </button>
         </section>
 
