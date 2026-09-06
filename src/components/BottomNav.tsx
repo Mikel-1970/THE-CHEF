@@ -1,4 +1,4 @@
-import { ChefHat, Home, PackageOpen, Search, UserRound } from 'lucide-react';
+import { ChefHat, CookingPot, Home, PackageOpen, Search } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import '../navigation-v04.css';
 
@@ -25,9 +25,9 @@ export function BottomNav() {
         <span>Despensa</span>
       </NavLink>
 
-      <NavLink to="/ajustes" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-        <UserRound size={24} strokeWidth={1.75} />
-        <span>Perfil</span>
+      <NavLink to="/tecnicas" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+        <CookingPot size={24} strokeWidth={1.8} />
+        <span>Técnicas</span>
       </NavLink>
     </nav>
   );
