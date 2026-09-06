@@ -1,4 +1,4 @@
-import { AlertTriangle, Bookmark, Check, ChefHat, Clock3, Heart, Leaf, Mic, MicOff, Play, ShieldCheck, ShoppingBasket, Sparkles, UsersRound, WandSparkles, X } from 'lucide-react';
+import { AlertTriangle, Bookmark, Check, ChefHat, Clock3, Heart, Leaf, Mic, MicOff, Play, Share2, ShieldCheck, ShoppingBasket, Sparkles, UsersRound, WandSparkles, X } from 'lucide-react';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
@@ -10,6 +10,8 @@ import { useApp } from '../AppContext';
 import type { RecipeIngredient } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { reviseAiRecipe } from '../services/aiProposalGateway';
+import { getRecipeImage } from '../services/mediaGateway';
+import { shareRecipePdf } from '../services/recipePdf';
 import { getRecipeById, registerExternalRecipes, rememberActiveRecipe, rememberLibraryRecipe } from '../services/recipeCatalog';
 import { formatQuantity, scaleQuantity } from '../utils/scaling';
 import { formatDuration } from '../utils/time';
@@ -30,6 +32,8 @@ export function RecipePage() {
   const [revisionText, setRevisionText] = useState('');
   const [revisionError, setRevisionError] = useState<string>();
   const [isRevising, setIsRevising] = useState(false);
+  const [sharingPdf, setSharingPdf] = useState(false);
+  const [shareStatus, setShareStatus] = useState<string>();
   const revisionVoice = useAiDictation(transcript => setRevisionText(current => appendSentence(current, transcript)));
 
   const sections = useMemo(() => {
@@ -55,11 +59,10 @@ export function RecipePage() {
     setIsRevisionOpen(false);
     setRevisionText('');
     setRevisionError(undefined);
+    setShareStatus(undefined);
   }, [recipe?.id]);
 
-  if (!recipe) {
-    return <AppShell><div className="page-content nav-safe"><section className="editorial-card"><h2>Esta receta no está disponible.</h2><p>Vuelve a Mis recetas o genera una nueva propuesta.</p></section></div></AppShell>;
-  }
+  if (!recipe) return <AppShell><div className="page-content nav-safe"><section className="editorial-card"><h2>Esta receta no está disponible.</h2><p>Vuelve a Mis recetas o genera una nueva propuesta.</p></section></div></AppShell>;
 
   const total = recipe.prepMinutes + recipe.cookMinutes;
   const isFavorite = favorites.includes(recipe.id);
@@ -73,17 +76,28 @@ export function RecipePage() {
       return next;
     });
     if (shouldBeMissing && !ingredient.optional) {
-      upsertShoppingItem({
-        id: itemId,
-        name: ingredient.name,
-        quantity: scaleQuantity(ingredient, recipe.baseServings, servings),
-        unit: ingredient.unit,
-        recipeId: recipe.id,
-        recipeTitle: recipe.title,
-        checked: false
-      });
-    } else {
-      removeShoppingItem(itemId);
+      upsertShoppingItem({ id: itemId, name: ingredient.name, quantity: scaleQuantity(ingredient, recipe.baseServings, servings), unit: ingredient.unit, recipeId: recipe.id, recipeTitle: recipe.title, checked: false });
+    } else removeShoppingItem(itemId);
+  };
+
+  const saveRecipe = () => {
+    const willSave = !isSaved;
+    toggleSavedRecipe(recipe.id);
+    if (willSave) void getRecipeImage(recipe).catch(() => undefined);
+  };
+
+  const sharePdf = async () => {
+    if (sharingPdf) return;
+    setSharingPdf(true);
+    setShareStatus(undefined);
+    try {
+      const result = await shareRecipePdf(recipe, servings);
+      setShareStatus(result === 'shared' ? 'PDF compartido.' : 'PDF preparado. Puedes compartirlo desde tus descargas.');
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+      setShareStatus(error instanceof Error ? error.message : 'No se ha podido preparar el PDF.');
+    } finally {
+      setSharingPdf(false);
     }
   };
 
@@ -109,9 +123,7 @@ export function RecipePage() {
       navigate(`/receta/${registered.id}`);
     } catch (error) {
       setRevisionError(error instanceof Error ? error.message : 'No se ha podido revisar la receta.');
-    } finally {
-      setIsRevising(false);
-    }
+    } finally { setIsRevising(false); }
   };
 
   const ingredientPanel = <>
@@ -136,25 +148,22 @@ export function RecipePage() {
   return (
     <AppShell hideBack hideProfile>
       <ChefLoadingOverlay active={isRevising} title="Rehaciendo tu receta" messages={['¡Oído cocina!']} />
+      <ChefLoadingOverlay active={sharingPdf} title="Preparando la ficha" messages={['Montando tu receta en PDF…']} />
       <TopBar eyebrow="RECETA" title="Lista para cocinar" />
       <div className="recipe-page">
-        <section className="recipe-hero">
-          <div className="recipe-hero-art"><span>{recipe.emoji}</span><div className="hero-glow" /></div>
-          <button className={`floating-heart ${isFavorite ? 'active' : ''}`} onClick={() => toggleFavorite(recipe.id)} aria-label="Favorito"><Heart size={21} fill={isFavorite ? 'currentColor' : 'none'} /></button>
-          <div className="recipe-title-block"><span className="eyebrow light">{recipe.cuisine.toUpperCase()} · {recipe.style.toUpperCase()}</span><h1>{recipe.title}</h1><p>{recipe.description}</p><div className="hero-meta"><span><Clock3 size={16} /> {formatDuration(total)}</span><span><ChefHat size={16} /> {recipe.difficulty}</span><span><UsersRound size={16} /> {servings}</span></div></div>
-        </section>
+        <section className="recipe-hero"><div className="recipe-hero-art"><span>{recipe.emoji}</span><div className="hero-glow" /></div><button className={`floating-heart ${isFavorite ? 'active' : ''}`} onClick={() => toggleFavorite(recipe.id)} aria-label="Favorito"><Heart size={21} fill={isFavorite ? 'currentColor' : 'none'} /></button><div className="recipe-title-block"><span className="eyebrow light">{recipe.cuisine.toUpperCase()} · {recipe.style.toUpperCase()}</span><h1>{recipe.title}</h1><p>{recipe.description}</p><div className="hero-meta"><span><Clock3 size={16} /> {formatDuration(total)}</span><span><ChefHat size={16} /> {recipe.difficulty}</span><span><UsersRound size={16} /> {servings}</span></div></div></section>
 
         <div className="recipe-content nav-safe">
           <section className="nutrition-card nutrition-card-priority"><div><span className="eyebrow">INFORMACIÓN NUTRICIONAL APROXIMADA</span><h2>Por ración</h2></div><div className="nutrition-grid"><div><strong>{recipe.nutritionPerServing.kcal}</strong><span>kcal</span></div><div><strong>{recipe.nutritionPerServing.proteinG} g</strong><span>proteína</span></div><div><strong>{recipe.nutritionPerServing.carbsG} g</strong><span>hidratos</span></div><div><strong>{recipe.nutritionPerServing.fatG} g</strong><span>grasas</span></div></div></section>
           <section className="servings-card"><div><span className="eyebrow">COMENSALES</span><strong>Ajusta la receta</strong></div><NumberStepper value={servings} onChange={setServings} /></section>
-          <div className="recipe-save-actions"><button className="secondary-button" type="button" onClick={() => toggleSavedRecipe(recipe.id)}><Bookmark size={18} fill={isSaved ? 'currentColor' : 'none'} /> {isSaved ? 'Guardada en Mis recetas' : 'Guardar receta'}</button><button className="secondary-button recipe-revision-launch" type="button" onClick={() => { setRevisionText(''); setRevisionError(undefined); setIsRevisionOpen(true); }}><WandSparkles size={18} /> Personalizar receta</button></div>
+          <div className="recipe-save-actions">
+            <button className="secondary-button" type="button" onClick={saveRecipe}><Bookmark size={18} fill={isSaved ? 'currentColor' : 'none'} /> {isSaved ? 'Guardada en Mis recetas' : 'Guardar receta'}</button>
+            <button className="secondary-button" type="button" onClick={() => void sharePdf()} disabled={sharingPdf}><Share2 size={18} /> {sharingPdf ? 'Preparando PDF…' : 'Compartir ficha PDF'}</button>
+            <button className="secondary-button recipe-revision-launch" type="button" onClick={() => { setRevisionText(''); setRevisionError(undefined); setIsRevisionOpen(true); }}><WandSparkles size={18} /> Personalizar receta</button>
+          </div>
+          {shareStatus && <div className="recipe-share-status">{shareStatus}</div>}
           <RecipeSourceNote recipe={recipe} />
-          <section className="recipe-action-grid" aria-label="Información de la receta">
-            <button type="button" onClick={() => setActivePanel('ingredients')}><ShoppingBasket size={22} /><strong>Ingredientes</strong><span>Lo que necesitas</span></button>
-            <button type="button" onClick={() => setActivePanel('prep')}><Sparkles size={22} /><strong>Mise en place</strong><span>Preparación previa</span></button>
-            <button type="button" onClick={() => setActivePanel('critical')}><AlertTriangle size={22} /><strong>Puntos críticos</strong><span>Lo importante para acertar</span></button>
-            <button type="button" onClick={() => setActivePanel('recommendations')}><Leaf size={22} /><strong>Recomendaciones</strong><span>Consejos y sustituciones</span></button>
-          </section>
+          <section className="recipe-action-grid" aria-label="Información de la receta"><button type="button" onClick={() => setActivePanel('ingredients')}><ShoppingBasket size={22} /><strong>Ingredientes</strong><span>Lo que necesitas</span></button><button type="button" onClick={() => setActivePanel('prep')}><Sparkles size={22} /><strong>Mise en place</strong><span>Preparación previa</span></button><button type="button" onClick={() => setActivePanel('critical')}><AlertTriangle size={22} /><strong>Puntos críticos</strong><span>Lo importante para acertar</span></button><button type="button" onClick={() => setActivePanel('recommendations')}><Leaf size={22} /><strong>Recomendaciones</strong><span>Consejos y sustituciones</span></button></section>
           <section className="trust-strip compact-trust-strip"><ShieldCheck size={18} /><div><strong>Todo preparado</strong><span>La elaboración completa está en el modo cocina para evitar información duplicada.</span></div></section>
           <div className="cook-cta"><button onClick={startCooking}><Play size={20} fill="currentColor" /> Empezar a cocinar</button></div>
         </div>
