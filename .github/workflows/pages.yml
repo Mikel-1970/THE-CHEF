@@ -109,7 +109,7 @@ jobs:
     name: Notificar resultado
     needs: [build, deploy, validate]
     if: ${{ always() }}
-    uses: Mikel-1970/CURSO-IA-CHAT-GPT/.github/workflows/notify-app-reusable.yml@main
+    uses: Mikel-1970/CURSO-IA-CHAT-GPT/.github/workflows/notify-app-central.yml@main
     with:
       project: THE-CHEF
       version: ${{ needs.build.outputs.version }}
@@ -117,6 +117,3 @@ jobs:
       build_result: ${{ needs.build.result }}
       deploy_result: ${{ needs.deploy.result }}
       validate_result: ${{ needs.validate.result }}
-    secrets:
-      PUSHOVER_USER_KEY: ${{ secrets.PUSHOVER_USER_KEY }}
-      PUSHOVER_APP_TOKEN: ${{ secrets.PUSHOVER_APP_TOKEN }}
