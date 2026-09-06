@@ -1,4 +1,4 @@
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, RefreshCw, SlidersHorizontal } from 'lucide-react';
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
@@ -71,6 +71,7 @@ export function ResultsPage() {
   const aiConfigured = isAiProposalApiConfigured();
   const visibleCount = proposals.length;
   const working = Boolean(generatingId || refreshing);
+  const editOptions = () => navigate(currentRequest.desireText ? '/antojo' : '/cocina-despensa');
 
   return (
     <AppShell hideBack hideProfile>
@@ -86,7 +87,10 @@ export function ResultsPage() {
         {selectionError && <div className="helper-note" role="alert"><AlertTriangle size={17} /><span>{selectionError}</span></div>}
         {!engineNotice && proposals.some(proposal => proposal.recipeId.startsWith('ai-proposal-')) && <div className="helper-note" role="status">Las {visibleCount} ideas son propuestas ligeras. La receta completa se genera únicamente cuando eliges una.</div>}
         <div className="proposal-stack">{proposals.map((proposal, index) => <ProposalCard key={proposal.id} proposal={proposal} index={index} onSelect={selectProposal} generating={generatingId === proposal.id} />)}</div>
-        <button className="secondary-button" onClick={refresh} disabled={refreshing || Boolean(generatingId)}><RefreshCw size={17} /> {refreshing ? 'Buscando otras opciones…' : `Dame otras ${PROPOSAL_COUNT}`}</button>
+        <div className="proposal-footer-actions">
+          <button className="secondary-button" onClick={editOptions} disabled={working}><SlidersHorizontal size={17} /> Cambiar opciones</button>
+          <button className="secondary-button" onClick={refresh} disabled={refreshing || Boolean(generatingId)}><RefreshCw size={17} /> {refreshing ? 'Buscando…' : `Dame otras ${PROPOSAL_COUNT}`}</button>
+        </div>
         <p className="prototype-note">{engineNotice ? 'Catálogo local de respaldo activo.' : aiConfigured ? `Flujo IA en dos fases activo: primero ${visibleCount} propuestas breves y después una única receta completa al elegir.` : 'Motor híbrido preparado: por ahora se utiliza el catálogo local validado.'}</p>
       </div>
     </AppShell>
