@@ -1,7 +1,7 @@
 import { ArrowLeft, Camera, CheckCircle2, ChevronLeft, ChevronRight, Clock3, Pause, Play, RotateCcw, ScreenShare, Sparkles, Thermometer, X } from 'lucide-react';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { evaluateDishPhoto, type DishEvaluation } from '../services/mediaGateway';
+import { evaluateDishPhoto, getRecipeImage, type DishEvaluation } from '../services/mediaGateway';
 import { getActiveRecipe, getRecipeById } from '../services/recipeCatalog';
 import '../cook-enhancements.css';
 
@@ -18,6 +18,8 @@ export function CookPage() {
   const [evaluation, setEvaluation] = useState<DishEvaluation>();
   const [photoUrl, setPhotoUrl] = useState<string>();
   const [photoError, setPhotoError] = useState<string>();
+  const [referenceImageUrl, setReferenceImageUrl] = useState<string>();
+  const [referenceImageError, setReferenceImageError] = useState(false);
   const wakeLock = useRef<any>(null);
   const servings = Number(params.get('servings') || recipe?.baseServings || 4);
   const recipeId = recipe?.id;
@@ -50,6 +52,25 @@ export function CookPage() {
     requestWakeLock();
     return () => wakeLock.current?.release?.();
   }, []);
+
+  useEffect(() => {
+    if (!recipe) return;
+    let disposed = false;
+    let generatedUrl: string | undefined;
+    setReferenceImageError(false);
+    getRecipeImage(recipe)
+      .then(url => {
+        generatedUrl = url;
+        if (!disposed && url) setReferenceImageUrl(url);
+      })
+      .catch(() => {
+        if (!disposed) setReferenceImageError(true);
+      });
+    return () => {
+      disposed = true;
+      if (generatedUrl?.startsWith('blob:')) URL.revokeObjectURL(generatedUrl);
+    };
+  }, [recipeId]);
 
   if (!recipe) {
     return (
@@ -101,7 +122,12 @@ export function CookPage() {
           <h1>{evaluation ? (celebration ? '¡Enhorabuena!' : 'Plato terminado') : '¿Cómo te ha quedado?'}</h1>
           <p>{evaluation ? 'He comparado visualmente el resultado con lo esperable para esta receta.' : 'Haz una foto del resultado final y El Chef te dará una valoración visual con puntos fuertes y mejoras concretas.'}</p>
 
-          {photoUrl && <img className="dish-result-photo" src={photoUrl} alt={`Resultado final de ${recipe.title}`} />}
+          <section className="dish-reference-card" aria-label="Presentación esperada">
+            <span>PROPUESTA DE EL CHEF</span>
+            {referenceImageUrl ? <img src={referenceImageUrl} alt={`Presentación sugerida de ${recipe.title}`} /> : <div className="dish-reference-placeholder"><span>{recipe.emoji}</span><strong>{referenceImageError ? 'No se ha podido cargar la referencia' : 'Preparando la imagen en segundo plano…'}</strong></div>}
+          </section>
+
+          {photoUrl && <section className="dish-real-card"><span>TU PLATO</span><img className="dish-result-photo" src={photoUrl} alt={`Resultado final de ${recipe.title}`} /></section>}
 
           {!evaluation && (
             <label className={`photo-capture-button ${evaluating ? 'disabled' : ''}`}>

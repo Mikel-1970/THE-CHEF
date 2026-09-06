@@ -89,6 +89,58 @@
   margin: 0 0 18px;
 }
 
+.dish-reference-card,
+.dish-real-card {
+  margin: 0 0 18px;
+  padding: 10px;
+  border-radius: 22px;
+  background: rgba(255,255,255,.10);
+  text-align: left;
+}
+
+.dish-reference-card > span,
+.dish-real-card > span {
+  display: block;
+  padding: 2px 4px 9px;
+  font-size: .65rem;
+  font-weight: 850;
+  letter-spacing: .09em;
+  opacity: .72;
+}
+
+.dish-reference-card img,
+.dish-reference-placeholder {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  object-fit: cover;
+  background: rgba(255,255,255,.08);
+}
+
+.dish-reference-placeholder {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 9px;
+  text-align: center;
+}
+
+.dish-reference-placeholder span {
+  font-size: 3.6rem;
+}
+
+.dish-reference-placeholder strong {
+  padding: 0 12px;
+  font-size: .72rem;
+  opacity: .75;
+}
+
+.dish-real-card .dish-result-photo {
+  margin: 0;
+  border-radius: 16px;
+}
+
 .photo-capture-button,
 .photo-retry-button {
   border: 0;
