@@ -1,14 +1,16 @@
-.techniques-page { display: grid; gap: 18px; }
+.techniques-page { width: 100%; max-width: 620px; margin-inline: auto; display: grid; gap: 18px; }
 
 .technique-input-box {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
   align-items: start;
 }
 
 .technique-input-box textarea {
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   resize: vertical;
   min-height: 116px;
   border: 1px solid rgba(63,84,36,.14);
@@ -20,6 +22,8 @@
   line-height: 1.45;
   outline: none;
 }
+
+.technique-generate-action { margin-top: 13px; }
 
 .technique-input-box textarea:focus {
   border-color: rgba(64,91,37,.42);

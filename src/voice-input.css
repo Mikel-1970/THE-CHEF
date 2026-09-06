@@ -80,6 +80,13 @@
 .voice-status.listening { color: #a34f34; font-weight: 800; }
 .voice-status.error { color: #a34f34; }
 .voice-status.unsupported { color: #85877c; }
+.voice-status.confirmed { color: #50682f; font-weight: 800; }
+.voice-confirm-button.confirmed { background: #5f762f !important; }
+
+.pantry-picker-toggle { width:100%;min-height:52px;border:1px solid var(--line);border-radius:16px;background:#fffaf1;color:#405626;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-weight:800; }
+.pantry-picker-toggle span { display:flex;align-items:center;gap:9px; }
+.pantry-picker-panel { margin-top:9px;padding:14px;border:1px solid var(--line);border-radius:18px;background:rgba(255,250,241,.78); }
+.pantry-selection-note { margin-top:11px;color:#707667;font-size:.65rem;line-height:1.45; }
 
 .desire-box { position: relative; }
 .desire-box .voice-button,

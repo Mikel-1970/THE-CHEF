@@ -1,4 +1,4 @@
-import { Check, ChevronDown, ChevronUp, Clock3, Mic, MicOff, Sparkles, Star, Trash2, UsersRound, WandSparkles, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Clock3, Mic, MicOff, PackageOpen, Sparkles, Star, Trash2, UsersRound, WandSparkles, X } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
@@ -27,9 +27,9 @@ export function DesirePage() {
   const navigate = useNavigate();
   const { settings, favorites, history, setSearch } = useApp();
   const [text, setText] = useState('');
-  const [ingredients, setIngredients] = useState<IngredientInput[]>(() => settings.pantryStock ?? []);
+  const [ingredients, setIngredients] = useState<IngredientInput[]>(() => (settings.pantryStock ?? []).map(item => ({ ...item, priority: false })));
   const [ingredientDraft, setIngredientDraft] = useState('');
-  const [usePantry, setUsePantry] = useState((settings.pantryStock?.length ?? 0) > 0);
+  const [pantryOpen, setPantryOpen] = useState(false);
   const [servings, setServings] = useState(settings.defaultServings);
   const [servingsTouched, setServingsTouched] = useState(false);
   const [maxMinutes, setMaxMinutes] = useState(60);
@@ -39,8 +39,12 @@ export function DesirePage() {
   const [cuisine, setCuisine] = useState<string>();
   const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
   const [isSearching, setIsSearching] = useState(false);
+  const [requestConfirmed, setRequestConfirmed] = useState(false);
 
-  const requestVoice = useAiDictation(transcript => setText(current => appendSentence(current, transcript)));
+  const requestVoice = useAiDictation(transcript => {
+    setText(current => appendSentence(current, transcript));
+    setRequestConfirmed(false);
+  });
   const ingredientVoice = useAiDictation(transcript => setIngredientDraft(current => appendIngredientDictation(current, transcript)));
   const suggestions = useMemo(() => buildSuggestions(favorites, history.map(entry => entry.label)), [favorites, history]);
 
@@ -49,25 +53,25 @@ export function DesirePage() {
     if (ingredientVoice.isListening) ingredientVoice.stop();
     const entries = splitIngredientEntries(ingredientDraft);
     if (!entries.length) return;
-    setIngredients(current => mergeIngredientEntries(current, entries));
+    setIngredients(current => mergeIngredientEntries(current, entries, true));
     setIngredientDraft('');
-    setUsePantry(true);
   };
 
   const search = async () => {
     if (isSearching || requestVoice.isListening || requestVoice.isTranscribing || !text.trim()) return;
     const interpreted = interpretDesireText(text);
+    const selectedIngredients = ingredients.filter(item => item.priority);
     const request: CookingRequest = {
-      mode: usePantry ? 'pantry' : 'desire',
+      mode: selectedIngredients.length ? 'pantry' : 'desire',
       servings: servingsTouched ? servings : interpreted.servings ?? servings,
       maxMinutes: timeTouched ? maxMinutes : interpreted.maxMinutes ?? maxMinutes,
       desireText: text,
       style: style ?? interpreted.style,
       cuisine: cuisine ?? interpreted.cuisine,
       difficulty: difficulty ?? interpreted.difficulty,
-      pantryIngredients: usePantry ? ingredients : [],
-      pantryBasics: usePantry ? settings.pantryBasics : [],
-      pantryPolicy: usePantry ? 'prioritize' : 'ignore'
+      pantryIngredients: selectedIngredients,
+      pantryBasics: selectedIngredients.length ? settings.pantryBasics : [],
+      pantryPolicy: selectedIngredients.length ? 'prioritize' : 'ignore'
     };
 
     setIsSearching(true);
@@ -91,21 +95,27 @@ export function DesirePage() {
           <div className="section-label"><span>¿Qué quieres que prepare?</span></div>
           <div className="desire-box">
             <WandSparkles size={22} />
-            <textarea rows={5} value={text} onChange={e => setText(e.target.value)} placeholder="Ej. prepárame una paella con pollo; o un postre de chocolate; o algo nuevo y rápido…" />
+            <textarea rows={5} value={text} onChange={e => { setText(e.target.value); setRequestConfirmed(false); }} placeholder="Ej. prepárame una paella con pollo; o un postre de chocolate; o algo nuevo y rápido…" />
             <div className="voice-action-stack">
-              <button type="button" className="clear-input-button" onClick={() => { requestVoice.stop(); setText(''); }} disabled={!text.trim() && !requestVoice.isListening} aria-label="Borrar petición"><X size={18} /></button>
+              <button type="button" className="clear-input-button" onClick={() => { requestVoice.stop(); setText(''); setRequestConfirmed(false); }} disabled={!text.trim() && !requestVoice.isListening} aria-label="Borrar petición"><X size={18} /></button>
               <button type="button" className={`voice-button ${requestVoice.isListening ? 'listening' : ''}`} onClick={requestVoice.toggle} disabled={!requestVoice.isSupported || requestVoice.isTranscribing || isSearching} aria-label={requestVoice.isListening ? 'Detener dictado' : 'Dictar petición'}>{requestVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
-              <button type="button" className="voice-confirm-button" onClick={() => void search()} disabled={!text.trim() || requestVoice.isListening || requestVoice.isTranscribing || isSearching} aria-label="Confirmar petición"><Check size={19} /></button>
+              <button type="button" className={`voice-confirm-button ${requestConfirmed ? 'confirmed' : ''}`} onClick={() => setRequestConfirmed(true)} disabled={!text.trim() || requestVoice.isListening || requestVoice.isTranscribing || isSearching} aria-label="Validar petición"><Check size={19} /></button>
             </div>
           </div>
           {requestVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
           {requestVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado con IA…</div>}
           {requestVoice.error && <div className="voice-status error">{requestVoice.error}</div>}
-          <div className="suggestion-row">{suggestions.map(s => <button key={s} onClick={() => setText(s)}>{s}</button>)}</div>
+          {requestConfirmed && <div className="voice-status confirmed"><Check size={14} /> Petición validada. Puedes revisar los productos y opciones antes de buscar.</div>}
+          <div className="suggestion-row">{suggestions.map(s => <button key={s} onClick={() => { setText(s); setRequestConfirmed(false); }}>{s}</button>)}</div>
         </section>
 
         <section className="form-section">
-          <div className="section-label"><span>Productos que tienes</span><small>Opcional · ★ principal/prioritario</small></div>
+          <button type="button" className="pantry-picker-toggle" onClick={() => setPantryOpen(value => !value)} aria-expanded={pantryOpen}>
+            <span><PackageOpen size={19} /> Despensa {ingredients.some(item => item.priority) ? `(${ingredients.filter(item => item.priority).length} seleccionados)` : ''}</span>
+            {pantryOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </button>
+          {pantryOpen && <div className="pantry-picker-panel">
+          <div className="section-label"><span>¿Qué quieres que utilice?</span><small>Marca solo lo necesario</small></div>
           <form className="ingredient-input" onSubmit={addIngredient}>
             <input value={ingredientDraft} onChange={e => setIngredientDraft(e.target.value)} placeholder="Ej. pollo 300 g, 4 huevos, arroz…" />
             <button type="button" className="clear-input-button" onClick={() => { ingredientVoice.stop(); setIngredientDraft(''); }} disabled={!ingredientDraft.trim() && !ingredientVoice.isListening} aria-label="Borrar productos"><X size={18} /></button>
@@ -125,10 +135,9 @@ export function DesirePage() {
             ))}
           </div>
 
-          <div className="advanced-panel" style={{ marginTop: 12 }}>
-            <div className="advanced-group"><strong>¿Quieres que aproveche lo que tienes?</strong><div className="chip-row"><Chip selected={usePantry} onClick={() => setUsePantry(true)}>Sí, aprovéchalo</Chip><Chip selected={!usePantry} onClick={() => setUsePantry(false)}>No, sorpréndeme</Chip></div></div>
-          </div>
-          {usePantry && <div className="pantry-basics-note"><span>Básicos activos:</span> {settings.pantryBasics.join(' · ') || 'ninguno'} <button onClick={() => navigate('/nevera')}>Abrir despensa</button></div>}
+          <div className="pantry-selection-note">Solo se exigirán los productos marcados con ★. El Chef podrá añadir otros ingredientes necesarios para construir una receta coherente.</div>
+          <div className="pantry-basics-note"><span>Básicos activos:</span> {settings.pantryBasics.join(' · ') || 'ninguno'} <button onClick={() => navigate('/nevera')}>Gestionar despensa</button></div>
+          </div>}
         </section>
 
         <section className="control-card">
@@ -147,17 +156,17 @@ export function DesirePage() {
   );
 }
 
-function mergeIngredientEntries(current: IngredientInput[], entries: string[]): IngredientInput[] {
+function mergeIngredientEntries(current: IngredientInput[], entries: string[], selectNew = false): IngredientInput[] {
   const next = [...current];
   entries.forEach(entry => {
     const parsed = parseIngredientInput(entry);
     if (!parsed.name) return;
     const existingIndex = next.findIndex(item => normalize(item.name) === normalize(parsed.name));
     if (existingIndex >= 0) {
-      if (parsed.quantity !== undefined) next[existingIndex] = { ...next[existingIndex], quantity: parsed.quantity, unit: parsed.unit };
+      next[existingIndex] = { ...next[existingIndex], ...(parsed.quantity !== undefined ? { quantity: parsed.quantity, unit: parsed.unit } : {}), priority: selectNew || next[existingIndex].priority };
       return;
     }
-    next.push(parsed);
+    next.push({ ...parsed, priority: selectNew });
   });
   return next;
 }

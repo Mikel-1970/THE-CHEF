@@ -1,125 +1,88 @@
+import { Check, ChevronDown, ChevronUp, Clock3, Mic, MicOff, Sparkles, Star, UsersRound, X } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
-import { Check, Mic, MicOff, Sparkles, Star, Trash2, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
+import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
+import { Chip } from '../components/Chip';
+import { CuisineSelect } from '../components/CuisineSelect';
+import { NumberStepper } from '../components/NumberStepper';
+import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
-import type { IngredientInput } from '../domain/types';
+import { RECIPE_STYLES } from '../data/cookingOptions';
+import type { CookingRequest, Difficulty, IngredientInput } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
+import { getHybridProposals } from '../services/hybridRecommendationEngine';
 import { parseIngredientInput } from '../utils/ingredientInput';
 import '../voice-input.css';
 
+const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
+
 export function PantryPage() {
-  const { settings, updateSettings } = useApp();
+  const navigate = useNavigate();
+  const { settings, updateSettings, setSearch } = useApp();
+  const pantry = settings.pantryStock ?? [];
+  const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [draft, setDraft] = useState('');
-  const ingredients = settings.pantryStock ?? [];
-  const basics = settings.pantryBasics ?? [];
+  const [servings, setServings] = useState(settings.defaultServings);
+  const [maxMinutes, setMaxMinutes] = useState(60);
+  const [advanced, setAdvanced] = useState(false);
+  const [style, setStyle] = useState<string>();
+  const [cuisine, setCuisine] = useState<string>();
+  const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
+  const [isSearching, setIsSearching] = useState(false);
   const voice = useAiDictation(transcript => setDraft(current => appendDictation(current, transcript)));
+  const sortedPantry = useMemo(() => [...pantry].sort((a, b) => a.name.localeCompare(b.name, 'es')), [pantry]);
 
-  const sortedIngredients = useMemo(
-    () => [...ingredients].sort((a, b) => Number(Boolean(b.priority)) - Number(Boolean(a.priority)) || a.name.localeCompare(b.name, 'es')),
-    [ingredients]
-  );
+  const toggle = (name: string) => setSelected(current => {
+    const next = new Set(current); const key = normalize(name);
+    if (next.has(key)) next.delete(key); else next.add(key);
+    return next;
+  });
 
-  const addIngredient = (e?: FormEvent) => {
-    e?.preventDefault();
+  const addIngredient = (event?: FormEvent) => {
+    event?.preventDefault();
     if (voice.isListening) voice.stop();
     const entries = splitIngredientEntries(draft);
     if (!entries.length) return;
-    const next = mergeIngredientEntries(ingredients, entries);
-    updateSettings({ pantryStock: next });
+    updateSettings({ pantryStock: mergeIngredientEntries(pantry, entries) });
+    setSelected(current => new Set([...current, ...entries.map(entry => normalize(parseIngredientInput(entry).name)).filter(Boolean)]));
     setDraft('');
   };
 
-  const togglePriority = (name: string) => {
-    updateSettings({ pantryStock: ingredients.map(item => normalize(item.name) === normalize(name) ? { ...item, priority: !item.priority } : item) });
+  const search = async () => {
+    const chosen = pantry.filter(item => selected.has(normalize(item.name))).map(item => ({ ...item, priority: true }));
+    if (!chosen.length || isSearching) return;
+    const request: CookingRequest = { mode: 'pantry', servings, maxMinutes, style, cuisine, difficulty, pantryIngredients: chosen, pantryBasics: settings.pantryBasics, pantryPolicy: 'prioritize' };
+    setIsSearching(true);
+    try { const result = await getHybridProposals(request); setSearch(request, result.proposals.slice(0, 3)); navigate('/propuestas'); }
+    finally { setIsSearching(false); }
   };
-
-  const removeIngredient = (name: string) => {
-    updateSettings({ pantryStock: ingredients.filter(item => normalize(item.name) !== normalize(name)) });
-  };
-
-  const clearDraft = () => { voice.stop(); setDraft(''); };
 
   return (
-    <AppShell>
-      <TopBar eyebrow="TU COCINA" title="Despensa" />
-      <div className="page-content nav-safe">
-        <section className="editorial-card olive-intro">
-          <span className="eyebrow">LO QUE TIENES EN CASA</span>
-          <h2>Guarda aquí tus productos habituales.</h2>
-          <p>El Chef podrá utilizarlos cuando le pidas que aproveche lo que tienes. Las cantidades son opcionales y nunca se inventan.</p>
-        </section>
-
+    <AppShell hideNav>
+      <ChefLoadingOverlay active={isSearching} title="Cocinando con tu despensa" messages={['Revisando tus productos…', 'Buscando combinaciones con sentido…', 'Afinando las propuestas…']} />
+      <TopBar eyebrow="COCINA CON LO QUE TIENES" title="Elige tus productos" />
+      <div className="page-content">
+        <section className="editorial-card olive-intro"><span className="eyebrow">TU DESPENSA</span><h2>¿Qué quieres utilizar?</h2><p>Selecciona uno o varios productos. El Chef añadirá solo lo necesario para construir recetas coherentes.</p></section>
         <section className="form-section">
-          <div className="section-label"><span>Productos disponibles</span><small>★ = priorizar</small></div>
-          <form className="ingredient-input" onSubmit={addIngredient}>
-            <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Ej. pollo 300 g, huevos, arroz…" />
-            <button type="button" className="clear-input-button" onClick={clearDraft} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={18} /></button>
-            <button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar productos'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
-            <button type="submit" className="voice-confirm-button" disabled={!draft.trim() || voice.isListening || voice.isTranscribing} aria-label="Confirmar productos"><Check size={19} /></button>
-          </form>
-          {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
-          {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado con IA…</div>}
-          {voice.error && <div className="voice-status error">{voice.error}</div>}
-
-          <div className="ingredient-pills">
-            {sortedIngredients.map(item => (
-              <div className={`ingredient-pill ${item.priority ? 'priority' : ''}`} key={item.name}>
-                <button className="star-toggle" onClick={() => togglePriority(item.name)} aria-label="Cambiar prioridad"><Star size={15} fill={item.priority ? 'currentColor' : 'none'} /></button>
-                <span>{item.name}{item.quantity !== undefined ? ` · ${formatIngredientQuantity(item)}` : ''}</span>
-                <button onClick={() => removeIngredient(item.name)} aria-label="Eliminar"><Trash2 size={14} /></button>
-              </div>
-            ))}
-          </div>
-          {!ingredients.length && <div className="pantry-basics-note">Todavía no has guardado productos. Puedes añadirlos ahora o introducirlos directamente al pedir una receta.</div>}
+          <div className="section-label"><span>Productos disponibles</span><small>{selected.size} seleccionados</small></div>
+          <div className="pantry-choice-grid">{sortedPantry.map(item => { const active = selected.has(normalize(item.name)); return <button type="button" className={active ? 'selected' : ''} aria-pressed={active} onClick={() => toggle(item.name)} key={item.name}><Star size={16} fill={active ? 'currentColor' : 'none'} /><span>{item.name}{item.quantity !== undefined ? ` · ${formatIngredientQuantity(item)}` : ''}</span></button>; })}</div>
+          {!pantry.length && <div className="pantry-basics-note">Tu despensa está vacía. Añade productos escribiendo o usando el micrófono.</div>}
+          <form className="ingredient-input pantry-add-input" onSubmit={addIngredient}><input value={draft} onChange={event => setDraft(event.target.value)} placeholder="Añadir otro producto…" /><button type="button" className="clear-input-button" onClick={() => { voice.stop(); setDraft(''); }} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={18} /></button><button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar productos'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button><button type="submit" className="voice-confirm-button" disabled={!draft.trim() || voice.isListening || voice.isTranscribing} aria-label="Añadir productos"><Check size={19} /></button></form>
+          {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando productos…</div>}{voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}{voice.error && <div className="voice-status error">{voice.error}</div>}
         </section>
-
-        <section className="editorial-card">
-          <span className="eyebrow">BÁSICOS DE DESPENSA</span>
-          <h2>Productos que damos por disponibles</h2>
-          <p>{basics.join(' · ') || 'No hay básicos configurados.'}</p>
-          <small>Puedes editarlos desde Perfil. Se consideran básicos habituales, no ingredientes prioritarios.</small>
-        </section>
+        <section className="control-card"><div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Somos</strong><small>Comensales</small></div></div><NumberStepper value={servings} onChange={setServings} /></div><div className="divider" /><div className="control-row"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Tiempo total</small></div></div><NumberStepper value={maxMinutes} min={15} max={180} step={5} suffix="min" editable onChange={setMaxMinutes} /></div></section>
+        <button className="advanced-toggle" onClick={() => setAdvanced(value => !value)}><span>Más opciones</span>{advanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
+        {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(value => <Chip key={value} selected={style === value} onClick={() => setStyle(style === value ? undefined : value)}>{value}</Chip>)}</div></div><div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(value => <Chip key={value} selected={difficulty === value} onClick={() => setDifficulty(difficulty === value ? undefined : value)}>{value}</Chip>)}</div></div></section>}
+        <div className="sticky-action"><PrimaryButton onClick={() => void search()} disabled={!selected.size || isSearching}>{isSearching ? 'Buscando propuestas…' : 'Cocinar con estos productos'}</PrimaryButton></div>
       </div>
     </AppShell>
   );
 }
 
-function mergeIngredientEntries(current: IngredientInput[], entries: string[]): IngredientInput[] {
-  const next = [...current];
-  entries.forEach(entry => {
-    const parsed = parseIngredientInput(entry);
-    if (!parsed.name) return;
-    const existingIndex = next.findIndex(item => normalize(item.name) === normalize(parsed.name));
-    if (existingIndex >= 0) {
-      next[existingIndex] = { ...next[existingIndex], ...parsed, priority: next[existingIndex].priority };
-      return;
-    }
-    next.push(parsed);
-  });
-  return next;
-}
-
-function splitIngredientEntries(value: string): string[] {
-  return value
-    .replace(/\bademás\b/gi, ',')
-    .split(/[,;\n]+|\s+(?:y|e)\s+/i)
-    .map(item => item.replace(/^[.\-–—\s]+|[.\s]+$/g, '').trim())
-    .filter(Boolean);
-}
-
-function appendDictation(current: string, transcript: string): string {
-  const base = current.trimEnd();
-  const clean = transcript.trim();
-  return base ? `${base}, ${clean}` : clean;
-}
-
-function formatIngredientQuantity(item: IngredientInput): string {
-  if (item.quantity === undefined) return '';
-  const value = Number.isInteger(item.quantity) ? String(item.quantity) : item.quantity.toLocaleString('es-ES', { maximumFractionDigits: 1 });
-  return `${value}${item.unit ? ` ${item.unit}` : ''}`;
-}
-
-function normalize(value: string): string {
-  return value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
-}
+function mergeIngredientEntries(current: IngredientInput[], entries: string[]) { const next = [...current]; entries.forEach(entry => { const parsed = parseIngredientInput(entry); if (!parsed.name) return; const index = next.findIndex(item => normalize(item.name) === normalize(parsed.name)); if (index >= 0) next[index] = { ...next[index], ...parsed }; else next.push(parsed); }); return next; }
+function splitIngredientEntries(value: string) { return value.replace(/\bademás\b/gi, ',').split(/[,;\n]+|\s+(?:y|e)\s+/i).map(item => item.replace(/^[.\-–—\s]+|[.\s]+$/g, '').trim()).filter(Boolean); }
+function appendDictation(current: string, transcript: string) { const base = current.trimEnd(); const clean = transcript.trim(); return base ? `${base}, ${clean}` : clean; }
+function formatIngredientQuantity(item: IngredientInput) { if (item.quantity === undefined) return ''; const value = Number.isInteger(item.quantity) ? String(item.quantity) : item.quantity.toLocaleString('es-ES', { maximumFractionDigits: 1 }); return `${value}${item.unit ? ` ${item.unit}` : ''}`; }
+function normalize(value: string) { return value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }

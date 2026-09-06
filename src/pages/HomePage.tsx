@@ -47,11 +47,11 @@ export function HomePage() {
 
         <section className="reference-secondary-actions" aria-label="Otras formas de cocinar">
           <button className="reference-secondary-card" onClick={() => navigate('/nevera')}>
-            <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.05), rgba(24,30,18,.78)), url(${pantryImage})` }} aria-hidden="true" />
+            <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.02), rgba(24,30,18,.62)), url(${pantryImage})` }} aria-hidden="true" />
             <span className="reference-secondary-copy"><PackageOpen size={25} /><strong>Cocina con lo que tienes</strong><small>Abre tu despensa y aprovecha sus productos con sentido.</small></span>
           </button>
           <button className="reference-secondary-card reference-photo-card" onClick={() => navigate('/foto')}>
-            <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.02), rgba(24,30,18,.77)), url(${photoRecipeImage})` }} aria-hidden="true" />
+            <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.01), rgba(24,30,18,.61)), url(${photoRecipeImage})` }} aria-hidden="true" />
             <span className="reference-secondary-copy"><Camera size={25} /><strong>Receta desde una foto</strong><small>Enséñame un plato y descubre cómo prepararlo.</small></span>
           </button>
         </section>

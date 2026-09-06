@@ -2,6 +2,7 @@ import { Check, Clock3, Flame, Mic, MicOff, Save, Sparkles, Trash2, Wrench, X } 
 import { useState } from 'react';
 import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
+import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { getSavedTechniques, removeTechnique, saveTechnique } from '../services/techniqueCatalog';
@@ -24,7 +25,8 @@ export function TechniquesPage() {
   const [saved, setSaved] = useState<Technique[]>(() => getSavedTechniques());
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string>();
-  const voice = useAiDictation(transcript => setDraft(existing => appendSentence(existing, transcript)));
+  const [validated, setValidated] = useState(false);
+  const voice = useAiDictation(transcript => { setDraft(existing => appendSentence(existing, transcript)); setValidated(false); });
 
   const submit = async () => {
     const request = draft.trim();
@@ -62,18 +64,20 @@ export function TechniquesPage() {
         <section className="form-section">
           <div className="section-label"><span>¿Qué quieres aprender o preparar?</span></div>
           <div className="technique-input-box">
-            <textarea rows={4} value={draft} onChange={event => setDraft(event.target.value)} placeholder="Ej. ¿Cómo hago un aceite verde de perejil que pueda guardar y usar en otras recetas?" />
+            <textarea rows={4} value={draft} onChange={event => { setDraft(event.target.value); setValidated(false); }} placeholder="Ej. ¿Cómo hago un aceite verde de perejil que pueda guardar y usar en otras recetas?" />
             <div className="voice-action-stack">
-              <button type="button" className="clear-input-button" onClick={() => { voice.stop(); setDraft(''); }} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={18} /></button>
+              <button type="button" className="clear-input-button" onClick={() => { voice.stop(); setDraft(''); setValidated(false); }} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={18} /></button>
               <button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing || isGenerating} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar técnica'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
-              <button type="button" className="voice-confirm-button" onClick={() => void submit()} disabled={!draft.trim() || voice.isListening || voice.isTranscribing || isGenerating} aria-label="Confirmar"><Check size={19} /></button>
+              <button type="button" className={`voice-confirm-button ${validated ? 'confirmed' : ''}`} onClick={() => setValidated(true)} disabled={!draft.trim() || voice.isListening || voice.isTranscribing || isGenerating} aria-label="Validar técnica"><Check size={19} /></button>
             </div>
           </div>
           {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
           {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
           {voice.error && <div className="voice-status error">{voice.error}</div>}
+          {validated && <div className="voice-status confirmed"><Check size={14} /> Texto validado. Puedes generar la técnica cuando quieras.</div>}
           {error && <div className="voice-status error">{error}</div>}
-          <div className="suggestion-row">{suggestions.map(item => <button type="button" key={item} onClick={() => setDraft(item)}>{item}</button>)}</div>
+          <div className="suggestion-row">{suggestions.map(item => <button type="button" key={item} onClick={() => { setDraft(item); setValidated(false); }}>{item}</button>)}</div>
+          <div className="technique-generate-action"><PrimaryButton onClick={() => void submit()} disabled={!draft.trim() || voice.isListening || voice.isTranscribing || isGenerating}>{isGenerating ? 'Preparando técnica…' : 'Generar técnica'}</PrimaryButton></div>
         </section>
 
         {current && <TechniqueCard technique={current} saved />}
