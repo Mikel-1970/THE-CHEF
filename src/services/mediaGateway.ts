@@ -3,6 +3,7 @@ import type { Recipe } from '../domain/types';
 const API_URL = (import.meta.env.VITE_RECIPE_API_URL || 'https://nrtmmepynzczfdddvohh.supabase.co/functions/v1').trim().replace(/\/+$/, '');
 const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'sb_publishable_b08-tfZCh2pEBGK0lBH-1g_oB3RwvV8').trim();
 const IMAGE_CACHE = 'chef-recipe-images-v1';
+const THUMBNAIL_CACHE = 'chef-recipe-thumbnails-v1';
 
 export type DishEvaluation = {
   score: number;
@@ -13,11 +14,15 @@ export type DishEvaluation = {
 };
 
 export async function getRecipeImage(recipe: Recipe): Promise<string | undefined> {
-  const cacheKey = new Request(`https://the-chef.local/generated-images/${encodeURIComponent(recipe.id)}`);
+  const cacheKey = imageRequest(recipe.id);
   if ('caches' in window) {
     const cache = await caches.open(IMAGE_CACHE);
     const hit = await cache.match(cacheKey);
-    if (hit) return URL.createObjectURL(await hit.blob());
+    if (hit) {
+      const blob = await hit.blob();
+      await cacheThumbnailBlob(recipe.id, blob);
+      return URL.createObjectURL(blob);
+    }
   }
 
   const response = await fetch(`${API_URL}/chef-media/image`, {
@@ -41,11 +46,27 @@ export async function getRecipeImage(recipe: Recipe): Promise<string | undefined
     if ('caches' in window) {
       const cache = await caches.open(IMAGE_CACHE);
       await cache.put(cacheKey, new Response(blob, { headers: { 'Content-Type': blob.type } }));
+      await cacheThumbnailBlob(recipe.id, blob);
     }
     return URL.createObjectURL(blob);
   }
   if (typeof payload?.imageUrl === 'string') return payload.imageUrl;
   return undefined;
+}
+
+export async function getRecipeThumbnail(recipeId: string): Promise<string | undefined> {
+  if (!('caches' in window)) return undefined;
+  const cache = await caches.open(THUMBNAIL_CACHE);
+  const hit = await cache.match(thumbnailRequest(recipeId));
+  if (!hit) return undefined;
+  return URL.createObjectURL(await hit.blob());
+}
+
+export async function saveRecipeThumbnail(recipeId: string, imageUrl: string): Promise<void> {
+  if (!('caches' in window) || !imageUrl) return;
+  const response = await fetch(imageUrl);
+  const blob = await response.blob();
+  await cacheThumbnailBlob(recipeId, blob);
 }
 
 export async function transcribeCookingAudio(audio: Blob): Promise<string> {
@@ -85,9 +106,7 @@ export async function evaluateDishPhoto(recipe: Recipe, file: File): Promise<{ e
   const payload = await response.json().catch(() => undefined);
   if (!response.ok) throw new Error(readError(payload, 'No se ha podido valorar la foto final.'));
   const evaluation = payload?.evaluation as DishEvaluation | undefined;
-  if (!evaluation || typeof evaluation.score !== 'number' || typeof evaluation.summary !== 'string') {
-    throw new Error('La valoración visual no ha llegado completa.');
-  }
+  if (!evaluation || typeof evaluation.score !== 'number' || typeof evaluation.summary !== 'string') throw new Error('La valoración visual no ha llegado completa.');
   return { evaluation, previewUrl };
 }
 
@@ -111,15 +130,20 @@ async function prepareDishImage(file: File): Promise<{ base64: string; mimeType:
     if (!context) throw new Error('No se ha podido preparar la fotografía.');
     context.drawImage(image, 0, 0, width, height);
     const dataUrl = canvas.toDataURL('image/jpeg', .82);
-    return {
-      base64: dataUrl.slice(dataUrl.indexOf(',') + 1),
-      mimeType: 'image/jpeg',
-      previewUrl: dataUrl
-    };
+    return { base64: dataUrl.slice(dataUrl.indexOf(',') + 1), mimeType: 'image/jpeg', previewUrl: dataUrl };
   } finally {
     URL.revokeObjectURL(sourceUrl);
   }
 }
+
+async function cacheThumbnailBlob(recipeId: string, blob: Blob) {
+  if (!('caches' in window)) return;
+  const cache = await caches.open(THUMBNAIL_CACHE);
+  await cache.put(thumbnailRequest(recipeId), new Response(blob, { headers: { 'Content-Type': blob.type || 'image/jpeg' } }));
+}
+
+function imageRequest(recipeId: string) { return new Request(`https://the-chef.local/generated-images/${encodeURIComponent(recipeId)}`); }
+function thumbnailRequest(recipeId: string) { return new Request(`https://the-chef.local/recipe-thumbnails/${encodeURIComponent(recipeId)}`); }
 
 function headers(contentType?: string): HeadersInit {
   return {
