@@ -13,7 +13,6 @@ export function AppShell({ children, hideNav = false, hideBack = false, hideProf
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === '/';
-  const isProfile = location.pathname === '/ajustes';
 
   return (
     <div className="app-bg">
@@ -22,7 +21,7 @@ export function AppShell({ children, hideNav = false, hideBack = false, hideProf
       <div className="grain" />
       <main className="phone-shell">{children}</main>
 
-      {!isHome && !hideBack && (
+      {hideNav && !isHome && !hideBack && (
         <button
           className="floating-back-button"
           onClick={onBack ?? (() => navigate(-1))}
@@ -32,7 +31,7 @@ export function AppShell({ children, hideNav = false, hideBack = false, hideProf
         </button>
       )}
 
-      {!isProfile && !hideProfile && (
+      {isHome && !hideProfile && (
         <button
           className="floating-profile-button"
           onClick={() => navigate('/ajustes')}

@@ -1,81 +1,88 @@
-import { Check, ChevronDown, ChevronUp, Clock3, Mic, MicOff, Sparkles, Star, UsersRound, X } from 'lucide-react';
+import { Check, Mic, MicOff, PackageOpen, ShoppingBasket, Sparkles, Trash2, X } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
-import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
-import { Chip } from '../components/Chip';
-import { CuisineSelect } from '../components/CuisineSelect';
-import { NumberStepper } from '../components/NumberStepper';
-import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
-import { RECIPE_STYLES } from '../data/cookingOptions';
-import type { CookingRequest, Difficulty, IngredientInput } from '../domain/types';
+import type { IngredientInput } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
-import { getHybridProposals } from '../services/hybridRecommendationEngine';
 import { parseIngredientInput } from '../utils/ingredientInput';
 import '../voice-input.css';
 
-const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
-
 export function PantryPage() {
-  const navigate = useNavigate();
-  const { settings, updateSettings, setSearch } = useApp();
+  const { settings, updateSettings, upsertShoppingItem } = useApp();
   const pantry = settings.pantryStock ?? [];
-  const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [draft, setDraft] = useState('');
-  const [servings, setServings] = useState(settings.defaultServings);
-  const [maxMinutes, setMaxMinutes] = useState(60);
-  const [advanced, setAdvanced] = useState(false);
-  const [style, setStyle] = useState<string>();
-  const [cuisine, setCuisine] = useState<string>();
-  const [difficulty, setDifficulty] = useState<Difficulty | undefined>(settings.defaultDifficulty);
-  const [isSearching, setIsSearching] = useState(false);
+  const [recentlyRemoved, setRecentlyRemoved] = useState<IngredientInput>();
   const voice = useAiDictation(transcript => setDraft(current => appendDictation(current, transcript)));
-  const sortedPantry = useMemo(() => [...pantry].sort((a, b) => a.name.localeCompare(b.name, 'es')), [pantry]);
+  const sorted = useMemo(() => [...pantry].sort((a, b) => a.name.localeCompare(b.name, 'es')), [pantry]);
 
-  const toggle = (name: string) => setSelected(current => {
-    const next = new Set(current); const key = normalize(name);
-    if (next.has(key)) next.delete(key); else next.add(key);
-    return next;
-  });
-
-  const addIngredient = (event?: FormEvent) => {
+  const addProducts = (event?: FormEvent) => {
     event?.preventDefault();
     if (voice.isListening) voice.stop();
     const entries = splitIngredientEntries(draft);
     if (!entries.length) return;
     updateSettings({ pantryStock: mergeIngredientEntries(pantry, entries) });
-    setSelected(current => new Set([...current, ...entries.map(entry => normalize(parseIngredientInput(entry).name)).filter(Boolean)]));
     setDraft('');
+    setRecentlyRemoved(undefined);
   };
 
-  const search = async () => {
-    const chosen = pantry.filter(item => selected.has(normalize(item.name))).map(item => ({ ...item, priority: true }));
-    if (!chosen.length || isSearching) return;
-    const request: CookingRequest = { mode: 'pantry', servings, maxMinutes, style, cuisine, difficulty, pantryIngredients: chosen, pantryBasics: settings.pantryBasics, pantryPolicy: 'prioritize' };
-    setIsSearching(true);
-    try { const result = await getHybridProposals(request); setSearch(request, result.proposals.slice(0, 3)); navigate('/propuestas'); }
-    finally { setIsSearching(false); }
+  const removeProduct = (item: IngredientInput) => {
+    updateSettings({ pantryStock: pantry.filter(entry => normalize(entry.name) !== normalize(item.name)) });
+    setRecentlyRemoved(item);
+  };
+
+  const addRemovedToShopping = () => {
+    if (!recentlyRemoved) return;
+    upsertShoppingItem({
+      id: `manual:${normalize(recentlyRemoved.name).replace(/\s+/g, '-')}`,
+      name: recentlyRemoved.name,
+      quantity: recentlyRemoved.quantity,
+      unit: recentlyRemoved.unit,
+      checked: false
+    });
+    setRecentlyRemoved(undefined);
   };
 
   return (
-    <AppShell hideNav>
-      <ChefLoadingOverlay active={isSearching} title="Cocinando con tu despensa" messages={['Revisando tus productos…', 'Buscando combinaciones con sentido…', 'Afinando las propuestas…']} />
-      <TopBar eyebrow="COCINA CON LO QUE TIENES" title="Elige tus productos" />
-      <div className="page-content">
-        <section className="editorial-card olive-intro"><span className="eyebrow">TU DESPENSA</span><h2>¿Qué quieres utilizar?</h2><p>Selecciona uno o varios productos. El Chef añadirá solo lo necesario para construir recetas coherentes.</p></section>
+    <AppShell>
+      <TopBar eyebrow="TU INVENTARIO" title="Despensa" />
+      <div className="page-content nav-safe">
+        <section className="editorial-card olive-intro"><PackageOpen size={26} /><h2>Lo que tienes en casa.</h2><p>Este apartado solo guarda tu inventario. Para cocinar con estos productos usa “Cocina con lo que tienes” desde Inicio.</p></section>
+
         <section className="form-section">
-          <div className="section-label"><span>Productos disponibles</span><small>{selected.size} seleccionados</small></div>
-          <div className="pantry-choice-grid">{sortedPantry.map(item => { const active = selected.has(normalize(item.name)); return <button type="button" className={active ? 'selected' : ''} aria-pressed={active} onClick={() => toggle(item.name)} key={item.name}><Star size={16} fill={active ? 'currentColor' : 'none'} /><span>{item.name}{item.quantity !== undefined ? ` · ${formatIngredientQuantity(item)}` : ''}</span></button>; })}</div>
-          {!pantry.length && <div className="pantry-basics-note">Tu despensa está vacía. Añade productos escribiendo o usando el micrófono.</div>}
-          <form className="ingredient-input pantry-add-input" onSubmit={addIngredient}><input value={draft} onChange={event => setDraft(event.target.value)} placeholder="Añadir otro producto…" /><button type="button" className="clear-input-button" onClick={() => { voice.stop(); setDraft(''); }} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={18} /></button><button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar productos'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button><button type="submit" className="voice-confirm-button" disabled={!draft.trim() || voice.isListening || voice.isTranscribing} aria-label="Añadir productos"><Check size={19} /></button></form>
-          {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando productos…</div>}{voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}{voice.error && <div className="voice-status error">{voice.error}</div>}
+          <div className="section-label"><span>Productos disponibles</span><small>{pantry.length}</small></div>
+          {!sorted.length && <div className="pantry-basics-note">Todavía no tienes productos guardados en la despensa.</div>}
+          <div style={{ display: 'grid', gap: 10 }}>
+            {sorted.map(item => (
+              <section className="settings-card" key={item.name} style={{ display: 'grid', gridTemplateColumns: '1fr 42px', alignItems: 'center', gap: 10 }}>
+                <div><strong style={{ display: 'block' }}>{item.name}</strong><small>{item.quantity !== undefined ? formatIngredientQuantity(item) : 'Cantidad no indicada'}</small></div>
+                <button className="icon-button" type="button" onClick={() => removeProduct(item)} aria-label={`Eliminar ${item.name}`}><Trash2 size={18} /></button>
+              </section>
+            ))}
+          </div>
+
+          <form className="ingredient-input pantry-add-input" onSubmit={addProducts} style={{ marginTop: 14 }}>
+            <input value={draft} onChange={event => setDraft(event.target.value)} placeholder="Añadir productos a la despensa…" />
+            <button type="button" className="clear-input-button" onClick={() => { voice.stop(); setDraft(''); }} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={18} /></button>
+            <button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar productos'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
+            <button type="submit" className="voice-confirm-button" disabled={!draft.trim() || voice.isListening || voice.isTranscribing} aria-label="Añadir productos"><Check size={19} /></button>
+          </form>
+          {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando productos…</div>}
+          {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
+          {voice.error && <div className="voice-status error">{voice.error}</div>}
         </section>
-        <section className="control-card"><div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Somos</strong><small>Comensales</small></div></div><NumberStepper value={servings} onChange={setServings} /></div><div className="divider" /><div className="control-row"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Tiempo total</small></div></div><NumberStepper value={maxMinutes} min={15} max={180} step={5} suffix="min" editable onChange={setMaxMinutes} /></div></section>
-        <button className="advanced-toggle" onClick={() => setAdvanced(value => !value)}><span>Más opciones</span>{advanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
-        {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(value => <Chip key={value} selected={style === value} onClick={() => setStyle(style === value ? undefined : value)}>{value}</Chip>)}</div></div><div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(value => <Chip key={value} selected={difficulty === value} onClick={() => setDifficulty(difficulty === value ? undefined : value)}>{value}</Chip>)}</div></div></section>}
-        <div className="sticky-action"><PrimaryButton onClick={() => void search()} disabled={!selected.size || isSearching}>{isSearching ? 'Buscando propuestas…' : 'Cocinar con estos productos'}</PrimaryButton></div>
+
+        {recentlyRemoved && (
+          <section className="editorial-card" style={{ marginTop: 14 }}>
+            <ShoppingBasket size={22} />
+            <h2>Has quitado {recentlyRemoved.name}</h2>
+            <p>¿Quieres añadirlo a la lista de la compra?</p>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <button className="secondary-button" type="button" onClick={addRemovedToShopping}><ShoppingBasket size={17} /> Añadir a compra</button>
+              <button className="advanced-toggle" type="button" onClick={() => setRecentlyRemoved(undefined)}>No, gracias</button>
+            </div>
+          </section>
+        )}
       </div>
     </AppShell>
   );

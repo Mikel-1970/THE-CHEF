@@ -1,0 +1,8 @@
+- [x] Navegación
+- [x] Receta simplificada
+- [x] Despensa independiente
+- [x] Lista de compra manual
+- [x] Foto conectada a IA
+- [x] Técnicas estructuradas
+- [ ] Validación CI
+- [ ] Despliegue Pages

@@ -6,6 +6,7 @@ import { DesirePage } from './pages/DesirePage';
 import { HomePage } from './pages/HomePage';
 import { MyRecipesPage } from './pages/MyRecipesPage';
 import { NoticesPage } from './pages/NoticesPage';
+import { PantryCookPage } from './pages/PantryCookPage';
 import { PantryPage } from './pages/PantryPage';
 import { PhotoRecipePage } from './pages/PhotoRecipePage';
 import { RecipePage } from './pages/RecipePage';
@@ -35,6 +36,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/nevera" element={<PantryPage />} />
+          <Route path="/cocina-despensa" element={<PantryCookPage />} />
           <Route path="/foto" element={<PhotoRecipePage />} />
           <Route path="/antojo" element={<DesirePage />} />
           <Route path="/buscar" element={<SearchPage />} />

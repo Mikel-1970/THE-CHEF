@@ -46,7 +46,7 @@ export function HomePage() {
         </section>
 
         <section className="reference-secondary-actions" aria-label="Otras formas de cocinar">
-          <button className="reference-secondary-card" onClick={() => navigate('/nevera')}>
+          <button className="reference-secondary-card" onClick={() => navigate('/cocina-despensa')}>
             <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.02), rgba(24,30,18,.62)), url(${pantryImage})` }} aria-hidden="true" />
             <span className="reference-secondary-copy"><PackageOpen size={25} /><strong>Cocina con lo que tienes</strong><small>Abre tu despensa y aprovecha sus productos con sentido.</small></span>
           </button>
