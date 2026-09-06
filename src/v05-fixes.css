@@ -1,0 +1,11 @@
+.technique-guide { bottom: 74px; }
+.technique-guide main { padding-bottom: 120px; }
+.technique-guide footer.technique-guide-footer-safe { bottom: 74px; z-index: 1210; }
+
+.recipe-content.nav-safe,
+.page-content.nav-safe { padding-bottom: calc(112px + env(safe-area-inset-bottom)); }
+
+@media (max-width: 390px) {
+  .technique-guide { bottom: 72px; }
+  .technique-guide footer.technique-guide-footer-safe { bottom: 72px; }
+}
