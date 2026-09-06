@@ -1,5 +1,6 @@
-import { Check, Circle, Mic, MicOff, Share2, ShoppingBasket, Sparkles, Trash2, X } from 'lucide-react';
+import { ArrowLeft, Check, Circle, Mic, MicOff, Share2, ShoppingBasket, Sparkles, Trash2, X } from 'lucide-react';
 import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { useApp } from '../AppContext';
 import { useAiDictation } from '../hooks/useAiDictation';
@@ -8,10 +9,14 @@ import { formatQuantity } from '../utils/scaling';
 import '../recipe-enhancements.css';
 import '../voice-input.css';
 
+const UNIT_OPTIONS = ['ud', 'g', 'kg', 'ml', 'l', 'paquete', 'bote', 'lata', 'manojo'];
+
 export function ShoppingListPage() {
+  const navigate = useNavigate();
   const { shoppingList, toggleShoppingItem, removeShoppingItem, clearShoppingList, upsertShoppingItem } = useApp();
   const [draft, setDraft] = useState('');
   const voice = useAiDictation(transcript => setDraft(current => appendDictation(current, transcript)));
+  const originRecipeId = shoppingList.find(item => item.recipeId)?.recipeId;
 
   const addItems = (event?: FormEvent) => {
     event?.preventDefault();
@@ -29,6 +34,19 @@ export function ShoppingListPage() {
       });
     });
     if (entries.length) setDraft('');
+  };
+
+  const updateQuantity = (id: string, value: string) => {
+    const item = shoppingList.find(entry => entry.id === id);
+    if (!item) return;
+    const parsed = value === '' ? undefined : Number(value);
+    upsertShoppingItem({ ...item, quantity: Number.isFinite(parsed) ? parsed : undefined });
+  };
+
+  const updateUnit = (id: string, unit: string) => {
+    const item = shoppingList.find(entry => entry.id === id);
+    if (!item) return;
+    upsertShoppingItem({ ...item, unit: unit || undefined });
   };
 
   const buildShareText = () => {
@@ -54,9 +72,11 @@ export function ShoppingListPage() {
   };
 
   return (
-    <AppShell>
+    <AppShell hideBack hideProfile>
       <div className="simple-page-header light-header"><span className="eyebrow">TU CESTA</span><h1>Lista de compra</h1><p>Úsala de forma independiente o deja que las recetas añadan automáticamente lo que te falte.</p></div>
       <div className="page-content nav-safe">
+        {originRecipeId && <button className="secondary-button return-to-recipe" type="button" onClick={() => navigate(`/receta/${originRecipeId}`)}><ArrowLeft size={17} /> Volver a la receta</button>}
+
         <section className="form-section">
           <div className="section-label"><span>Añadir productos</span><small>Texto o voz</small></div>
           <form className="ingredient-input pantry-add-input" onSubmit={addItems}>
@@ -72,11 +92,18 @@ export function ShoppingListPage() {
 
         {!shoppingList.length && <section className="editorial-card olive-intro"><ShoppingBasket size={24} /><h2>La lista está vacía.</h2><p>Añade aquí cualquier producto que quieras comprar, aunque no esté relacionado con una receta.</p></section>}
 
-        <div style={{ display: 'grid', gap: 10 }}>
+        <div className="editable-stock-list">
           {shoppingList.map(item => (
-            <section className="settings-card" key={item.id} style={{ display: 'grid', gridTemplateColumns: '42px 1fr 42px', alignItems: 'center', gap: 10, opacity: item.checked ? .58 : 1 }}>
+            <section className={`settings-card editable-stock-card ${item.checked ? 'checked' : ''}`} key={item.id}>
               <button className="icon-button" onClick={() => toggleShoppingItem(item.id)} aria-label={item.checked ? 'Marcar pendiente' : 'Marcar comprado'}>{item.checked ? <Check size={20} /> : <Circle size={20} />}</button>
-              <div style={{ minWidth: 0 }}><strong style={{ display: 'block', textDecoration: item.checked ? 'line-through' : 'none' }}>{item.name}</strong><small style={{ display: 'block', marginTop: 3 }}>{item.quantity !== undefined ? `${formatQuantity(item.quantity)} ${item.unit ?? ''}`.trim() : 'Cantidad no indicada'}{item.recipeTitle ? ` · ${item.recipeTitle}` : ''}</small></div>
+              <div className="editable-stock-main">
+                <strong className={item.checked ? 'strike' : ''}>{item.name}</strong>
+                {item.recipeTitle && <small>Para {item.recipeTitle}</small>}
+                <div className="quantity-unit-editor">
+                  <label><span>Cantidad</span><input inputMode="decimal" type="number" min="0" step="0.1" value={item.quantity ?? ''} placeholder="—" onChange={event => updateQuantity(item.id, event.target.value)} /></label>
+                  <label><span>Unidad</span><select value={item.unit ?? ''} onChange={event => updateUnit(item.id, event.target.value)}><option value="">Sin indicar</option>{UNIT_OPTIONS.map(unit => <option value={unit} key={unit}>{unit}</option>)}</select></label>
+                </div>
+              </div>
               <button className="icon-button" onClick={() => removeShoppingItem(item.id)} aria-label="Eliminar de la lista"><Trash2 size={18} /></button>
             </section>
           ))}
