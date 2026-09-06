@@ -1,6 +1,8 @@
 .recipe-action-grid button:last-child { grid-column: auto; min-height: 112px; }
 
 .page-content:not(.nav-safe) { padding-bottom: calc(118px + env(safe-area-inset-bottom)) !important; }
+.proposal-footer-actions { display:grid;grid-template-columns:1fr 1fr;gap:9px; }
+.proposal-footer-actions .secondary-button { min-width:0;padding:8px;margin-top:16px;font-size:.68rem; }
 
 .editable-stock-list { display: grid; gap: 10px; }
 .editable-stock-card { display: grid !important; grid-template-columns: 42px minmax(0, 1fr) 42px; align-items: center; gap: 10px; }
