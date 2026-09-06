@@ -1,10 +1,12 @@
-import { ChefHat, Info, Plus, Smartphone, Trash2, Type, UsersRound } from 'lucide-react';
+import { Check, ChefHat, Info, Mic, MicOff, Smartphone, Sparkles, Trash2, Type, UsersRound, X } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { AppShell } from '../components/AppShell';
 import { Chip } from '../components/Chip';
 import { NumberStepper } from '../components/NumberStepper';
 import { useApp } from '../AppContext';
+import { useAiDictation } from '../hooks/useAiDictation';
 import type { CookingLevel, FontScale, SpiceLevel } from '../services/storage';
+import '../voice-input.css';
 
 const fontScaleLabels: Array<{ value: FontScale; label: string }> = [
   { value: 'normal', label: 'Normal' },
@@ -15,12 +17,18 @@ const fontScaleLabels: Array<{ value: FontScale; label: string }> = [
 export function SettingsPage() {
   const { settings, updateSettings } = useApp();
   const [draft, setDraft] = useState('');
+  const voice = useAiDictation(transcript => setDraft(current => current.trim() ? `${current.trim()}, ${transcript.trim()}` : transcript.trim()));
 
-  const addBasic = (e: FormEvent) => {
-    e.preventDefault();
-    const clean = draft.trim();
-    if (!clean || settings.pantryBasics.some(v => v.toLowerCase() === clean.toLowerCase())) return;
-    updateSettings({ pantryBasics: [...settings.pantryBasics, clean] });
+  const addBasic = (e?: FormEvent) => {
+    e?.preventDefault();
+    if (voice.isListening) voice.stop();
+    const values = draft.split(/[,;\n]+/).map(value => value.trim()).filter(Boolean);
+    if (!values.length) return;
+    const next = [...settings.pantryBasics];
+    values.forEach(value => {
+      if (!next.some(existing => existing.toLowerCase() === value.toLowerCase())) next.push(value);
+    });
+    updateSettings({ pantryBasics: next });
     setDraft('');
   };
 
@@ -49,7 +57,15 @@ export function SettingsPage() {
 
         <section className="settings-card">
           <div className="settings-card-title"><strong>Básicos de despensa</strong><small>Se consideran disponibles al buscar con lo que tienes</small></div>
-          <form className="ingredient-input compact-input" onSubmit={addBasic}><input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Añadir básico…" /><button><Plus size={19} /></button></form>
+          <form className="ingredient-input compact-input" onSubmit={addBasic}>
+            <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Añadir básico…" />
+            <button type="button" className="clear-input-button" onClick={() => { voice.stop(); setDraft(''); }} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={17} /></button>
+            <button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar básicos'}>{voice.isListening ? <MicOff size={18} /> : <Mic size={18} />}</button>
+            <button type="submit" className="voice-confirm-button" disabled={!draft.trim() || voice.isListening || voice.isTranscribing} aria-label="Confirmar básicos"><Check size={18} /></button>
+          </form>
+          {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
+          {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
+          {voice.error && <div className="voice-status error">{voice.error}</div>}
           <div className="basic-list">{settings.pantryBasics.map(item => <span key={item}>{item}<button onClick={() => updateSettings({ pantryBasics: settings.pantryBasics.filter(v => v !== item) })}><Trash2 size={13} /></button></span>)}</div>
         </section>
 
