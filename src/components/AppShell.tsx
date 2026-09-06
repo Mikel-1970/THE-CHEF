@@ -1,9 +1,9 @@
-import { ArrowLeft, UserRound } from 'lucide-react';
+import { UserRound } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BottomNav } from './BottomNav';
 
-export function AppShell({ children, hideBack = false, hideProfile = false, onBack }: {
+export function AppShell({ children, hideProfile = false }: {
   children: ReactNode;
   hideNav?: boolean;
   hideBack?: boolean;
@@ -20,12 +20,6 @@ export function AppShell({ children, hideBack = false, hideProfile = false, onBa
       <div className="ambient ambient-two" />
       <div className="grain" />
       <main className="phone-shell">{children}</main>
-
-      {onBack && !hideBack && (
-        <button className="floating-back-button" onClick={onBack} aria-label="Volver">
-          <ArrowLeft size={23} strokeWidth={2} />
-        </button>
-      )}
 
       {isHome && !hideProfile && (
         <button className="floating-profile-button" onClick={() => navigate('/ajustes')} aria-label="Abrir Perfil">
