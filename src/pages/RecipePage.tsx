@@ -256,15 +256,7 @@ export function RecipePage() {
   const currentPanel = activePanel ? panelConfig[activePanel] : null;
 
   return (
-    <AppShell
-      hideNav
-      hideProfile={Boolean(activePanel || isRevisionOpen)}
-      onBack={activePanel
-        ? () => setActivePanel(null)
-        : isRevisionOpen
-          ? closeRevision
-          : undefined}
-    >
+    <AppShell hideNav hideBack hideProfile>
       <ChefLoadingOverlay active={isRevising} title="Rehaciendo tu receta" messages={['¡Oído cocina!', 'Aplicando tus cambios…', 'Recalculando ingredientes y tiempos…', 'Guardando tu nueva versión…']} />
       <TopBar eyebrow="RECETA" title="Lista para cocinar" />
       <div className="recipe-page">

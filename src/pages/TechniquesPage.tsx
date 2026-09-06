@@ -1,5 +1,6 @@
-import { Check, Clock3, Flame, Mic, MicOff, Save, Sparkles, Trash2, Wrench, X } from 'lucide-react';
-import { useState } from 'react';
+import { Check, ChevronLeft, ChevronRight, Clock3, Flame, Mic, MicOff, Play, Save, Sparkles, Trash2, Wrench, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { PrimaryButton } from '../components/PrimaryButton';
@@ -20,13 +21,23 @@ const suggestions = [
 ];
 
 export function TechniquesPage() {
+  const [params] = useSearchParams();
   const [draft, setDraft] = useState('');
   const [current, setCurrent] = useState<Technique>();
   const [saved, setSaved] = useState<Technique[]>(() => getSavedTechniques());
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string>();
   const [validated, setValidated] = useState(false);
+  const [guided, setGuided] = useState<Technique>();
+  const [guidedStep, setGuidedStep] = useState(0);
   const voice = useAiDictation(transcript => { setDraft(existing => appendSentence(existing, transcript)); setValidated(false); });
+
+  useEffect(() => {
+    const openId = params.get('open');
+    if (!openId) return;
+    const technique = getSavedTechniques().find(item => item.id === openId);
+    if (technique) setCurrent(technique);
+  }, [params]);
 
   const submit = async () => {
     const request = draft.trim();
@@ -49,6 +60,8 @@ export function TechniquesPage() {
     setCurrent(technique);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const startTechnique = (technique: Technique) => { setGuided(technique); setGuidedStep(0); };
 
   return (
     <AppShell>
@@ -80,7 +93,7 @@ export function TechniquesPage() {
           <div className="technique-generate-action"><PrimaryButton onClick={() => void submit()} disabled={!draft.trim() || voice.isListening || voice.isTranscribing || isGenerating}>{isGenerating ? 'Preparando técnica…' : 'Generar técnica'}</PrimaryButton></div>
         </section>
 
-        {current && <TechniqueCard technique={current} saved />}
+        {current && <TechniqueCard technique={current} saved onStart={() => startTechnique(current)} />}
 
         <section className="library-section techniques-library">
           <div className="section-heading-row"><div><span className="eyebrow">TU REPOSITORIO</span><h2>{saved.length ? `${saved.length} técnicas guardadas` : 'Todavía vacío'}</h2></div></div>
@@ -98,11 +111,12 @@ export function TechniquesPage() {
           </div>
         </section>
       </div>
+      {guided && <TechniqueGuide technique={guided} step={guidedStep} onStep={setGuidedStep} onClose={() => setGuided(undefined)} />}
     </AppShell>
   );
 }
 
-function TechniqueCard({ technique, saved }: { technique: Technique; saved?: boolean }) {
+function TechniqueCard({ technique, saved, onStart }: { technique: Technique; saved?: boolean; onStart?: () => void }) {
   return (
     <section className="technique-card">
       <div className="technique-title-row"><div><span className="eyebrow">{technique.category.toUpperCase()}</span><h2>{technique.title}</h2><p>{technique.description}</p></div>{saved && <Save size={20} />}</div>
@@ -113,8 +127,14 @@ function TechniqueCard({ technique, saved }: { technique: Technique; saved?: boo
       {!!technique.criticalPoints.length && <div className="technique-section"><h3>Puntos críticos</h3>{technique.criticalPoints.map((point, index) => <p key={`${point}-${index}`}>• {point}</p>)}</div>}
       <div className="technique-section"><h3>Conservación</h3><p>{technique.storage}</p></div>
       {!!technique.uses.length && <div className="technique-section"><h3>Cómo reutilizarla</h3><p>{technique.uses.join(' · ')}</p></div>}
+      {onStart && <PrimaryButton onClick={onStart}><Play size={18} /> Empezar técnica</PrimaryButton>}
     </section>
   );
+}
+
+function TechniqueGuide({ technique, step, onStep, onClose }: { technique: Technique; step: number; onStep: (value: number) => void; onClose: () => void }) {
+  const current = technique.steps[step];
+  return <div className="technique-guide" role="dialog" aria-modal="true" aria-label={`Elaboración de ${technique.title}`}><header><button type="button" onClick={onClose} aria-label="Cerrar técnica"><X size={21} /></button><div><span>PASO A PASO</span><strong>{technique.title}</strong></div><span /></header><main><div className="technique-guide-progress"><span style={{ width: `${((step + 1) / technique.steps.length) * 100}%` }} /></div><small>PASO {step + 1} DE {technique.steps.length}</small><div className="technique-guide-number">{String(step + 1).padStart(2, '0')}</div><p>{current.instruction}</p>{(current.minutes || current.temperatureC) && <div className="technique-guide-facts">{current.minutes && <span><Clock3 size={17} /> {current.minutes} min</span>}{current.temperatureC && <span><Flame size={17} /> {current.temperatureC} °C</span>}</div>}{current.cue && <aside><strong>Fíjate en esto</strong>{current.cue}</aside>}</main><footer><button type="button" disabled={step === 0} onClick={() => onStep(Math.max(0, step - 1))}><ChevronLeft size={20} /> Anterior</button>{step < technique.steps.length - 1 ? <button type="button" className="primary" onClick={() => onStep(step + 1)}>Siguiente <ChevronRight size={20} /></button> : <button type="button" className="primary" onClick={onClose}><Check size={20} /> Terminar</button>}</footer></div>;
 }
 
 function appendSentence(current: string, transcript: string) {

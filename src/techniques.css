@@ -1,4 +1,6 @@
-.techniques-page { width: 100%; max-width: 620px; margin-inline: auto; display: grid; gap: 18px; }
+.techniques-page { width: 100%; min-width: 0; max-width: 620px; margin-inline: auto; display: grid; gap: 18px; overflow-x: clip; }
+.techniques-page > * { min-width: 0; max-width: 100%; }
+.techniques-page .form-section { width: 100%; min-width: 0; }
 
 .technique-input-box {
   display: grid;
@@ -24,6 +26,18 @@
 }
 
 .technique-generate-action { margin-top: 13px; }
+.technique-card .primary-button { margin-top: 2px; }
+.technique-card .primary-button span { display:flex; align-items:center; gap:8px; }
+
+.technique-guide { position:fixed; inset:0; z-index:1200; background:#f7f1e5; color:#34442a; display:flex; flex-direction:column; }
+.technique-guide header { padding:max(16px,env(safe-area-inset-top)) 14px 12px; background:#405526; color:#fff; display:grid; grid-template-columns:42px 1fr 42px; align-items:center; }
+.technique-guide header button { width:38px; height:38px; border:0; border-radius:50%; background:rgba(255,255,255,.12); color:#fff; display:grid; place-items:center; }
+.technique-guide header div { text-align:center; }.technique-guide header span,.technique-guide header strong { display:block; }.technique-guide header span { font-size:.58rem; opacity:.7; letter-spacing:.1em; }.technique-guide header strong { margin-top:2px; font-family:'Playfair Display',serif; font-size:.85rem; }
+.technique-guide main { flex:1; width:min(100%,620px); margin:0 auto; padding:26px 20px 110px; text-align:center; overflow-y:auto; }
+.technique-guide-progress { height:4px; border-radius:99px; background:#dce2ce; overflow:hidden; margin-bottom:28px; }.technique-guide-progress span { display:block; height:100%; background:var(--gold); }
+.technique-guide main>small { color:#87906f; font-weight:800; letter-spacing:.12em; }.technique-guide-number { margin:16px 0; color:#b8811b; font-family:'Playfair Display',serif; font-size:4rem; line-height:1; }.technique-guide main>p { margin:0; color:#35462a; font-family:'Playfair Display',serif; font-size:1.4rem; line-height:1.48; }
+.technique-guide-facts { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:22px; }.technique-guide-facts span { display:flex; align-items:center; gap:6px; padding:9px 12px; border-radius:14px; background:#405526; color:#fff; font-size:.72rem; font-weight:800; }.technique-guide aside { margin:22px auto 0; max-width:430px; padding:14px; border-radius:16px; background:#eef0df; color:#526336; text-align:left; font-size:.72rem; line-height:1.48; }.technique-guide aside strong { display:block; margin-bottom:3px; }
+.technique-guide footer { position:fixed; left:0; right:0; bottom:0; padding:12px 14px max(12px,env(safe-area-inset-bottom)); background:rgba(247,241,229,.96); display:grid; grid-template-columns:1fr 1fr; gap:10px; border-top:1px solid var(--line); }.technique-guide footer button { min-height:50px; border:1px solid var(--line); border-radius:15px; background:#fffaf1; color:#506232; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; }.technique-guide footer button.primary { border:0; background:#405526; color:#fff; }.technique-guide footer button:disabled { opacity:.35; }
 
 .technique-input-box textarea:focus {
   border-color: rgba(64,91,37,.42);
