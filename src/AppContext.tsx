@@ -154,11 +154,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const upsertShoppingItem = (item: ShoppingListItem) => {
     setShoppingList(current => {
-      const existing = current.find(entry => entry.id === item.id);
-      if (existing && existing.name === item.name && existing.quantity === item.quantity && existing.unit === item.unit && existing.recipeId === item.recipeId && existing.recipeTitle === item.recipeTitle && existing.checked === item.checked) {
-        return current;
+      const index = current.findIndex(entry => entry.id === item.id);
+      if (index >= 0) {
+        const existing = current[index];
+        if (existing.name === item.name && existing.quantity === item.quantity && existing.unit === item.unit && existing.recipeId === item.recipeId && existing.recipeTitle === item.recipeTitle && existing.checked === item.checked) {
+          return current;
+        }
+        const next = [...current];
+        next[index] = item;
+        saveShoppingList(next);
+        return next;
       }
-      const next = [item, ...current.filter(entry => entry.id !== item.id)];
+      const next = [item, ...current];
       saveShoppingList(next);
       return next;
     });
