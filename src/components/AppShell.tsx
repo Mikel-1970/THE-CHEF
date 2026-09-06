@@ -1,9 +1,9 @@
-import { ArrowLeft, UserRound } from 'lucide-react';
+import { UserRound } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BottomNav } from './BottomNav';
 
-export function AppShell({ children, hideNav = false, hideBack = false, hideProfile = false, onBack }: {
+export function AppShell({ children, hideProfile = false }: {
   children: ReactNode;
   hideNav?: boolean;
   hideBack?: boolean;
@@ -21,27 +21,13 @@ export function AppShell({ children, hideNav = false, hideBack = false, hideProf
       <div className="grain" />
       <main className="phone-shell">{children}</main>
 
-      {hideNav && !isHome && !hideBack && (
-        <button
-          className="floating-back-button"
-          onClick={onBack ?? (() => navigate(-1))}
-          aria-label="Volver"
-        >
-          <ArrowLeft size={23} strokeWidth={2} />
-        </button>
-      )}
-
       {isHome && !hideProfile && (
-        <button
-          className="floating-profile-button"
-          onClick={() => navigate('/ajustes')}
-          aria-label="Abrir Perfil"
-        >
+        <button className="floating-profile-button" onClick={() => navigate('/ajustes')} aria-label="Abrir Perfil">
           <UserRound size={22} strokeWidth={1.9} />
         </button>
       )}
 
-      {!hideNav && <BottomNav />}
+      <BottomNav />
     </div>
   );
 }

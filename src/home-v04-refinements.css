@@ -1,106 +1,118 @@
 .reference-home {
-  height: 100dvh;
-  min-height: 0;
-  padding: max(8px, env(safe-area-inset-top)) 14px max(94px, calc(env(safe-area-inset-bottom) + 88px));
-  overflow: hidden;
+  padding-top: max(18px, env(safe-area-inset-top));
+  padding-bottom: calc(98px + env(safe-area-inset-bottom));
+  min-height: 100dvh;
+  box-sizing: border-box;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .reference-brand {
-  padding: 0 0 7px;
+  padding: 0 0 13px;
+  flex: 0 0 auto;
 }
 
 .reference-chef-logo {
-  width: 52px;
-  height: 43px;
+  width: 68px;
+  height: 58px;
   margin-bottom: 0;
 }
 
 .reference-chef-logo > svg:first-child {
-  width: 46px;
-  height: 46px;
+  width: 58px;
+  height: 58px;
 }
 
 .reference-chef-heart {
-  bottom: 0;
-  left: 21px;
-}
-
-.reference-brand h1 {
-  font-size: clamp(2.35rem, 10vw, 3.15rem);
-}
-
-.reference-divider {
-  margin: 5px 0 7px;
-}
-
-.reference-brand h2 {
-  margin: 0;
-  font-size: clamp(.96rem, 4vw, 1.18rem);
-}
-
-.reference-doodle-heart {
   bottom: 3px;
+  left: 28px;
 }
 
-/* El Chef es ahora la única acción principal: centrada y a ancho completo. */
+.reference-brand h1 { font-size: clamp(2.85rem, 12.5vw, 3.9rem); }
+.reference-divider { margin: 10px 0 13px; }
+.reference-brand h2 { margin-bottom: 4px; font-size: clamp(1.3rem, 5.3vw, 1.72rem); }
+.reference-brand p { font-size: clamp(.88rem, 3.4vw, 1.04rem); }
+.reference-doodle-heart { bottom: 3px; }
+
 .reference-main-actions {
   grid-template-columns: minmax(0, 1fr);
   width: min(100%, 680px);
   margin-inline: auto;
+  flex: 1.08 1 0;
+  min-height: 0;
 }
 
 .reference-action-card {
   width: 100%;
-  min-height: 170px;
+  height: 100%;
+  min-height: 218px;
+  max-height: 310px;
 }
 
 .reference-action-text {
-  left: 16px;
-  top: 15px;
+  left: 20px;
+  top: 20px;
   width: 56%;
 }
 
 .reference-action-text h3 {
-  font-size: clamp(1.18rem, 5vw, 1.65rem);
+  font-size: clamp(1.48rem, 6vw, 2rem);
   line-height: 1.01;
 }
 
 .reference-action-text p {
   color: #34382f;
-  font-size: .74rem;
+  font-size: .9rem;
   line-height: 1.35;
   font-weight: 650;
 }
 
+.reference-card-cta,
+.reference-secondary-copy b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 13px;
+  border-radius: 999px;
+  font-size: .7rem;
+  font-weight: 850;
+  letter-spacing: .01em;
+}
+
+.reference-card-cta {
+  margin-top: 12px;
+  background: #405626;
+  color: white;
+  box-shadow: 0 6px 14px rgba(51,69,35,.16);
+}
+
 .reference-card-icon {
-  left: 14px;
-  bottom: 11px;
-  width: 44px;
-  height: 44px;
+  left: 18px;
+  bottom: 16px;
+  width: 56px;
+  height: 56px;
 }
-
-.reference-card-icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-.reference-quick-section {
-  margin-top: 8px;
-}
+.reference-card-icon svg { width: 30px; height: 30px; }
 
 .reference-secondary-actions {
   position: relative;
   z-index: 2;
   width: min(100%, 680px);
-  margin: 7px auto 0;
+  margin: 10px auto 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+  flex: .9 1 0;
+  min-height: 0;
 }
 
 .reference-secondary-card {
   position: relative;
-  min-height: 112px;
+  height: 100%;
+  min-height: 158px;
+  max-height: 205px;
   overflow: hidden;
   padding: 0;
   border: 1px solid rgba(255,255,255,.88);
@@ -113,142 +125,74 @@
 
 .reference-secondary-photo { position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .22s ease; }
 .reference-secondary-card:active .reference-secondary-photo { transform:scale(1.025); }
-.reference-secondary-copy { position:absolute;z-index:2;inset:auto 10px 9px;display:flex;flex-direction:column;align-items:flex-start;gap:2px; }
-.reference-secondary-copy strong { font-family:'Playfair Display',Georgia,serif;font-size:.88rem;line-height:1.04; }
-.reference-secondary-copy small { color:rgba(255,255,255,.84);font-size:.53rem;line-height:1.25; }
-.reference-secondary-copy svg { width:19px;height:19px; }
-.reference-secondary-copy svg { color:#f1c55c;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));margin-bottom:3px; }
+.reference-secondary-copy { position:absolute;z-index:2;inset:auto 14px 13px;display:flex;flex-direction:column;align-items:flex-start;gap:4px; }
+.reference-secondary-copy strong { font-family:'Playfair Display',Georgia,serif;font-size:1.08rem;line-height:1.06; }
+.reference-secondary-copy small { color:rgba(255,255,255,.82);font-size:.65rem;line-height:1.3; }
+.reference-secondary-copy svg { color:#f1c55c;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));margin-bottom:2px; }
+.reference-secondary-copy b { margin-top:4px;background:rgba(255,255,255,.92);color:#3e502e; }
 .reference-photo-card .reference-secondary-photo { background-position:60% center; }
 
-.reference-quick-title {
-  margin-bottom: 5px;
+.reference-quick-section {
+  margin-top: 11px;
+  flex: .62 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
-.reference-quick-title h2 { font-size:.83rem; }
-
+.reference-quick-title { margin-bottom: 7px; flex: 0 0 auto; }
+.reference-quick-grid { flex: 1 1 auto; min-height: 0; }
 .reference-quick-grid button {
-  min-height: 60px;
-  padding: 5px 2px;
-  gap: 3px;
+  height: 100%;
+  min-height: 70px;
+  padding-top: 8px;
+  padding-bottom: 7px;
+  gap: 5px;
 }
-
-.reference-quick-grid button svg {
-  width: 22px;
-  height: 22px;
-}
-
-.reference-quick-grid strong {
-  color: #252923;
-  font-weight: 700;
-  font-size: .54rem;
-}
+.reference-quick-grid button svg { width: 29px; height: 29px; }
+.reference-quick-grid strong { color:#252923;font-weight:700;font-size:.63rem; }
 
 @media (min-width: 520px) {
-  .reference-action-card {
-    min-height: 190px;
-  }
-
-  .reference-action-text {
-    left: 28px;
-    top: 28px;
-    width: 52%;
-  }
+  .reference-action-card { min-height: 245px; }
+  .reference-action-text { left: 28px; top: 26px; width: 52%; }
 }
 
 @media (max-width: 390px) {
-  .reference-home {
-    padding-top: max(6px, env(safe-area-inset-top));
-  }
+  .reference-home { padding-top:max(12px,env(safe-area-inset-top)); padding-bottom:calc(92px + env(safe-area-inset-bottom)); }
+  .reference-brand { padding-bottom:9px; }
+  .reference-chef-logo { height:48px; }
+  .reference-chef-logo > svg:first-child { width:48px;height:48px; }
+  .reference-brand h1 { font-size:2.82rem; }
+  .reference-divider { margin:7px 0 8px; }
+  .reference-brand h2 { font-size:1.25rem; }
+  .reference-brand p { font-size:.86rem; }
+  .reference-action-card { min-height:205px; }
+  .reference-action-text { left:16px;top:15px;width:59%; }
+  .reference-action-text h3 { font-size:1.38rem; }
+  .reference-action-text p { font-size:.8rem; }
+  .reference-action-line { margin:8px 0 7px; }
+  .reference-card-cta { margin-top:9px;min-height:31px;padding:0 11px;font-size:.65rem; }
+  .reference-card-icon { left:14px;bottom:11px;width:50px;height:50px; }
+  .reference-card-icon svg { width:26px;height:26px; }
+  .reference-secondary-actions { gap:8px;margin-top:8px; }
+  .reference-secondary-card { min-height:145px;border-radius:20px; }
+  .reference-secondary-copy { inset:auto 11px 10px; }
+  .reference-secondary-copy strong { font-size:.92rem; }
+  .reference-secondary-copy small { font-size:.57rem; }
+  .reference-secondary-copy b { min-height:29px;padding:0 10px;font-size:.61rem; }
+  .reference-quick-section { margin-top:9px; }
+  .reference-quick-title { margin-bottom:6px; }
+  .reference-quick-title h2 { font-size:.98rem; }
+  .reference-quick-grid button { min-height:66px;padding:6px 2px;gap:4px; }
+  .reference-quick-grid button svg { width:25px;height:25px; }
+  .reference-quick-grid strong { font-size:.57rem; }
+}
 
-  .reference-brand {
-    padding-bottom: 6px;
-  }
-
-  .reference-chef-logo {
-    height: 40px;
-  }
-
-  .reference-chef-logo > svg:first-child {
-    width: 43px;
-    height: 43px;
-  }
-
-  .reference-brand h1 {
-    font-size: 2.35rem;
-  }
-
-  .reference-divider {
-    margin: 8px 0 10px;
-  }
-
-  .reference-brand h2 {
-    font-size: .92rem;
-  }
-
-  .reference-action-card {
-    min-height: 158px;
-  }
-
-  .reference-action-text {
-    left: 16px;
-    top: 17px;
-    width: 59%;
-  }
-
-  .reference-action-text h3 {
-    font-size: 1.42rem;
-  }
-
-  .reference-action-text p {
-    font-size: .79rem;
-    font-weight: 650;
-  }
-
-  .reference-action-line {
-    margin: 9px 0 8px;
-  }
-
-  .reference-card-icon {
-    left: 14px;
-    bottom: 12px;
-    width: 54px;
-    height: 54px;
-  }
-
-  .reference-card-icon svg {
-    width: 28px;
-    height: 28px;
-  }
-
-  .reference-quick-section {
-    margin-top: 13px;
-  }
-
-  .reference-secondary-actions { gap:8px;margin-top:9px; }
-  .reference-secondary-card { min-height:104px;border-radius:18px; }
-  .reference-secondary-copy { inset:auto 11px 11px; }
-  .reference-secondary-copy strong { font-size:.82rem; }
-  .reference-secondary-copy small { font-size:.49rem; }
-
-  .reference-quick-title {
-    margin-bottom: 7px;
-  }
-
-  .reference-quick-title h2 {
-    font-size: 1rem;
-  }
-
-  .reference-quick-grid button {
-    min-height: 56px;
-    padding: 4px 2px;
-    gap: 2px;
-  }
-
-  .reference-quick-grid button svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .reference-quick-grid strong {
-    font-size: .59rem;
-  }
+@media (max-height: 760px) {
+  .reference-brand h1 { font-size:2.5rem; }
+  .reference-chef-logo,.reference-chef-logo > svg:first-child { width:44px;height:44px; }
+  .reference-divider { margin:5px 0 6px; }
+  .reference-action-card { min-height:180px; }
+  .reference-secondary-card { min-height:128px; }
+  .reference-secondary-copy small { display:none; }
+  .reference-quick-grid button { min-height:58px; }
 }

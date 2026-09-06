@@ -20,7 +20,10 @@
   display: grid;
   justify-items: center;
   gap: 10px;
+  transition: transform .22s ease, opacity .22s ease;
 }
+
+.chef-loading-card.completed { transform: scale(.98); }
 
 .chef-loading-card strong {
   font-family: 'Playfair Display', Georgia, serif;
@@ -28,10 +31,30 @@
   color: #2f4321;
 }
 
-.chef-loading-card span {
+.chef-loading-card > span {
   min-height: 1.4em;
   color: #6b6d63;
   font-size: .88rem;
+}
+
+.chef-progress-ring {
+  width: 94px;
+  height: 94px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.chef-progress-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(#405626 0deg 112deg, #d8c27e 112deg 204deg, rgba(64,86,38,.13) 204deg 360deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 0);
+  animation: chef-progress-spin 1.05s linear infinite;
 }
 
 .chef-hat-spinner {
@@ -42,15 +65,36 @@
   place-items: center;
   background: #eef0e3;
   color: #405626;
-  animation: chef-hat-spin 1.35s ease-in-out infinite;
+  animation: chef-avatar-float 1.4s ease-in-out infinite;
 }
 
-@keyframes chef-hat-spin {
-  0% { transform: rotate(-8deg) scale(.98); }
-  50% { transform: rotate(352deg) scale(1.04); }
-  100% { transform: rotate(712deg) scale(.98); }
+.chef-loading-card.completed .chef-progress-ring::before {
+  background: #405626;
+  animation: none;
+}
+
+.chef-complete-check {
+  position: absolute;
+  right: -4px;
+  bottom: -3px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #405626;
+  color: #fff;
+  border: 3px solid #fffaf1;
+  box-shadow: 0 6px 18px rgba(48,64,34,.25);
+}
+
+@keyframes chef-progress-spin { to { transform: rotate(360deg); } }
+@keyframes chef-avatar-float {
+  0%, 100% { transform: rotate(-3deg) scale(.99); }
+  50% { transform: rotate(3deg) scale(1.035); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .chef-progress-ring::before,
   .chef-hat-spinner { animation: none; }
 }

@@ -10,6 +10,7 @@ const ACTIVE_SEARCH_KEY = 'chef:active-search';
 export type CookingLevel = 'Principiante' | 'Intermedio' | 'Avanzado';
 export type SpiceLevel = 'Nada' | 'Suave' | 'Medio' | 'Alto';
 export type FontScale = 'normal' | 'large' | 'xlarge';
+export type AppLanguage = 'es' | 'en' | 'fr' | 'de' | 'it' | 'pt' | 'zh';
 
 export type AppSettings = {
   defaultServings: number;
@@ -20,6 +21,9 @@ export type AppSettings = {
   defaultDifficulty?: Difficulty;
   pantryBasics: string[];
   pantryStock: IngredientInput[];
+  language: AppLanguage;
+  avatarEmoji: string;
+  profileImage?: string;
 };
 
 export type ActiveSearchState = {
@@ -35,7 +39,10 @@ export const defaultSettings: AppSettings = {
   fontScale: 'large',
   defaultDifficulty: undefined,
   pantryBasics: ['Aceite de oliva', 'Sal', 'Pimienta', 'Ajo'],
-  pantryStock: []
+  pantryStock: [],
+  language: 'es',
+  avatarEmoji: '👨‍🍳',
+  profileImage: undefined
 };
 
 function parse<T>(key: string, fallback: T): T {
@@ -60,7 +67,10 @@ export function loadSettings(): AppSettings {
     ...defaultSettings,
     ...saved,
     pantryBasics: Array.isArray(saved.pantryBasics) ? saved.pantryBasics : defaultSettings.pantryBasics,
-    pantryStock: Array.isArray(saved.pantryStock) ? saved.pantryStock : defaultSettings.pantryStock
+    pantryStock: Array.isArray(saved.pantryStock) ? saved.pantryStock : defaultSettings.pantryStock,
+    language: saved.language ?? defaultSettings.language,
+    avatarEmoji: saved.avatarEmoji || defaultSettings.avatarEmoji,
+    profileImage: typeof saved.profileImage === 'string' ? saved.profileImage : undefined
   };
 }
 

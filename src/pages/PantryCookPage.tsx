@@ -62,7 +62,7 @@ export function PantryCookPage() {
 
   return (
     <AppShell>
-      <ChefLoadingOverlay active={isSearching} title="Cocinando con tu despensa" messages={['Buscando la mejor combinación…']} />
+      <ChefLoadingOverlay active={isSearching} title="Cocinando con tu despensa" messages={['Buscando la mejor combinación…', 'Ajustando ingredientes…', 'Dando forma a las propuestas…']} />
       <TopBar eyebrow="COCINA CON LO QUE TIENES" title="Elige tus productos" />
       <div className="page-content nav-safe">
         <section className="editorial-card olive-intro"><span className="eyebrow">TU DESPENSA</span><h2>¿Qué quieres utilizar?</h2><p>Selecciona uno o varios productos. El Chef añadirá solo lo necesario para construir recetas coherentes.</p></section>

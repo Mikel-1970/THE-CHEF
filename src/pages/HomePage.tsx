@@ -24,7 +24,8 @@ export function HomePage() {
           </div>
           <h1>El Chef</h1>
           <div className="reference-divider" aria-hidden="true"><span /><i>◇</i><span /></div>
-          <h2>Vamos a cocinar algo delicioso.</h2>
+          <h2>¡Bienvenido de nuevo!</h2>
+          <p>Vamos a cocinar algo delicioso.</p>
           <Heart className="reference-doodle-heart" size={31} strokeWidth={1.65} />
         </header>
 
@@ -34,12 +35,9 @@ export function HomePage() {
               <h3>¿Qué quieres<br />que te prepare?</h3>
               <span className="reference-action-line reference-action-line-gold" />
               <p>Dime qué te apetece</p>
+              <span className="reference-card-cta">Empezar</span>
             </div>
-            <div
-              className="reference-action-photo reference-desire-photo"
-              style={{ backgroundImage: `linear-gradient(90deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.88) 38%, rgba(255,253,248,.14) 68%, rgba(255,253,248,0) 100%), url(${desireImage})` }}
-              aria-hidden="true"
-            />
+            <div className="reference-action-photo reference-desire-photo" style={{ backgroundImage: `linear-gradient(90deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.88) 38%, rgba(255,253,248,.14) 68%, rgba(255,253,248,0) 100%), url(${desireImage})` }} aria-hidden="true" />
             <span className="reference-card-icon reference-card-icon-gold"><ChefHat size={38} strokeWidth={1.55} /></span>
           </button>
         </section>
@@ -47,11 +45,11 @@ export function HomePage() {
         <section className="reference-secondary-actions" aria-label="Otras formas de cocinar">
           <button className="reference-secondary-card" onClick={() => navigate('/cocina-despensa')}>
             <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.02), rgba(24,30,18,.62)), url(${pantryImage})` }} aria-hidden="true" />
-            <span className="reference-secondary-copy"><PackageOpen size={25} /><strong>Cocina con lo que tienes</strong><small>Abre tu despensa y aprovecha sus productos con sentido.</small></span>
+            <span className="reference-secondary-copy"><PackageOpen size={25} /><strong>Cocina con lo que tienes</strong><small>Abre tu despensa y aprovecha sus productos con sentido.</small><b>Ver opciones</b></span>
           </button>
           <button className="reference-secondary-card reference-photo-card" onClick={() => navigate('/foto')}>
             <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.01), rgba(24,30,18,.61)), url(${photoRecipeImage})` }} aria-hidden="true" />
-            <span className="reference-secondary-copy"><Camera size={25} /><strong>Receta desde una foto</strong><small>Enséñame un plato y descubre cómo prepararlo.</small></span>
+            <span className="reference-secondary-copy"><Camera size={25} /><strong>Receta desde una foto</strong><small>Enséñame un plato y descubre cómo prepararlo.</small><b>Subir foto</b></span>
           </button>
         </section>
 
