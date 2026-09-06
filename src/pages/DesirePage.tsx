@@ -1,8 +1,9 @@
-import { ChevronDown, ChevronUp, Clock3, Mic, MicOff, Plus, Sparkles, Star, Trash2, UsersRound, WandSparkles, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Clock3, Mic, MicOff, Sparkles, Star, Trash2, UsersRound, WandSparkles, X } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
+import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { Chip } from '../components/Chip';
 import { CuisineSelect } from '../components/CuisineSelect';
 import { NumberStepper } from '../components/NumberStepper';
@@ -45,6 +46,7 @@ export function DesirePage() {
 
   const addIngredient = (e?: FormEvent) => {
     e?.preventDefault();
+    if (ingredientVoice.isListening) ingredientVoice.stop();
     const entries = splitIngredientEntries(ingredientDraft);
     if (!entries.length) return;
     setIngredients(current => mergeIngredientEntries(current, entries));
@@ -53,7 +55,7 @@ export function DesirePage() {
   };
 
   const search = async () => {
-    if (isSearching) return;
+    if (isSearching || requestVoice.isListening || requestVoice.isTranscribing || !text.trim()) return;
     const interpreted = interpretDesireText(text);
     const request: CookingRequest = {
       mode: usePantry ? 'pantry' : 'desire',
@@ -80,6 +82,7 @@ export function DesirePage() {
 
   return (
     <AppShell hideNav>
+      <ChefLoadingOverlay active={isSearching} title="Buscando propuestas" messages={['¡Oído cocina!', 'Buscando la mejor opción…', 'El Chef está pensando…', 'Afinando tus propuestas…']} />
       <TopBar eyebrow="¡OÍDO COCINA!" title="¿Qué quieres que te prepare?" />
       <div className="page-content">
         <section className="editorial-card desire-intro olive-intro"><span className="eyebrow">PÍDELO A TU MANERA</span><h2>Dime qué te apetece.</h2><p>Puedes pedir un plato concreto, un tipo de comida o dejar que El Chef te sorprenda.</p></section>
@@ -90,8 +93,9 @@ export function DesirePage() {
             <WandSparkles size={22} />
             <textarea rows={5} value={text} onChange={e => setText(e.target.value)} placeholder="Ej. prepárame una paella con pollo; o un postre de chocolate; o algo nuevo y rápido…" />
             <div className="voice-action-stack">
-              {text.trim() && <button type="button" className="clear-input-button" onClick={() => { requestVoice.stop(); setText(''); }} aria-label="Borrar petición"><X size={18} /></button>}
-              <button type="button" className={`voice-button ${requestVoice.isListening ? 'listening' : ''}`} onClick={requestVoice.toggle} disabled={!requestVoice.isSupported || requestVoice.isTranscribing} aria-label={requestVoice.isListening ? 'Detener dictado' : 'Dictar petición'}>{requestVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
+              <button type="button" className="clear-input-button" onClick={() => { requestVoice.stop(); setText(''); }} disabled={!text.trim() && !requestVoice.isListening} aria-label="Borrar petición"><X size={18} /></button>
+              <button type="button" className={`voice-button ${requestVoice.isListening ? 'listening' : ''}`} onClick={requestVoice.toggle} disabled={!requestVoice.isSupported || requestVoice.isTranscribing || isSearching} aria-label={requestVoice.isListening ? 'Detener dictado' : 'Dictar petición'}>{requestVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
+              <button type="button" className="voice-confirm-button" onClick={() => void search()} disabled={!text.trim() || requestVoice.isListening || requestVoice.isTranscribing || isSearching} aria-label="Confirmar petición"><Check size={19} /></button>
             </div>
           </div>
           {requestVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
@@ -104,9 +108,9 @@ export function DesirePage() {
           <div className="section-label"><span>Productos que tienes</span><small>Opcional · ★ principal/prioritario</small></div>
           <form className="ingredient-input" onSubmit={addIngredient}>
             <input value={ingredientDraft} onChange={e => setIngredientDraft(e.target.value)} placeholder="Ej. pollo 300 g, 4 huevos, arroz…" />
-            {ingredientDraft.trim() && <button type="button" className="clear-input-button" onClick={() => { ingredientVoice.stop(); setIngredientDraft(''); }} aria-label="Borrar productos"><X size={18} /></button>}
+            <button type="button" className="clear-input-button" onClick={() => { ingredientVoice.stop(); setIngredientDraft(''); }} disabled={!ingredientDraft.trim() && !ingredientVoice.isListening} aria-label="Borrar productos"><X size={18} /></button>
             <button type="button" className={`voice-button ${ingredientVoice.isListening ? 'listening' : ''}`} onClick={ingredientVoice.toggle} disabled={!ingredientVoice.isSupported || ingredientVoice.isTranscribing} aria-label={ingredientVoice.isListening ? 'Detener dictado' : 'Dictar productos'}>{ingredientVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
-            <button type="submit" aria-label="Añadir producto"><Plus size={19} /></button>
+            <button type="submit" className="voice-confirm-button" disabled={!ingredientDraft.trim() || ingredientVoice.isListening || ingredientVoice.isTranscribing} aria-label="Confirmar productos"><Check size={19} /></button>
           </form>
           {ingredientVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando la lista de productos…</div>}
           {ingredientVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Separando e interpretando ingredientes con IA…</div>}
@@ -137,7 +141,7 @@ export function DesirePage() {
         {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(v => <Chip key={v} selected={style === v} onClick={() => setStyle(style === v ? undefined : v)}>{v}</Chip>)}</div></div><div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(v => <Chip key={v} selected={difficulty === v} onClick={() => setDifficulty(difficulty === v ? undefined : v)}>{v}</Chip>)}</div></div></section>}
 
         <div className="helper-note"><Sparkles size={17} /> El Chef combina tu petición con lo que tienes solo cuando se lo indicas. La búsqueda inicial muestra 2 propuestas para responder más rápido.</div>
-        <div className="sticky-action"><PrimaryButton onClick={search} disabled={!text.trim() || isSearching}>{isSearching ? 'Consultando al Chef…' : 'Buscar 2 propuestas'}</PrimaryButton></div>
+        <div className="sticky-action"><PrimaryButton onClick={() => void search()} disabled={!text.trim() || isSearching || requestVoice.isListening || requestVoice.isTranscribing}>{isSearching ? 'Consultando al Chef…' : 'Buscar 2 propuestas'}</PrimaryButton></div>
       </div>
     </AppShell>
   );

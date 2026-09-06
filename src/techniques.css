@@ -1,0 +1,118 @@
+.techniques-page { display: grid; gap: 18px; }
+
+.technique-input-box {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: start;
+}
+
+.technique-input-box textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 116px;
+  border: 1px solid rgba(63,84,36,.14);
+  border-radius: 18px;
+  padding: 14px 15px;
+  background: #fffdf8;
+  color: #2f3429;
+  font: inherit;
+  line-height: 1.45;
+  outline: none;
+}
+
+.technique-input-box textarea:focus {
+  border-color: rgba(64,91,37,.42);
+  box-shadow: 0 0 0 4px rgba(64,91,37,.08);
+}
+
+.technique-card {
+  border: 1px solid rgba(63,84,36,.12);
+  border-radius: 24px;
+  background: rgba(255,253,248,.98);
+  box-shadow: 0 14px 34px rgba(72,62,38,.10);
+  padding: 20px;
+  display: grid;
+  gap: 18px;
+}
+
+.technique-title-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  align-items: start;
+}
+
+.technique-title-row h2 { margin: 5px 0 7px; }
+.technique-title-row p { margin: 0; color: #6c6f66; line-height: 1.5; }
+
+.technique-meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.technique-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #f2efe7;
+  color: #526044;
+  font-size: .74rem;
+  font-weight: 700;
+}
+
+.technique-section { display: grid; gap: 8px; }
+.technique-section h3 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .92rem;
+  color: #334525;
+}
+.technique-section p { margin: 0; color: #676b61; line-height: 1.48; }
+
+.technique-ingredients { display: grid; gap: 7px; }
+.technique-ingredients > div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(63,84,36,.08);
+}
+.technique-ingredients span { color: #464c40; }
+.technique-ingredients strong { color: #334525; font-size: .84rem; }
+
+.technique-section .expanded-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 11px; }
+.technique-section .expanded-list li { color: #4f5549; line-height: 1.5; }
+.technique-section .expanded-list li strong { color: #405b25; margin-right: 4px; }
+.technique-section .expanded-list li small { display: block; margin: 4px 0 0 24px; color: #777b70; }
+
+.technique-library-card {
+  display: grid !important;
+  grid-template-columns: 1fr 42px;
+  align-items: center;
+  gap: 8px;
+}
+
+.technique-open {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+
+@media (max-width: 390px) {
+  .technique-card { padding: 17px; border-radius: 20px; }
+  .technique-input-box { gap: 7px; }
+}

@@ -1,15 +1,18 @@
-import { ChevronDown, ChevronUp, Clock3, Globe2, Search, SlidersHorizontal } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Clock3, Globe2, Mic, MicOff, Search, SlidersHorizontal, Sparkles, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
+import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { Chip } from '../components/Chip';
 import { CuisineSelect } from '../components/CuisineSelect';
 import { NumberStepper } from '../components/NumberStepper';
 import { RECIPE_STYLES } from '../data/cookingOptions';
 import type { Difficulty } from '../domain/types';
+import { useAiDictation } from '../hooks/useAiDictation';
 import { fetchExternalSearch, isExternalRecipeApiConfigured } from '../services/externalRecipeGateway';
 import { getAllRecipes, registerExternalRecipes } from '../services/recipeCatalog';
 import { formatDuration } from '../utils/time';
+import '../voice-input.css';
 
 const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
 const difficultyRank: Record<Difficulty, number> = { Fácil: 1, Media: 2, Avanzada: 3 };
@@ -24,6 +27,7 @@ export function SearchPage() {
   const [catalogVersion, setCatalogVersion] = useState(0);
   const [isSearchingExternal, setIsSearchingExternal] = useState(false);
   const [externalMessage, setExternalMessage] = useState<string>();
+  const voice = useAiDictation(transcript => setQuery(current => appendSentence(current, transcript)));
 
   const catalog = useMemo(() => getAllRecipes(), [catalogVersion]);
 
@@ -52,6 +56,11 @@ export function SearchPage() {
     setMaxMinutes(180);
   };
 
+  const confirmQuery = () => {
+    if (voice.isListening) voice.stop();
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  };
+
   const searchExternal = async () => {
     if (!externalConfigured || isSearchingExternal) return;
     setIsSearchingExternal(true);
@@ -70,9 +79,22 @@ export function SearchPage() {
 
   return (
     <AppShell>
+      <ChefLoadingOverlay active={isSearchingExternal} title="Buscando recetas" messages={['¡Oído cocina!', 'Buscando nuevas recetas…', 'Revisando opciones…', 'Comprobando resultados…']} />
       <div className="simple-page-header light-header"><span className="eyebrow">BUSCAR RECETAS</span><h1>Encuentra un plato</h1><p>Busca por nombre, ingrediente, estilo o tipo de cocina.</p></div>
       <div className="page-content nav-safe">
-        <div className="search-box"><Search size={18} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Ej. pasta pollo, italiana, calabacín…" /></div>
+        <div className="search-box">
+          <Search size={18} />
+          <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Ej. pasta pollo, italiana, calabacín…" />
+          <div className="voice-inline-actions">
+            <button type="button" className="clear-input-button" onClick={() => { voice.stop(); setQuery(''); }} disabled={!query.trim() && !voice.isListening} aria-label="Borrar búsqueda"><X size={17} /></button>
+            <button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar búsqueda'}>{voice.isListening ? <MicOff size={18} /> : <Mic size={18} />}</button>
+            <button type="button" className="voice-confirm-button" onClick={confirmQuery} disabled={!query.trim() || voice.isListening || voice.isTranscribing} aria-label="Confirmar búsqueda"><Check size={18} /></button>
+          </div>
+        </div>
+        {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
+        {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
+        {voice.error && <div className="voice-status error">{voice.error}</div>}
+
         <button className="advanced-toggle" onClick={() => setFiltersOpen(value => !value)}><span><SlidersHorizontal size={17} /> Filtros{activeFilters ? ` · ${activeFilters}` : ''}</span>{filtersOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
 
         {filtersOpen && (
@@ -105,6 +127,12 @@ export function SearchPage() {
       </div>
     </AppShell>
   );
+}
+
+function appendSentence(current: string, transcript: string): string {
+  const base = current.trimEnd();
+  const clean = transcript.trim();
+  return base ? `${base}${/[.!?…]$/.test(base) ? ' ' : ' '}${clean}` : clean;
 }
 
 function normalize(value: string): string {

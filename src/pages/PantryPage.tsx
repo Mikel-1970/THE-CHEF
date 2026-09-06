@@ -1,5 +1,5 @@
 import { FormEvent, useMemo, useState } from 'react';
-import { Mic, MicOff, Plus, Sparkles, Star, Trash2, X } from 'lucide-react';
+import { Check, Mic, MicOff, Sparkles, Star, Trash2, X } from 'lucide-react';
 import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
 import { TopBar } from '../components/TopBar';
@@ -22,6 +22,7 @@ export function PantryPage() {
 
   const addIngredient = (e?: FormEvent) => {
     e?.preventDefault();
+    if (voice.isListening) voice.stop();
     const entries = splitIngredientEntries(draft);
     if (!entries.length) return;
     const next = mergeIngredientEntries(ingredients, entries);
@@ -53,9 +54,9 @@ export function PantryPage() {
           <div className="section-label"><span>Productos disponibles</span><small>★ = priorizar</small></div>
           <form className="ingredient-input" onSubmit={addIngredient}>
             <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Ej. pollo 300 g, huevos, arroz…" />
-            {draft.trim() && <button type="button" className="clear-input-button" onClick={clearDraft} aria-label="Borrar"><X size={18} /></button>}
+            <button type="button" className="clear-input-button" onClick={clearDraft} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={18} /></button>
             <button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar productos'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button>
-            <button type="submit" aria-label="Añadir producto"><Plus size={19} /></button>
+            <button type="submit" className="voice-confirm-button" disabled={!draft.trim() || voice.isListening || voice.isTranscribing} aria-label="Confirmar productos"><Check size={19} /></button>
           </form>
           {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
           {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado con IA…</div>}
