@@ -12,6 +12,7 @@ import { ResultsPage } from './pages/ResultsPage';
 import { SearchPage } from './pages/SearchPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { ShoppingListPage } from './pages/ShoppingListPage';
+import { TechniquesPage } from './pages/TechniquesPage';
 
 function ScrollToTop() {
   const { pathname, search, key } = useLocation();
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="/cocinar/:id" element={<CookPage />} />
           <Route path="/lista-compra" element={<ShoppingListPage />} />
           <Route path="/mis-recetas" element={<MyRecipesPage />} />
+          <Route path="/tecnicas" element={<TechniquesPage />} />
           <Route path="/ajustes" element={<SettingsPage />} />
         </Routes>
       </AppProvider>
