@@ -24,8 +24,7 @@ export function HomePage() {
           </div>
           <h1>El Chef</h1>
           <div className="reference-divider" aria-hidden="true"><span /><i>◇</i><span /></div>
-          <h2>¡Bienvenido de nuevo!</h2>
-          <p>Vamos a cocinar algo delicioso.</p>
+          <h2>Vamos a cocinar algo delicioso.</h2>
           <Heart className="reference-doodle-heart" size={31} strokeWidth={1.65} />
         </header>
 

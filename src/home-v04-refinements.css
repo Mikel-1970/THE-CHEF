@@ -1,38 +1,41 @@
 .reference-home {
-  padding-top: max(18px, env(safe-area-inset-top));
-  overflow-y: auto;
+  height: 100dvh;
+  min-height: 0;
+  padding: max(8px, env(safe-area-inset-top)) 14px max(94px, calc(env(safe-area-inset-bottom) + 88px));
+  overflow: hidden;
 }
 
 .reference-brand {
-  padding: 0 0 13px;
+  padding: 0 0 7px;
 }
 
 .reference-chef-logo {
-  width: 68px;
-  height: 58px;
+  width: 52px;
+  height: 43px;
   margin-bottom: 0;
 }
 
 .reference-chef-logo > svg:first-child {
-  width: 58px;
-  height: 58px;
+  width: 46px;
+  height: 46px;
 }
 
 .reference-chef-heart {
-  bottom: 3px;
-  left: 28px;
+  bottom: 0;
+  left: 21px;
 }
 
 .reference-brand h1 {
-  font-size: clamp(2.85rem, 12.5vw, 3.9rem);
+  font-size: clamp(2.35rem, 10vw, 3.15rem);
 }
 
 .reference-divider {
-  margin: 10px 0 13px;
+  margin: 5px 0 7px;
 }
 
 .reference-brand h2 {
-  margin-bottom: 4px;
+  margin: 0;
+  font-size: clamp(.96rem, 4vw, 1.18rem);
 }
 
 .reference-doodle-heart {
@@ -48,48 +51,48 @@
 
 .reference-action-card {
   width: 100%;
-  min-height: 280px;
+  min-height: 170px;
 }
 
 .reference-action-text {
-  left: 20px;
-  top: 22px;
+  left: 16px;
+  top: 15px;
   width: 56%;
 }
 
 .reference-action-text h3 {
-  font-size: clamp(1.45rem, 6vw, 2rem);
+  font-size: clamp(1.18rem, 5vw, 1.65rem);
   line-height: 1.01;
 }
 
 .reference-action-text p {
   color: #34382f;
-  font-size: .88rem;
+  font-size: .74rem;
   line-height: 1.35;
   font-weight: 650;
 }
 
 .reference-card-icon {
-  left: 18px;
-  bottom: 16px;
-  width: 62px;
-  height: 62px;
+  left: 14px;
+  bottom: 11px;
+  width: 44px;
+  height: 44px;
 }
 
 .reference-card-icon svg {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
 }
 
 .reference-quick-section {
-  margin-top: 16px;
+  margin-top: 8px;
 }
 
 .reference-secondary-actions {
   position: relative;
   z-index: 2;
   width: min(100%, 680px);
-  margin: 12px auto 0;
+  margin: 7px auto 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
@@ -97,7 +100,7 @@
 
 .reference-secondary-card {
   position: relative;
-  min-height: 190px;
+  min-height: 112px;
   overflow: hidden;
   padding: 0;
   border: 1px solid rgba(255,255,255,.88);
@@ -110,37 +113,38 @@
 
 .reference-secondary-photo { position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .22s ease; }
 .reference-secondary-card:active .reference-secondary-photo { transform:scale(1.025); }
-.reference-secondary-copy { position:absolute;z-index:2;inset:auto 14px 14px;display:flex;flex-direction:column;align-items:flex-start;gap:4px; }
-.reference-secondary-copy strong { font-family:'Playfair Display',Georgia,serif;font-size:1.08rem;line-height:1.06; }
-.reference-secondary-copy small { color:rgba(255,255,255,.82);font-size:.65rem;line-height:1.35; }
+.reference-secondary-copy { position:absolute;z-index:2;inset:auto 10px 9px;display:flex;flex-direction:column;align-items:flex-start;gap:2px; }
+.reference-secondary-copy strong { font-family:'Playfair Display',Georgia,serif;font-size:.88rem;line-height:1.04; }
+.reference-secondary-copy small { color:rgba(255,255,255,.84);font-size:.53rem;line-height:1.25; }
+.reference-secondary-copy svg { width:19px;height:19px; }
 .reference-secondary-copy svg { color:#f1c55c;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));margin-bottom:3px; }
 .reference-photo-card .reference-secondary-photo { background-position:60% center; }
 
 .reference-quick-title {
-  margin-bottom: 9px;
+  margin-bottom: 5px;
 }
+.reference-quick-title h2 { font-size:.83rem; }
 
 .reference-quick-grid button {
-  min-height: 94px;
-  padding-top: 10px;
-  padding-bottom: 9px;
-  gap: 7px;
+  min-height: 60px;
+  padding: 5px 2px;
+  gap: 3px;
 }
 
 .reference-quick-grid button svg {
-  width: 31px;
-  height: 31px;
+  width: 22px;
+  height: 22px;
 }
 
 .reference-quick-grid strong {
   color: #252923;
   font-weight: 700;
-  font-size: .63rem;
+  font-size: .54rem;
 }
 
 @media (min-width: 520px) {
   .reference-action-card {
-    min-height: 315px;
+    min-height: 190px;
   }
 
   .reference-action-text {
@@ -152,24 +156,24 @@
 
 @media (max-width: 390px) {
   .reference-home {
-    padding-top: max(14px, env(safe-area-inset-top));
+    padding-top: max(6px, env(safe-area-inset-top));
   }
 
   .reference-brand {
-    padding-bottom: 11px;
+    padding-bottom: 6px;
   }
 
   .reference-chef-logo {
-    height: 52px;
+    height: 40px;
   }
 
   .reference-chef-logo > svg:first-child {
-    width: 52px;
-    height: 52px;
+    width: 43px;
+    height: 43px;
   }
 
   .reference-brand h1 {
-    font-size: 3rem;
+    font-size: 2.35rem;
   }
 
   .reference-divider {
@@ -177,15 +181,11 @@
   }
 
   .reference-brand h2 {
-    font-size: 1.18rem;
-  }
-
-  .reference-brand p {
-    font-size: .79rem;
+    font-size: .92rem;
   }
 
   .reference-action-card {
-    min-height: 245px;
+    min-height: 158px;
   }
 
   .reference-action-text {
@@ -224,10 +224,10 @@
   }
 
   .reference-secondary-actions { gap:8px;margin-top:9px; }
-  .reference-secondary-card { min-height:168px;border-radius:20px; }
+  .reference-secondary-card { min-height:104px;border-radius:18px; }
   .reference-secondary-copy { inset:auto 11px 11px; }
-  .reference-secondary-copy strong { font-size:.96rem; }
-  .reference-secondary-copy small { font-size:.59rem; }
+  .reference-secondary-copy strong { font-size:.82rem; }
+  .reference-secondary-copy small { font-size:.49rem; }
 
   .reference-quick-title {
     margin-bottom: 7px;
@@ -238,14 +238,14 @@
   }
 
   .reference-quick-grid button {
-    min-height: 86px;
-    padding: 8px 2px 7px;
-    gap: 6px;
+    min-height: 56px;
+    padding: 4px 2px;
+    gap: 2px;
   }
 
   .reference-quick-grid button svg {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
   }
 
   .reference-quick-grid strong {
