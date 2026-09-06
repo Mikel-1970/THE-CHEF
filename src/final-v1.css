@@ -22,6 +22,9 @@
 .history-filter-row label { display: grid; gap: 5px; }
 .history-filter-row label > span { font-size: .68rem; font-weight: 800; color: #69715f; }
 
+.library-photo { overflow: hidden; padding: 0 !important; }
+.library-photo img { width: 100%; height: 100%; display: block; object-fit: cover; border-radius: inherit; }
+
 .profile-settings-card { display: grid; gap: 14px; }
 .profile-preview-row { display: flex; align-items: center; gap: 14px; }
 .profile-preview { width: 74px; height: 74px; border-radius: 50%; position: relative; flex: 0 0 74px; display: grid; place-items: center; background: #eef0e3; border: 2px solid #fff; box-shadow: 0 7px 18px rgba(72,60,38,.13); font-size: 2rem; overflow: visible; }
@@ -48,8 +51,9 @@
 .photo-identification-card p { margin: 0; line-height: 1.48; }
 .photo-answer-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .photo-ingredient-confirmation { display: grid; gap: 8px; }
-.photo-ingredient-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 13px; background: #fffaf1; }
+.photo-ingredient-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid rgba(63,84,36,.10); border-radius: 13px; background: #fffaf1; color: #35452a; text-align: left; }
 .photo-ingredient-row strong { font-size: .88rem; }
+.photo-correction-box { display: grid; gap: 9px; }
 .photo-correction-box textarea { width: 100%; min-height: 110px; box-sizing: border-box; border: 1px solid rgba(63,84,36,.14); border-radius: 15px; padding: 12px; background: #fffdf8; font: inherit; resize: vertical; }
 
 .cook-screen.with-bottom-nav { padding-bottom: calc(82px + env(safe-area-inset-bottom)); }
