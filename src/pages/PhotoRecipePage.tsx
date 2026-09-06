@@ -30,10 +30,12 @@ export function PhotoRecipePage() {
   const [error, setError] = useState<string>();
   const [correction, setCorrection] = useState('');
   const [correctionOpen, setCorrectionOpen] = useState(false);
+  const [personalization, setPersonalization] = useState('');
   const [servings, setServings] = useState(settings.defaultServings || 2);
   const [confirmedIngredients, setConfirmedIngredients] = useState<Set<string>>(new Set());
   const [extraIngredient, setExtraIngredient] = useState('');
   const correctionVoice = useAiDictation(transcript => setCorrection(current => appendSentence(current, transcript)));
+  const personalizationVoice = useAiDictation(transcript => setPersonalization(current => appendSentence(current, transcript)));
 
   const identifiedIngredients = useMemo(() => proposal ? Array.from(new Set([...proposal.usedIngredients, ...proposal.missingIngredients])).filter(Boolean) : [], [proposal]);
 
@@ -48,6 +50,7 @@ export function PhotoRecipePage() {
     setVisualSummary('');
     setCorrection('');
     setCorrectionOpen(false);
+    setPersonalization('');
     setStage('select');
     setError(undefined);
   };
@@ -101,12 +104,13 @@ export function PhotoRecipePage() {
     setError(undefined);
     try {
       const ingredientList = Array.from(confirmedIngredients);
+      const personalizationText = personalization.trim() ? ` Personalización solicitada: ${personalization.trim()}.` : '';
       const request: CookingRequest = {
         mode: 'desire',
         servings,
         maxMinutes: 120,
         pantryBasics: settings.pantryBasics,
-        desireText: `Reproduce el plato de la fotografía identificado como “${proposal.title}”. La referencia visual es: ${visualSummary}. Ingredientes confirmados por el usuario: ${ingredientList.join(', ')}. Genera una sola receta completa, fiel a ese plato y adaptada a ${servings} comensales.`
+        desireText: `Reproduce el plato de la fotografía identificado como “${proposal.title}”. La referencia visual es: ${visualSummary}. Ingredientes confirmados por el usuario: ${ingredientList.join(', ')}.${personalizationText} Genera una sola receta completa, fiel a ese plato y adaptada a ${servings} comensales.`
       };
       let recipe: Recipe | undefined;
       if (proposal.recipeId.startsWith('ai-proposal-')) {
@@ -134,8 +138,8 @@ export function PhotoRecipePage() {
 
   return (
     <AppShell hideBack hideProfile>
-      <ChefLoadingOverlay active={working === 'analyse'} title="Analizando el plato" messages={['Reconstruyendo lo que hay en la foto…']} />
-      <ChefLoadingOverlay active={working === 'generate'} title="Preparando tu receta" messages={['Convirtiendo la foto en una receta completa…']} />
+      <ChefLoadingOverlay active={working === 'analyse'} title="Analizando el plato" messages={['Identificando el plato…', 'Leyendo ingredientes visibles…', 'Comprobando la interpretación…']} />
+      <ChefLoadingOverlay active={working === 'generate'} title="Preparando tu receta" messages={['Ajustando cantidades…', 'Ordenando la elaboración…', 'Afinando puntos críticos…']} />
       <TopBar eyebrow="MIRA, CONFIRMA Y COCINA" title="Receta desde una foto" />
       <div className="page-content nav-safe">
         <section className="editorial-card olive-intro"><span className="eyebrow">ENSÉÑAME EL PLATO</span><h2>Descubre cómo prepararlo.</h2><p>El Chef primero identificará el plato, después confirmarás los ingredientes y solo entonces generará una receta completa.</p></section>
@@ -159,6 +163,12 @@ export function PhotoRecipePage() {
           <p>Desmarca lo que no corresponda y añade cualquier ingrediente importante que falte.</p>
           <div className="photo-ingredient-confirmation">{identifiedIngredients.map(name => { const checked = confirmedIngredients.has(name); return <button type="button" className="photo-ingredient-row" key={name} onClick={() => setConfirmedIngredients(current => { const next = new Set(current); if (next.has(name)) next.delete(name); else next.add(name); return next; })}><strong>{name}</strong><span>{checked ? '✓' : '—'}</span></button>; })}</div>
           <div className="ingredient-input"><input value={extraIngredient} onChange={event => setExtraIngredient(event.target.value)} placeholder="Añadir ingrediente…" onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); addIngredient(); } }} /><button type="button" className="voice-confirm-button" onClick={addIngredient} disabled={!extraIngredient.trim()}><Plus size={18} /></button></div>
+          <div className="photo-correction-box">
+            <strong>Personalización opcional</strong>
+            <textarea value={personalization} onChange={event => setPersonalization(event.target.value)} placeholder="Ej. sin cebolla, añade limón y tomillo, quiero una versión más ligera…" />
+            <div className="recipe-revision-toolbar"><button type="button" className="revision-clear-button" onClick={() => { personalizationVoice.stop(); setPersonalization(''); }}><X size={19} /></button><button type="button" className={`voice-button ${personalizationVoice.isListening ? 'listening' : ''}`} onClick={personalizationVoice.toggle} disabled={!personalizationVoice.isSupported || personalizationVoice.isTranscribing}>{personalizationVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button><button type="button" className="revision-confirm-button" disabled={!personalization.trim() || personalizationVoice.isListening || personalizationVoice.isTranscribing}><Check size={20} /></button></div>
+            {personalizationVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando personalización…</div>}{personalizationVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando…</div>}
+          </div>
           <div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Comensales</strong><small>Para la receta final</small></div></div><NumberStepper value={servings} onChange={setServings} /></div>
           <PrimaryButton onClick={() => void generateRecipe()} disabled={!confirmedIngredients.size || Boolean(working)}>{working === 'generate' ? 'Generando receta…' : 'Generar receta'}</PrimaryButton>
         </section>}
