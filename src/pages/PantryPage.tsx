@@ -55,7 +55,7 @@ export function PantryPage() {
     <AppShell hideBack hideProfile>
       <TopBar eyebrow="TU INVENTARIO" title="Despensa" />
       <div className="page-content nav-safe">
-        <section className="editorial-card olive-intro"><PackageOpen size={26} /><h2>Lo que tienes en casa.</h2><p>Este apartado guarda tu inventario. Para cocinar con estos productos usa “Cocina con lo que tienes” desde Inicio.</p></section>
+        <section className="editorial-card olive-intro"><PackageOpen size={26} /><h2>Lo que tienes en casa.</h2><p>Este apartado guarda tu inventario. Para cocinar con estos productos usa “Cocina con lo que hay” desde Inicio.</p></section>
 
         <section className="form-section pantry-add-first">
           <div className="section-label"><span>Añadir productos</span><small>Texto o voz</small></div>
