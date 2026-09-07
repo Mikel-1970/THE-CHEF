@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { HashRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { AppProvider } from './AppContext';
+import { GuidedTour } from './components/GuidedTour';
 import { CookPage } from './pages/CookPage';
 import { DesirePage } from './pages/DesirePage';
 import { HomePage } from './pages/HomePage';
@@ -33,6 +34,7 @@ export default function App() {
     <HashRouter>
       <ScrollToTop />
       <AppProvider>
+        <GuidedTour />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/nevera" element={<PantryPage />} />
