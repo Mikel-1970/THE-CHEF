@@ -1,7 +1,8 @@
-import { UserRound } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useApp } from '../AppContext';
 import { BottomNav } from './BottomNav';
+import { ChefAvatar } from './ChefAvatar';
 
 export function AppShell({ children, hideProfile = false }: {
   children: ReactNode;
@@ -12,6 +13,7 @@ export function AppShell({ children, hideProfile = false }: {
 }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { settings } = useApp();
   const isHome = location.pathname === '/';
 
   return (
@@ -23,7 +25,7 @@ export function AppShell({ children, hideProfile = false }: {
 
       {isHome && !hideProfile && (
         <button data-tour="profile" className="floating-profile-button" onClick={() => navigate('/ajustes')} aria-label="Abrir Perfil">
-          <UserRound size={22} strokeWidth={1.9} />
+          <ChefAvatar avatar={settings.avatarEmoji} image={settings.profileImage} size={42} showHat={false} className="chef-avatar-compact" />
         </button>
       )}
 
