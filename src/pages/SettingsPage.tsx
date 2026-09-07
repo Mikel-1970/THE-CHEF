@@ -1,7 +1,9 @@
-import { Camera, Check, ChefHat, ImagePlus, Info, Languages, Mic, MicOff, Smartphone, Sparkles, Trash2, Type, UsersRound, X } from 'lucide-react';
+import { Camera, Check, ChefHat, CircleHelp, ImagePlus, Info, Languages, Mic, MicOff, Smartphone, Sparkles, Trash2, Type, UsersRound, X } from 'lucide-react';
 import { ChangeEvent, FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { Chip } from '../components/Chip';
+import { requestGuidedTourReplay } from '../components/GuidedTour';
 import { NumberStepper } from '../components/NumberStepper';
 import { useApp } from '../AppContext';
 import { useAiDictation } from '../hooks/useAiDictation';
@@ -27,6 +29,7 @@ const LANGUAGE_OPTIONS: Array<{ value: AppLanguage; label: string }> = [
 const AVATARS = ['👨‍🍳', '👩‍🍳', '🍅', '🍋', '🍆', '🦐', '🦀', '🐄', '🥐', '🍌'];
 
 export function SettingsPage() {
+  const navigate = useNavigate();
   const { settings, updateSettings } = useApp();
   const [draft, setDraft] = useState('');
   const [profileError, setProfileError] = useState<string>();
@@ -59,6 +62,11 @@ export function SettingsPage() {
     }
   };
 
+  const replayGuide = () => {
+    requestGuidedTourReplay();
+    navigate('/');
+  };
+
   return (
     <AppShell hideBack>
       <div className="simple-page-header light-header"><span className="eyebrow">TU PERFIL DE COCINA</span><h1>Ajustes</h1><p>Preferencias para que El Chef se adapte a tu forma de cocinar.</p></div>
@@ -79,6 +87,11 @@ export function SettingsPage() {
           </div>
           {settings.profileImage && <button className="advanced-toggle" type="button" onClick={() => updateSettings({ profileImage: undefined })}><Trash2 size={16} /> Quitar foto</button>}
           {profileError && <div className="voice-status error">{profileError}</div>}
+        </section>
+
+        <section className="settings-card">
+          <div className="settings-card-title"><CircleHelp size={20} /><div><strong>Guía de uso</strong><small>Repite el recorrido inicial cuando quieras</small></div></div>
+          <button type="button" className="secondary-button settings-guide-button" onClick={replayGuide}><CircleHelp size={17} /> Ver guía de la aplicación</button>
         </section>
 
         <section className="settings-card">
