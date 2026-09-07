@@ -1,6 +1,6 @@
-import { AlertTriangle, Check, ChevronLeft, ChevronRight, Clock3, Leaf, Mic, MicOff, Play, Save, Sparkles, Trash2, Wrench, X } from 'lucide-react';
+import { AlertTriangle, Check, ChevronLeft, ChevronRight, Clock3, Home, Leaf, Mic, MicOff, Play, Save, Sparkles, Trash2, Wrench, X } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { PrimaryButton } from '../components/PrimaryButton';
@@ -15,7 +15,6 @@ const suggestions = ['Aceite de perejil', 'Caviar de tomate', 'Verduras marinada
 type TechniquePanel = 'ingredients' | 'prep' | 'recommendations' | 'critical' | null;
 
 export function TechniquesPage() {
-  const navigate = useNavigate();
   const [params] = useSearchParams();
   const [draft, setDraft] = useState('');
   const [current, setCurrent] = useState<Technique>();
@@ -26,6 +25,7 @@ export function TechniquesPage() {
   const [panel, setPanel] = useState<TechniquePanel>(null);
   const [guided, setGuided] = useState<Technique>();
   const [guidedStep, setGuidedStep] = useState(0);
+  const [completedTechnique, setCompletedTechnique] = useState<string>();
   const voice = useAiDictation(transcript => { setDraft(existing => appendSentence(existing, transcript)); setValidated(false); });
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export function TechniquesPage() {
   const submit = async () => {
     const request = draft.trim();
     if (!request || isGenerating || voice.isListening || voice.isTranscribing) return;
-    setIsGenerating(true); setError(undefined);
+    setIsGenerating(true); setError(undefined); setCompletedTechnique(undefined);
     try {
       const technique = await generateTechnique(request);
       setCurrent(technique); setSaved(saveTechnique(technique)); setDraft(''); setPanel(null);
@@ -48,8 +48,9 @@ export function TechniquesPage() {
     } finally { setIsGenerating(false); }
   };
 
-  const selectTechnique = (technique: Technique) => { setCurrent(technique); setPanel(null); window.scrollTo({ top: 0, behavior: 'smooth' }); };
-  const startTechnique = (technique: Technique) => { setGuided(technique); setGuidedStep(0); };
+  const selectTechnique = (technique: Technique) => { setCurrent(technique); setPanel(null); setCompletedTechnique(undefined); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const startTechnique = (technique: Technique) => { setCompletedTechnique(undefined); setGuided(technique); setGuidedStep(0); };
+  const finishTechnique = (technique: Technique) => { setGuided(undefined); setGuidedStep(0); setCurrent(technique); setCompletedTechnique(technique.id); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
   return (
     <AppShell hideBack hideProfile>
@@ -57,6 +58,8 @@ export function TechniquesPage() {
       <TopBar eyebrow="BASE CULINARIA" title="Técnicas" />
       <div className="page-content nav-safe techniques-page">
         <section className="editorial-card olive-intro"><span className="eyebrow">PREGUNTA AL CHEF</span><h2>Preparaciones que podrás reutilizar.</h2><p>Aceites, marinados, confitados, salsas, fondos, esferificaciones y otras técnicas de cocina.</p></section>
+
+        {current && completedTechnique === current.id && <section className="editorial-card technique-completed-card"><Check size={26} /><div><span className="eyebrow">TÉCNICA TERMINADA</span><h2>{current.title}</h2><p>Has completado todos los pasos. Puedes consultar de nuevo la ficha, repetir la técnica o seguir navegando desde el menú inferior.</p></div></section>}
 
         <section className="form-section">
           <div className="section-label"><span>¿Qué quieres aprender o preparar?</span></div>
@@ -72,7 +75,7 @@ export function TechniquesPage() {
       </div>
 
       {current && panel && <TechniqueSheet technique={current} panel={panel} onClose={() => setPanel(null)} />}
-      {guided && <TechniqueGuide technique={guided} step={guidedStep} onStep={setGuidedStep} onClose={() => setGuided(undefined)} onFinish={() => { setGuided(undefined); navigate('/'); }} />}
+      {guided && <TechniqueGuide technique={guided} step={guidedStep} onStep={setGuidedStep} onClose={() => setGuided(undefined)} onFinish={() => finishTechnique(guided)} />}
     </AppShell>
   );
 }

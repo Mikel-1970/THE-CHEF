@@ -1,8 +1,8 @@
-import { ArrowLeft, Camera, CheckCircle2, ChevronLeft, ChevronRight, Clock3, Pause, Play, RotateCcw, ScreenShare, Sparkles, Thermometer } from 'lucide-react';
+import { ArrowLeft, Camera, CheckCircle2, ChevronLeft, ChevronRight, Clock3, ImagePlus, Pause, Play, RotateCcw, ScreenShare, Sparkles, Thermometer } from 'lucide-react';
 import { ChangeEvent, useEffect, useRef, useState, type ReactNode } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { BottomNav } from '../components/BottomNav';
-import { evaluateDishPhoto, getRecipeImage, saveRecipeThumbnail, type DishEvaluation } from '../services/mediaGateway';
+import { evaluateDishPhoto, getRecipeImage, getRecipeSourcePhoto, saveRecipeResultPhoto, type DishEvaluation } from '../services/mediaGateway';
 import { getActiveRecipe, getRecipeById } from '../services/recipeCatalog';
 import '../cook-enhancements.css';
 
@@ -20,12 +20,12 @@ export function CookPage() {
   const [photoUrl, setPhotoUrl] = useState<string>();
   const [photoError, setPhotoError] = useState<string>();
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>();
+  const [sourcePhotoUrl, setSourcePhotoUrl] = useState<string>();
   const [referenceImageError, setReferenceImageError] = useState(false);
   const wakeLock = useRef<any>(null);
   const servings = Number(params.get('servings') || recipe?.baseServings || 4);
   const recipeId = recipe?.id;
   const stepMinutes = recipe?.steps[index]?.minutes || 0;
-  const sourcePhotoUrl = recipeId ? safeSessionGet(`chef:source-photo:${recipeId}`) : undefined;
 
   useEffect(() => {
     if (!recipeId || finished) return;
@@ -45,11 +45,30 @@ export function CookPage() {
   useEffect(() => {
     const requestWakeLock = async () => {
       try { if ('wakeLock' in navigator) wakeLock.current = await (navigator as any).wakeLock.request('screen'); }
-      catch { /* fallback silently */ }
+      catch { /* fallback silencioso */ }
     };
     requestWakeLock();
     return () => wakeLock.current?.release?.();
   }, []);
+
+  useEffect(() => {
+    if (!recipeId) return;
+    let disposed = false;
+    let cachedUrl: string | undefined;
+    const fromSession = safeSessionGet(`chef:source-photo:${recipeId}`);
+    if (fromSession) {
+      setSourcePhotoUrl(fromSession);
+      return;
+    }
+    getRecipeSourcePhoto(recipeId).then(url => {
+      cachedUrl = url;
+      if (!disposed && url) setSourcePhotoUrl(url);
+    }).catch(() => undefined);
+    return () => {
+      disposed = true;
+      if (cachedUrl?.startsWith('blob:')) URL.revokeObjectURL(cachedUrl);
+    };
+  }, [recipeId]);
 
   useEffect(() => {
     if (!recipe) return;
@@ -84,7 +103,7 @@ export function CookPage() {
       const result = await evaluateDishPhoto(recipe, file);
       setPhotoUrl(result.previewUrl);
       setEvaluation(result.evaluation);
-      await saveRecipeThumbnail(recipe.id, result.previewUrl).catch(() => undefined);
+      await saveRecipeResultPhoto(recipe.id, result.previewUrl).catch(() => undefined);
     } catch (error) {
       setPhotoError(error instanceof Error ? error.message : 'No se ha podido valorar la fotografía.');
     } finally {
@@ -101,7 +120,7 @@ export function CookPage() {
         <main className="cook-finish-main">
           <div className={`finish-badge ${celebration ? 'celebrate' : ''}`}>{evaluation ? (celebration ? '👏' : <CheckCircle2 size={34} />) : <Camera size={34} />}</div>
           <h1>{evaluation ? (celebration ? '¡Enhorabuena!' : 'Plato terminado') : '¿Cómo te ha quedado?'}</h1>
-          <p>{evaluation ? 'He comparado visualmente el resultado con lo esperable para esta receta.' : sourcePhotoUrl ? 'Haz una foto de tu resultado y compárala con la fotografía original que querías reproducir.' : 'Haz una foto del resultado final y El Chef te dará una valoración visual con puntos fuertes y mejoras concretas.'}</p>
+          <p>{evaluation ? 'He comparado visualmente el resultado con la referencia de esta receta.' : sourcePhotoUrl ? 'Haz una foto de tu resultado y compárala con la fotografía original que querías reproducir.' : 'Haz una foto del resultado final y El Chef te dará una valoración visual con puntos fuertes y mejoras concretas.'}</p>
 
           <section className="dish-reference-card" aria-label={sourcePhotoUrl ? 'Fotografía original' : 'Presentación esperada'}>
             <span>{sourcePhotoUrl ? 'FOTO ORIGINAL' : 'PROPUESTA DE EL CHEF'}</span>
@@ -110,10 +129,10 @@ export function CookPage() {
 
           {photoUrl && <section className="dish-real-card"><span>TU PLATO</span><img className="dish-result-photo" src={photoUrl} alt={`Resultado final de ${recipe.title}`} /></section>}
 
-          {!evaluation && <label className={`photo-capture-button ${evaluating ? 'disabled' : ''}`}><Camera size={21} /> {evaluating ? 'Analizando la foto…' : 'Hacer foto'}<input type="file" accept="image/*" capture="environment" onChange={handlePhoto} disabled={evaluating} /></label>}
+          {!evaluation && <div className="cook-photo-actions"><label className={`photo-capture-button ${evaluating ? 'disabled' : ''}`}><Camera size={21} /> {evaluating ? 'Analizando la foto…' : 'Hacer foto'}<input type="file" accept="image/*" capture="environment" onChange={handlePhoto} disabled={evaluating} /></label><label className={`photo-capture-button secondary ${evaluating ? 'disabled' : ''}`}><ImagePlus size={20} /> Elegir de galería<input type="file" accept="image/*" onChange={handlePhoto} disabled={evaluating} /></label></div>}
           {photoError && <div className="dish-evaluation-error">{photoError}</div>}
 
-          {evaluation && <section className="dish-evaluation-card"><div className="dish-score"><strong>{evaluation.score.toFixed(1)}</strong><span>/ 10</span></div><p className="dish-summary">{evaluation.summary}</p>{evaluation.strengths.length > 0 && <div><h3>Lo mejor</h3>{evaluation.strengths.map((item, i) => <p key={`${item}-${i}`}>✓ {item}</p>)}</div>}{evaluation.improvements.length > 0 && <div><h3>Para mejorarlo</h3>{evaluation.improvements.map((item, i) => <p key={`${item}-${i}`}>• {item}</p>)}</div>}<label className="photo-retry-button"><Camera size={17} /> Hacer otra foto<input type="file" accept="image/*" capture="environment" onChange={handlePhoto} disabled={evaluating} /></label></section>}
+          {evaluation && <section className="dish-evaluation-card"><div className="dish-score"><strong>{evaluation.score.toFixed(1)}</strong><span>/ 10</span></div><p className="dish-summary">{evaluation.summary}</p>{evaluation.strengths.length > 0 && <div><h3>Lo mejor</h3>{evaluation.strengths.map((item, i) => <p key={`${item}-${i}`}>✓ {item}</p>)}</div>}{evaluation.improvements.length > 0 && <div><h3>Para mejorarlo</h3>{evaluation.improvements.map((item, i) => <p key={`${item}-${i}`}>• {item}</p>)}</div>}<div className="cook-photo-actions"><label className="photo-retry-button"><Camera size={17} /> Hacer otra foto<input type="file" accept="image/*" capture="environment" onChange={handlePhoto} disabled={evaluating} /></label><label className="photo-retry-button"><ImagePlus size={17} /> Elegir otra<input type="file" accept="image/*" onChange={handlePhoto} disabled={evaluating} /></label></div></section>}
 
           <button className="finish-return-button" type="button" onClick={() => navigate(`/receta/${recipe.id}`)}>Volver a la receta</button>
         </main>

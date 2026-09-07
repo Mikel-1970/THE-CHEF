@@ -11,7 +11,7 @@ import type { CookingRequest, Proposal, Recipe } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { generateAiRecipe } from '../services/aiProposalGateway';
 import { getHybridProposals } from '../services/hybridRecommendationEngine';
-import { evaluateDishPhoto, saveRecipeThumbnail } from '../services/mediaGateway';
+import { evaluateDishPhoto, saveRecipeSourcePhoto, saveRecipeThumbnail } from '../services/mediaGateway';
 import { getRecipeById, registerExternalRecipes, rememberActiveRecipe, rememberLibraryRecipe } from '../services/recipeCatalog';
 import '../voice-input.css';
 
@@ -31,11 +31,12 @@ export function PhotoRecipePage() {
   const [correction, setCorrection] = useState('');
   const [correctionOpen, setCorrectionOpen] = useState(false);
   const [personalization, setPersonalization] = useState('');
+  const [personalizationConfirmed, setPersonalizationConfirmed] = useState(false);
   const [servings, setServings] = useState(settings.defaultServings || 2);
   const [confirmedIngredients, setConfirmedIngredients] = useState<Set<string>>(new Set());
   const [extraIngredient, setExtraIngredient] = useState('');
   const correctionVoice = useAiDictation(transcript => setCorrection(current => appendSentence(current, transcript)));
-  const personalizationVoice = useAiDictation(transcript => setPersonalization(current => appendSentence(current, transcript)));
+  const personalizationVoice = useAiDictation(transcript => { setPersonalization(current => appendSentence(current, transcript)); setPersonalizationConfirmed(false); });
 
   const identifiedIngredients = useMemo(() => proposal ? Array.from(new Set([...proposal.usedIngredients, ...proposal.missingIngredients])).filter(Boolean) : [], [proposal]);
 
@@ -51,6 +52,7 @@ export function PhotoRecipePage() {
     setCorrection('');
     setCorrectionOpen(false);
     setPersonalization('');
+    setPersonalizationConfirmed(false);
     setStage('select');
     setError(undefined);
   };
@@ -100,6 +102,10 @@ export function PhotoRecipePage() {
 
   const generateRecipe = async () => {
     if (!proposal || working) return;
+    if (personalization.trim() && !personalizationConfirmed) {
+      setError('Confirma la personalización con ✓ o bórrala antes de generar la receta.');
+      return;
+    }
     setWorking('generate');
     setError(undefined);
     try {
@@ -126,7 +132,10 @@ export function PhotoRecipePage() {
       rememberLibraryRecipe(stored);
       if (sourceImageData) {
         try { sessionStorage.setItem(`chef:source-photo:${stored.id}`, sourceImageData); } catch { /* sin persistencia visual */ }
-        await saveRecipeThumbnail(stored.id, sourceImageData).catch(() => undefined);
+        await Promise.all([
+          saveRecipeSourcePhoto(stored.id, sourceImageData).catch(() => undefined),
+          saveRecipeThumbnail(stored.id, sourceImageData).catch(() => undefined)
+        ]);
       }
       navigate(`/receta/${stored.id}`);
     } catch (err) {
@@ -140,7 +149,7 @@ export function PhotoRecipePage() {
     <AppShell hideBack hideProfile>
       <ChefLoadingOverlay active={working === 'analyse'} title="Analizando el plato" messages={['Identificando el plato…', 'Leyendo ingredientes visibles…', 'Comprobando la interpretación…']} />
       <ChefLoadingOverlay active={working === 'generate'} title="Preparando tu receta" messages={['Ajustando cantidades…', 'Ordenando la elaboración…', 'Afinando puntos críticos…']} />
-      <TopBar eyebrow="MIRA, CONFIRMA Y COCINA" title="Receta desde una foto" />
+      <TopBar eyebrow="MIRA, CONFIRMA Y COCINA" title="Foto receta" />
       <div className="page-content nav-safe">
         <section className="editorial-card olive-intro"><span className="eyebrow">ENSÉÑAME EL PLATO</span><h2>Descubre cómo prepararlo.</h2><p>El Chef primero identificará el plato, después confirmarás los ingredientes y solo entonces generará una receta completa.</p></section>
         <section className="photo-recipe-upload">{previewUrl ? <img src={previewUrl} alt="Plato elegido para identificar" /> : <div><Camera size={44} /><strong>Añade la foto del plato</strong><span>Procura que tenga buena luz y se vea el plato completo.</span></div>}</section>
@@ -165,12 +174,12 @@ export function PhotoRecipePage() {
           <div className="ingredient-input"><input value={extraIngredient} onChange={event => setExtraIngredient(event.target.value)} placeholder="Añadir ingrediente…" onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); addIngredient(); } }} /><button type="button" className="voice-confirm-button" onClick={addIngredient} disabled={!extraIngredient.trim()}><Plus size={18} /></button></div>
           <div className="photo-correction-box">
             <strong>Personalización opcional</strong>
-            <textarea value={personalization} onChange={event => setPersonalization(event.target.value)} placeholder="Ej. sin cebolla, añade limón y tomillo, quiero una versión más ligera…" />
-            <div className="recipe-revision-toolbar"><button type="button" className="revision-clear-button" onClick={() => { personalizationVoice.stop(); setPersonalization(''); }}><X size={19} /></button><button type="button" className={`voice-button ${personalizationVoice.isListening ? 'listening' : ''}`} onClick={personalizationVoice.toggle} disabled={!personalizationVoice.isSupported || personalizationVoice.isTranscribing}>{personalizationVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button><button type="button" className="revision-confirm-button" disabled={!personalization.trim() || personalizationVoice.isListening || personalizationVoice.isTranscribing}><Check size={20} /></button></div>
-            {personalizationVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando personalización…</div>}{personalizationVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando…</div>}
+            <textarea value={personalization} onChange={event => { setPersonalization(event.target.value); setPersonalizationConfirmed(false); }} placeholder="Ej. sin cebolla, añade limón y tomillo, quiero una versión más ligera…" />
+            <div className="recipe-revision-toolbar"><button type="button" className="revision-clear-button" onClick={() => { personalizationVoice.stop(); setPersonalization(''); setPersonalizationConfirmed(false); }}><X size={19} /></button><button type="button" className={`voice-button ${personalizationVoice.isListening ? 'listening' : ''}`} onClick={personalizationVoice.toggle} disabled={!personalizationVoice.isSupported || personalizationVoice.isTranscribing}>{personalizationVoice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button><button type="button" className={`revision-confirm-button ${personalizationConfirmed ? 'confirmed' : ''}`} onClick={() => setPersonalizationConfirmed(true)} disabled={!personalization.trim() || personalizationVoice.isListening || personalizationVoice.isTranscribing}><Check size={20} /></button></div>
+            {personalizationVoice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando personalización…</div>}{personalizationVoice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando…</div>}{personalizationConfirmed && <div className="voice-status confirmed"><Check size={14} /> Personalización confirmada.</div>}
           </div>
           <div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Comensales</strong><small>Para la receta final</small></div></div><NumberStepper value={servings} onChange={setServings} /></div>
-          <PrimaryButton onClick={() => void generateRecipe()} disabled={!confirmedIngredients.size || Boolean(working)}>{working === 'generate' ? 'Generando receta…' : 'Generar receta'}</PrimaryButton>
+          <PrimaryButton onClick={() => void generateRecipe()} disabled={!confirmedIngredients.size || Boolean(working) || Boolean(personalization.trim() && !personalizationConfirmed)}>{working === 'generate' ? 'Generando receta…' : 'Generar receta'}</PrimaryButton>
         </section>}
 
         {error && <div className="voice-status error">{error}</div>}

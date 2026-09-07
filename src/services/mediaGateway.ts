@@ -4,6 +4,8 @@ const API_URL = (import.meta.env.VITE_RECIPE_API_URL || 'https://nrtmmepynzczfdd
 const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'sb_publishable_b08-tfZCh2pEBGK0lBH-1g_oB3RwvV8').trim();
 const IMAGE_CACHE = 'chef-recipe-images-v1';
 const THUMBNAIL_CACHE = 'chef-recipe-thumbnails-v1';
+const SOURCE_PHOTO_CACHE = 'chef-recipe-source-photos-v1';
+const RESULT_PHOTO_CACHE = 'chef-recipe-result-photos-v1';
 
 export type DishEvaluation = {
   score: number;
@@ -55,18 +57,27 @@ export async function getRecipeImage(recipe: Recipe): Promise<string | undefined
 }
 
 export async function getRecipeThumbnail(recipeId: string): Promise<string | undefined> {
-  if (!('caches' in window)) return undefined;
-  const cache = await caches.open(THUMBNAIL_CACHE);
-  const hit = await cache.match(thumbnailRequest(recipeId));
-  if (!hit) return undefined;
-  return URL.createObjectURL(await hit.blob());
+  return getCachedImage(THUMBNAIL_CACHE, thumbnailRequest(recipeId));
 }
 
 export async function saveRecipeThumbnail(recipeId: string, imageUrl: string): Promise<void> {
-  if (!('caches' in window) || !imageUrl) return;
-  const response = await fetch(imageUrl);
-  const blob = await response.blob();
-  await cacheThumbnailBlob(recipeId, blob);
+  await saveCachedImage(THUMBNAIL_CACHE, thumbnailRequest(recipeId), imageUrl);
+}
+
+export async function saveRecipeSourcePhoto(recipeId: string, imageUrl: string): Promise<void> {
+  await saveCachedImage(SOURCE_PHOTO_CACHE, sourcePhotoRequest(recipeId), imageUrl);
+}
+
+export async function getRecipeSourcePhoto(recipeId: string): Promise<string | undefined> {
+  return getCachedImage(SOURCE_PHOTO_CACHE, sourcePhotoRequest(recipeId));
+}
+
+export async function saveRecipeResultPhoto(recipeId: string, imageUrl: string): Promise<void> {
+  await saveCachedImage(RESULT_PHOTO_CACHE, resultPhotoRequest(recipeId), imageUrl);
+}
+
+export async function getRecipeResultPhoto(recipeId: string): Promise<string | undefined> {
+  return getCachedImage(RESULT_PHOTO_CACHE, resultPhotoRequest(recipeId));
 }
 
 export async function transcribeCookingAudio(audio: Blob): Promise<string> {
@@ -142,8 +153,26 @@ async function cacheThumbnailBlob(recipeId: string, blob: Blob) {
   await cache.put(thumbnailRequest(recipeId), new Response(blob, { headers: { 'Content-Type': blob.type || 'image/jpeg' } }));
 }
 
+async function saveCachedImage(cacheName: string, request: Request, imageUrl: string) {
+  if (!('caches' in window) || !imageUrl) return;
+  const response = await fetch(imageUrl);
+  const blob = await response.blob();
+  const cache = await caches.open(cacheName);
+  await cache.put(request, new Response(blob, { headers: { 'Content-Type': blob.type || 'image/jpeg' } }));
+}
+
+async function getCachedImage(cacheName: string, request: Request): Promise<string | undefined> {
+  if (!('caches' in window)) return undefined;
+  const cache = await caches.open(cacheName);
+  const hit = await cache.match(request);
+  if (!hit) return undefined;
+  return URL.createObjectURL(await hit.blob());
+}
+
 function imageRequest(recipeId: string) { return new Request(`https://the-chef.local/generated-images/${encodeURIComponent(recipeId)}`); }
 function thumbnailRequest(recipeId: string) { return new Request(`https://the-chef.local/recipe-thumbnails/${encodeURIComponent(recipeId)}`); }
+function sourcePhotoRequest(recipeId: string) { return new Request(`https://the-chef.local/source-photos/${encodeURIComponent(recipeId)}`); }
+function resultPhotoRequest(recipeId: string) { return new Request(`https://the-chef.local/result-photos/${encodeURIComponent(recipeId)}`); }
 
 function headers(contentType?: string): HeadersInit {
   return {

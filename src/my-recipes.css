@@ -4,9 +4,10 @@
 }
 
 .history-card {
+  position: relative;
   width: 100%;
   min-height: 76px;
-  padding: 12px 14px;
+  padding: 12px 42px 12px 14px;
   border: 1px solid var(--line);
   border-radius: 16px;
   background: rgba(255,250,241,.94);
@@ -40,6 +41,8 @@
 .history-card:active {
   transform: scale(.99);
 }
+
+.history-recipe-card{grid-template-columns:52px minmax(0,1fr);align-items:center;gap:10px;padding-left:10px}.history-recipe-card>.library-emoji{width:50px;height:50px;min-width:50px;border-radius:13px}.history-card-copy{min-width:0;display:grid;gap:4px}.history-recipe-placeholder{width:50px;height:50px;border-radius:13px;background:#ede9df;display:grid!important;place-items:center;color:#8b8d83!important}.history-delete{position:absolute;right:10px;top:50%;transform:translateY(-50%)}
 
 .library-type-tabs { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
 .library-type-tabs button { min-width:0; min-height:72px; padding:12px; border:1px solid var(--line); border-radius:18px; background:#fffaf1; color:#647052; display:flex; align-items:center; gap:9px; text-align:left; }
