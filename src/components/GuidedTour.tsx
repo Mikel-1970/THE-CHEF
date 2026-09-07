@@ -5,6 +5,7 @@ import './GuidedTour.css';
 
 const TUTORIAL_ACTIVE_KEY = 'chef:tutorial:active:v2';
 const TUTORIAL_INVITE_HIDDEN_KEY = 'chef:tutorial:invite-hidden:v2';
+const TUTORIAL_INVITE_DISMISSED_SESSION_KEY = 'chef:tutorial:invite-dismissed-session:v2';
 
 type TutorialTip = {
   selector?: string;
@@ -50,7 +51,7 @@ function tipsForPath(pathname: string): TutorialTip[] {
   if (pathname.startsWith('/foto')) return [
     { selector: '.photo-recipe-upload', title: 'Añade la imagen', body: 'Puedes hacer una foto o elegir una de la galería. Procura que el plato se vea completo y con buena luz.' },
     { selector: '.photo-recipe-actions', title: 'Foto o galería', body: 'Elige la entrada que prefieras. Después El Chef analizará el plato antes de generar ninguna receta.' },
-    { selector: '.photo-identification-card', title: 'Confirma antes de continuar', body: 'Revisa la identificación, corrígela por texto o voz si hace falta y confirma los ingredientes y comensales antes de generar la receta.' }
+    { selector: '.photo-identification-card', title: 'Confirma antes de continuar', body: 'Revisa la identificación, corrígela por texto o voz si hace falta y confirma los ingredientes, personalización y comensales antes de generar la receta.' }
   ];
   if (pathname.startsWith('/cocina-despensa')) return [
     { selector: '.pantry-choice-grid', title: 'Elige lo que quieres aprovechar', body: 'Marca los productos que quieres utilizar. Puedes añadir otros escribiendo o dictando.' },
@@ -71,7 +72,7 @@ function tipsForPath(pathname: string): TutorialTip[] {
   ];
   if (pathname.startsWith('/cocinar/')) return [
     { selector: '.cook-main', title: 'Sigue un paso cada vez', body: 'Cada pantalla muestra únicamente lo necesario para ese paso: instrucción, tiempo, temperatura y señales visuales.' },
-    { selector: '.cook-footer', title: 'Avanza a tu ritmo', body: 'Usa Anterior y Siguiente. Al terminar podrás fotografiar el resultado y compararlo con la referencia cuando exista.' }
+    { selector: '.cook-footer', title: 'Avanza a tu ritmo', body: 'Usa Anterior y Siguiente. Al terminar podrás fotografiar el resultado o elegir una imagen de la galería y compararlo con la referencia cuando exista.' }
   ];
   if (pathname.startsWith('/lista-compra')) return [
     { selector: '.pantry-add-input', title: 'Añade cualquier compra', body: 'La lista funciona por sí sola. Puedes escribir o dictar productos, con cantidades y unidades.' },
@@ -86,10 +87,11 @@ function tipsForPath(pathname: string): TutorialTip[] {
     { selector: '.recipe-action-grid', title: 'Consulta antes de empezar', body: 'Revisa Ingredientes, Mise en place, Recomendaciones y Puntos críticos, y después entra en Empezar técnica.' }
   ];
   if (pathname.startsWith('/buscar')) return [
-    { title: 'Busca una receta', body: 'Utiliza este apartado cuando quieras localizar una receta concreta por nombre, ingrediente o idea.' }
+    { selector: '.search-box', title: 'Busca una receta', body: 'Utiliza este apartado cuando quieras localizar una receta concreta por nombre, ingrediente o idea.' }
   ];
   if (pathname.startsWith('/antojo')) return [
-    { title: 'Dile al Chef qué te apetece', body: 'Describe el plato o la idea con tus palabras. Puedes hacerlo por texto o voz y completar únicamente las opciones que te interesen.' }
+    { selector: '.desire-box', title: 'Dile al Chef qué te apetece', body: 'Describe el plato o la idea con tus palabras. Puedes hacerlo por texto o voz y completar únicamente las opciones que te interesen.' },
+    { selector: '.advanced-toggle', title: 'Afina solo cuando quieras', body: 'Comensales y tiempo están siempre disponibles. En Más opciones puedes añadir estilo, cocina y dificultad.' }
   ];
   if (pathname.startsWith('/ajustes')) return [
     { selector: '.profile-settings-card', title: 'Personaliza tu experiencia', body: 'Aquí puedes elegir avatar o foto y configurar tus preferencias de cocina.' },
@@ -111,12 +113,14 @@ export function GuidedTour() {
     setTipIndex(0);
     let persistedActive = false;
     let hideInvite = false;
+    let dismissedThisSession = false;
     try {
       persistedActive = localStorage.getItem(TUTORIAL_ACTIVE_KEY) === '1';
       hideInvite = localStorage.getItem(TUTORIAL_INVITE_HIDDEN_KEY) === '1';
+      dismissedThisSession = sessionStorage.getItem(TUTORIAL_INVITE_DISMISSED_SESSION_KEY) === '1';
     } catch { /* sin persistencia */ }
     setActive(persistedActive);
-    setInviteVisible(location.pathname === '/' && !persistedActive && !hideInvite);
+    setInviteVisible(location.pathname === '/' && !persistedActive && !hideInvite && !dismissedThisSession);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -131,6 +135,7 @@ export function GuidedTour() {
   const startTutorial = () => {
     try {
       localStorage.setItem(TUTORIAL_ACTIVE_KEY, '1');
+      sessionStorage.setItem(TUTORIAL_INVITE_DISMISSED_SESSION_KEY, '1');
       if (dontShowAgain) localStorage.setItem(TUTORIAL_INVITE_HIDDEN_KEY, '1');
     } catch { /* sin persistencia */ }
     setInviteVisible(false);
@@ -139,14 +144,18 @@ export function GuidedTour() {
   };
 
   const dismissInvite = () => {
-    if (dontShowAgain) {
-      try { localStorage.setItem(TUTORIAL_INVITE_HIDDEN_KEY, '1'); } catch { /* sin persistencia */ }
-    }
+    try {
+      sessionStorage.setItem(TUTORIAL_INVITE_DISMISSED_SESSION_KEY, '1');
+      if (dontShowAgain) localStorage.setItem(TUTORIAL_INVITE_HIDDEN_KEY, '1');
+    } catch { /* sin persistencia */ }
     setInviteVisible(false);
   };
 
   const stopTutorial = () => {
-    try { localStorage.removeItem(TUTORIAL_ACTIVE_KEY); } catch { /* sin persistencia */ }
+    try {
+      localStorage.removeItem(TUTORIAL_ACTIVE_KEY);
+      sessionStorage.setItem(TUTORIAL_INVITE_DISMISSED_SESSION_KEY, '1');
+    } catch { /* sin persistencia */ }
     setActive(false);
     setInviteVisible(false);
   };
@@ -173,7 +182,7 @@ export function GuidedTour() {
               <button type="button" className="guided-tour-secondary" onClick={() => setTipIndex(current => Math.max(0, current - 1))} disabled={tipIndex === 0}><ChevronLeft size={18} /> Anterior</button>
               <button type="button" className="guided-tour-primary" onClick={() => setTipIndex(current => Math.min(tips.length - 1, current + 1))} disabled={tipIndex >= tips.length - 1}>Siguiente consejo <ChevronRight size={18} /></button>
             </div>
-            <small className="guided-tour-free-nav">Puedes ignorar esta tarjeta y seguir navegando por la app.</small>
+            <small className="guided-tour-free-nav">Puedes cerrar esta ayuda visualmente o seguir navegando; la X superior sale del tutorial completo.</small>
           </section>
         </div>
       )}
@@ -184,5 +193,6 @@ export function GuidedTour() {
 export function requestGuidedTourReplay() {
   try {
     localStorage.setItem(TUTORIAL_ACTIVE_KEY, '1');
+    sessionStorage.setItem(TUTORIAL_INVITE_DISMISSED_SESSION_KEY, '1');
   } catch { /* sin persistencia */ }
 }
