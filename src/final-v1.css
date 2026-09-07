@@ -31,24 +31,17 @@
 
 .profile-settings-card { display: grid; gap: 14px; }
 .profile-preview-row { display: flex; align-items: center; gap: 14px; }
-.profile-preview { width: 74px; height: 74px; border-radius: 50%; position: relative; flex: 0 0 74px; display: grid; place-items: center; background: #eef0e3; border: 2px solid #fff; box-shadow: 0 7px 18px rgba(72,60,38,.13); font-size: 2rem; overflow: visible; }
-.profile-preview img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-.profile-preview > span { font-size: 2.2rem; }
-.profile-preview i { position: absolute; right: -8px; top: -9px; width: 34px; height: 34px; border-radius: 50%; background: #405626; color: #fff; display: grid; place-items: center; box-shadow: 0 5px 12px rgba(45,56,32,.22); }
 .profile-preview-row > div:last-child { display: grid; gap: 3px; }
 .profile-preview-row small { color: #777b70; line-height: 1.35; }
 .avatar-gallery { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-.avatar-gallery button { min-height: 48px; border: 1px solid rgba(63,84,36,.12); border-radius: 13px; background: #fffaf1; font-size: 1.45rem; }
+.avatar-gallery button { min-height: 52px; border: 1px solid rgba(63,84,36,.12); border-radius: 13px; background: #fffaf1; display:grid;place-items:center;padding:3px; }
 .avatar-gallery button.active { border-color: #405626; box-shadow: 0 0 0 2px rgba(64,86,38,.12); background: #eef0e3; }
 .profile-photo-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 .profile-photo-actions .secondary-button { min-height: 46px; justify-content: center; }
 .profile-photo-actions input { display: none; }
 .settings-select { min-height: 46px; }
 
-.personalized-chef-spinner { width: 72px !important; height: 72px !important; border-radius: 50%; position: relative; display: grid !important; place-items: center; overflow: visible; background: rgba(64,86,38,.08); }
-.personalized-chef-spinner img { width: 62px; height: 62px; object-fit: cover; border-radius: 50%; }
-.personalized-chef-spinner > span { font-size: 2.35rem; line-height: 1; }
-.personalized-chef-spinner i { position: absolute; right: -5px; top: -9px; width: 34px; height: 34px; border-radius: 50%; background: #405626; color: white; display: grid; place-items: center; }
+.personalized-chef-spinner { width: 76px !important; height: 76px !important; border-radius: 50%; position: relative; display: grid !important; place-items: center; overflow: visible; background: rgba(64,86,38,.08); }
 
 .photo-identification-card { display: grid; gap: 12px; }
 .photo-identification-card h2 { margin: 0; }
@@ -65,8 +58,15 @@
 .cook-screen.with-bottom-nav .cook-finish-main { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
 .cook-screen.with-bottom-nav .cook-footer { bottom: calc(74px + env(safe-area-inset-bottom)); z-index: 80; }
 .cook-screen.with-bottom-nav + .bottom-nav { z-index: 90; }
+.cook-photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%}.cook-photo-actions label{margin:0!important;min-width:0;justify-content:center;text-align:center}.photo-capture-button.secondary{background:#fffdf8!important;color:#405626!important;border:1px solid rgba(64,86,38,.18)!important}
 
 .recipe-share-status { margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: #eef0e3; color: #4c5d3c; font-size: .76rem; line-height: 1.4; }
+
+/* En la tarjeta principal de Inicio la fotografía queda limitada a la mitad derecha: el gorrito no invade la imagen. */
+.reference-desire-card .reference-action-photo{clip-path:inset(0 0 0 50%);border-radius:0 29px 29px 0}.reference-desire-card .reference-card-icon{left:18px;bottom:15px;background:#fffaf1;border:1px solid rgba(211,154,39,.18)}
+
+/* El acceso de Perfil muestra la imagen real elegida sin deformarla. */
+.floating-profile-button{overflow:visible!important;padding:0!important}.floating-profile-button .chef-avatar{width:44px!important;height:44px!important}
 
 @media (min-width: 640px) {
   .recipe-action-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
@@ -78,5 +78,7 @@
   .quantity-unit-editor { grid-template-columns: 1fr 1fr; }
   .profile-photo-actions { grid-template-columns: 1fr; }
   .avatar-gallery { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
-  .avatar-gallery button { min-height: 44px; font-size: 1.25rem; padding: 0; }
+  .avatar-gallery button { min-height: 46px; padding: 1px; }
+  .cook-photo-actions{grid-template-columns:1fr}
+  .reference-desire-card .reference-action-photo{clip-path:inset(0 0 0 52%)}
 }
