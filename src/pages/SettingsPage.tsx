@@ -2,6 +2,7 @@ import { Camera, Check, ChefHat, CircleHelp, ImagePlus, Info, Languages, Mic, Mi
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
+import { ChefAvatar, CHEF_AVATARS, normalizeChefAvatar } from '../components/ChefAvatar';
 import { Chip } from '../components/Chip';
 import { requestGuidedTourReplay } from '../components/GuidedTour';
 import { NumberStepper } from '../components/NumberStepper';
@@ -25,8 +26,6 @@ const LANGUAGE_OPTIONS: Array<{ value: AppLanguage; label: string }> = [
   { value: 'pt', label: 'Português' },
   { value: 'zh', label: '中文' }
 ];
-
-const AVATARS = ['👨‍🍳', '👩‍🍳', '🍅', '🍋', '🍆', '🦐', '🦀', '🐄', '🥐', '🍌'];
 
 export function SettingsPage() {
   const navigate = useNavigate();
@@ -67,20 +66,19 @@ export function SettingsPage() {
     navigate('/');
   };
 
+  const currentAvatar = normalizeChefAvatar(settings.avatarEmoji);
+
   return (
     <AppShell hideBack>
       <div className="simple-page-header light-header"><span className="eyebrow">TU PERFIL DE COCINA</span><h1>Ajustes</h1><p>Preferencias para que El Chef se adapte a tu forma de cocinar.</p></div>
       <div className="page-content nav-safe settings-v03">
         <section className="settings-card profile-settings-card">
-          <div className="settings-card-title"><ChefHat size={20} /><div><strong>Tu imagen en El Chef</strong><small>Elige un avatar o utiliza tu propia foto</small></div></div>
+          <div className="settings-card-title"><ChefHat size={20} /><div><strong>Tu imagen en El Chef</strong><small>Elige un avatar original o utiliza tu propia foto</small></div></div>
           <div className="profile-preview-row">
-            <div className="profile-preview">
-              {settings.profileImage ? <img src={settings.profileImage} alt="Foto de perfil" /> : <span>{settings.avatarEmoji}</span>}
-              <i><ChefHat size={24} /></i>
-            </div>
-            <div><strong>{settings.profileImage ? 'Tu foto' : 'Tu avatar'}</strong><small>Se utilizará también durante las esperas de la aplicación.</small></div>
+            <ChefAvatar avatar={settings.avatarEmoji} image={settings.profileImage} size={74} />
+            <div><strong>{settings.profileImage ? 'Tu foto' : 'Tu avatar'}</strong><small>Se utiliza también en el botón de Perfil y durante las esperas.</small></div>
           </div>
-          <div className="avatar-gallery" aria-label="Avatares disponibles">{AVATARS.map(avatar => <button type="button" className={!settings.profileImage && settings.avatarEmoji === avatar ? 'active' : ''} key={avatar} onClick={() => updateSettings({ avatarEmoji: avatar, profileImage: undefined })}>{avatar}</button>)}</div>
+          <div className="avatar-gallery" aria-label="Avatares disponibles">{CHEF_AVATARS.map(avatar => <button type="button" className={!settings.profileImage && currentAvatar === avatar.id ? 'active' : ''} key={avatar.id} onClick={() => updateSettings({ avatarEmoji: avatar.id, profileImage: undefined })} aria-label={`Elegir avatar ${avatar.label}`}><ChefAvatar avatar={avatar.id} size={44} showHat={false} /></button>)}</div>
           <div className="profile-photo-actions">
             <label className="secondary-button"><Camera size={17} /> Hacer foto<input type="file" accept="image/*" capture="user" onChange={chooseProfilePhoto} /></label>
             <label className="secondary-button"><ImagePlus size={17} /> Elegir de fototeca<input type="file" accept="image/*" onChange={chooseProfilePhoto} /></label>
@@ -90,8 +88,8 @@ export function SettingsPage() {
         </section>
 
         <section className="settings-card">
-          <div className="settings-card-title"><CircleHelp size={20} /><div><strong>Guía de uso</strong><small>Repite el recorrido inicial cuando quieras</small></div></div>
-          <button type="button" className="secondary-button settings-guide-button" onClick={replayGuide}><CircleHelp size={17} /> Ver guía de la aplicación</button>
+          <div className="settings-card-title"><CircleHelp size={20} /><div><strong>Guía / Tutorial</strong><small>Actívalo cuando quieras y navega libremente por la app</small></div></div>
+          <button type="button" className="secondary-button settings-guide-button" onClick={replayGuide}><CircleHelp size={17} /> Iniciar tutorial contextual</button>
         </section>
 
         <section className="settings-card">
@@ -120,7 +118,7 @@ export function SettingsPage() {
         </section>
 
         <section className="settings-card">
-          <div className="settings-card-title"><strong>Básicos de despensa</strong><small>Se consideran disponibles al buscar con lo que tienes</small></div>
+          <div className="settings-card-title"><strong>Básicos de despensa</strong><small>Se consideran disponibles al usar Cocina con lo que hay</small></div>
           <form className="ingredient-input compact-input" onSubmit={addBasic}>
             <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Añadir básico…" />
             <button type="button" className="clear-input-button" onClick={() => { voice.stop(); setDraft(''); }} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={17} /></button>
