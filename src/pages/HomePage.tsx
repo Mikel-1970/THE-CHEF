@@ -30,7 +30,7 @@ export function HomePage() {
         </header>
 
         <section className="reference-main-actions" aria-label="Acción principal">
-          <button className="reference-action-card reference-desire-card" onClick={() => navigate('/antojo')}>
+          <button data-tour="desire" className="reference-action-card reference-desire-card" onClick={() => navigate('/antojo')}>
             <div className="reference-action-text">
               <h3>¿Qué quieres<br />que te prepare?</h3>
               <span className="reference-action-line reference-action-line-gold" />
@@ -43,17 +43,17 @@ export function HomePage() {
         </section>
 
         <section className="reference-secondary-actions" aria-label="Otras formas de cocinar">
-          <button className="reference-secondary-card" onClick={() => navigate('/cocina-despensa')}>
+          <button data-tour="pantry-cook" className="reference-secondary-card" onClick={() => navigate('/cocina-despensa')}>
             <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.02), rgba(24,30,18,.62)), url(${pantryImage})` }} aria-hidden="true" />
             <span className="reference-secondary-copy"><PackageOpen size={25} /><strong>Cocina con lo que tienes</strong><small>Abre tu despensa y aprovecha sus productos con sentido.</small><b>Ver opciones</b></span>
           </button>
-          <button className="reference-secondary-card reference-photo-card" onClick={() => navigate('/foto')}>
+          <button data-tour="photo" className="reference-secondary-card reference-photo-card" onClick={() => navigate('/foto')}>
             <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.01), rgba(24,30,18,.61)), url(${photoRecipeImage})` }} aria-hidden="true" />
             <span className="reference-secondary-copy"><Camera size={25} /><strong>Receta desde una foto</strong><small>Enséñame un plato y descubre cómo prepararlo.</small><b>Subir foto</b></span>
           </button>
         </section>
 
-        <section className="reference-quick-section" aria-label="Accesos rápidos">
+        <section data-tour="quick" className="reference-quick-section" aria-label="Accesos rápidos">
           <div className="reference-quick-title"><span>❧</span><h2>Accesos rápidos</h2><span>❧</span></div>
           <div className="reference-quick-grid">
             <button onClick={() => navigate('/mis-recetas')}><BookOpen size={37} strokeWidth={1.65} /><strong>Mis recetas</strong></button>

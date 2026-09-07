@@ -22,7 +22,7 @@ export function AppShell({ children, hideProfile = false }: {
       <main className="phone-shell">{children}</main>
 
       {isHome && !hideProfile && (
-        <button className="floating-profile-button" onClick={() => navigate('/ajustes')} aria-label="Abrir Perfil">
+        <button data-tour="profile" className="floating-profile-button" onClick={() => navigate('/ajustes')} aria-label="Abrir Perfil">
           <UserRound size={22} strokeWidth={1.9} />
         </button>
       )}
