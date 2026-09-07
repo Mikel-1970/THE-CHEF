@@ -4,7 +4,7 @@ import '../navigation-v04.css';
 
 export function BottomNav() {
   return (
-    <nav className="bottom-nav bottom-nav-consistent" aria-label="Navegación principal">
+    <nav data-tour="bottom-nav" className="bottom-nav bottom-nav-consistent" aria-label="Navegación principal">
       <NavLink to="/" end className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
         <Home size={23} strokeWidth={1.9} fill="currentColor" />
         <span>Inicio</span>
