@@ -17,4 +17,4 @@ export const CUISINES = [
   'Internacional'
 ] as const;
 
-export const RECIPE_STYLES = ['Casera', 'Moderna', 'Rápida', 'Saludable'] as const;
+export const RECIPE_STYLES = ['Tradicional', 'Moderna', 'Rápida', 'Saludable'] as const;
