@@ -2,6 +2,7 @@ export type MealType = 'Desayuno' | 'Brunch' | 'Comida' | 'Merienda' | 'Cena';
 export type Difficulty = 'Fácil' | 'Media' | 'Avanzada';
 export type DishClassification = 'Con lo que tienes' | 'Te falta muy poco' | 'Buena opción si compras algunas cosas';
 export type RecipeSourceKind = 'local' | 'web' | 'ai' | 'user';
+export type StockLocation = 'pantry' | 'fridge';
 
 export type RecipeSource = {
   kind: RecipeSourceKind;
@@ -18,6 +19,7 @@ export type IngredientInput = {
   unit?: string;
   priority?: boolean;
   category?: string;
+  location?: StockLocation;
 };
 
 export type CookingRequest = {
@@ -27,6 +29,7 @@ export type CookingRequest = {
   style?: string;
   cuisine?: string;
   difficulty?: Difficulty;
+  spiceLevel?: 'Nada' | 'Suave' | 'Medio' | 'Alto';
   pantryIngredients?: IngredientInput[];
   pantryBasics?: string[];
   pantryPolicy?: 'prioritize' | 'ignore';
@@ -108,6 +111,7 @@ export type ShoppingListItem = {
   name: string;
   quantity?: number;
   unit?: string;
+  category?: string;
   recipeId?: string;
   recipeTitle?: string;
   checked: boolean;
