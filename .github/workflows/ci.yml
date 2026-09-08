@@ -19,6 +19,8 @@ jobs:
           node-version: 24
       - name: Instalar dependencias
         run: npm install
+      - name: Auditoría de vulnerabilidades críticas de producción
+        run: npm audit --omit=dev --audit-level=critical
       - name: Auditoría estática Fase 1
         run: npm run audit:phase1
       - name: Compilar y validar TypeScript
