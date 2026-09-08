@@ -36,13 +36,13 @@ const HOME_TIPS: TutorialTip[] = [
   },
   {
     selector: '[data-tour="bottom-nav"]',
-    title: 'Navega libremente',
-    body: 'El menú inferior permanece disponible. Mientras el tutorial esté activo puedes entrar en cualquier función y recibirás ayuda contextual al llegar.'
+    title: 'Menú principal en Inicio',
+    body: 'En la pantalla de Inicio tienes el menú completo. El botón central muestra el avatar que hayas elegido como usuario.'
   },
   {
     selector: '[data-tour="profile"]',
     title: 'Perfil y ajustes',
-    body: 'Desde tu perfil puedes cambiar preferencias, avatar o foto y volver a iniciar este tutorial siempre que quieras.'
+    body: 'Desde tu avatar puedes abrir Ajustes y cambiar tus datos, preferencias, permisos y personaje. Al navegar por la app, el menú completo se convierte en un botón flotante con ese mismo avatar.'
   }
 ];
 
@@ -59,7 +59,7 @@ function tipsForPath(pathname: string): TutorialTip[] {
     { selector: '.sticky-action', title: 'Pide propuestas', body: 'Cuando esté todo listo, El Chef utilizará esos productos como prioridad y propondrá platos coherentes.' }
   ];
   if (pathname.startsWith('/nevera')) return [
-    { selector: '.pantry-add-first', title: 'Tu despensa es un inventario', body: 'Añade aquí lo que tienes en casa, con cantidad si la conoces. Este apartado guarda existencias; para cocinar usa Cocina con lo que hay.' },
+    { selector: '.pantry-add-first', title: 'Despensa y nevera', body: 'Añade aquí lo que tienes en casa, con cantidad si la conoces. Este apartado guarda existencias; para cocinar usa Cocina con lo que hay.' },
     { selector: '.editable-stock-list', title: 'Actualiza lo que tienes', body: 'Puedes cambiar cantidades y unidades o eliminar productos. Si quitas uno, podrás pasarlo a la lista de compra.' }
   ];
   if (pathname.startsWith('/propuestas')) return [
@@ -94,10 +94,11 @@ function tipsForPath(pathname: string): TutorialTip[] {
     { selector: '.advanced-toggle', title: 'Afina solo cuando quieras', body: 'Comensales y tiempo están siempre disponibles. En Más opciones puedes añadir estilo, cocina y dificultad.' }
   ];
   if (pathname.startsWith('/ajustes')) return [
-    { selector: '.profile-settings-card', title: 'Personaliza tu experiencia', body: 'Aquí puedes elegir avatar o foto y configurar tus preferencias de cocina.' },
-    { selector: '.settings-guide-button', title: 'Tutorial siempre disponible', body: 'Desde este botón podrás volver a activar el tutorial contextual cuando lo necesites.' }
+    { selector: '.settings-user-fields', title: 'Tus datos de acceso', body: 'Aquí puedes revisar nombre, usuario y contraseña. La contraseña permanece oculta hasta que pulses el icono del ojo.' },
+    { selector: '.profile-settings-card', title: 'Elige tu avatar', body: 'Selecciona uno de los 16 personajes. Ese avatar aparecerá en Inicio y en el botón flotante de navegación.' },
+    { selector: '.settings-mic-actions', title: 'Permiso del micrófono', body: 'Puedes activar o desactivar el uso del micrófono desde aquí si cambias de decisión después del registro.' }
   ];
-  return [{ title: 'Tutorial activo', body: 'Navega normalmente por la aplicación. Al entrar en cada función verás consejos breves sobre cómo utilizarla.' }];
+  return [{ title: 'Tutorial activo', body: 'Navega normalmente por la aplicación. Al entrar en cada función verás consejos breves sobre cómo utilizarla. El avatar flotante te permite abrir la navegación fuera de Inicio.' }];
 }
 
 export function GuidedTour() {
