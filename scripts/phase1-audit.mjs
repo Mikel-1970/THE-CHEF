@@ -19,7 +19,7 @@ ok('Cook sin BottomNav',!cook.includes('BottomNav'));
 ok('Foto corrección confirmada',photo.includes('CONFIRMADOS por el usuario'));
 ok('Métrica IA',gateway.includes('recordAiUsage'));
 ok('Idioma seleccionado llega a IA',gateway.includes('Idioma de salida obligatorio'));
-ok('Capa multidioma activa',app.includes('<UiI18n>')&&i18n.includes('Italiano'));
+ok('Capa multidioma activa',app.includes('<UiI18n>')&&i18n.includes('Apri il frigo'));
 ok('Compra manual persiste entre recetas',context.includes('existingIsManual')&&context.includes('!item.recipeId || item.recipeId === recipeId'));
 ok('Proposal nutrition',/nutritionPerServing\?\s*:\s*NutritionSummary/.test(types));
 ok('jsPDF parcheado',/^\^?4\.2\.1$/.test(pkg.dependencies?.jspdf??''));
