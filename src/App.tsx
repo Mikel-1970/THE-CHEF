@@ -20,9 +20,8 @@ import { TechniquesPage } from './pages/TechniquesPage';
 import { TutorialWelcomePage } from './pages/TutorialWelcomePage';
 
 const AUTH_SESSION_KEY = 'chef:auth:session:v1';
-const TUTORIAL_ACTIVE_KEY = 'chef:tutorial:active:v2';
-const TUTORIAL_INVITE_HIDDEN_KEY = 'chef:tutorial:invite-hidden:v2';
-const TUTORIAL_INVITE_DISMISSED_SESSION_KEY = 'chef:tutorial:invite-dismissed-session:v2';
+const ENTRY_TUTORIAL_HIDDEN_KEY = 'chef:entry-tutorial:hidden:v1';
+const ENTRY_TUTORIAL_SESSION_KEY = 'chef:entry-tutorial:seen-session:v1';
 
 function ScrollToTop() {
   const { pathname, search, key } = useLocation();
@@ -46,7 +45,7 @@ function readLocalFlag(key: string): boolean {
 
 function AppFlow() {
   const [authenticated, setAuthenticated] = useState(() => readSessionFlag(AUTH_SESSION_KEY));
-  const [tutorialReady, setTutorialReady] = useState(() => readLocalFlag(TUTORIAL_ACTIVE_KEY) || readLocalFlag(TUTORIAL_INVITE_HIDDEN_KEY) || readSessionFlag(TUTORIAL_INVITE_DISMISSED_SESSION_KEY));
+  const [tutorialReady, setTutorialReady] = useState(() => readLocalFlag(ENTRY_TUTORIAL_HIDDEN_KEY) || readSessionFlag(ENTRY_TUTORIAL_SESSION_KEY));
 
   if (!authenticated) return <AccessPage onAuthenticated={() => setAuthenticated(true)} />;
   if (!tutorialReady) return <TutorialWelcomePage onContinue={() => setTutorialReady(true)} />;
