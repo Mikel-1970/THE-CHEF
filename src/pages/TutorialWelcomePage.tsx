@@ -5,7 +5,8 @@ import '../entry-flow.css';
 
 type Props = { onContinue: () => void };
 
-const INVITE_HIDDEN_KEY = 'chef:tutorial:invite-hidden:v2';
+const ENTRY_TUTORIAL_HIDDEN_KEY = 'chef:entry-tutorial:hidden:v1';
+const ENTRY_TUTORIAL_SESSION_KEY = 'chef:entry-tutorial:seen-session:v1';
 const INVITE_DISMISSED_SESSION_KEY = 'chef:tutorial:invite-dismissed-session:v2';
 
 export function TutorialWelcomePage({ onContinue }: Props) {
@@ -13,14 +14,18 @@ export function TutorialWelcomePage({ onContinue }: Props) {
 
   const start = () => {
     requestGuidedTourReplay();
-    try { sessionStorage.setItem(INVITE_DISMISSED_SESSION_KEY, '1'); } catch { /* sin persistencia */ }
+    try {
+      sessionStorage.setItem(ENTRY_TUTORIAL_SESSION_KEY, '1');
+      sessionStorage.setItem(INVITE_DISMISSED_SESSION_KEY, '1');
+    } catch { /* sin persistencia */ }
     onContinue();
   };
 
   const skip = () => {
     try {
+      sessionStorage.setItem(ENTRY_TUTORIAL_SESSION_KEY, '1');
       sessionStorage.setItem(INVITE_DISMISSED_SESSION_KEY, '1');
-      if (dontShowAgain) localStorage.setItem(INVITE_HIDDEN_KEY, '1');
+      if (dontShowAgain) localStorage.setItem(ENTRY_TUTORIAL_HIDDEN_KEY, '1');
     } catch { /* sin persistencia */ }
     onContinue();
   };
