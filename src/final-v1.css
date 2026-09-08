@@ -36,9 +36,6 @@
 .avatar-gallery { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .avatar-gallery button { min-height: 52px; border: 1px solid rgba(63,84,36,.12); border-radius: 13px; background: #fffaf1; display:grid;place-items:center;padding:3px; }
 .avatar-gallery button.active { border-color: #405626; box-shadow: 0 0 0 2px rgba(64,86,38,.12); background: #eef0e3; }
-.profile-photo-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-.profile-photo-actions .secondary-button { min-height: 46px; justify-content: center; }
-.profile-photo-actions input { display: none; }
 .settings-select { min-height: 46px; }
 
 .personalized-chef-spinner { width: 76px !important; height: 76px !important; border-radius: 50%; position: relative; display: grid !important; place-items: center; overflow: visible; background: rgba(64,86,38,.08); }
@@ -61,11 +58,25 @@
 .cook-photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%}.cook-photo-actions label{margin:0!important;min-width:0;justify-content:center;text-align:center}.photo-capture-button.secondary{background:#fffdf8!important;color:#405626!important;border:1px solid rgba(64,86,38,.18)!important}
 
 .recipe-share-status { margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: #eef0e3; color: #4c5d3c; font-size: .76rem; line-height: 1.4; }
+.recipe-revision-priority { width: 100%; justify-content: center; margin: 2px 0 10px; min-height: 48px; }
+.recipe-save-actions-final { margin-top: 14px; grid-template-columns: 1fr 1fr; }
+
+.pantry-category-list { display: grid; gap: 12px; }
+.pantry-category { border: 1px solid rgba(63,84,36,.12); border-radius: 16px; background: rgba(255,253,248,.72); overflow: hidden; }
+.pantry-category summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; color: #405626; }
+.pantry-category summary::-webkit-details-marker { display: none; }
+.pantry-category summary span { min-width: 28px; height: 28px; display: grid; place-items: center; border-radius: 999px; background: #eef0e3; color: #405626; font-size: .72rem; font-weight: 800; }
+.pantry-category[open] summary { border-bottom: 1px solid rgba(63,84,36,.08); }
+.pantry-category > .editable-stock-list,
+.pantry-category > .pantry-choice-grid { padding: 10px; }
+.needs-quantity { border-color: rgba(214,166,46,.48) !important; background: #fffaf0 !important; }
+.needs-quantity .quantity-unit-editor input { border-color: rgba(214,166,46,.55); background: #fff8d8; }
+.pantry-choice-categories .pantry-choice-grid { margin: 0; }
 
 /* En la tarjeta principal de Inicio la fotografía queda limitada a la mitad derecha: el gorrito no invade la imagen. */
 .reference-desire-card .reference-action-photo{clip-path:inset(0 0 0 50%);border-radius:0 29px 29px 0}.reference-desire-card .reference-card-icon{left:18px;bottom:15px;background:#fffaf1;border:1px solid rgba(211,154,39,.18)}
 
-/* El acceso de Perfil muestra la imagen real elegida sin deformarla. */
+/* El acceso de Perfil muestra exclusivamente el avatar ilustrado elegido. */
 .floating-profile-button{overflow:visible!important;padding:0!important}.floating-profile-button .chef-avatar{width:44px!important;height:44px!important}
 
 @media (min-width: 640px) {
@@ -76,9 +87,9 @@
 
 @media (max-width: 390px) {
   .quantity-unit-editor { grid-template-columns: 1fr 1fr; }
-  .profile-photo-actions { grid-template-columns: 1fr; }
-  .avatar-gallery { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+  .avatar-gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
   .avatar-gallery button { min-height: 46px; padding: 1px; }
   .cook-photo-actions{grid-template-columns:1fr}
   .reference-desire-card .reference-action-photo{clip-path:inset(0 0 0 52%)}
+  .recipe-save-actions-final { grid-template-columns: 1fr; }
 }
