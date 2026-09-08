@@ -1,10 +1,12 @@
-import { ArrowLeft, Check, Circle, Mic, MicOff, Share2, ShoppingBasket, Sparkles, Trash2, X } from 'lucide-react';
-import { FormEvent, useState } from 'react';
+import { ArrowLeft, Check, Circle, Mic, MicOff, PackageOpen, Share2, ShoppingBasket, Snowflake, Sparkles, Trash2, X } from 'lucide-react';
+import { FormEvent, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { useApp } from '../AppContext';
+import type { IngredientInput, ShoppingListItem, StockLocation } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { parseIngredientInput } from '../utils/ingredientInput';
+import { groupShopping, inferPantryCategory } from '../utils/pantryCategories';
 import { formatQuantity } from '../utils/scaling';
 import '../recipe-enhancements.css';
 import '../voice-input.css';
@@ -13,10 +15,11 @@ const UNIT_OPTIONS = ['ud', 'g', 'kg', 'ml', 'l', 'paquete', 'bote', 'lata', 'ma
 
 export function ShoppingListPage() {
   const navigate = useNavigate();
-  const { shoppingList, toggleShoppingItem, removeShoppingItem, clearShoppingList, upsertShoppingItem } = useApp();
+  const { shoppingList, toggleShoppingItem, removeShoppingItem, clearShoppingList, upsertShoppingItem, settings, updateSettings } = useApp();
   const [draft, setDraft] = useState('');
   const voice = useAiDictation(transcript => setDraft(current => appendDictation(current, transcript)));
   const originRecipeId = shoppingList.find(item => item.recipeId)?.recipeId;
+  const grouped = useMemo(() => groupShopping(shoppingList), [shoppingList]);
 
   const addItems = (event?: FormEvent) => {
     event?.preventDefault();
@@ -30,6 +33,7 @@ export function ShoppingListPage() {
         name: parsed.name,
         quantity: parsed.quantity,
         unit: parsed.unit,
+        category: inferPantryCategory(parsed.name),
         checked: false
       });
     });
@@ -49,12 +53,27 @@ export function ShoppingListPage() {
     upsertShoppingItem({ ...item, unit: unit || undefined });
   };
 
+  const addBoughtToStock = (item: ShoppingListItem, location: StockLocation) => {
+    const stock = settings.pantryStock ?? [];
+    const index = stock.findIndex(entry => normalize(entry.name) === normalize(item.name));
+    const nextIngredient: IngredientInput = {
+      name: item.name,
+      quantity: item.quantity,
+      unit: item.unit,
+      category: item.category ?? inferPantryCategory(item.name),
+      location
+    };
+    const next = [...stock];
+    if (index >= 0) next[index] = { ...next[index], ...nextIngredient };
+    else next.push(nextIngredient);
+    updateSettings({ pantryStock: next });
+    removeShoppingItem(item.id);
+  };
+
   const buildShareText = () => {
     const pending = shoppingList.filter(item => !item.checked);
     const rows = pending.map(item => {
-      const quantity = item.quantity !== undefined
-        ? `${formatQuantity(item.quantity)} ${item.unit ?? ''}`.trim()
-        : 'cantidad por revisar';
+      const quantity = item.quantity !== undefined ? `${formatQuantity(item.quantity)} ${item.unit ?? ''}`.trim() : 'sin cantidad indicada';
       return `• ${item.name} — ${quantity}`;
     });
     return ['🛒 Lista de compra · El Chef', '', ...rows].join('\n');
@@ -73,8 +92,8 @@ export function ShoppingListPage() {
 
   return (
     <AppShell hideBack hideProfile>
-      <div className="simple-page-header light-header"><span className="eyebrow">TU CESTA</span><h1>Lista de compra</h1><p>Úsala de forma independiente o deja que las recetas añadan automáticamente lo que te falte.</p></div>
-      <div className="page-content nav-safe">
+      <div className="simple-page-header light-header"><span className="eyebrow">TU CESTA</span><h1>Lista de compra</h1><p>Independiente y conectada con recetas, despensa y nevera.</p></div>
+      <div className="page-content nav-safe shopping-grouped-page">
         {originRecipeId && <button className="secondary-button return-to-recipe" type="button" onClick={() => navigate(`/receta/${originRecipeId}`)}><ArrowLeft size={17} /> Volver a la receta</button>}
 
         <section className="form-section">
@@ -90,23 +109,29 @@ export function ShoppingListPage() {
           {voice.error && <div className="voice-status error">{voice.error}</div>}
         </section>
 
-        {!shoppingList.length && <section className="editorial-card olive-intro"><ShoppingBasket size={24} /><h2>La lista está vacía.</h2><p>Añade aquí cualquier producto que quieras comprar, aunque no esté relacionado con una receta.</p></section>}
+        {!shoppingList.length && <section className="editorial-card olive-intro"><ShoppingBasket size={24} /><h2>La lista está vacía.</h2><p>Añade productos aquí, desde una receta o desde Despensa y nevera.</p></section>}
 
-        <div className="editable-stock-list">
-          {shoppingList.map(item => (
-            <section className={`settings-card editable-stock-card ${item.checked ? 'checked' : ''}`} key={item.id}>
-              <button className="icon-button" onClick={() => toggleShoppingItem(item.id)} aria-label={item.checked ? 'Marcar pendiente' : 'Marcar comprado'}>{item.checked ? <Check size={20} /> : <Circle size={20} />}</button>
-              <div className="editable-stock-main">
-                <strong className={item.checked ? 'strike' : ''}>{item.name}</strong>
-                {item.recipeTitle && <small>Para {item.recipeTitle}</small>}
-                <div className="quantity-unit-editor">
-                  <label><span>Cantidad</span><input inputMode="decimal" type="number" min="0" step="0.1" value={item.quantity ?? ''} placeholder="—" onChange={event => updateQuantity(item.id, event.target.value)} /></label>
-                  <label><span>Unidad</span><select value={item.unit ?? ''} onChange={event => updateUnit(item.id, event.target.value)}><option value="">Sin indicar</option>{UNIT_OPTIONS.map(unit => <option value={unit} key={unit}>{unit}</option>)}</select></label>
-                </div>
-              </div>
-              <button className="icon-button" onClick={() => removeShoppingItem(item.id)} aria-label="Eliminar de la lista"><Trash2 size={18} /></button>
-            </section>
-          ))}
+        <div className="shopping-category-list">
+          {grouped.map(([category, items]) => <section className="shopping-category" key={category}>
+            <div className="section-label"><span>{category}</span><small>{items.length}</small></div>
+            <div className="editable-stock-list">
+              {items.map(item => (
+                <section className={`settings-card editable-stock-card shopping-stock-card ${item.checked ? 'checked' : ''}`} key={item.id}>
+                  <button className="icon-button" onClick={() => toggleShoppingItem(item.id)} aria-label={item.checked ? 'Marcar pendiente' : 'Marcar comprado'}>{item.checked ? <Check size={20} /> : <Circle size={20} />}</button>
+                  <div className="editable-stock-main">
+                    <strong className={item.checked ? 'strike' : ''}>{item.name}</strong>
+                    {item.recipeTitle && <small>Para {item.recipeTitle}</small>}
+                    <div className="quantity-unit-editor">
+                      <label><span>Cantidad</span><input inputMode="decimal" type="number" min="0" step="0.1" value={item.quantity ?? ''} placeholder="—" onChange={event => updateQuantity(item.id, event.target.value)} /></label>
+                      <label><span>Unidad</span><select value={item.unit ?? ''} onChange={event => updateUnit(item.id, event.target.value)}><option value="">Sin indicar</option>{UNIT_OPTIONS.map(unit => <option value={unit} key={unit}>{unit}</option>)}</select></label>
+                    </div>
+                    {item.checked && <div className="bought-stock-actions"><button type="button" onClick={() => addBoughtToStock(item, 'fridge')}><Snowflake size={15} /> Guardar en nevera</button><button type="button" onClick={() => addBoughtToStock(item, 'pantry')}><PackageOpen size={15} /> Guardar en despensa</button></div>}
+                  </div>
+                  <button className="icon-button" onClick={() => removeShoppingItem(item.id)} aria-label="Eliminar de la lista"><Trash2 size={18} /></button>
+                </section>
+              ))}
+            </div>
+          </section>)}
         </div>
 
         {!!shoppingList.length && <div className="shopping-share-actions"><button className="secondary-button" type="button" onClick={() => void shareList()}><Share2 size={17} /> Compartir lista</button><button className="advanced-toggle" onClick={clearShoppingList}><Trash2 size={17} /> Vaciar lista</button></div>}
