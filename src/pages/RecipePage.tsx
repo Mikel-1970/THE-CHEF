@@ -156,16 +156,16 @@ export function RecipePage() {
         <div className="recipe-content nav-safe">
           <section className="nutrition-card nutrition-card-priority"><div><span className="eyebrow">INFORMACIÓN NUTRICIONAL APROXIMADA</span><h2>Por ración</h2></div><div className="nutrition-grid"><div><strong>{recipe.nutritionPerServing.kcal}</strong><span>kcal</span></div><div><strong>{recipe.nutritionPerServing.proteinG} g</strong><span>proteína</span></div><div><strong>{recipe.nutritionPerServing.carbsG} g</strong><span>hidratos</span></div><div><strong>{recipe.nutritionPerServing.fatG} g</strong><span>grasas</span></div></div></section>
           <section className="servings-card"><div><span className="eyebrow">COMENSALES</span><strong>Ajusta la receta</strong></div><NumberStepper value={servings} onChange={setServings} /></section>
-          <div className="recipe-save-actions">
-            <button className="secondary-button" type="button" onClick={saveRecipe}><Bookmark size={18} fill={isSaved ? 'currentColor' : 'none'} /> {isSaved ? 'Guardada en Mis recetas' : 'Guardar receta'}</button>
-            <button className="secondary-button" type="button" onClick={() => void sharePdf()} disabled={sharingPdf}><Share2 size={18} /> {sharingPdf ? 'Preparando PDF…' : 'Compartir ficha PDF'}</button>
-            <button className="secondary-button recipe-revision-launch" type="button" onClick={() => { setRevisionText(''); setRevisionError(undefined); setIsRevisionOpen(true); }}><WandSparkles size={18} /> Personalizar receta</button>
-          </div>
-          {shareStatus && <div className="recipe-share-status">{shareStatus}</div>}
+          <button className="secondary-button recipe-revision-launch recipe-revision-priority" type="button" onClick={() => { setRevisionText(''); setRevisionError(undefined); setIsRevisionOpen(true); }}><WandSparkles size={18} /> Personalizar receta</button>
           <RecipeSourceNote recipe={recipe} />
           <section className="recipe-action-grid" aria-label="Información de la receta"><button type="button" onClick={() => setActivePanel('ingredients')}><ShoppingBasket size={22} /><strong>Ingredientes</strong><span>Lo que necesitas</span></button><button type="button" onClick={() => setActivePanel('prep')}><Sparkles size={22} /><strong>Mise en place</strong><span>Preparación previa</span></button><button type="button" onClick={() => setActivePanel('critical')}><AlertTriangle size={22} /><strong>Puntos críticos</strong><span>Lo importante para acertar</span></button><button type="button" onClick={() => setActivePanel('recommendations')}><Leaf size={22} /><strong>Recomendaciones</strong><span>Consejos y sustituciones</span></button></section>
           <section className="trust-strip compact-trust-strip"><ShieldCheck size={18} /><div><strong>Todo preparado</strong><span>La elaboración completa está en el modo cocina para evitar información duplicada.</span></div></section>
           <div className="cook-cta"><button onClick={startCooking}><Play size={20} fill="currentColor" /> Empezar a cocinar</button></div>
+          <div className="recipe-save-actions recipe-save-actions-final">
+            <button className="secondary-button" type="button" onClick={saveRecipe}><Bookmark size={18} fill={isSaved ? 'currentColor' : 'none'} /> {isSaved ? 'Guardada en Mis recetas' : 'Guardar en Mis recetas'}</button>
+            <button className="secondary-button" type="button" onClick={() => void sharePdf()} disabled={sharingPdf}><Share2 size={18} /> {sharingPdf ? 'Preparando PDF…' : 'Compartir ficha PDF'}</button>
+          </div>
+          {shareStatus && <div className="recipe-share-status">{shareStatus}</div>}
         </div>
       </div>
 
