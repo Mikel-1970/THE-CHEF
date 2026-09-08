@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { transcribeCookingAudio } from '../services/mediaGateway';
+import { loadMicrophonePreference } from '../utils/microphonePreference';
 
 export function useAiDictation(onTranscript: (text: string) => void) {
   const callbackRef = useRef(onTranscript);
@@ -24,6 +25,17 @@ export function useAiDictation(onTranscript: (text: string) => void) {
   const start = useCallback(async () => {
     if (!isSupported || isListening || isTranscribing) return;
     setError(undefined);
+
+    const microphonePreference = loadMicrophonePreference();
+    if (microphonePreference === 'disabled') {
+      setError('El micrófono está desactivado en The Chef. Puedes activarlo desde Ajustes.');
+      return;
+    }
+    if (microphonePreference === 'unsupported') {
+      setError('Este dispositivo o navegador no permite utilizar el micrófono desde la app.');
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
@@ -53,7 +65,7 @@ export function useAiDictation(onTranscript: (text: string) => void) {
     } catch (err) {
       cleanup();
       const denied = err instanceof DOMException && (err.name === 'NotAllowedError' || err.name === 'SecurityError');
-      setError(denied ? 'Necesitas permitir el acceso al micrófono para usar el dictado.' : 'No se ha podido iniciar el micrófono.');
+      setError(denied ? 'El permiso del micrófono está bloqueado. Revisa el permiso del sitio en iPhone/Safari o actívalo desde Ajustes.' : 'No se ha podido iniciar el micrófono.');
     }
   }, [cleanup, isListening, isSupported, isTranscribing]);
 

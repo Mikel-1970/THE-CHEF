@@ -11,170 +11,52 @@
   flex-direction: column;
 }
 
-.reference-brand {
-  padding: 0 0 13px;
-  flex: 0 0 auto;
-}
+.reference-brand { padding: 0 0 13px; flex: 0 0 auto; }
+.reference-chef-logo { width:68px;height:58px;margin-bottom:0; }
+.reference-chef-logo > svg:first-child { width:58px;height:58px; }
+.reference-brand h1 { font-size:clamp(2.85rem,12.5vw,3.9rem); }
+.reference-divider { margin:10px 0 13px; }
+.reference-brand-tagline { margin:0;font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.08rem,4.4vw,1.42rem);line-height:1.18;font-weight:650; }
 
-.reference-chef-logo {
-  width: 68px;
-  height: 58px;
-  margin-bottom: 0;
-}
+.reference-main-actions { grid-template-columns:minmax(0,1fr);width:min(100%,680px);margin-inline:auto;flex:1.08 1 0;min-height:0; }
+.reference-action-card { width:100%;height:100%;min-height:218px;max-height:310px; }
+.reference-action-text { left:20px;top:20px;width:56%; }
+.reference-action-text h3 { font-size:clamp(1.48rem,6vw,2rem);line-height:1.01; }
+.reference-action-text p { color:#34382f;font-size:.9rem;line-height:1.35;font-weight:650; }
 
-.reference-chef-logo > svg:first-child {
-  width: 58px;
-  height: 58px;
-}
+.reference-card-cta,.reference-secondary-copy b { display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 13px;border-radius:999px;font-size:.7rem;font-weight:850;letter-spacing:.01em; }
+.reference-card-cta { margin-top:12px;background:#405626;color:white;box-shadow:0 6px 14px rgba(51,69,35,.16); }
 
-.reference-brand h1 { font-size: clamp(2.85rem, 12.5vw, 3.9rem); }
-.reference-divider { margin: 10px 0 13px; }
-.reference-brand-tagline {
-  margin: 0;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(1.08rem, 4.4vw, 1.42rem);
-  line-height: 1.18;
-  font-weight: 650;
-}
+/* El icono de “¿Qué quieres que te prepare?” queda abajo: nunca tapa título ni CTA. */
+.reference-card-icon { left:18px;right:auto;top:auto;bottom:16px;width:56px;height:56px; }
+.reference-card-icon svg { width:30px;height:30px; }
 
-.reference-main-actions {
-  grid-template-columns: minmax(0, 1fr);
-  width: min(100%, 680px);
-  margin-inline: auto;
-  flex: 1.08 1 0;
-  min-height: 0;
-}
-
-.reference-action-card {
-  width: 100%;
-  height: 100%;
-  min-height: 218px;
-  max-height: 310px;
-}
-
-.reference-action-text {
-  left: 20px;
-  top: 20px;
-  width: 56%;
-}
-
-.reference-action-text h3 {
-  font-size: clamp(1.48rem, 6vw, 2rem);
-  line-height: 1.01;
-}
-
-.reference-action-text p {
-  color: #34382f;
-  font-size: .9rem;
-  line-height: 1.35;
-  font-weight: 650;
-}
-
-.reference-card-cta,
-.reference-secondary-copy b {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 34px;
-  padding: 0 13px;
-  border-radius: 999px;
-  font-size: .7rem;
-  font-weight: 850;
-  letter-spacing: .01em;
-}
-
-.reference-card-cta {
-  margin-top: 12px;
-  background: #405626;
-  color: white;
-  box-shadow: 0 6px 14px rgba(51,69,35,.16);
-}
-
-.reference-card-icon {
-  left: auto;
-  right: 18px;
-  top: 16px;
-  bottom: auto;
-  width: 56px;
-  height: 56px;
-}
-.reference-card-icon svg { width: 30px; height: 30px; }
-
-.reference-secondary-actions {
-  position: relative;
-  z-index: 2;
-  width: min(100%, 680px);
-  margin: 10px auto 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  flex: .9 1 0;
-  min-height: 0;
-}
-
-.reference-secondary-card {
-  position: relative;
-  height: 100%;
-  min-height: 158px;
-  max-height: 205px;
-  overflow: hidden;
-  padding: 0;
-  border: 1px solid rgba(255,255,255,.88);
-  border-radius: 24px;
-  background: #344328;
-  box-shadow: 0 13px 25px rgba(75,62,40,.15);
-  color: white;
-  text-align: left;
-}
-
+.reference-secondary-actions { position:relative;z-index:2;width:min(100%,680px);margin:10px auto 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;flex:.9 1 0;min-height:0; }
+.reference-secondary-card { position:relative;height:100%;min-height:158px;max-height:205px;overflow:hidden;padding:0;border:1px solid rgba(255,255,255,.88);border-radius:24px;background:#344328;box-shadow:0 13px 25px rgba(75,62,40,.15);color:white;text-align:left; }
 .reference-secondary-photo { position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .22s ease; }
 .reference-secondary-card:active .reference-secondary-photo { transform:scale(1.025); }
-.reference-secondary-icon {
-  position: absolute;
-  z-index: 3;
-  top: 12px;
-  right: 12px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: rgba(255,255,255,.9);
-  color: #405626;
-  box-shadow: 0 5px 13px rgba(0,0,0,.16);
-}
-.reference-secondary-copy { position:absolute;z-index:2;inset:auto 14px 13px;display:flex;flex-direction:column;align-items:flex-start;gap:4px; }
+.reference-secondary-icon { position:absolute;z-index:3;top:12px;right:12px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.9);color:#405626;box-shadow:0 5px 13px rgba(0,0,0,.16); }
+/* Las dos tarjetas empiezan el bloque de texto a la misma altura y terminan el CTA alineado. */
+.reference-secondary-copy { position:absolute;z-index:2;left:14px;right:14px;top:43%;bottom:13px;display:flex;flex-direction:column;align-items:flex-start;gap:4px; }
 .reference-secondary-copy strong { font-family:'Playfair Display',Georgia,serif;font-size:1.08rem;line-height:1.06; }
 .reference-secondary-copy small { color:rgba(255,255,255,.82);font-size:.65rem;line-height:1.3; }
-.reference-secondary-copy b { margin-top:4px;background:rgba(255,255,255,.92);color:#3e502e; }
+.reference-secondary-copy b { margin-top:auto;background:rgba(255,255,255,.92);color:#3e502e; }
 .reference-photo-card .reference-secondary-photo { background-position:60% center; }
 
-.reference-quick-section {
-  margin-top: 11px;
-  flex: .62 1 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-.reference-quick-title { margin-bottom: 7px; flex: 0 0 auto; }
-.reference-quick-grid { flex: 1 1 auto; min-height: 0; }
-.reference-quick-grid button {
-  height: 100%;
-  min-height: 70px;
-  padding-top: 8px;
-  padding-bottom: 7px;
-  gap: 5px;
-}
-.reference-quick-grid button svg { width: 29px; height: 29px; }
+.reference-quick-section { margin-top:11px;flex:.62 1 0;min-height:0;display:flex;flex-direction:column; }
+.reference-quick-title { margin-bottom:7px;flex:0 0 auto; }
+.reference-quick-grid { flex:1 1 auto;min-height:0; }
+.reference-quick-grid button { height:100%;min-height:70px;padding-top:8px;padding-bottom:7px;gap:5px; }
+.reference-quick-grid button svg { width:29px;height:29px; }
 .reference-quick-grid strong { color:#252923;font-weight:700;font-size:.63rem; }
 
-@media (min-width: 520px) {
-  .reference-action-card { min-height: 245px; }
-  .reference-action-text { left: 28px; top: 26px; width: 52%; }
+@media (min-width:520px) {
+  .reference-action-card { min-height:245px; }
+  .reference-action-text { left:28px;top:26px;width:52%; }
 }
 
-@media (max-width: 390px) {
-  .reference-home { padding-top:max(12px,env(safe-area-inset-top)); padding-bottom:calc(92px + env(safe-area-inset-bottom)); }
+@media (max-width:390px) {
+  .reference-home { padding-top:max(12px,env(safe-area-inset-top));padding-bottom:calc(92px + env(safe-area-inset-bottom)); }
   .reference-brand { padding-bottom:9px; }
   .reference-chef-logo { height:48px; }
   .reference-chef-logo > svg:first-child { width:48px;height:48px; }
@@ -187,12 +69,12 @@
   .reference-action-text p { font-size:.8rem; }
   .reference-action-line { margin:8px 0 7px; }
   .reference-card-cta { margin-top:9px;min-height:31px;padding:0 11px;font-size:.65rem; }
-  .reference-card-icon { right:14px;top:11px;width:50px;height:50px; }
+  .reference-card-icon { left:14px;right:auto;top:auto;bottom:11px;width:50px;height:50px; }
   .reference-card-icon svg { width:26px;height:26px; }
   .reference-secondary-actions { gap:8px;margin-top:8px; }
   .reference-secondary-card { min-height:145px;border-radius:20px; }
   .reference-secondary-icon { top:9px;right:9px;width:36px;height:36px; }
-  .reference-secondary-copy { inset:auto 11px 10px; }
+  .reference-secondary-copy { left:11px;right:11px;top:39%;bottom:10px; }
   .reference-secondary-copy strong { font-size:.92rem; }
   .reference-secondary-copy small { font-size:.57rem; }
   .reference-secondary-copy b { min-height:29px;padding:0 10px;font-size:.61rem; }
@@ -204,12 +86,13 @@
   .reference-quick-grid strong { font-size:.57rem; }
 }
 
-@media (max-height: 760px) {
+@media (max-height:760px) {
   .reference-brand h1 { font-size:2.5rem; }
   .reference-chef-logo,.reference-chef-logo > svg:first-child { width:44px;height:44px; }
   .reference-divider { margin:5px 0 6px; }
   .reference-action-card { min-height:180px; }
   .reference-secondary-card { min-height:128px; }
   .reference-secondary-copy small { display:none; }
+  .reference-secondary-copy { top:38%; }
   .reference-quick-grid button { min-height:58px; }
 }
