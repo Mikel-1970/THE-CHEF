@@ -6,7 +6,7 @@ import { TopBar } from '../components/TopBar';
 import type { IngredientInput } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { parseIngredientInput } from '../utils/ingredientInput';
-import { groupPantry } from '../utils/pantryCategories';
+import { getPantryCategory, groupPantry, PANTRY_CATEGORIES } from '../utils/pantryCategories';
 import '../voice-input.css';
 
 const UNIT_OPTIONS = ['ud', 'g', 'kg', 'ml', 'l', 'paquete', 'bote', 'lata', 'manojo'];
@@ -63,7 +63,7 @@ export function PantryPage() {
     <AppShell hideBack hideProfile>
       <TopBar eyebrow="TU INVENTARIO" title="Despensa" />
       <div className="page-content nav-safe">
-        <section className="editorial-card olive-intro"><PackageOpen size={26} /><h2>Lo que tienes en casa.</h2><p>Guarda aquí tus productos. El Chef los agrupa automáticamente para que sea más fácil encontrar y aprovechar lo que tienes.</p></section>
+        <section className="editorial-card olive-intro"><PackageOpen size={26} /><h2>Lo que tienes en casa.</h2><p>Guarda aquí tus productos. El Chef los agrupa automáticamente y puedes corregir la categoría cuando quieras.</p></section>
 
         <section className="form-section pantry-add-first">
           <div className="section-label"><span>Añadir productos</span><small>Texto o voz</small></div>
@@ -101,6 +101,7 @@ export function PantryPage() {
                           <label><span>Cantidad</span><input inputMode="decimal" type="number" min="0" step="0.1" value={item.quantity ?? ''} placeholder="Pendiente" onChange={event => { const raw = event.target.value; const quantity = raw === '' ? undefined : Number(raw); editProduct(item, { quantity: Number.isFinite(quantity) ? quantity : undefined }); }} /></label>
                           <label><span>Unidad</span><select value={item.unit ?? ''} onChange={event => editProduct(item, { unit: event.target.value || undefined })}><option value="">Sin indicar</option>{UNIT_OPTIONS.map(unit => <option value={unit} key={unit}>{unit}</option>)}</select></label>
                         </div>
+                        <label className="pantry-category-editor"><span>Categoría</span><select value={getPantryCategory(item)} onChange={event => editProduct(item, { category: event.target.value })}>{PANTRY_CATEGORIES.map(value => <option value={value} key={value}>{value}</option>)}</select></label>
                       </div>
                       <button className="icon-button" type="button" onClick={() => removeProduct(item)} aria-label={`Eliminar ${item.name}`}><Trash2 size={18} /></button>
                     </section>
