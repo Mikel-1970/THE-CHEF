@@ -14,6 +14,7 @@ import type { CookingRequest, Difficulty, IngredientInput } from '../domain/type
 import { useAiDictation } from '../hooks/useAiDictation';
 import { getHybridProposals } from '../services/hybridRecommendationEngine';
 import { parseIngredientInput } from '../utils/ingredientInput';
+import { groupPantry } from '../utils/pantryCategories';
 import '../voice-input.css';
 
 const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
@@ -33,13 +34,9 @@ export function PantryCookPage() {
   const [difficulty, setDifficulty] = useState<Difficulty | undefined>(previous?.difficulty ?? settings.defaultDifficulty);
   const [isSearching, setIsSearching] = useState(false);
   const voice = useAiDictation(transcript => setDraft(current => appendDictation(current, transcript)));
-  const sortedPantry = useMemo(() => [...pantry].sort((a, b) => a.name.localeCompare(b.name, 'es')), [pantry]);
+  const groupedPantry = useMemo(() => groupPantry(pantry), [pantry]);
 
-  const toggle = (name: string) => setSelected(current => {
-    const next = new Set(current); const key = normalize(name);
-    if (next.has(key)) next.delete(key); else next.add(key);
-    return next;
-  });
+  const toggle = (name: string) => setSelected(current => { const next = new Set(current); const key = normalize(name); if (next.has(key)) next.delete(key); else next.add(key); return next; });
 
   const addIngredient = (event?: FormEvent) => {
     event?.preventDefault();
@@ -65,11 +62,14 @@ export function PantryCookPage() {
       <ChefLoadingOverlay active={isSearching} title="Cocinando con lo que hay" messages={['Buscando la mejor combinación…', 'Ajustando ingredientes…', 'Dando forma a las propuestas…']} />
       <TopBar eyebrow="COCINA CON LO QUE HAY" title="Elige tus productos" />
       <div className="page-content nav-safe">
-        <section className="editorial-card olive-intro"><span className="eyebrow">TU DESPENSA</span><h2>¿Qué quieres utilizar?</h2><p>Selecciona uno o varios productos. El Chef añadirá solo lo necesario para construir recetas coherentes.</p></section>
+        <section className="editorial-card olive-intro"><span className="eyebrow">TU DESPENSA</span><h2>¿Qué quieres utilizar?</h2><p>Selecciona los productos prioritarios. Puedes añadir otros sobre la marcha y El Chef tendrá en cuenta tus básicos de despensa.</p></section>
         <section className="form-section">
           <div className="section-label"><span>Productos disponibles</span><small>{selected.size} seleccionados</small></div>
-          <div className="pantry-choice-grid">{sortedPantry.map(item => { const active = selected.has(normalize(item.name)); return <button type="button" className={active ? 'selected' : ''} aria-pressed={active} onClick={() => toggle(item.name)} key={item.name}><Star size={16} fill={active ? 'currentColor' : 'none'} /><span>{item.name}{item.quantity !== undefined ? ` · ${formatIngredientQuantity(item)}` : ''}</span></button>; })}</div>
+          <div className="pantry-category-list pantry-choice-categories">
+            {groupedPantry.map(([category, items]) => <details className="pantry-category" key={category} open><summary><strong>{category}</strong><span>{items.length}</span></summary><div className="pantry-choice-grid">{items.map(item => { const active = selected.has(normalize(item.name)); return <button type="button" className={active ? 'selected' : ''} aria-pressed={active} onClick={() => toggle(item.name)} key={item.name}><Star size={16} fill={active ? 'currentColor' : 'none'} /><span>{item.name}{item.quantity !== undefined ? ` · ${formatIngredientQuantity(item)}` : ''}</span></button>; })}</div></details>)}
+          </div>
           {!pantry.length && <div className="pantry-basics-note">Tu despensa está vacía. Añade productos escribiendo o usando el micrófono.</div>}
+          {!!settings.pantryBasics.length && <div className="pantry-basics-note"><strong>Básicos disponibles:</strong> {settings.pantryBasics.join(', ')}.</div>}
           <form className="ingredient-input pantry-add-input" onSubmit={addIngredient}><input value={draft} onChange={event => setDraft(event.target.value)} placeholder="Añadir otro producto…" /><button type="button" className="clear-input-button" onClick={() => { voice.stop(); setDraft(''); }} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={18} /></button><button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar productos'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button><button type="submit" className="voice-confirm-button" disabled={!draft.trim() || voice.isListening || voice.isTranscribing} aria-label="Añadir productos"><Check size={19} /></button></form>
           {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando productos…</div>}{voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}{voice.error && <div className="voice-status error">{voice.error}</div>}
         </section>
