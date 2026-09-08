@@ -45,10 +45,15 @@ export function inferPantryCategory(name: string): PantryCategory {
   return 'Otros';
 }
 
+export function getPantryCategory(item: IngredientInput): PantryCategory {
+  if (item.category && PANTRY_CATEGORIES.includes(item.category as PantryCategory)) return item.category as PantryCategory;
+  return inferPantryCategory(item.name);
+}
+
 export function groupPantry(items: IngredientInput[]): Array<[PantryCategory, IngredientInput[]]> {
   const groups = new Map<PantryCategory, IngredientInput[]>();
   PANTRY_CATEGORIES.forEach(category => groups.set(category, []));
-  items.forEach(item => groups.get(inferPantryCategory(item.name))!.push(item));
+  items.forEach(item => groups.get(getPantryCategory(item))!.push(item));
   return PANTRY_CATEGORIES.map(category => [category, (groups.get(category) ?? []).sort((a, b) => a.name.localeCompare(b.name, 'es'))] as [PantryCategory, IngredientInput[]]).filter(([, values]) => values.length > 0);
 }
 
