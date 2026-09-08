@@ -1,4 +1,4 @@
-import { ChefHat, Eye, EyeOff, Info, KeyRound, Languages, Smartphone, Type, UserRound, UsersRound } from 'lucide-react';
+import { ChefHat, Eye, EyeOff, Info, KeyRound, Languages, Mic, MicOff, Smartphone, Type, UserRound, UsersRound } from 'lucide-react';
 import { useState } from 'react';
 import { AppShell } from '../components/AppShell';
 import { ChefAvatar, CHEF_AVATARS, normalizeChefAvatar } from '../components/ChefAvatar';
@@ -6,6 +6,7 @@ import { Chip } from '../components/Chip';
 import { NumberStepper } from '../components/NumberStepper';
 import { useApp } from '../AppContext';
 import type { AppLanguage, CookingLevel, FontScale, SpiceLevel } from '../services/storage';
+import { loadMicrophonePreference, requestMicrophoneAccess, saveMicrophonePreference, type MicrophonePreference } from '../utils/microphonePreference';
 
 const fontScaleLabels: Array<{ value: FontScale; label: string }> = [
   { value: 'normal', label: 'Normal' },
@@ -27,26 +28,41 @@ export function SettingsPage() {
   const { settings, updateSettings } = useApp();
   const currentAvatar = normalizeChefAvatar(settings.avatarEmoji);
   const [showPassword, setShowPassword] = useState(false);
+  const [micPreference, setMicPreference] = useState<MicrophonePreference>(() => loadMicrophonePreference());
+  const [micBusy, setMicBusy] = useState(false);
+
+  const enableMicrophone = async () => {
+    if (micBusy) return;
+    setMicBusy(true);
+    const next = await requestMicrophoneAccess();
+    setMicPreference(next);
+    setMicBusy(false);
+  };
+
+  const disableMicrophone = () => {
+    saveMicrophonePreference('disabled');
+    setMicPreference('disabled');
+  };
 
   return (
     <AppShell hideBack>
       <div className="simple-page-header light-header"><span className="eyebrow">TU PERFIL DE COCINA</span><h1>Ajustes</h1><p>Preferencias para que El Chef se adapte a tu forma de cocinar.</p></div>
       <div className="page-content nav-safe settings-v03">
         <section className="settings-card">
-          <div className="settings-card-title"><UserRound size={20} /><div><strong>Datos de usuario</strong><small>Información preparada para el futuro acceso personal.</small></div></div>
+          <div className="settings-card-title"><UserRound size={20} /><div><strong>Datos de usuario</strong><small>Datos de acceso del usuario.</small></div></div>
           <div className="settings-user-fields">
             <label><span>Nombre</span><input value={settings.displayName} onChange={event => updateSettings({ displayName: event.target.value })} autoComplete="name" placeholder="Tu nombre" /></label>
             <label><span>Usuario de acceso</span><input value={settings.loginUser} onChange={event => updateSettings({ loginUser: event.target.value })} autoComplete="username" placeholder="Usuario" /></label>
             <label><span>Contraseña</span><div className="password-field"><KeyRound size={17} /><input type={showPassword ? 'text' : 'password'} value={settings.loginPassword} onChange={event => updateSettings({ loginPassword: event.target.value })} autoComplete="current-password" placeholder="Contraseña" /><button type="button" onClick={() => setShowPassword(value => !value)} aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}>{showPassword ? <EyeOff size={19} /> : <Eye size={19} />}</button></div></label>
           </div>
-          <div className="pantry-basics-note">En esta versión los datos se guardan solo en este dispositivo; el acceso real con cuenta se conectará cuando exista el backend de usuarios.</div>
+          <div className="pantry-basics-note">En esta versión los datos se guardan en este dispositivo; el sistema definitivo de usuarios se conectará al backend de la aplicación.</div>
         </section>
 
         <section className="settings-card profile-settings-card">
           <div className="settings-card-title"><ChefHat size={20} /><div><strong>Tu avatar en El Chef</strong><small>Elige uno de los 16 personajes ilustrados.</small></div></div>
           <div className="profile-preview-row">
             <ChefAvatar avatar={settings.avatarEmoji} size={74} showHat={false} />
-            <div><strong>Tu avatar</strong><small>Se utiliza también en el botón de Perfil y durante las esperas.</small></div>
+            <div><strong>Tu avatar</strong><small>Se utiliza en Inicio y en el botón flotante de navegación.</small></div>
           </div>
           <div className="avatar-gallery" aria-label="Avatares disponibles">
             {CHEF_AVATARS.map(avatar => (
@@ -54,6 +70,15 @@ export function SettingsPage() {
                 <ChefAvatar avatar={avatar.id} size={48} showHat={false} />
               </button>
             ))}
+          </div>
+        </section>
+
+        <section className="settings-card">
+          <div className="settings-card-title">{micPreference === 'enabled' ? <Mic size={20} /> : <MicOff size={20} />}<div><strong>Micrófono</strong><small>Controla el dictado por voz de The Chef.</small></div></div>
+          <div className="pantry-basics-note">{micPreference === 'enabled' ? 'Micrófono activado. La app intentará iniciar el dictado sin volver a pedir permiso en cada uso.' : micPreference === 'unsupported' ? 'Este dispositivo o navegador no permite usar el micrófono desde la app.' : 'Micrófono desactivado. Puedes activarlo cuando quieras.'}</div>
+          <div className="settings-mic-actions">
+            {micPreference !== 'enabled' && <button type="button" className="secondary-button" onClick={() => void enableMicrophone()} disabled={micBusy}>{micBusy ? 'Solicitando permiso…' : 'Activar micrófono'}</button>}
+            {micPreference === 'enabled' && <button type="button" className="secondary-button" onClick={disableMicrophone}>Desactivar en The Chef</button>}
           </div>
         </section>
 
