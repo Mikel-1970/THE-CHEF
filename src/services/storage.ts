@@ -13,6 +13,9 @@ export type FontScale = 'normal' | 'large' | 'xlarge';
 export type AppLanguage = 'es' | 'en' | 'fr' | 'de' | 'it' | 'pt' | 'zh';
 
 export type AppSettings = {
+  displayName: string;
+  loginUser: string;
+  loginPassword: string;
   defaultServings: number;
   compactMode: boolean;
   cookingLevel: CookingLevel;
@@ -32,6 +35,9 @@ export type ActiveSearchState = {
 };
 
 export const defaultSettings: AppSettings = {
+  displayName: '',
+  loginUser: '',
+  loginPassword: '',
   defaultServings: 4,
   compactMode: false,
   cookingLevel: 'Intermedio',
@@ -41,7 +47,7 @@ export const defaultSettings: AppSettings = {
   pantryBasics: ['Aceite de oliva', 'Sal', 'Pimienta', 'Ajo'],
   pantryStock: [],
   language: 'es',
-  avatarEmoji: '👨‍🍳',
+  avatarEmoji: 'chef-man',
   profileImage: undefined
 };
 
@@ -66,6 +72,9 @@ export function loadSettings(): AppSettings {
   return {
     ...defaultSettings,
     ...saved,
+    displayName: typeof saved.displayName === 'string' ? saved.displayName : '',
+    loginUser: typeof saved.loginUser === 'string' ? saved.loginUser : '',
+    loginPassword: typeof saved.loginPassword === 'string' ? saved.loginPassword : '',
     pantryBasics: Array.isArray(saved.pantryBasics) ? saved.pantryBasics : defaultSettings.pantryBasics,
     pantryStock: Array.isArray(saved.pantryStock) ? saved.pantryStock : defaultSettings.pantryStock,
     language: saved.language ?? defaultSettings.language,
