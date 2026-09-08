@@ -20,13 +20,10 @@ export function HomePage() {
         <header className="reference-brand">
           <div className="reference-chef-logo">
             <ChefHat size={68} strokeWidth={1.55} />
-            <Heart size={13} strokeWidth={2.3} className="reference-chef-heart" />
           </div>
           <h1>El Chef</h1>
           <div className="reference-divider" aria-hidden="true"><span /><i>◇</i><span /></div>
-          <h2>¡Bienvenido de nuevo!</h2>
-          <p>Vamos a cocinar algo delicioso.</p>
-          <Heart className="reference-doodle-heart" size={31} strokeWidth={1.65} />
+          <p className="reference-brand-tagline">Vamos a cocinar algo delicioso.</p>
         </header>
 
         <section className="reference-main-actions" aria-label="Acción principal">
@@ -45,11 +42,13 @@ export function HomePage() {
         <section className="reference-secondary-actions" aria-label="Otras formas de cocinar">
           <button data-tour="pantry-cook" className="reference-secondary-card" onClick={() => navigate('/cocina-despensa')}>
             <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.02), rgba(24,30,18,.62)), url(${pantryImage})` }} aria-hidden="true" />
-            <span className="reference-secondary-copy"><PackageOpen size={25} /><strong>Cocina con lo que hay</strong><small>Abre tu despensa y aprovecha sus productos con sentido.</small><b>Ver opciones</b></span>
+            <span className="reference-secondary-icon"><PackageOpen size={25} /></span>
+            <span className="reference-secondary-copy"><strong>Cocina con lo que hay</strong><small>Abre tu despensa y aprovecha sus productos con sentido.</small><b>Ver opciones</b></span>
           </button>
           <button data-tour="photo" className="reference-secondary-card reference-photo-card" onClick={() => navigate('/foto')}>
             <span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.01), rgba(24,30,18,.61)), url(${photoRecipeImage})` }} aria-hidden="true" />
-            <span className="reference-secondary-copy"><Camera size={25} /><strong>Foto receta</strong><small>Enséñame un plato y descubre cómo prepararlo.</small><b>Subir foto</b></span>
+            <span className="reference-secondary-icon"><Camera size={25} /></span>
+            <span className="reference-secondary-copy"><strong>Foto receta</strong><small>Enséñame un plato y descubre cómo prepararlo.</small><b>Subir foto</b></span>
           </button>
         </section>
 

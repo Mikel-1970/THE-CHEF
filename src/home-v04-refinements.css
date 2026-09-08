@@ -1,9 +1,12 @@
 .reference-home {
   padding-top: max(18px, env(safe-area-inset-top));
   padding-bottom: calc(98px + env(safe-area-inset-bottom));
+  height: 100dvh;
   min-height: 100dvh;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: pan-y;
   display: flex;
   flex-direction: column;
 }
@@ -24,16 +27,15 @@
   height: 58px;
 }
 
-.reference-chef-heart {
-  bottom: 3px;
-  left: 28px;
-}
-
 .reference-brand h1 { font-size: clamp(2.85rem, 12.5vw, 3.9rem); }
 .reference-divider { margin: 10px 0 13px; }
-.reference-brand h2 { margin-bottom: 4px; font-size: clamp(1.3rem, 5.3vw, 1.72rem); }
-.reference-brand p { font-size: clamp(.88rem, 3.4vw, 1.04rem); }
-.reference-doodle-heart { bottom: 3px; }
+.reference-brand-tagline {
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.08rem, 4.4vw, 1.42rem);
+  line-height: 1.18;
+  font-weight: 650;
+}
 
 .reference-main-actions {
   grid-template-columns: minmax(0, 1fr);
@@ -89,8 +91,10 @@
 }
 
 .reference-card-icon {
-  left: 18px;
-  bottom: 16px;
+  left: auto;
+  right: 18px;
+  top: 16px;
+  bottom: auto;
   width: 56px;
   height: 56px;
 }
@@ -125,10 +129,23 @@
 
 .reference-secondary-photo { position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .22s ease; }
 .reference-secondary-card:active .reference-secondary-photo { transform:scale(1.025); }
+.reference-secondary-icon {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,.9);
+  color: #405626;
+  box-shadow: 0 5px 13px rgba(0,0,0,.16);
+}
 .reference-secondary-copy { position:absolute;z-index:2;inset:auto 14px 13px;display:flex;flex-direction:column;align-items:flex-start;gap:4px; }
 .reference-secondary-copy strong { font-family:'Playfair Display',Georgia,serif;font-size:1.08rem;line-height:1.06; }
 .reference-secondary-copy small { color:rgba(255,255,255,.82);font-size:.65rem;line-height:1.3; }
-.reference-secondary-copy svg { color:#f1c55c;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));margin-bottom:2px; }
 .reference-secondary-copy b { margin-top:4px;background:rgba(255,255,255,.92);color:#3e502e; }
 .reference-photo-card .reference-secondary-photo { background-position:60% center; }
 
@@ -163,18 +180,18 @@
   .reference-chef-logo > svg:first-child { width:48px;height:48px; }
   .reference-brand h1 { font-size:2.82rem; }
   .reference-divider { margin:7px 0 8px; }
-  .reference-brand h2 { font-size:1.25rem; }
-  .reference-brand p { font-size:.86rem; }
+  .reference-brand-tagline { font-size:1.08rem; }
   .reference-action-card { min-height:205px; }
   .reference-action-text { left:16px;top:15px;width:59%; }
   .reference-action-text h3 { font-size:1.38rem; }
   .reference-action-text p { font-size:.8rem; }
   .reference-action-line { margin:8px 0 7px; }
   .reference-card-cta { margin-top:9px;min-height:31px;padding:0 11px;font-size:.65rem; }
-  .reference-card-icon { left:14px;bottom:11px;width:50px;height:50px; }
+  .reference-card-icon { right:14px;top:11px;width:50px;height:50px; }
   .reference-card-icon svg { width:26px;height:26px; }
   .reference-secondary-actions { gap:8px;margin-top:8px; }
   .reference-secondary-card { min-height:145px;border-radius:20px; }
+  .reference-secondary-icon { top:9px;right:9px;width:36px;height:36px; }
   .reference-secondary-copy { inset:auto 11px 10px; }
   .reference-secondary-copy strong { font-size:.92rem; }
   .reference-secondary-copy small { font-size:.57rem; }

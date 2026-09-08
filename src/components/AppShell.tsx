@@ -25,7 +25,7 @@ export function AppShell({ children, hideProfile = false }: {
 
       {isHome && !hideProfile && (
         <button data-tour="profile" className="floating-profile-button" onClick={() => navigate('/ajustes')} aria-label="Abrir Perfil">
-          <ChefAvatar avatar={settings.avatarEmoji} image={settings.profileImage} size={42} showHat={false} className="chef-avatar-compact" />
+          <ChefAvatar avatar={settings.avatarEmoji} size={42} showHat={false} className="chef-avatar-compact" />
         </button>
       )}
 
