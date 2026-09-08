@@ -1,97 +1,13 @@
 import type { CookingRequest, Difficulty, HistoryEntry, IngredientInput, Proposal, ShoppingListItem } from '../domain/types';
-
-const FAVORITES_KEY = 'chef:favorites';
-const SAVED_RECIPES_KEY = 'chef:saved-recipes';
-const HISTORY_KEY = 'chef:history';
-const SETTINGS_KEY = 'chef:settings';
-const SHOPPING_LIST_KEY = 'chef:shopping-list';
-const ACTIVE_SEARCH_KEY = 'chef:active-search';
-
-export type CookingLevel = 'Principiante' | 'Intermedio' | 'Avanzado';
-export type SpiceLevel = 'Nada' | 'Suave' | 'Medio' | 'Alto';
-export type FontScale = 'normal' | 'large' | 'xlarge';
-export type AppLanguage = 'es' | 'en' | 'fr' | 'de' | 'it' | 'pt' | 'zh';
-
-export type AppSettings = {
-  displayName: string;
-  loginUser: string;
-  loginPassword: string;
-  defaultServings: number;
-  compactMode: boolean;
-  cookingLevel: CookingLevel;
-  spiceLevel: SpiceLevel;
-  fontScale: FontScale;
-  defaultDifficulty?: Difficulty;
-  pantryBasics: string[];
-  pantryStock: IngredientInput[];
-  language: AppLanguage;
-  avatarEmoji: string;
-  profileImage?: string;
-};
-
-export type ActiveSearchState = {
-  request: CookingRequest | null;
-  proposals: Proposal[];
-};
-
-export const defaultSettings: AppSettings = {
-  displayName: '',
-  loginUser: '',
-  loginPassword: '',
-  defaultServings: 4,
-  compactMode: false,
-  cookingLevel: 'Intermedio',
-  spiceLevel: 'Medio',
-  fontScale: 'large',
-  defaultDifficulty: undefined,
-  pantryBasics: ['Aceite de oliva', 'Sal', 'Pimienta', 'Ajo'],
-  pantryStock: [],
-  language: 'es',
-  avatarEmoji: 'chef-man',
-  profileImage: undefined
-};
-
-function parse<T>(key: string, fallback: T): T {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) as T : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-export function loadFavorites(): string[] { return parse<string[]>(FAVORITES_KEY, []); }
-export function saveFavorites(ids: string[]): void { localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids)); }
-export function loadSavedRecipes(): string[] { return parse<string[]>(SAVED_RECIPES_KEY, []); }
-export function saveSavedRecipes(ids: string[]): void { localStorage.setItem(SAVED_RECIPES_KEY, JSON.stringify(ids)); }
-export function loadHistory(): HistoryEntry[] { return parse<HistoryEntry[]>(HISTORY_KEY, []); }
-export function saveHistory(entries: HistoryEntry[]): void { localStorage.setItem(HISTORY_KEY, JSON.stringify(entries.slice(0, 30))); }
-
-export function loadSettings(): AppSettings {
-  const saved = parse<Partial<AppSettings>>(SETTINGS_KEY, {});
-  return {
-    ...defaultSettings,
-    ...saved,
-    displayName: typeof saved.displayName === 'string' ? saved.displayName : '',
-    loginUser: typeof saved.loginUser === 'string' ? saved.loginUser : '',
-    loginPassword: typeof saved.loginPassword === 'string' ? saved.loginPassword : '',
-    pantryBasics: Array.isArray(saved.pantryBasics) ? saved.pantryBasics : defaultSettings.pantryBasics,
-    pantryStock: Array.isArray(saved.pantryStock) ? saved.pantryStock : defaultSettings.pantryStock,
-    language: saved.language ?? defaultSettings.language,
-    avatarEmoji: saved.avatarEmoji || defaultSettings.avatarEmoji,
-    profileImage: typeof saved.profileImage === 'string' ? saved.profileImage : undefined
-  };
-}
-
-export function saveSettings(settings: AppSettings): void { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
-export function loadShoppingList(): ShoppingListItem[] { return parse<ShoppingListItem[]>(SHOPPING_LIST_KEY, []); }
-export function saveShoppingList(items: ShoppingListItem[]): void { localStorage.setItem(SHOPPING_LIST_KEY, JSON.stringify(items)); }
-
-export function loadActiveSearch(): ActiveSearchState {
-  const saved = parse<Partial<ActiveSearchState>>(ACTIVE_SEARCH_KEY, {});
-  return { request: saved.request ?? null, proposals: Array.isArray(saved.proposals) ? saved.proposals : [] };
-}
-
-export function saveActiveSearch(request: CookingRequest | null, proposals: Proposal[]): void {
-  localStorage.setItem(ACTIVE_SEARCH_KEY, JSON.stringify({ request, proposals } satisfies ActiveSearchState));
-}
+const FAVORITES_KEY='chef:favorites', SAVED_RECIPES_KEY='chef:saved-recipes', HISTORY_KEY='chef:history', SETTINGS_KEY='chef:settings', SHOPPING_LIST_KEY='chef:shopping-list', ACTIVE_SEARCH_KEY='chef:active-search';
+export type CookingLevel='Principiante'|'Intermedio'|'Avanzado'; export type SpiceLevel='Nada'|'Suave'|'Medio'|'Alto'; export type FontScale='normal'|'large'|'xlarge'; export type AppLanguage='es'|'en'|'fr'|'de'|'it'|'pt'|'zh';
+export type AppSettings={ displayName:string; loginUser:string; loginPassword:string; defaultServings:number; compactMode:boolean; cookingLevel:CookingLevel; spiceLevel:SpiceLevel; fontScale:FontScale; defaultDifficulty?:Difficulty; pantryBasics:string[]; pantryStock:IngredientInput[]; customPantryCategories:string[]; language:AppLanguage; avatarEmoji:string; profileImage?:string; aiPreference:number; };
+export type ActiveSearchState={request:CookingRequest|null; proposals:Proposal[]};
+export const defaultSettings:AppSettings={displayName:'',loginUser:'',loginPassword:'',defaultServings:4,compactMode:false,cookingLevel:'Intermedio',spiceLevel:'Medio',fontScale:'large',defaultDifficulty:undefined,pantryBasics:['Aceite de oliva','Sal','Pimienta','Ajo'],pantryStock:[],customPantryCategories:[],language:'es',avatarEmoji:'chef-man',profileImage:undefined,aiPreference:70};
+function parse<T>(key:string,fallback:T):T{try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw) as T:fallback}catch{return fallback}}
+export function loadFavorites(){return parse<string[]>(FAVORITES_KEY,[])} export function saveFavorites(v:string[]){localStorage.setItem(FAVORITES_KEY,JSON.stringify(v))}
+export function loadSavedRecipes(){return parse<string[]>(SAVED_RECIPES_KEY,[])} export function saveSavedRecipes(v:string[]){localStorage.setItem(SAVED_RECIPES_KEY,JSON.stringify(v))}
+export function loadHistory(){return parse<HistoryEntry[]>(HISTORY_KEY,[])} export function saveHistory(v:HistoryEntry[]){localStorage.setItem(HISTORY_KEY,JSON.stringify(v.slice(0,30)))}
+export function loadSettings():AppSettings{const s=parse<Partial<AppSettings>>(SETTINGS_KEY,{});return {...defaultSettings,...s,displayName:typeof s.displayName==='string'?s.displayName:'',loginUser:typeof s.loginUser==='string'?s.loginUser:'',loginPassword:typeof s.loginPassword==='string'?s.loginPassword:'',pantryBasics:Array.isArray(s.pantryBasics)?s.pantryBasics:defaultSettings.pantryBasics,pantryStock:Array.isArray(s.pantryStock)?s.pantryStock:[],customPantryCategories:Array.isArray(s.customPantryCategories)?s.customPantryCategories:[],language:s.language??'es',avatarEmoji:s.avatarEmoji||'chef-man',profileImage:typeof s.profileImage==='string'?s.profileImage:undefined,aiPreference:Number.isFinite(s.aiPreference)?Math.max(0,Math.min(100,Number(s.aiPreference))):70}}
+export function saveSettings(v:AppSettings){localStorage.setItem(SETTINGS_KEY,JSON.stringify(v))} export function loadShoppingList(){return parse<ShoppingListItem[]>(SHOPPING_LIST_KEY,[])} export function saveShoppingList(v:ShoppingListItem[]){localStorage.setItem(SHOPPING_LIST_KEY,JSON.stringify(v))}
+export function loadActiveSearch():ActiveSearchState{const s=parse<Partial<ActiveSearchState>>(ACTIVE_SEARCH_KEY,{});return{request:s.request??null,proposals:Array.isArray(s.proposals)?s.proposals:[]}} export function saveActiveSearch(request:CookingRequest|null,proposals:Proposal[]){localStorage.setItem(ACTIVE_SEARCH_KEY,JSON.stringify({request,proposals} satisfies ActiveSearchState))}

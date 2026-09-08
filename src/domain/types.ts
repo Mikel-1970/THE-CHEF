@@ -3,116 +3,26 @@ export type Difficulty = 'Fácil' | 'Media' | 'Avanzada';
 export type DishClassification = 'Con lo que tienes' | 'Te falta muy poco' | 'Buena opción si compras algunas cosas';
 export type RecipeSourceKind = 'local' | 'web' | 'ai' | 'user';
 export type StockLocation = 'pantry' | 'fridge';
-
-export type RecipeSource = {
-  kind: RecipeSourceKind;
-  label: string;
-  url?: string;
-  publisher?: string;
-  retrievedAt?: string;
-  adapted?: boolean;
-};
-
-export type IngredientInput = {
-  name: string;
-  quantity?: number;
-  unit?: string;
-  priority?: boolean;
-  category?: string;
-  location?: StockLocation;
-};
-
+export type RecipeSource = { kind: RecipeSourceKind; label: string; url?: string; publisher?: string; retrievedAt?: string; adapted?: boolean; };
+export type IngredientInput = { name: string; quantity?: number; unit?: string; priority?: boolean; category?: string; location?: StockLocation; };
 export type CookingRequest = {
-  mode: 'pantry' | 'desire';
-  servings: number;
-  maxMinutes?: number;
-  style?: string;
-  cuisine?: string;
-  difficulty?: Difficulty;
-  spiceLevel?: 'Nada' | 'Suave' | 'Medio' | 'Alto';
-  pantryIngredients?: IngredientInput[];
-  pantryBasics?: string[];
-  pantryPolicy?: 'prioritize' | 'ignore';
-  desireText?: string;
+  mode: 'pantry' | 'desire'; servings: number; maxMinutes?: number; style?: string; cuisine?: string; difficulty?: Difficulty;
+  spiceLevel?: 'Nada' | 'Suave' | 'Medio' | 'Alto'; pantryIngredients?: IngredientInput[]; pantryBasics?: string[];
+  pantryPolicy?: 'prioritize' | 'ignore'; desireText?: string; mainProduct?: string; technique?: string; utensils?: string[];
+  restrictions?: string[]; aiPreference?: number;
 };
-
+export type NutritionSummary = { kcal: number; proteinG: number; carbsG: number; fatG: number; fiberG?: number; };
 export type Proposal = {
-  id: string;
-  title: string;
-  subtitle: string;
-  emoji: string;
-  minutes: number;
-  difficulty: Difficulty;
-  classification?: DishClassification;
-  usedIngredients: string[];
-  missingIngredients: string[];
-  insufficientIngredients?: string[];
-  substitutionNotes?: string[];
-  reason: string;
-  recipeId: string;
+  id: string; title: string; subtitle: string; emoji: string; minutes: number; difficulty: Difficulty; style?: string;
+  classification?: DishClassification; usedIngredients: string[]; missingIngredients: string[]; insufficientIngredients?: string[];
+  substitutionNotes?: string[]; reason: string; recipeId: string; nutritionPerServing?: NutritionSummary;
 };
-
-export type RecipeIngredient = {
-  name: string;
-  quantity: number;
-  unit: string;
-  section?: string;
-  scalingMode: 'linear' | 'discrete' | 'culinary' | 'fixed';
-  optional?: boolean;
-};
-
-export type RecipeStep = {
-  number: number;
-  instruction: string;
-  minutes?: number;
-  temperatureC?: number;
-  cue?: string;
-};
-
+export type RecipeIngredient = { name: string; quantity: number; unit: string; section?: string; scalingMode: 'linear' | 'discrete' | 'culinary' | 'fixed'; optional?: boolean; };
+export type RecipeStep = { number: number; instruction: string; minutes?: number; temperatureC?: number; cue?: string; };
 export type Recipe = {
-  id: string;
-  title: string;
-  description: string;
-  emoji: string;
-  baseServings: number;
-  prepMinutes: number;
-  cookMinutes: number;
-  difficulty: Difficulty;
-  mealType: MealType;
-  style: string;
-  cuisine: string;
-  ingredients: RecipeIngredient[];
-  miseEnPlace: string[];
-  steps: RecipeStep[];
-  criticalPoints: string[];
-  substitutions: string[];
-  storage: string;
-  nutritionPerServing: {
-    kcal: number;
-    proteinG: number;
-    carbsG: number;
-    fatG: number;
-  };
-  source?: RecipeSource;
+  id: string; title: string; description: string; emoji: string; baseServings: number; prepMinutes: number; cookMinutes: number;
+  difficulty: Difficulty; mealType: MealType; style: string; cuisine: string; ingredients: RecipeIngredient[]; miseEnPlace: string[];
+  steps: RecipeStep[]; criticalPoints: string[]; substitutions: string[]; storage: string; nutritionPerServing: NutritionSummary; source?: RecipeSource;
 };
-
-export type HistoryEntry = {
-  id: string;
-  createdAt: string;
-  label: string;
-  kind?: 'search' | 'recipe';
-  mode?: CookingRequest['mode'];
-  recipeId?: string;
-  request?: CookingRequest;
-};
-
-export type ShoppingListItem = {
-  id: string;
-  name: string;
-  quantity?: number;
-  unit?: string;
-  category?: string;
-  recipeId?: string;
-  recipeTitle?: string;
-  checked: boolean;
-};
+export type HistoryEntry = { id: string; createdAt: string; label: string; kind?: 'search' | 'recipe'; mode?: CookingRequest['mode']; recipeId?: string; request?: CookingRequest; };
+export type ShoppingListItem = { id: string; name: string; quantity?: number; unit?: string; category?: string; recipeId?: string; recipeTitle?: string; checked: boolean; };
