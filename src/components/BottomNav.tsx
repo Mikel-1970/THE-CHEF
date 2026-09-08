@@ -1,8 +1,12 @@
-import { ChefHat, CookingPot, Home, PackageOpen, Search } from 'lucide-react';
+import { CookingPot, Home, PackageOpen, Search } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { useApp } from '../AppContext';
+import { ChefAvatar } from './ChefAvatar';
 import '../navigation-v04.css';
 
 export function BottomNav() {
+  const { settings } = useApp();
+
   return (
     <nav data-tour="bottom-nav" className="bottom-nav bottom-nav-consistent" aria-label="Navegación principal">
       <NavLink to="/" end className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
@@ -16,7 +20,7 @@ export function BottomNav() {
       </NavLink>
 
       <NavLink to="/antojo" className={({ isActive }) => `nav-item chef-nav ${isActive ? 'active' : ''}`} aria-label="Abrir El Chef">
-        <span className="chef-nav-circle"><ChefHat size={31} strokeWidth={1.7} /></span>
+        <span className="chef-nav-circle"><ChefAvatar avatar={settings.avatarEmoji} size={72} showHat={false} /></span>
         <span className="chef-nav-label">Chef</span>
       </NavLink>
 
