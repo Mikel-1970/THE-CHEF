@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { HashRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { AppProvider } from './AppContext';
 import { GuidedTour } from './components/GuidedTour';
+import { AccessPage } from './pages/AccessPage';
 import { CookPage } from './pages/CookPage';
 import { DesirePage } from './pages/DesirePage';
 import { HomePage } from './pages/HomePage';
@@ -16,6 +17,12 @@ import { SearchPage } from './pages/SearchPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { ShoppingListPage } from './pages/ShoppingListPage';
 import { TechniquesPage } from './pages/TechniquesPage';
+import { TutorialWelcomePage } from './pages/TutorialWelcomePage';
+
+const AUTH_SESSION_KEY = 'chef:auth:session:v1';
+const TUTORIAL_ACTIVE_KEY = 'chef:tutorial:active:v2';
+const TUTORIAL_INVITE_HIDDEN_KEY = 'chef:tutorial:invite-hidden:v2';
+const TUTORIAL_INVITE_DISMISSED_SESSION_KEY = 'chef:tutorial:invite-dismissed-session:v2';
 
 function ScrollToTop() {
   const { pathname, search, key } = useLocation();
@@ -29,28 +36,50 @@ function ScrollToTop() {
   return null;
 }
 
+function readSessionFlag(key: string): boolean {
+  try { return sessionStorage.getItem(key) === '1'; } catch { return false; }
+}
+
+function readLocalFlag(key: string): boolean {
+  try { return localStorage.getItem(key) === '1'; } catch { return false; }
+}
+
+function AppFlow() {
+  const [authenticated, setAuthenticated] = useState(() => readSessionFlag(AUTH_SESSION_KEY));
+  const [tutorialReady, setTutorialReady] = useState(() => readLocalFlag(TUTORIAL_ACTIVE_KEY) || readLocalFlag(TUTORIAL_INVITE_HIDDEN_KEY) || readSessionFlag(TUTORIAL_INVITE_DISMISSED_SESSION_KEY));
+
+  if (!authenticated) return <AccessPage onAuthenticated={() => setAuthenticated(true)} />;
+  if (!tutorialReady) return <TutorialWelcomePage onContinue={() => setTutorialReady(true)} />;
+
+  return (
+    <>
+      <GuidedTour />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/nevera" element={<PantryPage />} />
+        <Route path="/cocina-despensa" element={<PantryCookPage />} />
+        <Route path="/foto" element={<PhotoRecipePage />} />
+        <Route path="/antojo" element={<DesirePage />} />
+        <Route path="/buscar" element={<SearchPage />} />
+        <Route path="/avisos" element={<NoticesPage />} />
+        <Route path="/propuestas" element={<ResultsPage />} />
+        <Route path="/receta/:id" element={<RecipePage />} />
+        <Route path="/cocinar/:id" element={<CookPage />} />
+        <Route path="/lista-compra" element={<ShoppingListPage />} />
+        <Route path="/mis-recetas" element={<MyRecipesPage />} />
+        <Route path="/tecnicas" element={<TechniquesPage />} />
+        <Route path="/ajustes" element={<SettingsPage />} />
+      </Routes>
+    </>
+  );
+}
+
 export default function App() {
   return (
     <HashRouter>
       <ScrollToTop />
       <AppProvider>
-        <GuidedTour />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/nevera" element={<PantryPage />} />
-          <Route path="/cocina-despensa" element={<PantryCookPage />} />
-          <Route path="/foto" element={<PhotoRecipePage />} />
-          <Route path="/antojo" element={<DesirePage />} />
-          <Route path="/buscar" element={<SearchPage />} />
-          <Route path="/avisos" element={<NoticesPage />} />
-          <Route path="/propuestas" element={<ResultsPage />} />
-          <Route path="/receta/:id" element={<RecipePage />} />
-          <Route path="/cocinar/:id" element={<CookPage />} />
-          <Route path="/lista-compra" element={<ShoppingListPage />} />
-          <Route path="/mis-recetas" element={<MyRecipesPage />} />
-          <Route path="/tecnicas" element={<TechniquesPage />} />
-          <Route path="/ajustes" element={<SettingsPage />} />
-        </Routes>
+        <AppFlow />
       </AppProvider>
     </HashRouter>
   );
