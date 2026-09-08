@@ -13,17 +13,19 @@ import { reviseAiRecipe } from '../services/aiProposalGateway';
 import { getRecipeImage } from '../services/mediaGateway';
 import { shareRecipePdf } from '../services/recipePdf';
 import { getRecipeById, registerExternalRecipes, rememberActiveRecipe, rememberLibraryRecipe } from '../services/recipeCatalog';
+import { findAvailableSubstitute, getIngredientAlternatives } from '../services/substitutions';
+import { inferPantryCategory } from '../utils/pantryCategories';
 import { formatQuantity, scaleQuantity } from '../utils/scaling';
 import { formatDuration } from '../utils/time';
 import '../recipe-enhancements.css';
 import '../voice-input.css';
 
-type RecipePanel = 'ingredients' | 'prep' | 'critical' | 'recommendations' | null;
+type RecipePanel = 'ingredients' | 'prep' | 'elaboration' | 'critical' | 'recommendations' | null;
 
 export function RecipePage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { favorites, savedRecipes, toggleFavorite, toggleSavedRecipe, recordRecipeView, currentRequest, shoppingList, upsertShoppingItem, removeShoppingItem } = useApp();
+  const { favorites, savedRecipes, toggleFavorite, toggleSavedRecipe, recordRecipeView, currentRequest, shoppingList, upsertShoppingItem, removeShoppingItem, settings } = useApp();
   const recipe = getRecipeById(id);
   const [servings, setServings] = useState(currentRequest?.servings ?? recipe?.baseServings ?? 4);
   const [activePanel, setActivePanel] = useState<RecipePanel>(null);
@@ -45,6 +47,11 @@ export function RecipePage() {
     });
     return Array.from(grouped.entries());
   }, [recipe]);
+
+  const availableNames = useMemo(() => [
+    ...(settings.pantryStock ?? []).map(item => item.name),
+    ...settings.pantryBasics
+  ], [settings.pantryStock, settings.pantryBasics]);
 
   useEffect(() => {
     if (!recipe) return;
@@ -76,7 +83,16 @@ export function RecipePage() {
       return next;
     });
     if (shouldBeMissing && !ingredient.optional) {
-      upsertShoppingItem({ id: itemId, name: ingredient.name, quantity: scaleQuantity(ingredient, recipe.baseServings, servings), unit: ingredient.unit, recipeId: recipe.id, recipeTitle: recipe.title, checked: false });
+      upsertShoppingItem({
+        id: itemId,
+        name: ingredient.name,
+        quantity: scaleQuantity(ingredient, recipe.baseServings, servings),
+        unit: ingredient.unit,
+        category: inferPantryCategory(ingredient.name),
+        recipeId: recipe.id,
+        recipeTitle: recipe.title,
+        checked: false
+      });
     } else removeShoppingItem(itemId);
   };
 
@@ -91,7 +107,7 @@ export function RecipePage() {
     setSharingPdf(true);
     setShareStatus(undefined);
     try {
-      const result = await shareRecipePdf(recipe, servings);
+      const result = await shareRecipePdf(recipe, servings, settings.avatarEmoji);
       setShareStatus(result === 'shared' ? 'PDF compartido.' : 'PDF preparado. Puedes compartirlo desde tus descargas.');
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') return;
@@ -127,21 +143,41 @@ export function RecipePage() {
   };
 
   const ingredientPanel = <>
-    <div className="panel-intro"><p>Revisa los ingredientes. Si marcas “Me falta”, se añadirá automáticamente a la lista de compra.</p></div>
+    <div className="panel-intro"><p>Marca lo que te falta. Antes de comprar, El Chef comprueba si ya tienes un sustituto razonable.</p></div>
     {sections.map(([section, ingredients]) => <div className="ingredient-section" key={section}><h3>{section}</h3>{ingredients.map(ingredient => {
       const quantity = scaleQuantity(ingredient, recipe.baseServings, servings);
       const isMissing = missing.has(ingredient.name);
-      return <div className="recipe-ingredient" key={`${section}-${ingredient.name}`}><div style={{ minWidth: 0 }}><span>{ingredient.name}{ingredient.optional ? <small> opcional</small> : null}</span><div className="chip-row compact" style={{ marginTop: 7 }}><button className={`chip ${!isMissing ? 'selected' : ''}`} onClick={() => setMissingIngredient(ingredient, false)}>Tengo</button><button className={`chip ${isMissing ? 'selected' : ''}`} onClick={() => setMissingIngredient(ingredient, true)}>Me falta</button></div></div><strong>{formatQuantity(quantity)} {ingredient.unit}</strong></div>;
+      const availableSubstitute = findAvailableSubstitute(ingredient.name, availableNames);
+      return <div className={`recipe-ingredient recipe-ingredient-status ${isMissing ? 'missing' : ''}`} key={`${section}-${ingredient.name}`}>
+        <div className="recipe-ingredient-main">
+          <span>{ingredient.name}{ingredient.optional ? <small className="ingredient-optional"> Opcional</small> : null}</span>
+          {availableSubstitute && <small className="ingredient-substitute"><Leaf size={13} /> Sustitución disponible: {availableSubstitute}</small>}
+          <div className="chip-row compact" style={{ marginTop: 7 }}><button className={`chip ${!isMissing ? 'selected' : ''}`} onClick={() => setMissingIngredient(ingredient, false)}>Tengo</button><button className={`chip ${isMissing ? 'selected' : ''}`} onClick={() => setMissingIngredient(ingredient, true)}>Me falta</button></div>
+        </div>
+        <strong>{formatQuantity(quantity)} {ingredient.unit}</strong>
+      </div>;
     })}</div>)}
     {!!shoppingList.filter(item => item.recipeId === recipe.id && !item.checked).length && <button className="advanced-toggle full-panel-action" onClick={() => navigate('/lista-compra')}><ShoppingBasket size={17} /> Ver lista de compra</button>}
     <div className="recipe-panel-end-spacer" aria-hidden="true" />
   </>;
 
+  const elaborationPanel = <div className="panel-steps">
+    <ol className="expanded-list recipe-elaboration-list">{recipe.steps.map(step => <li key={step.number}><strong>{step.number}.</strong><div><span>{step.instruction}</span>{(step.minutes || step.temperatureC) && <small>{step.minutes ? `${step.minutes} min` : ''}{step.minutes && step.temperatureC ? ' · ' : ''}{step.temperatureC ? `${step.temperatureC} °C` : ''}</small>}{step.cue && <em>Fíjate: {step.cue}</em>}</div></li>)}</ol>
+    <div className="recipe-panel-end-spacer" aria-hidden="true" />
+  </div>;
+
+  const recommendationRows = recipe.ingredients.flatMap(ingredient => {
+    const alternatives = getIngredientAlternatives(ingredient.name, recipe.substitutions, ingredient.optional);
+    return alternatives.slice(0, 1).map(alternative => `${ingredient.name}: ${alternative}`);
+  });
+  const recommendations = Array.from(new Set([...recipe.substitutions, ...recommendationRows])).slice(0, 12);
+
   const panelConfig: Record<Exclude<RecipePanel, null>, { title: string; eyebrow: string; content: ReactNode }> = {
     ingredients: { title: 'Ingredientes', eyebrow: 'LO QUE NECESITAS', content: ingredientPanel },
     prep: { title: 'Mise en place', eyebrow: 'PREPARACIÓN PREVIA', content: <><ol className="expanded-list">{recipe.miseEnPlace.map((item, i) => <li key={`${item}-${i}`}><strong>{i + 1}.</strong> {item}</li>)}</ol><div className="recipe-panel-end-spacer" aria-hidden="true" /></> },
+    elaboration: { title: 'Elaboración', eyebrow: 'PASO A PASO', content: elaborationPanel },
     critical: { title: 'Puntos críticos', eyebrow: 'PARA QUE SALGA BIEN', content: <div className="panel-advice warning">{recipe.criticalPoints.map((point, i) => <p key={`${point}-${i}`}><AlertTriangle size={17} /> <span>{point}</span></p>)}<div className="recipe-panel-end-spacer" aria-hidden="true" /></div> },
-    recommendations: { title: 'Recomendaciones', eyebrow: 'CONSEJOS Y SUSTITUCIONES', content: <div className="panel-advice">{recipe.substitutions.map((point, i) => <p key={`${point}-${i}`}><Leaf size={17} /> <span>{point}</span></p>)}<div className="recipe-panel-end-spacer" aria-hidden="true" /></div> }
+    recommendations: { title: 'Recomendaciones', eyebrow: 'CONSEJOS Y SUSTITUCIONES', content: <div className="panel-advice">{recommendations.map((point, i) => <p key={`${point}-${i}`}><Leaf size={17} /> <span>{point}</span></p>)}<div className="recipe-panel-end-spacer" aria-hidden="true" /></div> }
   };
   const currentPanel = activePanel ? panelConfig[activePanel] : null;
 
@@ -158,8 +194,8 @@ export function RecipePage() {
           <section className="servings-card"><div><span className="eyebrow">COMENSALES</span><strong>Ajusta la receta</strong></div><NumberStepper value={servings} onChange={setServings} /></section>
           <button className="secondary-button recipe-revision-launch recipe-revision-priority" type="button" onClick={() => { setRevisionText(''); setRevisionError(undefined); setIsRevisionOpen(true); }}><WandSparkles size={18} /> Personalizar receta</button>
           <RecipeSourceNote recipe={recipe} />
-          <section className="recipe-action-grid" aria-label="Información de la receta"><button type="button" onClick={() => setActivePanel('ingredients')}><ShoppingBasket size={22} /><strong>Ingredientes</strong><span>Lo que necesitas</span></button><button type="button" onClick={() => setActivePanel('prep')}><Sparkles size={22} /><strong>Mise en place</strong><span>Preparación previa</span></button><button type="button" onClick={() => setActivePanel('critical')}><AlertTriangle size={22} /><strong>Puntos críticos</strong><span>Lo importante para acertar</span></button><button type="button" onClick={() => setActivePanel('recommendations')}><Leaf size={22} /><strong>Recomendaciones</strong><span>Consejos y sustituciones</span></button></section>
-          <section className="trust-strip compact-trust-strip"><ShieldCheck size={18} /><div><strong>Todo preparado</strong><span>La elaboración completa está en el modo cocina para evitar información duplicada.</span></div></section>
+          <section className="recipe-action-grid recipe-action-grid-five" aria-label="Información de la receta"><button type="button" onClick={() => setActivePanel('ingredients')}><ShoppingBasket size={22} /><strong>Ingredientes</strong><span>Lo que necesitas</span></button><button type="button" onClick={() => setActivePanel('prep')}><Sparkles size={22} /><strong>Mise en place</strong><span>Preparación previa</span></button><button type="button" onClick={() => setActivePanel('elaboration')}><ChefHat size={22} /><strong>Elaboración</strong><span>Todos los pasos</span></button><button type="button" onClick={() => setActivePanel('critical')}><AlertTriangle size={22} /><strong>Puntos críticos</strong><span>Lo importante para acertar</span></button><button type="button" onClick={() => setActivePanel('recommendations')}><Leaf size={22} /><strong>Recomendaciones</strong><span>Consejos y sustituciones</span></button></section>
+          <section className="trust-strip compact-trust-strip"><ShieldCheck size={18} /><div><strong>Todo preparado</strong><span>Ingredientes, cantidades, pasos y tiempos revisados antes de cocinar.</span></div></section>
           <div className="cook-cta"><button onClick={startCooking}><Play size={20} fill="currentColor" /> Empezar a cocinar</button></div>
           <div className="recipe-save-actions recipe-save-actions-final">
             <button className="secondary-button" type="button" onClick={saveRecipe}><Bookmark size={18} fill={isSaved ? 'currentColor' : 'none'} /> {isSaved ? 'Guardada en Mis recetas' : 'Guardar en Mis recetas'}</button>
@@ -176,6 +212,5 @@ export function RecipePage() {
   );
 }
 
+function shoppingItemId(recipeId: string, ingredientName: string) { return `recipe:${recipeId}:${ingredientName.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-')}`; }
 function appendSentence(current: string, transcript: string): string { const base = current.trimEnd(); const clean = transcript.trim(); return base ? `${base}${/[.!?…]$/.test(base) ? ' ' : '. '}${clean}` : clean; }
-function normalize(value: string): string { return value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
-function shoppingItemId(recipeId: string, ingredientName: string): string { return `${recipeId}:${normalize(ingredientName).replace(/\s+/g, '-')}`; }

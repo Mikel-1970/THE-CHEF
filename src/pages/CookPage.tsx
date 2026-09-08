@@ -1,19 +1,22 @@
 import { ArrowLeft, Camera, CheckCircle2, ChevronLeft, ChevronRight, Clock3, ImagePlus, Pause, Play, RotateCcw, ScreenShare, Sparkles, Thermometer } from 'lucide-react';
-import { ChangeEvent, useEffect, useRef, useState, type ReactNode } from 'react';
+import { ChangeEvent, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { BottomNav } from '../components/BottomNav';
 import { evaluateDishPhoto, getRecipeImage, getRecipeSourcePhoto, saveRecipeResultPhoto, type DishEvaluation } from '../services/mediaGateway';
 import { getActiveRecipe, getRecipeById } from '../services/recipeCatalog';
 import '../cook-enhancements.css';
 
+type CookSessionState = { index: number; seconds: number; running: boolean; updatedAt: number };
+
 export function CookPage() {
   const { id } = useParams();
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const recipe = getRecipeById(id) ?? getActiveRecipe(id);
-  const [index, setIndex] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const [running, setRunning] = useState(false);
+  const restored = useMemo(() => loadCookState(id), [id]);
+  const [index, setIndex] = useState(restored?.index ?? 0);
+  const [seconds, setSeconds] = useState(restored?.seconds ?? 0);
+  const [running, setRunning] = useState(restored?.running ?? false);
   const [finished, setFinished] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
   const [evaluation, setEvaluation] = useState<DishEvaluation>();
@@ -23,15 +26,27 @@ export function CookPage() {
   const [sourcePhotoUrl, setSourcePhotoUrl] = useState<string>();
   const [referenceImageError, setReferenceImageError] = useState(false);
   const wakeLock = useRef<any>(null);
+  const previousIndex = useRef(index);
   const servings = Number(params.get('servings') || recipe?.baseServings || 4);
   const recipeId = recipe?.id;
-  const stepMinutes = recipe?.steps[index]?.minutes || 0;
+  const safeIndex = Math.min(index, Math.max(0, (recipe?.steps.length ?? 1) - 1));
+  const stepMinutes = recipe?.steps[safeIndex]?.minutes || 0;
 
   useEffect(() => {
     if (!recipeId || finished) return;
+    if (previousIndex.current === safeIndex) {
+      if (!restored && seconds === 0 && stepMinutes > 0) setSeconds(stepMinutes * 60);
+      return;
+    }
+    previousIndex.current = safeIndex;
     setSeconds(stepMinutes * 60);
     setRunning(false);
-  }, [recipeId, index, stepMinutes, finished]);
+  }, [recipeId, safeIndex, stepMinutes, finished]);
+
+  useEffect(() => {
+    if (!recipeId || finished) return;
+    saveCookState(recipeId, { index: safeIndex, seconds, running, updatedAt: Date.now() });
+  }, [recipeId, safeIndex, seconds, running, finished]);
 
   useEffect(() => {
     if (!running) return;
@@ -116,7 +131,7 @@ export function CookPage() {
     const celebration = evaluation && evaluation.score >= 8.5;
     return (
       <CookFrame finish>
-        <header className="cook-header"><button onClick={() => setFinished(false)} aria-label="Volver al último paso"><ArrowLeft size={21} /></button><div><span>Resultado final</span><strong>{recipe.title}</strong></div><span /></header>
+        <header className="cook-header"><button className="cook-return-recipe" onClick={() => setFinished(false)} aria-label="Volver al último paso"><ArrowLeft size={21} /><span>Último paso</span></button><div><span>Resultado final</span><strong>{recipe.title}</strong></div><span /></header>
         <main className="cook-finish-main">
           <div className={`finish-badge ${celebration ? 'celebrate' : ''}`}>{evaluation ? (celebration ? '👏' : <CheckCircle2 size={34} />) : <Camera size={34} />}</div>
           <h1>{evaluation ? (celebration ? '¡Enhorabuena!' : 'Plato terminado') : '¿Cómo te ha quedado?'}</h1>
@@ -140,16 +155,15 @@ export function CookPage() {
     );
   }
 
-  const safeIndex = Math.min(index, Math.max(0, recipe.steps.length - 1));
   const step = recipe.steps[safeIndex];
-  if (!step) return <CookFrame><header className="cook-header"><button onClick={() => navigate(`/receta/${recipe.id}`)} aria-label="Volver"><ArrowLeft size={21} /></button><div><span>Modo Cocina</span><strong>{recipe.title}</strong></div><span /></header><main className="cook-main"><p className="cook-instruction">Esta receta no contiene pasos de elaboración válidos.</p></main></CookFrame>;
+  if (!step) return <CookFrame><header className="cook-header"><button className="cook-return-recipe" onClick={() => navigate(`/receta/${recipe.id}`)} aria-label="Volver a la receta"><ArrowLeft size={21} /><span>Volver a receta</span></button><div><span>Modo Cocina</span><strong>{recipe.title}</strong></div><span /></header><main className="cook-main"><p className="cook-instruction">Esta receta no contiene pasos de elaboración válidos.</p></main></CookFrame>;
 
   const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
   const secs = (seconds % 60).toString().padStart(2, '0');
 
   return (
     <CookFrame>
-      <header className="cook-header"><button onClick={() => navigate(`/receta/${recipe.id}`)} aria-label="Volver a la receta"><ArrowLeft size={21} /></button><div><span>Modo Cocina</span><strong>{recipe.title}</strong></div><span /></header>
+      <header className="cook-header"><button className="cook-return-recipe" onClick={() => navigate(`/receta/${recipe.id}`)} aria-label="Volver a la receta"><ArrowLeft size={21} /><span>Volver a receta</span></button><div><span>Modo Cocina</span><strong>{recipe.title}</strong></div><span /></header>
       <div className="cook-progress"><span style={{ width: `${((safeIndex + 1) / recipe.steps.length) * 100}%` }} /></div>
       <main className="cook-main">
         <div className="cook-step-label">PASO {safeIndex + 1} DE {recipe.steps.length}</div>
@@ -172,4 +186,27 @@ function CookFrame({ children, finish = false }: { children: ReactNode; finish?:
 function safeSessionGet(key: string): string | undefined {
   try { return sessionStorage.getItem(key) ?? undefined; }
   catch { return undefined; }
+}
+
+function loadCookState(id?: string): CookSessionState | undefined {
+  if (!id) return undefined;
+  try {
+    const raw = sessionStorage.getItem(`chef:cook-state:${id}`);
+    if (!raw) return undefined;
+    const parsed = JSON.parse(raw) as Partial<CookSessionState>;
+    if (!Number.isFinite(parsed.index) || !Number.isFinite(parsed.seconds) || !Number.isFinite(parsed.updatedAt)) return undefined;
+    let seconds = Math.max(0, Number(parsed.seconds));
+    let running = Boolean(parsed.running);
+    if (running) {
+      const elapsed = Math.max(0, Math.floor((Date.now() - Number(parsed.updatedAt)) / 1000));
+      seconds = Math.max(0, seconds - elapsed);
+      if (seconds === 0) running = false;
+    }
+    return { index: Math.max(0, Number(parsed.index)), seconds, running, updatedAt: Date.now() };
+  } catch { return undefined; }
+}
+
+function saveCookState(id: string, state: CookSessionState) {
+  try { sessionStorage.setItem(`chef:cook-state:${id}`, JSON.stringify(state)); }
+  catch { /* La cocina continúa aunque el navegador no permita sessionStorage. */ }
 }

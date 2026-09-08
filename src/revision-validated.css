@@ -1,0 +1,317 @@
+/* Revisión validada 2026-09-08 · estilos de cierre */
+
+/* Safe areas y scroll: ningún contenido puede quedar oculto bajo la navegación inferior. */
+.page-content.nav-safe,
+.recipe-content.nav-safe {
+  padding-bottom: calc(154px + env(safe-area-inset-bottom)) !important;
+}
+
+.recipe-panel-sheet {
+  min-height: 100dvh;
+}
+
+.recipe-panel-body {
+  min-height: 0;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom)) !important;
+  scroll-padding-bottom: calc(96px + env(safe-area-inset-bottom));
+}
+
+.recipe-panel-end-spacer {
+  height: calc(96px + env(safe-area-inset-bottom)) !important;
+  min-height: calc(96px + env(safe-area-inset-bottom)) !important;
+}
+
+/* Ajustes · datos de usuario */
+.settings-user-fields {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.settings-user-fields > label {
+  display: grid;
+  gap: 5px;
+}
+
+.settings-user-fields > label > span {
+  color: #68705f;
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.settings-user-fields input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid rgba(63,84,36,.14);
+  border-radius: 12px;
+  background: #fffdf8;
+  color: #35452a;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.password-field {
+  display: grid;
+  grid-template-columns: 28px minmax(0,1fr) 44px;
+  align-items: center;
+  min-height: 46px;
+  border: 1px solid rgba(63,84,36,.14);
+  border-radius: 12px;
+  background: #fffdf8;
+  padding-left: 10px;
+  color: #657257;
+}
+
+.password-field input {
+  border: 0;
+  min-height: 44px;
+  padding-left: 0;
+  background: transparent;
+  outline: 0;
+}
+
+.password-field button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: #405626;
+  display: grid;
+  place-items: center;
+}
+
+/* 16 avatares: selección compacta y uniforme. */
+.avatar-gallery {
+  grid-template-columns: repeat(4, minmax(0,1fr)) !important;
+}
+
+/* Petición principal simplificada */
+.desire-box-simple {
+  position: relative;
+}
+
+.desire-box-simple.confirmed {
+  box-shadow: 0 0 0 2px rgba(64,86,38,.14);
+}
+
+.voice-action-two {
+  grid-template-columns: 48px 48px !important;
+}
+
+.contextual-options-section {
+  margin-top: 14px;
+}
+
+.contextual-options-toggle {
+  margin-top: 0;
+}
+
+.contextual-options-panel {
+  margin-top: 10px;
+  display: grid;
+  gap: 12px;
+}
+
+.desire-generate-action {
+  margin-top: 14px;
+}
+
+/* Despensa y nevera */
+.stock-location-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.stock-location-switch button {
+  min-height: 44px;
+  border: 1px solid rgba(63,84,36,.14);
+  border-radius: 13px;
+  background: #fffaf1;
+  color: #57634b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-weight: 800;
+}
+
+.stock-location-switch button.active {
+  background: #405626;
+  color: white;
+  border-color: #405626;
+}
+
+.stock-location-section {
+  margin-top: 22px;
+}
+
+.pantry-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.pantry-category-editor {
+  display: grid;
+  gap: 4px;
+}
+
+.pantry-category-editor > span {
+  color: #777b70;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.pantry-category-editor select {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid rgba(63,84,36,.14);
+  border-radius: 11px;
+  background: #fffdf8;
+  color: #35452a;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: .78rem;
+}
+
+.stock-card-actions {
+  display: grid;
+  gap: 7px;
+  align-self: stretch;
+  align-content: center;
+}
+
+.pantry-stock-card {
+  grid-template-columns: minmax(0,1fr) 42px !important;
+}
+
+/* Lista de compra agrupada e integrada */
+.shopping-category-list {
+  display: grid;
+  gap: 22px;
+}
+
+.shopping-category .section-label {
+  margin: 0 2px 8px;
+}
+
+.shopping-stock-card {
+  grid-template-columns: 42px minmax(0,1fr) 42px !important;
+}
+
+.bought-stock-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 4px;
+}
+
+.bought-stock-actions button {
+  min-height: 38px;
+  border: 1px solid rgba(63,84,36,.13);
+  border-radius: 11px;
+  background: #eef0e3;
+  color: #405626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: .68rem;
+  font-weight: 800;
+}
+
+/* Estados de ingredientes */
+.recipe-ingredient-status {
+  align-items: flex-start !important;
+}
+
+.recipe-ingredient-main {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.ingredient-optional {
+  display: inline-block;
+  margin-left: 5px;
+  color: #8b7a52;
+  font-weight: 700;
+}
+
+.ingredient-substitute {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  color: #58723a;
+  font-size: .68rem;
+  line-height: 1.35;
+}
+
+.recipe-ingredient-status.missing {
+  border-color: rgba(179,108,47,.22);
+}
+
+.recipe-elaboration-list li {
+  display: grid;
+  grid-template-columns: 28px minmax(0,1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.recipe-elaboration-list li > div {
+  display: grid;
+  gap: 5px;
+}
+
+.recipe-elaboration-list small,
+.recipe-elaboration-list em {
+  color: #6d7465;
+  font-size: .72rem;
+}
+
+.recipe-elaboration-list em {
+  color: #7d683a;
+}
+
+/* Modo cocina · retorno visible */
+.cook-return-recipe {
+  width: auto !important;
+  min-width: 44px;
+  padding: 0 9px !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 5px;
+}
+
+.cook-return-recipe span {
+  font-size: .62rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* En pantallas amplias, los cinco accesos de receta se muestran en una sola fila. */
+@media (min-width: 640px) {
+  .recipe-action-grid-five {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .pantry-edit-grid,
+  .bought-stock-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .cook-return-recipe span {
+    display: none;
+  }
+}
