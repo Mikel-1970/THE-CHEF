@@ -1,17 +1,14 @@
-name: Validar El Chef
-
+name: Validar The Chef
 on:
   push:
     branches-ignore: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar repositorio
@@ -22,5 +19,7 @@ jobs:
           node-version: 24
       - name: Instalar dependencias
         run: npm install
+      - name: Auditoría estática Fase 1
+        run: npm run audit:phase1
       - name: Compilar y validar TypeScript
         run: npm run build
