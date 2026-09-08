@@ -17,6 +17,7 @@ export type IngredientInput = {
   quantity?: number;
   unit?: string;
   priority?: boolean;
+  category?: string;
 };
 
 export type CookingRequest = {
