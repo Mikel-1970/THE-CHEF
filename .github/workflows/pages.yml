@@ -1,4 +1,4 @@
-name: Publicar El Chef en GitHub Pages
+name: Publicar The Chef en GitHub Pages
 
 on:
   push:
@@ -26,10 +26,16 @@ jobs:
       - name: Preparar Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Instalar dependencias
         run: npm install
+
+      - name: Comprobar vulnerabilidades críticas de producción
+        run: npm audit --omit=dev --audit-level=critical
+
+      - name: Auditoría estática Fase 1
+        run: npm run audit:phase1
 
       - name: Generar metadatos de versión
         id: meta
