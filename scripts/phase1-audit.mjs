@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 const read=p=>fs.readFileSync(p,'utf8'); const checks=[]; const ok=(name,condition)=>checks.push({name,condition});
-const app=read('src/App.tsx'),shell=read('src/components/AppShell.tsx'),home=read('src/pages/HomePage.tsx'),recipe=read('src/pages/RecipePage.tsx'),results=read('src/pages/ResultsPage.tsx'),cook=read('src/pages/CookPage.tsx'),pantry=read('src/pages/PantryCookPage.tsx'),photo=read('src/pages/PhotoRecipePage.tsx'),shopping=read('src/pages/ShoppingListPage.tsx'),context=read('src/AppContext.tsx'),i18n=read('src/components/UiI18n.tsx'),types=read('src/domain/types.ts'),gateway=read('src/services/aiProposalGateway.ts'),hybrid=read('src/services/hybridRecommendationEngine.ts'),storage=read('src/services/storage.ts'),access=read('src/pages/AccessPage.tsx'),settings=read('src/pages/SettingsPage.tsx'),localAuth=read('src/services/localAuth.ts'),tour=read('src/components/GuidedTour.tsx'),pkg=JSON.parse(read('package.json'));
+const app=read('src/App.tsx'),shell=read('src/components/AppShell.tsx'),home=read('src/pages/HomePage.tsx'),recipe=read('src/pages/RecipePage.tsx'),results=read('src/pages/ResultsPage.tsx'),cook=read('src/pages/CookPage.tsx'),pantry=read('src/pages/PantryCookPage.tsx'),photo=read('src/pages/PhotoRecipePage.tsx'),shopping=read('src/pages/ShoppingListPage.tsx'),context=read('src/AppContext.tsx'),i18n=read('src/components/UiI18n.tsx'),types=read('src/domain/types.ts'),gateway=read('src/services/aiProposalGateway.ts'),hybrid=read('src/services/hybridRecommendationEngine.ts'),mock=read('src/services/mockRecommendationEngine.ts'),guard=read('src/services/restrictionGuard.ts'),storage=read('src/services/storage.ts'),access=read('src/pages/AccessPage.tsx'),settings=read('src/pages/SettingsPage.tsx'),localAuth=read('src/services/localAuth.ts'),tour=read('src/components/GuidedTour.tsx'),pkg=JSON.parse(read('package.json'));
 ok('Ruta Crear tu receta',app.includes('/crear-receta'));
 ok('Ruta Tutorial',app.includes('/tutorial'));
 ok('Inicio sin avatar flotante',shell.includes('!isHome && !hideProfile'));
@@ -32,5 +32,10 @@ ok('Tutorial sin BottomNav obsoleto',!tour.includes('data-tour="bottom-nav"')&&!
 ok('Contraseña no expuesta en Ajustes',!settings.includes('settings.loginPassword')&&!settings.includes('Mostrar contraseña'));
 ok('Credencial local derivada con PBKDF2',localAuth.includes("name:'PBKDF2'")&&localAuth.includes("hash:'SHA-256'")&&localAuth.includes('150000'));
 ok('Acceso migra contraseña legado',access.includes('hasLocalCredential')&&access.includes('saveLocalCredential')&&access.includes('loginPassword: undefined'));
+ok('Restricciones deterministas en fallback',mock.includes('recipeViolatesRestrictions')&&guard.includes('GROUPS'));
+ok('Restricciones verificadas tras generación IA',gateway.includes('assertRecipeRestrictions(recipe,request.restrictions)'));
+ok('Restricciones disponibles en Abre la nevera',pantry.includes('Restricciones / exclusiones')&&pantry.includes('restrictions:splitList(restrictions)'));
+ok('Tengo y Me falta persisten por receta',recipe.includes('loadMissingIngredients')&&recipe.includes('saveMissingIngredients'));
+ok('Temporizador único global',cook.includes('ACTIVE_TIMER_KEY')&&cook.includes('claimActiveTimer')&&cook.includes('clearActiveTimer'));
 
 const failed=checks.filter(c=>!c.condition);for(const c of checks)console.log(`${c.condition?'✓':'✗'} ${c.name}`);if(failed.length){console.error(`\n${failed.length} comprobaciones fallidas.`);process.exit(1)}console.log(`\n${checks.length} comprobaciones de Fase 1 superadas.`);
