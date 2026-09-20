@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 const read=p=>fs.readFileSync(p,'utf8'); const checks=[]; const ok=(name,condition)=>checks.push({name,condition});
-const app=read('src/App.tsx'),shell=read('src/components/AppShell.tsx'),home=read('src/pages/HomePage.tsx'),recipe=read('src/pages/RecipePage.tsx'),cook=read('src/pages/CookPage.tsx'),pantry=read('src/pages/PantryCookPage.tsx'),photo=read('src/pages/PhotoRecipePage.tsx'),shopping=read('src/pages/ShoppingListPage.tsx'),context=read('src/AppContext.tsx'),i18n=read('src/components/UiI18n.tsx'),types=read('src/domain/types.ts'),gateway=read('src/services/aiProposalGateway.ts'),pkg=JSON.parse(read('package.json'));
+const app=read('src/App.tsx'),shell=read('src/components/AppShell.tsx'),home=read('src/pages/HomePage.tsx'),recipe=read('src/pages/RecipePage.tsx'),results=read('src/pages/ResultsPage.tsx'),cook=read('src/pages/CookPage.tsx'),pantry=read('src/pages/PantryCookPage.tsx'),photo=read('src/pages/PhotoRecipePage.tsx'),shopping=read('src/pages/ShoppingListPage.tsx'),context=read('src/AppContext.tsx'),i18n=read('src/components/UiI18n.tsx'),types=read('src/domain/types.ts'),gateway=read('src/services/aiProposalGateway.ts'),pkg=JSON.parse(read('package.json'));
 ok('Ruta Crear tu receta',app.includes('/crear-receta'));
 ok('Ruta Tutorial',app.includes('/tutorial'));
 ok('Inicio sin avatar flotante',shell.includes('!isHome && !hideProfile'));
@@ -13,6 +13,8 @@ ok('Dos propuestas',pantry.includes('slice(0,2)'));
 ok('Tiempo máximo 120',pantry.includes('max={120}'));
 ok('Recipe sin panel elaboración duplicado',!recipe.includes("'elaboration'"));
 ok('CTA Elaboración',recipe.includes('> Elaboración</button>'));
+ok('Ficha título-resumen-foto-nutrición',recipe.indexOf('recipe-title-block')<recipe.indexOf('recipe-summary-content')&&recipe.indexOf('recipe-summary-content')<recipe.indexOf('recipe-hero')&&recipe.indexOf('recipe-hero')<recipe.indexOf('nutrition-card nutrition-card-priority'));
+ok('Imagen preparada antes de abrir ficha',results.includes('await getRecipeImage(recipe)')&&results.indexOf('await getRecipeImage(recipe)')<results.indexOf('navigate(`/receta/${recipe.id}`)'));
 ok('Variantes versionadas',recipe.includes('· v${version}'));
 ok('Timer con deadline real',cook.includes('deadline')&&cook.includes('Date.now()'));
 ok('Cook sin BottomNav',!cook.includes('BottomNav'));
