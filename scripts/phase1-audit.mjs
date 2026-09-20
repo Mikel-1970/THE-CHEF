@@ -15,6 +15,7 @@ ok('Recipe sin panel elaboración duplicado',!recipe.includes("'elaboration'"));
 ok('CTA Elaboración',recipe.includes('> Elaboración</button>'));
 ok('Ficha título-resumen-foto-nutrición',recipe.indexOf('recipe-title-block')<recipe.indexOf('recipe-summary-content')&&recipe.indexOf('recipe-summary-content')<recipe.indexOf('recipe-hero')&&recipe.indexOf('recipe-hero')<recipe.indexOf('nutrition-card nutrition-card-priority'));
 ok('Imagen preparada antes de abrir ficha',results.includes('await getRecipeImage(recipe)')&&results.indexOf('await getRecipeImage(recipe)')<results.indexOf('navigate(`/receta/${recipe.id}`)'));
+ok('Reintento de imagen sin regenerar receta',results.includes('pendingRecipe')&&results.includes('getRecipeById(pendingRecipe.recipeId)'));
 ok('Variantes versionadas',recipe.includes('· v${version}'));
 ok('Timer con deadline real',cook.includes('deadline')&&cook.includes('Date.now()'));
 ok('Cook sin BottomNav',!cook.includes('BottomNav'));
