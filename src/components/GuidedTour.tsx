@@ -35,11 +35,6 @@ const HOME_TIPS: TutorialTip[] = [
     body: 'Desde aquí puedes entrar directamente en Mis recetas, Favoritas, Historial y Cesta de compra.'
   },
   {
-    selector: '[data-tour="bottom-nav"]',
-    title: 'Menú principal en Inicio',
-    body: 'En la pantalla de Inicio tienes el menú completo. El botón central muestra el avatar que hayas elegido como usuario.'
-  },
-  {
     selector: '[data-tour="profile"]',
     title: 'Perfil y ajustes',
     body: 'Desde tu avatar puedes abrir Ajustes y cambiar tus datos, preferencias, permisos y personaje. Al navegar por la app, el menú completo se convierte en un botón flotante con ese mismo avatar.'
@@ -68,7 +63,7 @@ function tipsForPath(pathname: string): TutorialTip[] {
   ];
   if (pathname.startsWith('/receta/')) return [
     { selector: '.recipe-action-grid', title: 'Consulta lo importante', body: 'Ingredientes, Mise en place, Puntos críticos y Recomendaciones están separados para que puedas consultarlos sin duplicar la elaboración.' },
-    { selector: '.cook-cta', title: 'Pasa al modo cocina', body: 'Cuando quieras empezar, entra en Empezar a cocinar para avanzar paso a paso con tiempos, temperaturas y temporizadores.' }
+    { selector: '.cook-cta', title: 'Pasa al modo cocina', body: 'Cuando quieras empezar, entra en Elaboración para avanzar paso a paso con tiempos, temperaturas y temporizador.' }
   ];
   if (pathname.startsWith('/cocinar/')) return [
     { selector: '.cook-main', title: 'Sigue un paso cada vez', body: 'Cada pantalla muestra únicamente lo necesario para ese paso: instrucción, tiempo, temperatura y señales visuales.' },
@@ -84,7 +79,7 @@ function tipsForPath(pathname: string): TutorialTip[] {
   ];
   if (pathname.startsWith('/tecnicas')) return [
     { selector: '.technique-input-box', title: 'Pregunta por una técnica', body: 'Escribe o dicta la preparación que quieres aprender. El Chef generará una ficha reutilizable.' },
-    { selector: '.recipe-action-grid', title: 'Consulta antes de empezar', body: 'Revisa Ingredientes, Mise en place, Recomendaciones y Puntos críticos, y después entra en Empezar técnica.' }
+    { selector: '.recipe-action-grid', title: 'Consulta antes de empezar', body: 'Revisa Ingredientes, Mise en place, Recomendaciones y Puntos críticos, y después entra en la elaboración de la técnica.' }
   ];
   if (pathname.startsWith('/buscar')) return [
     { selector: '.search-box', title: 'Busca una receta', body: 'Utiliza este apartado cuando quieras localizar una receta concreta por nombre, ingrediente o idea.' }
