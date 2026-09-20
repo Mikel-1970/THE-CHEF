@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 const read=p=>fs.readFileSync(p,'utf8'); const checks=[]; const ok=(name,condition)=>checks.push({name,condition});
-const app=read('src/App.tsx'),shell=read('src/components/AppShell.tsx'),home=read('src/pages/HomePage.tsx'),recipe=read('src/pages/RecipePage.tsx'),results=read('src/pages/ResultsPage.tsx'),cook=read('src/pages/CookPage.tsx'),pantry=read('src/pages/PantryCookPage.tsx'),photo=read('src/pages/PhotoRecipePage.tsx'),shopping=read('src/pages/ShoppingListPage.tsx'),context=read('src/AppContext.tsx'),i18n=read('src/components/UiI18n.tsx'),types=read('src/domain/types.ts'),gateway=read('src/services/aiProposalGateway.ts'),pkg=JSON.parse(read('package.json'));
+const app=read('src/App.tsx'),shell=read('src/components/AppShell.tsx'),home=read('src/pages/HomePage.tsx'),recipe=read('src/pages/RecipePage.tsx'),results=read('src/pages/ResultsPage.tsx'),cook=read('src/pages/CookPage.tsx'),pantry=read('src/pages/PantryCookPage.tsx'),photo=read('src/pages/PhotoRecipePage.tsx'),shopping=read('src/pages/ShoppingListPage.tsx'),context=read('src/AppContext.tsx'),i18n=read('src/components/UiI18n.tsx'),types=read('src/domain/types.ts'),gateway=read('src/services/aiProposalGateway.ts'),hybrid=read('src/services/hybridRecommendationEngine.ts'),storage=read('src/services/storage.ts'),access=read('src/pages/AccessPage.tsx'),settings=read('src/pages/SettingsPage.tsx'),localAuth=read('src/services/localAuth.ts'),tour=read('src/components/GuidedTour.tsx'),pkg=JSON.parse(read('package.json'));
 ok('Ruta Crear tu receta',app.includes('/crear-receta'));
 ok('Ruta Tutorial',app.includes('/tutorial'));
 ok('Inicio sin avatar flotante',shell.includes('!isHome && !hideProfile'));
@@ -26,4 +26,11 @@ ok('Capa multidioma activa',app.includes('<UiI18n>')&&i18n.includes('Apri il fri
 ok('Compra manual persiste entre recetas',context.includes('existingIsManual')&&context.includes('!item.recipeId || item.recipeId === recipeId'));
 ok('Proposal nutrition',/nutritionPerServing\?\s*:\s*NutritionSummary/.test(types));
 ok('jsPDF parcheado',/^\^?4\.2\.1$/.test(pkg.dependencies?.jspdf??''));
+ok('Inventario disponible separado de prioridades',pantry.includes("priority:selected.has")&&pantry.includes("pantryIngredients:available"));
+ok('Preferencia IA afecta 0-2 propuestas',hybrid.includes("Math.round(preference/50)")&&!hybrid.includes("Math.min(1,Math.round(preference/50))"));
+ok('Tutorial sin BottomNav obsoleto',!tour.includes('data-tour="bottom-nav"')&&!tour.includes('Empezar a cocinar'));
+ok('Contraseña no expuesta en Ajustes',!settings.includes('settings.loginPassword')&&!settings.includes('Mostrar contraseña'));
+ok('Credencial local derivada con PBKDF2',localAuth.includes("name:'PBKDF2'")&&localAuth.includes("hash:'SHA-256'")&&localAuth.includes('150000'));
+ok('Acceso migra contraseña legado',access.includes('hasLocalCredential')&&access.includes('saveLocalCredential')&&access.includes('loginPassword: undefined'));
+
 const failed=checks.filter(c=>!c.condition);for(const c of checks)console.log(`${c.condition?'✓':'✗'} ${c.name}`);if(failed.length){console.error(`\n${failed.length} comprobaciones fallidas.`);process.exit(1)}console.log(`\n${checks.length} comprobaciones de Fase 1 superadas.`);
