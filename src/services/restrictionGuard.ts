@@ -46,6 +46,7 @@ function restrictionTerms(raw:string):string[]{
 }
 function containsTerm(text:string,term:string){
   const clean=normalize(term);
-  return clean.length>=2&&(text===clean||text.includes(` ${clean} `)||text.startsWith(`${clean} `)||text.endsWith(` ${clean}`));
+  if(clean.length<2)return false;
+  return (` ${text} `).includes(` ${clean} `)||text.includes(clean);
 }
-function normalize(value:string){return ` ${value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()} `.replace(/\s+/g,' ')}
+function normalize(value:string){return value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim()}
