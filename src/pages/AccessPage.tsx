@@ -1,6 +1,7 @@
 import { Eye, EyeOff, KeyRound, LockKeyhole, Mic, UserRound } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
 import { useApp } from '../AppContext';
+import { hasLocalCredential, saveLocalCredential, verifyLocalCredential } from '../services/localAuth';
 import { loadMicrophonePreference, requestMicrophoneAccess, saveMicrophonePreference } from '../utils/microphonePreference';
 import '../entry-flow.css';
 
@@ -19,7 +20,7 @@ export function AccessPage({ onAuthenticated }: Props) {
   const [error, setError] = useState('');
   const [micStep, setMicStep] = useState(false);
   const [micBusy, setMicBusy] = useState(false);
-  const hasRegisteredUser = useMemo(() => Boolean(settings.loginUser && settings.loginPassword), [settings.loginPassword, settings.loginUser]);
+  const hasRegisteredUser = useMemo(() => Boolean(settings.loginUser && (hasLocalCredential(settings.loginUser) || settings.loginPassword)), [settings.loginPassword, settings.loginUser]);
 
   const finishAuthentication = () => {
     try { sessionStorage.setItem('chef:auth:session:v1', '1'); } catch { /* sin persistencia */ }
@@ -31,7 +32,7 @@ export function AccessPage({ onAuthenticated }: Props) {
     else finishAuthentication();
   };
 
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
     setError('');
     const cleanUser = user.trim();
@@ -41,7 +42,18 @@ export function AccessPage({ onAuthenticated }: Props) {
         setError('Todavía no hay ningún usuario registrado en este dispositivo. Pulsa Registro.');
         return;
       }
-      if (cleanUser !== settings.loginUser || password !== settings.loginPassword) {
+      if (cleanUser !== settings.loginUser) {
+        setError('Usuario o contraseña incorrectos.');
+        return;
+      }
+      let valid=false;
+      if (hasLocalCredential(cleanUser)) valid=await verifyLocalCredential(cleanUser,password);
+      else if (settings.loginPassword && password===settings.loginPassword) {
+        await saveLocalCredential(cleanUser,password);
+        updateSettings({ loginPassword: undefined });
+        valid=true;
+      }
+      if (!valid) {
         setError('Usuario o contraseña incorrectos.');
         return;
       }
@@ -58,7 +70,8 @@ export function AccessPage({ onAuthenticated }: Props) {
         setError('Las contraseñas no coinciden.');
         return;
       }
-      updateSettings({ displayName: name.trim(), loginUser: cleanUser, loginPassword: password });
+      await saveLocalCredential(cleanUser,password);
+      updateSettings({ displayName: name.trim(), loginUser: cleanUser, loginPassword: undefined });
       continueAfterCredentials();
       return;
     }
@@ -75,12 +88,15 @@ export function AccessPage({ onAuthenticated }: Props) {
       setError('Introduce dos veces la nueva contraseña.');
       return;
     }
-    updateSettings({ loginPassword: password });
+    await saveLocalCredential(cleanUser,password);
+    updateSettings({ loginPassword: undefined });
     setPassword('');
     setConfirmPassword('');
     setMode('login');
     setError('Contraseña actualizada. Ya puedes iniciar sesión.');
   };
+
+  const safeSubmit = async (event: FormEvent) => { try { await submit(event); } catch (err) { setError(err instanceof Error ? err.message : 'No se ha podido proteger la credencial local.'); } };
 
   const allowMicrophone = async () => {
     if (micBusy) return;
@@ -122,7 +138,7 @@ export function AccessPage({ onAuthenticated }: Props) {
         <h1>{mode === 'login' ? 'Bienvenido' : mode === 'register' ? 'Crear usuario' : 'Recuperar contraseña'}</h1>
         <p>{mode === 'login' ? 'Identifícate para entrar en tu cocina.' : mode === 'register' ? 'Crea el usuario de acceso para esta versión de The Chef.' : 'Define una nueva contraseña para el usuario registrado.'}</p>
 
-        <form className="entry-form" onSubmit={submit}>
+        <form className="entry-form" onSubmit={safeSubmit}>
           {mode === 'register' && (
             <label><span>Nombre</span><div className="entry-input"><UserRound size={18} /><input value={name} onChange={event => setName(event.target.value)} autoComplete="name" placeholder="Tu nombre" /></div></label>
           )}
@@ -141,7 +157,7 @@ export function AccessPage({ onAuthenticated }: Props) {
           {mode === 'login' && <><button type="button" onClick={() => { setMode('register'); setError(''); setPassword(''); }}>Registro</button><button type="button" onClick={() => { setMode('recover'); setError(''); setPassword(''); setConfirmPassword(''); }}>¿Has olvidado la contraseña?</button></>}
         </div>
 
-        <small className="entry-local-note">Acceso provisional de esta versión: los datos se guardan localmente en el dispositivo hasta conectar el sistema definitivo de usuarios.</small>
+        <small className="entry-local-note">Acceso provisional de beta: la contraseña se guarda localmente mediante un derivado criptográfico, no en texto legible. El sistema definitivo de usuarios se conectará antes de producción.</small>
       </section>
     </div>
   );
