@@ -146,5 +146,5 @@ test('home has two larger cards, aligned actions and upper-right hat', async ({ 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({path:info.outputPath('home.png'),fullPage:true});
   await page.getByRole('button', { name:/Abre la despensa/ }).click();
-  await expect(page.getByText('ABRE LA DESPENSA', {exact:true})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Abre la despensa',exact:true})).toBeVisible();
 });
