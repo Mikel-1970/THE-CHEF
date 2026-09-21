@@ -3,13 +3,13 @@ const read=p=>fs.readFileSync(p,'utf8'); const checks=[]; const ok=(name,conditi
 const app=read('src/App.tsx'),shell=read('src/components/AppShell.tsx'),home=read('src/pages/HomePage.tsx'),recipe=read('src/pages/RecipePage.tsx'),results=read('src/pages/ResultsPage.tsx'),cook=read('src/pages/CookPage.tsx'),pantry=read('src/pages/PantryCookPage.tsx'),photo=read('src/pages/PhotoRecipePage.tsx'),shopping=read('src/pages/ShoppingListPage.tsx'),context=read('src/AppContext.tsx'),i18n=read('src/components/UiI18n.tsx'),types=read('src/domain/types.ts'),gateway=read('src/services/aiProposalGateway.ts'),hybrid=read('src/services/hybridRecommendationEngine.ts'),mock=read('src/services/mockRecommendationEngine.ts'),guard=read('src/services/restrictionGuard.ts'),cuisine=read('src/components/CuisineSelect.tsx'),storage=read('src/services/storage.ts'),access=read('src/pages/AccessPage.tsx'),settings=read('src/pages/SettingsPage.tsx'),localAuth=read('src/services/localAuth.ts'),tour=read('src/components/GuidedTour.tsx'),pdf=read('src/services/recipePdf.ts'),stepScaling=read('src/utils/scaleStepInstruction.ts'),homeCss=read('src/home-v04.css'),pkg=JSON.parse(read('package.json'));
 ok('Ruta Crear tu receta',app.includes('/crear-receta'));
 ok('Ruta Tutorial',app.includes('/tutorial'));
-ok('Inicio sin avatar flotante',shell.includes('!isHome && !hideProfile'));
+ok('Avatar flotante en todas las pantallas',shell.includes('createPortal')&&shell.includes('chef-draggable-avatar')&&!shell.includes('!isHome && !hideProfile'));
 ok('Sin BottomNav en AppShell',!shell.includes('BottomNav'));
 ok('Avatar disponible en Lista de compra',!shopping.includes('hideProfile'));
 ok('Nombre Abre la despensa',home.includes('Abre la despensa')&&pantry.includes('ABRE LA DESPENSA'));
 ok('Foto Receta',home.includes('Foto Receta'));
 ok('Sin boton Crear tu receta',!home.includes('Crear tu receta'));
-ok('Dos propuestas',pantry.includes('slice(0,2)'));
+ok('Una propuesta',pantry.includes('slice(0,1)')&&hybrid.includes('PROPOSAL_COUNT=1'));
 ok('Tiempo máximo 120',pantry.includes('max={120}'));
 ok('Recipe sin panel elaboración duplicado',!recipe.includes("'elaboration'"));
 ok('CTA Elaboración',recipe.includes('> Elaboración</button>'));
@@ -27,7 +27,7 @@ ok('Compra manual persiste entre recetas',context.includes('existingIsManual')&&
 ok('Proposal nutrition',/nutritionPerServing\?\s*:\s*NutritionSummary/.test(types));
 ok('jsPDF parcheado',/^\^?4\.2\.1$/.test(pkg.dependencies?.jspdf??''));
 ok('Inventario disponible separado de prioridades',pantry.includes("priority:selected.has")&&pantry.includes("pantryIngredients:available"));
-ok('Preferencia IA afecta 0-2 propuestas',hybrid.includes("Math.round(preference/50)")&&!hybrid.includes("Math.min(1,Math.round(preference/50))"));
+ok('Preferencia IA para una propuesta',hybrid.includes("Math.round(preference/100)")&&hybrid.includes('PROPOSAL_COUNT=1'));
 ok('Tutorial sin BottomNav obsoleto',!tour.includes('data-tour="bottom-nav"')&&!tour.includes('Empezar a cocinar'));
 ok('Contraseña no expuesta en Ajustes',!settings.includes('settings.loginPassword')&&!settings.includes('Mostrar contraseña'));
 ok('Credencial local derivada con PBKDF2',localAuth.includes("name:'PBKDF2'")&&localAuth.includes("hash:'SHA-256'")&&localAuth.includes('150000'));

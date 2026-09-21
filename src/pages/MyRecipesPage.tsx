@@ -80,7 +80,7 @@ export function MyRecipesPage() {
   const setDishTab = (nextTab: string) => setParams(nextTab === 'all' ? { type: 'dishes' } : { type: 'dishes', tab: nextTab });
 
   return (
-    <AppShell hideBack hideProfile>
+    <AppShell>
       <ChefLoadingOverlay active={isRepeating} title="Repitiendo búsqueda" messages={['Recuperando tus preferencias…']} />
       <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>Recetas guardadas, favoritas, técnicas e historial de actividad.</p></div>
       <div className="page-content nav-safe">

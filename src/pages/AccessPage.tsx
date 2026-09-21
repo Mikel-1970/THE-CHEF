@@ -1,3 +1,4 @@
+import { AvatarPicker } from '../components/AvatarPicker';
 import { WelcomeSplash } from '../components/WelcomeSplash';
 import { Eye, EyeOff, KeyRound, LockKeyhole, Mic, UserRound } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
@@ -13,6 +14,7 @@ type Props = { onAuthenticated: () => void };
 export function AccessPage({ onAuthenticated }: Props) {
   const { settings, updateSettings } = useApp();
   const [mode, setMode] = useState<AccessMode>('login');
+  const [avatar, setAvatar] = useState(settings.avatarEmoji);
   const [name, setName] = useState(settings.displayName);
   const [user, setUser] = useState(settings.loginUser);
   const [password, setPassword] = useState('');
@@ -36,7 +38,7 @@ export function AccessPage({ onAuthenticated }: Props) {
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     setError('');
-    const cleanUser = user.trim();
+    const cleanUser = user.includes('@') ? user.trim().toLowerCase() : user.trim();
 
     if (mode === 'login') {
       if (!hasRegisteredUser) {
@@ -63,8 +65,8 @@ export function AccessPage({ onAuthenticated }: Props) {
     }
 
     if (mode === 'register') {
-      if (!name.trim() || !cleanUser || password.length < 4) {
-        setError('Completa nombre, usuario y una contraseña de al menos 4 caracteres.');
+      if (!name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanUser) || password.length < 4) {
+        setError('Completa nombre, correo válido y una contraseña de al menos 4 caracteres.');
         return;
       }
       if (password !== confirmPassword) {
@@ -72,7 +74,7 @@ export function AccessPage({ onAuthenticated }: Props) {
         return;
       }
       await saveLocalCredential(cleanUser,password);
-      updateSettings({ displayName: name.trim(), loginUser: cleanUser, loginPassword: undefined });
+      updateSettings({ displayName: name.trim(), avatarEmoji: avatar, profileImage: undefined, loginUser: cleanUser, loginPassword: undefined });
       continueAfterCredentials();
       return;
     }
@@ -120,7 +122,7 @@ export function AccessPage({ onAuthenticated }: Props) {
           <div className="entry-round-icon"><Mic size={34} /></div>
           <span className="entry-eyebrow">CONFIGURACIÓN INICIAL</span>
           <h1>¿Permitir el micrófono?</h1>
-          <p>Si lo permites ahora, El Chef podrá activar el dictado cuando entres en una petición sin pedirte este permiso cada vez.</p>
+          <p>Podrás dictar pulsando el botón del micrófono y volver a pulsarlo para parar.</p>
           <div className="entry-actions stacked">
             <button className="entry-primary" type="button" onClick={() => void allowMicrophone()} disabled={micBusy}>{micBusy ? 'Solicitando permiso…' : 'Permitir micrófono'}</button>
             <button className="entry-secondary" type="button" onClick={skipMicrophone}>Ahora no</button>
@@ -132,7 +134,7 @@ export function AccessPage({ onAuthenticated }: Props) {
   }
 
   return (
-    <WelcomeSplash>
+    <WelcomeSplash avatar={mode === 'register' ? avatar : settings.avatarEmoji} greeting={mode === 'login' && hasRegisteredUser ? `Bienvenido${settings.displayName ? `, ${settings.displayName}` : ''}` : undefined}>
       <section key={mode} className="access-card">
         <span className="entry-eyebrow">ACCESO</span>
         {mode !== 'login' && <h2>{mode === 'register' ? 'Crear usuario' : 'Recuperar contraseña'}</h2>}
@@ -142,7 +144,8 @@ export function AccessPage({ onAuthenticated }: Props) {
           {mode === 'register' && (
             <label><span>Nombre</span><div className="entry-input"><UserRound size={18} /><input value={name} onChange={event => setName(event.target.value)} autoComplete="name" placeholder="Tu nombre" /></div></label>
           )}
-          <label><span>Usuario</span><div className="entry-input"><UserRound size={18} /><input value={user} onChange={event => setUser(event.target.value)} autoComplete="username" placeholder="Usuario" /></div></label>
+          {mode === 'register' && <AvatarPicker value={avatar} onChange={setAvatar} />}
+          <label><span>{mode === 'register' ? 'Correo electrónico' : 'Usuario o correo'}</span><div className="entry-input"><UserRound size={18} /><input value={user} onChange={event => setUser(event.target.value)} type={mode === 'register' ? 'email' : 'text'} autoComplete={mode === 'register' ? 'email' : 'username'} placeholder={mode === 'register' ? 'tu@correo.com' : 'Usuario o correo'} required /></div></label>
           <label><span>{mode === 'recover' ? 'Nueva contraseña' : 'Contraseña'}</span><div className="entry-input"><KeyRound size={18} /><input type={showPassword ? 'text' : 'password'} value={password} onChange={event => setPassword(event.target.value)} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} placeholder="Contraseña" /><button type="button" onClick={() => setShowPassword(value => !value)} aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}>{showPassword ? <EyeOff size={19} /> : <Eye size={19} />}</button></div></label>
           {(mode === 'register' || mode === 'recover') && (
             <label><span>Repetir contraseña</span><div className="entry-input"><LockKeyhole size={18} /><input type={showPassword ? 'text' : 'password'} value={confirmPassword} onChange={event => setConfirmPassword(event.target.value)} autoComplete="new-password" placeholder="Repite la contraseña" /></div></label>

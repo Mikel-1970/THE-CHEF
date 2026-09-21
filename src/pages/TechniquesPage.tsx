@@ -53,7 +53,7 @@ export function TechniquesPage() {
   const finishTechnique = (technique: Technique) => { setGuided(undefined); setGuidedStep(0); setCurrent(technique); setCompletedTechnique(technique.id); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
   return (
-    <AppShell hideBack hideProfile>
+    <AppShell>
       <ChefLoadingOverlay active={isGenerating} title="Preparando la técnica" messages={['Afinando la técnica…']} />
       <TopBar eyebrow="BASE CULINARIA" title="Técnicas" />
       <div className="page-content nav-safe techniques-page">

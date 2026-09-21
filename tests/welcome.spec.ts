@@ -25,7 +25,7 @@ test('first visit shows El Chef and automatically opens login in 2–3 seconds',
   expect(await brand!.evaluate(node => node.isConnected)).toBe(true);
   expect(await page.locator('.welcome-character').boundingBox()).toEqual(brandBox);
   await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible();
-  await expect(page.getByPlaceholder('Usuario', { exact: true })).toBeVisible();
+  await expect(page.getByPlaceholder('Usuario o correo', { exact: true })).toBeVisible();
   await expect(page.getByPlaceholder('Contraseña', { exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect(errors).toEqual([]);
@@ -46,12 +46,18 @@ test('animated entry and login render without clipping', async ({ page }, info) 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
-test('explicit skip opens login and registration retains permissions and tutorial', async ({ page }) => {
+test('explicit skip opens login and registration retains permissions and tutorial', async ({ page }, info) => {
   await page.goto('./');
   await page.getByRole('button', { name: 'Entrar ahora' }).click();
   await page.getByRole('button', { name: 'Registro', exact: true }).click();
   await page.getByPlaceholder('Tu nombre').fill('Prueba R1-03');
-  await page.getByPlaceholder('Usuario', { exact: true }).fill('r103');
+  await page.locator('.registration-avatar-picker summary').click();
+  await expect(page.locator('.registration-avatar-grid button')).toHaveCount(16);
+  await expect.poll(()=>page.locator('.registration-avatar-grid img').evaluateAll(images=>images.every(img=>(img as HTMLImageElement).naturalWidth===1122))).toBe(true);
+  await expect(page.locator('.entry-form .entry-primary')).toHaveCSS('opacity','1');
+  await page.screenshot({path:info.outputPath('registration-avatars.png'),fullPage:true});
+  await page.getByRole('button', {name:'Elegir avatar Voldi',exact:true}).click();
+  await page.getByPlaceholder('tu@correo.com').fill('r103@example.test');
   await page.getByPlaceholder('Contraseña', { exact: true }).fill('test-r103');
   await page.getByPlaceholder('Repite la contraseña').fill('test-r103');
   await page.getByRole('button', { name: 'Registro', exact: true }).click();
@@ -62,6 +68,8 @@ test('explicit skip opens login and registration retains permissions and tutoria
   await page.evaluate(() => sessionStorage.removeItem('chef:auth:session:v1'));
   await page.reload();
   await page.getByRole('button', { name: 'Entrar ahora' }).click();
+  await expect(page.getByRole('heading', {name:'Bienvenido, Prueba R1-03'})).toBeVisible();
+  await expect(page.locator('.welcome-character img')).toHaveAttribute('src',/dachshund.png$/);
   await page.getByPlaceholder('Contraseña', { exact: true }).fill('wrong');
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   await expect(page.getByText('Usuario o contraseña incorrectos.')).toBeVisible();

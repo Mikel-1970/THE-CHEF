@@ -16,7 +16,7 @@ export function TopBar({ eyebrow, title }: { eyebrow?: string; title: string; ba
     <header className="top-bar top-bar-v03">
       <span className="icon-spacer" />
       <div className="top-bar-copy">
-        <ChefHat className="topbar-chef" size={19} />
+        {visibleEyebrow && <ChefHat className="topbar-chef" size={19} />}
         {visibleEyebrow && <span className="eyebrow">{visibleEyebrow}</span>}
         <h1>{visibleTitle}</h1>
       </div>
