@@ -1,4 +1,4 @@
-import { ChefAvatar } from '../components/ChefAvatar';
+import { WelcomeSplash } from '../components/WelcomeSplash';
 import { Eye, EyeOff, KeyRound, LockKeyhole, Mic, UserRound } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
 import { useApp } from '../AppContext';
@@ -132,12 +132,10 @@ export function AccessPage({ onAuthenticated }: Props) {
   }
 
   return (
-    <div className="entry-page">
-      <section key={mode} className="entry-card access-card access-arrival">
-        <div className="entry-logo"><span>THE</span><strong>CHEF</strong></div>
-        <ChefAvatar avatar={settings.avatarEmoji} size={88} showHat={false} />
+    <WelcomeSplash>
+      <section key={mode} className="access-card">
         <span className="entry-eyebrow">ACCESO</span>
-        <h1>{mode === 'login' ? 'Bienvenido' : mode === 'register' ? 'Crear usuario' : 'Recuperar contraseña'}</h1>
+        {mode !== 'login' && <h2>{mode === 'register' ? 'Crear usuario' : 'Recuperar contraseña'}</h2>}
         <p>{mode === 'login' ? 'Identifícate para entrar en tu cocina.' : mode === 'register' ? 'Crea el usuario de acceso para esta versión de The Chef.' : 'Define una nueva contraseña para el usuario registrado.'}</p>
 
         <form className="entry-form" onSubmit={safeSubmit}>
@@ -161,6 +159,6 @@ export function AccessPage({ onAuthenticated }: Props) {
 
         <small className="entry-local-note">Acceso provisional de beta: la contraseña se guarda localmente mediante un derivado criptográfico, no en texto legible. El sistema definitivo de usuarios se conectará antes de producción.</small>
       </section>
-    </div>
+    </WelcomeSplash>
   );
 }

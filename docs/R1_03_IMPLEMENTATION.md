@@ -36,3 +36,11 @@ No se modifica main ni se publica producción. Se conserva intacta la copia chef
 ## Límites
 
 Las pruebas móviles son emuladas; no acreditan dispositivos físicos ni cierran el gate F2.4. Persistencia de avatar y credenciales sigue siendo local al origen: una URL inmutable nueva no comparte localStorage con la preview anterior. No se modifica el sistema provisional de autenticación.
+
+## Revisión solicitada tras revisar la preview inicial
+
+La presentación anterior no correspondía a la transición integrada solicitada. Ahora AccessPage permanece en una única pantalla: logo, avatar y lema conservan sus nodos y posición, y a los 2500 ms aparecen usuario, contraseña y Entrar con animación progresiva. No se sustituye por otra tarjeta de login. Registro/recuperación conservan el encabezado.
+
+Inicio: gorro de la tarjeta principal arriba a la derecha; eliminados los botones Crear tu receta de inicio y menú y su bloque de ayuda; Abre la despensa sustituye a Abre la nevera en inicio, menú, página y traducciones. Las dos tarjetas secundarias crecen a 240–250 px y mantienen ambos Empezar alineados. Inicio permite desplazamiento en pantallas pequeñas para evitar recortar contenido.
+
+Verificación de la revisión: 45 comprobaciones estáticas, build correcto y 16/16 pruebas de navegador en escritorio/móvil emulado. La prueba de acceso comprueba conservación del nodo y posición del avatar, además del intervalo de aparición. La prueba de inicio mide posición del gorro, altura de tarjetas y alineación de CTA. Capturas revisadas. Dispositivos físicos no probados.

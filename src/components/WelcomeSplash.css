@@ -1,17 +1,19 @@
-.welcome-splash { text-align:center; }
-.welcome-content { width:min(100%,430px); animation:welcome-exit .2s ease-in 2.3s both; }
-.welcome-logo { margin-bottom:12px; animation:welcome-appear .45s ease-out both; }
+.welcome-entry { align-items:start; text-align:center; padding-top:max(24px,env(safe-area-inset-top)); }
+.welcome-content { width:min(100%,430px); margin-inline:auto; }
+.welcome-logo { margin-bottom:8px; animation:welcome-appear .45s ease-out both; }
 .welcome-character { position:relative; display:grid; place-items:center; margin:0 auto 12px; animation:welcome-appear .65s ease-out .12s both; }
-.welcome-character::before { content:''; position:absolute; width:240px; height:240px; border-radius:50%; background:radial-gradient(circle,#e1e8cc,rgba(225,232,204,0)); }
-.welcome-character .chef-avatar { max-width:72vw; max-height:38dvh; }
-.welcome-content h1 { margin:0 0 10px; font-family:Georgia,serif; font-size:clamp(1.6rem,6vw,2.2rem); line-height:1.15; animation:welcome-appear .5s ease-out .3s both; }
-.welcome-content p { margin:0 0 24px; color:#65704f; animation:welcome-appear .5s ease-out .42s both; }
+.welcome-character::before { content:''; position:absolute; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle,#e1e8cc,rgba(225,232,204,0)); }
+.welcome-character .chef-avatar { max-width:72vw; }
+.welcome-content>h1 { margin:0 0 10px; font-family:Georgia,serif; font-size:clamp(1.6rem,6vw,2.2rem); line-height:1.15; animation:welcome-appear .5s ease-out .3s both; }
+.welcome-tagline { margin:0 0 20px; color:#65704f; animation:welcome-appear .5s ease-out .42s both; }
 .welcome-skip { min-height:44px; padding:10px 22px; border:1px solid #788565; border-radius:999px; background:transparent; color:#405626; font:inherit; cursor:pointer; }
 .welcome-skip:focus-visible { outline:3px solid #405626; outline-offset:4px; }
-.access-arrival { animation:welcome-appear .25s ease-out both; }
-.access-arrival>.chef-avatar { margin-bottom:12px; }
+.welcome-fields:not([hidden]) { animation:welcome-appear .4s ease-out both; }
+.welcome-fields .access-card>p { margin:8px 0 18px; color:#65704f; font-size:.85rem; }
+.welcome-fields .entry-form>label { animation:welcome-appear .4s ease-out both; }
+.welcome-fields .entry-form>label:nth-child(2) { animation-delay:.12s; }
+.welcome-fields .entry-primary { animation:welcome-appear .4s ease-out .24s both; }
 @keyframes welcome-appear { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-@keyframes welcome-exit { from { opacity:1; } to { opacity:0; } }
 @media (prefers-reduced-motion:reduce) {
-  .welcome-content,.welcome-logo,.welcome-character,.welcome-content h1,.welcome-content p,.access-arrival { animation:none; }
+ .welcome-entry *, .welcome-fields .entry-form>label, .welcome-fields .entry-primary { animation:none!important; }
 }

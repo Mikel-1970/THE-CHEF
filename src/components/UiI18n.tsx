@@ -5,7 +5,7 @@ import type { AppLanguage } from '../services/storage';
 const COMMON:Record<string,Record<AppLanguage,string>>={
  'Inicio':{es:'Inicio',en:'Home',fr:'Accueil',de:'Start',it:'Home',pt:'Início',zh:'首页'},
  '¿Qué quieres cocinar?':{es:'¿Qué quieres cocinar?',en:'What do you want to cook?',fr:'Que voulez-vous cuisiner ?',de:'Was möchtest du kochen?',it:'Cosa vuoi cucinare?',pt:'O que quer cozinhar?',zh:'你想做什么？'},
- 'Abre la nevera...':{es:'Abre la nevera...',en:'Open the fridge...',fr:'Ouvre le frigo...',de:'Öffne den Kühlschrank...',it:'Apri il frigo...',pt:'Abra o frigorífico...',zh:'打开冰箱…'},
+ 'Abre la despensa':{es:'Abre la despensa',en:'Open the pantry',fr:'Ouvre le garde-manger',de:'Öffne die Vorratskammer',it:'Apri la dispensa',pt:'Abra a despensa',zh:'打开储藏室'},
  'Foto Receta':{es:'Foto Receta',en:'Photo Recipe',fr:'Recette photo',de:'Foto-Rezept',it:'Foto Ricetta',pt:'Foto Receita',zh:'照片食谱'},
  'Crear tu receta':{es:'Crear tu receta',en:'Create your recipe',fr:'Créer votre recette',de:'Dein Rezept erstellen',it:'Crea la tua ricetta',pt:'Criar a sua receita',zh:'创建你的食谱'},
  'Buscar':{es:'Buscar',en:'Search',fr:'Rechercher',de:'Suchen',it:'Cerca',pt:'Pesquisar',zh:'搜索'},

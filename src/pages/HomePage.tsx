@@ -1,4 +1,4 @@
-import { BookOpen, Camera, ChefHat, Clock3, Heart, PackageOpen, PenLine, ShoppingBasket } from 'lucide-react';
+import { BookOpen, Camera, ChefHat, Clock3, Heart, PackageOpen, ShoppingBasket } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
@@ -23,9 +23,8 @@ export function HomePage() {
         </button>
       </section>
       <section className="reference-secondary-actions" aria-label="Otras formas de cocinar">
-        <button data-tour="pantry-cook" className="reference-secondary-card" onClick={() => navigate('/cocina-despensa')}><span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.02), rgba(24,30,18,.62)), url(${pantryImage})` }} aria-hidden="true" /><span className="reference-secondary-icon"><PackageOpen size={25} /></span><span className="reference-secondary-copy"><strong>Abre la nevera...</strong><small>Cocina aprovechando lo que ya tienes.</small><b>Empezar</b></span></button>
+        <button data-tour="pantry-cook" className="reference-secondary-card" onClick={() => navigate('/cocina-despensa')}><span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.02), rgba(24,30,18,.62)), url(${pantryImage})` }} aria-hidden="true" /><span className="reference-secondary-icon"><PackageOpen size={25} /></span><span className="reference-secondary-copy"><strong>Abre la despensa</strong><small>Cocina aprovechando lo que ya tienes.</small><b>Empezar</b></span></button>
         <button data-tour="photo" className="reference-secondary-card reference-photo-card" onClick={() => navigate('/foto')}><span className="reference-secondary-photo" style={{ backgroundImage: `linear-gradient(180deg, rgba(24,30,18,.01), rgba(24,30,18,.61)), url(${photoRecipeImage})` }} aria-hidden="true" /><span className="reference-secondary-icon"><Camera size={25} /></span><span className="reference-secondary-copy"><strong>Foto Receta</strong><small>Enséñame un plato y descubre cómo prepararlo.</small><b>Empezar</b></span></button>
-        <button className="reference-secondary-card" onClick={() => navigate('/crear-receta')}><span className="reference-secondary-icon"><PenLine size={25} /></span><span className="reference-secondary-copy"><strong>Crear tu receta</strong><small>Convierte tu receta de siempre en una receta completa y reproducible.</small><b>Empezar</b></span></button>
       </section>
       <section data-tour="quick" className="reference-quick-section" aria-label="Accesos rápidos"><div className="reference-quick-title"><span>❧</span><h2>Accesos rápidos</h2><span>❧</span></div><div className="reference-quick-grid">
         <button onClick={() => navigate('/mis-recetas')}><BookOpen size={37} strokeWidth={1.65} /><strong>Mis recetas</strong></button>
