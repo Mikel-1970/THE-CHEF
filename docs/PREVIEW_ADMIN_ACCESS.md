@@ -1,6 +1,6 @@
 # Cuenta administradora de pruebas y enlace persistente
 
-Estado: implementación local validada; activación remota pendiente de confirmar el correo administrador.
+Estado: implementación local validada; correo administrador confirmado por el usuario. Configuración preview aplicada; despliegue pendiente de verificación remota.
 
 ## Problema y resultado
 El alta anterior era local al origen y la sesión a la pestaña. Cada URL inmutable nueva parecía una cuenta nueva.
@@ -18,7 +18,7 @@ El alias se actualiza con cada despliegue de reconcile/baseline-2026-09-21. Los 
 - Cliente comprueba la sesión al abrir y al volver a la pestaña, y retira el contenido al vencer la sesión. No guarda un indicador de administrador persistente como autoridad.
 - Perfil conserva avatar y preferencias del navegador en la dirección fija. Ajustes identifica el rol, enlaza la dirección fija y permite cerrar sesión mediante Access.
 - Se omiten los avisos de introducción repetidos para esta identidad de pruebas. Guía y permisos manuales siguen accesibles.
-- No se amplían políticas de Access ni su duración (24 h), ni se toca main/producción. La activación prevista añade variables solo al entorno preview y fail_open=false; todavía no se ha aplicado.
+- No se amplían políticas de Access ni su duración (24 h), ni se toca main/producción. Se añaden variables solo al entorno preview. El valor de plataforma fail_open se conserva: Cloudflare exige que coincida en producción y preview. El endpoint y el cliente deniegan acceso si no pueden validar la identidad; Access permanece activo.
 - No se crea una base de datos, proveedor de autenticación nuevo ni cuenta con permisos administrativos en Supabase/Cloudflare. El rol es el administrador de esta aplicación de pruebas; no implica un panel de gestión de otros usuarios.
 
 ## Persistencia y límites
