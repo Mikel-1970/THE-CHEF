@@ -3,6 +3,12 @@
 ## Objetivo
 Validar la candidata de reconciliación en dispositivo real antes de corregir severidad alta y congelar la beta.
 
+## Antes de empezar
+1. Abrir **Ajustes → Versión de prueba** y anotar el commit mostrado.
+2. Usar ese mismo commit en todos los registros del dispositivo.
+3. Si la versión cambia durante la batería, detenerse y empezar un registro nuevo para el nuevo commit.
+4. No mezclar resultados de builds distintos.
+
 ## Dispositivos mínimos
 1. iPhone / Safari o PWA instalada.
 2. Android / Chrome o PWA instalada.
