@@ -7,9 +7,15 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   const isCloudflarePages = env.CF_PAGES === '1';
   const base = isCloudflarePages ? '/' : '/THE-CHEF/';
+  const buildCommit = env.CF_PAGES_COMMIT_SHA || env.GITHUB_SHA || '';
+  const buildBranch = env.CF_PAGES_BRANCH || env.GITHUB_REF_NAME || '';
 
   return {
     base,
+    define: {
+      __BUILD_COMMIT__: JSON.stringify(buildCommit),
+      __BUILD_BRANCH__: JSON.stringify(buildBranch)
+    },
     plugins: [
       react(),
       ...(isCloudflarePages ? [{
