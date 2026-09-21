@@ -12,7 +12,9 @@ Cloudflare Pages:
 - Build command: `npm run build`
 - Build output directory: `dist`
 - Root directory: raíz del repositorio
-- Rama de producción del proyecto de pruebas: puede mantenerse separada de `main`; para este piloto se usará la rama de reconciliación o preview de PR.
+- Rama de producción configurada: `main`, con `production_deployments_enabled=false`. No desplegarla.
+- Rama de preview exclusiva: `reconcile/baseline-2026-09-21`. Nunca configurarla como rama de producción.
+- Mantener `preview_deployment_setting=none` hasta verificar Access. Después usar `custom` e incluir únicamente la rama candidata.
 
 Cloudflare Pages inyecta `CF_PAGES=1`; `vite.config.ts` usa esa variable para construir con base `/`.
 GitHub Pages conserva su base histórica `/THE-CHEF/`.
@@ -33,7 +35,7 @@ Por eso F2.4 debe ejecutarse sobre una **preview deployment** de la rama/PR, no 
 ## Flujo recomendado
 1. Importar `Mikel-1970/THE-CHEF` desde GitHub.
 2. Usar build `npm run build` → `dist`.
-3. Activar Access policy antes de compartir la preview.
+3. Activar y verificar Access policy antes de crear cualquier despliegue de preview.
 4. Mantener `main` sin cambios.
 5. Abrir/usar la preview del PR #16 o de `reconcile/baseline-2026-09-21`.
 6. Ejecutar `docs/F2_4_SMOKE_TEST.md`.

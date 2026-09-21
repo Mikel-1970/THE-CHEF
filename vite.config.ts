@@ -12,6 +12,19 @@ export default defineConfig(({ mode }) => {
     base,
     plugins: [
       react(),
+      ...(isCloudflarePages ? [{
+        name: 'cloudflare-preview-version',
+        generateBundle() {
+          if (!env.CF_PAGES_COMMIT_SHA || !env.CF_PAGES_BRANCH) {
+            throw new Error('Pages build requires CF_PAGES_COMMIT_SHA and CF_PAGES_BRANCH for traceability.');
+          }
+          this.emitFile({
+            type: 'asset',
+            fileName: 'version.json',
+            source: JSON.stringify({ commit: env.CF_PAGES_COMMIT_SHA, branch: env.CF_PAGES_BRANCH }, null, 2) + '\n'
+          });
+        }
+      }] : []),
       VitePWA({
         registerType: 'autoUpdate',
         selfDestroying: true,
