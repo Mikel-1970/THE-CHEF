@@ -3,8 +3,9 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
-  const isVercel = Boolean(process.env.VERCEL);
-  const base = isVercel ? '/' : '/THE-CHEF/';
+  // Cloudflare Pages inyecta CF_PAGES=1. GitHub Pages sigue usando /THE-CHEF/.
+  const isCloudflarePages = process.env.CF_PAGES === '1';
+  const base = isCloudflarePages ? '/' : '/THE-CHEF/';
 
   return {
     base,
