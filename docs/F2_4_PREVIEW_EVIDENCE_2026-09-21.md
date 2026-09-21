@@ -34,7 +34,8 @@
 - Auditoría actual `npm audit --omit=dev --audit-level=critical`: 0 vulnerabilidades.
 - Visita anónima: HTTP 302 a Cloudflare Access; navegador muestra el formulario de código por correo.
 - Repetir prueba negativa con `node scripts/check-preview-access.mjs` (URL, metadatos, JS y alias; sin cookies).
-- Acceso autenticado y lectura de `version.json`: pendiente de completar el código de Access en navegador.
+- Acceso autenticado: usuario completó el código por correo; inspección actual del navegador confirma la pantalla «Bienvenido» de The Chef en la URL inmutable. No equivale a completar ST-01 ni los flujos internos.
+- `version.json` existe en el inventario del despliegue y fue comprobado localmente. Su apertura directa en el navegador integrado devolvió `ERR_BLOCKED_BY_CLIENT`; no se afirma lectura HTTP autenticada del JSON. La asociación commit/despliegue está verificada por la API y los logs de Cloudflare.
 
 ## Cambios acotados
 
@@ -48,7 +49,7 @@
 
 F2.4 sigue abierta. La infraestructura privada no acredita el gate físico.
 
-1. Completar acceso autenticado y contrastar `version.json` con el commit candidato.
+1. Usar la URL inmutable y el commit candidato al registrar pruebas. Completar la comprobación del JSON autenticado desde un navegador que permita abrirlo.
 2. Ejecutar ST-01 a ST-20 en iPhone/Safari, Android/Chrome y PC, registrando dispositivo, commit, fecha, evidencia y severidad en el CSV.
 3. F2.5: reproducir y resolver S0/S1; comenzar por TC-04-03 (cantidades en pasos al escalar), documentado como GAP en la auditoría previa. No se declara resuelto en esta tarea.
 4. Registrar comportamiento real del temporizador en segundo plano, cámara/micrófono, persistencia y PDF. Ningún emulador sustituye esta evidencia.
