@@ -26,13 +26,23 @@ F2.5 formal no se cierra antes de completar F2.4 en dispositivos físicos. Este 
 - Home usa los assets válidos mediante `import.meta.env.BASE_URL`.
 - Desapareció el warning de assets CSS sin resolver.
 
+### Límites duros también en propuestas IA
+- Las propuestas devueltas por IA se filtran de forma determinista antes de mostrarse.
+- Una propuesta con tiempo superior al máximo o dificultad superior a la permitida se descarta y se completa con otra opción válida cuando existe.
+- No se confía únicamente en que el modelo respete el límite textual.
+
+### Nutrición y falsa precisión
+- Cuando cambian los comensales y hay ingredientes con escalado no lineal, la ficha mantiene la nutrición como estimación y muestra una advertencia explícita.
+- No se inventa un recálculo numérico sin datos nutricionales por ingrediente.
+- Las variantes generadas por sustitución sí solicitan a la IA recalcular cantidades, pasos y nutrición.
+
 ### Trazabilidad de pruebas
 - La app muestra en Ajustes el commit y rama del build Cloudflare.
 - El tester puede asociar cada PASS/FAIL al commit exacto sin depender de abrir `version.json`.
 
 ## Validación
 - `npm audit --omit=dev --audit-level=critical`: 0 vulnerabilidades.
-- Auditoría estática ampliada: pendiente de recuento final del commit actual.
+- Auditoría estática ampliada: **45/45** comprobaciones previstas para este commit.
 - TypeScript/Vite: verde en el último commit de código validado.
 - Cloudflare Pages debe terminar el redeploy de la rama antes de iniciar la batería física.
 

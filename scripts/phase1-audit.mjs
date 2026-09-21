@@ -44,5 +44,7 @@ ok('Tengo reconoce inventario',recipe.includes('ingredientNamesMatch')&&recipe.i
 ok('Cantidades de pasos escalan en cocina y PDF',cook.includes('scaleStepInstruction(recipe,step.instruction,servings)')&&pdf.includes('scaleStepInstruction(recipe,s.instruction,servings)')&&stepScaling.includes('scaleQuantity'));
 ok('PDF se carga bajo demanda',pdf.includes("await import('jspdf')"));
 ok('Home sin URLs CSS obsoletas',!homeCss.includes("./home-pantry.jpg")&&!homeCss.includes("./home-desire.jpg"));
+ok('Propuestas IA respetan límites duros',hybrid.includes('proposalWithinLimits')&&hybrid.includes('proposal.minutes>request.maxMinutes')&&hybrid.includes('DIFFICULTY_RANK[proposal.difficulty]>DIFFICULTY_RANK[request.difficulty]'));
+ok('Nutrición escalada evita falsa precisión',recipe.includes('El escalado culinario puede variar ligeramente los valores'));
 
 const failed=checks.filter(c=>!c.condition);for(const c of checks)console.log(`${c.condition?'✓':'✗'} ${c.name}`);if(failed.length){console.error(`\n${failed.length} comprobaciones fallidas.`);process.exit(1)}console.log(`\n${checks.length} comprobaciones de Fase 1 superadas.`);
