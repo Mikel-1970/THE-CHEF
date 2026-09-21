@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
   return {
     base,
     define: {
+      __PRIVATE_PREVIEW__: JSON.stringify(isCloudflarePages),
       __BUILD_COMMIT__: JSON.stringify(buildCommit),
       __BUILD_BRANCH__: JSON.stringify(buildBranch)
     },
