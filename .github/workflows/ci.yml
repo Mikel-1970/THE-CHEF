@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 24
       - name: Instalar dependencias
-        run: npm install
+        run: npm ci
       - name: Auditoría de vulnerabilidades críticas de producción
         run: npm audit --omit=dev --audit-level=critical
       - name: Auditoría estática Fase 1
