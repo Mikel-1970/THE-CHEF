@@ -20,22 +20,22 @@ export type ChefAvatarId =
   | 'pan';
 
 export const CHEF_AVATARS: Array<{ id: ChefAvatarId; label: string }> = [
-  { id: 'shrimp', label: 'Langostino' },
-  { id: 'dachshund', label: 'Perro' },
-  { id: 'tomato', label: 'Tomate' },
-  { id: 'chef-woman', label: 'Cocinera' },
-  { id: 'chef-man', label: 'Cocinero' },
-  { id: 'avocado', label: 'Aguacate' },
-  { id: 'teapot', label: 'Tetera' },
-  { id: 'chili', label: 'Pimiento picante' },
-  { id: 'banana', label: 'Plátano' },
-  { id: 'mushroom', label: 'Champiñón' },
-  { id: 'lemon', label: 'Limón' },
-  { id: 'crab', label: 'Centollo' },
-  { id: 'moka', label: 'Cafetera' },
-  { id: 'potato', label: 'Patata' },
-  { id: 'cupcake', label: 'Magdalena' },
-  { id: 'pan', label: 'Sartén' }
+  { id: 'shrimp', label: 'Prawny' },
+  { id: 'dachshund', label: 'Voldi' },
+  { id: 'tomato', label: 'Tom' },
+  { id: 'chef-woman', label: 'La Chef' },
+  { id: 'chef-man', label: 'El Chef' },
+  { id: 'avocado', label: 'Avo' },
+  { id: 'teapot', label: 'Ketty' },
+  { id: 'chili', label: 'Chilly' },
+  { id: 'banana', label: 'Platanito' },
+  { id: 'mushroom', label: 'Champi' },
+  { id: 'lemon', label: 'Citronio' },
+  { id: 'crab', label: 'Centollu' },
+  { id: 'moka', label: 'Cafetín' },
+  { id: 'potato', label: 'Pot' },
+  { id: 'cupcake', label: 'Cupcake' },
+  { id: 'pan', label: 'Sartenio' }
 ];
 
 const LEGACY: Record<string, ChefAvatarId> = {
