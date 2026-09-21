@@ -18,7 +18,7 @@ El alias se actualiza con cada despliegue de reconcile/baseline-2026-09-21. Los 
 - Cliente comprueba la sesión al abrir y al volver a la pestaña, y retira el contenido al vencer la sesión. No guarda un indicador de administrador persistente como autoridad.
 - Perfil conserva avatar y preferencias del navegador en la dirección fija. Ajustes identifica el rol, enlaza la dirección fija y permite cerrar sesión mediante Access.
 - Se omiten los avisos de introducción repetidos para esta identidad de pruebas. Guía y permisos manuales siguen accesibles.
-- No se amplían políticas de Access ni su duración (24 h), ni se toca main/producción. Se añaden variables solo al entorno preview. El valor de plataforma fail_open se conserva: Cloudflare exige que coincida en producción y preview. El endpoint y el cliente deniegan acceso si no pueden validar la identidad; Access permanece activo.
+- No se amplían políticas de Access ni su duración (24 h), ni se toca main/producción. Se añaden variables solo al entorno preview. El valor de plataforma fail_open se conserva. La actualización remota se limita a env_vars de preview; la API confirma que producción conserva su configuración. El endpoint y el cliente deniegan acceso si no pueden validar la identidad; Access permanece activo.
 - No se crea una base de datos, proveedor de autenticación nuevo ni cuenta con permisos administrativos en Supabase/Cloudflare. El rol es el administrador de esta aplicación de pruebas; no implica un panel de gestión de otros usuarios.
 
 ## Persistencia y límites
