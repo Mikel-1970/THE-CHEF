@@ -52,3 +52,17 @@
 .dish-category-row { display:flex; gap:7px; overflow-x:auto; padding:10px 0 2px; scrollbar-width:none; }
 .dish-category-row button { white-space:nowrap; border:1px solid var(--line); border-radius:999px; background:#fffaf1; color:#68705b; padding:8px 11px; font-size:.64rem; font-weight:750; }
 .dish-category-row button.active { background:var(--forest); color:#fff; border-color:var(--forest); }
+
+.library-photo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.library-photo-card{position:relative;min-width:0;aspect-ratio:3/4;border-radius:24px;overflow:hidden;background:#536042;box-shadow:0 8px 24px #25301c1a}
+.library-photo-open{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:transparent;text-align:left;cursor:pointer;color:white}
+.library-photo-card .library-emoji{position:absolute;inset:0;display:grid;place-items:center;width:100%;height:100%;min-width:0;border-radius:0;font-size:3.5rem;background:linear-gradient(145deg,#879567,#39462c)}
+.library-photo-card .library-photo img{width:100%;height:100%;object-fit:cover}
+.library-photo-caption{position:absolute;inset:auto 0 0;padding:54px 12px 16px;background:linear-gradient(transparent,rgba(0,0,0,.88));color:white;display:grid;gap:8px}
+.library-photo-caption strong{font-size:clamp(1rem,3.8vw,1.45rem);line-height:1.18;color:white;overflow-wrap:anywhere}
+.library-photo-caption small{display:flex;align-items:center;gap:5px;font-size:.75rem;color:white}
+.library-photo-heart{position:absolute;top:9px;right:9px;width:42px;height:42px;border-radius:50%;border:1px solid #ffffff70;background:#0006;color:white;display:grid;place-items:center;cursor:pointer}
+.library-photo-heart[aria-pressed=true]{color:#ffcfbd}
+.library-photo-card .library-delete{position:absolute;right:6px;bottom:7px;width:30px;height:30px;background:#0006;color:white;border:0;border-radius:50%;padding:6px}
+.library-photo-grid>.empty-card{grid-column:1/-1}
+.library-photo-card button:focus-visible{outline:3px solid #e8b957;outline-offset:-4px}

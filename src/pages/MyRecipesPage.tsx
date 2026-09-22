@@ -105,13 +105,12 @@ export function MyRecipesPage() {
 
             <section className="library-section">
               <div className="section-heading-row"><div><span className="eyebrow">{tab === 'favorites' ? 'FAVORITAS' : 'MIS RECETAS'}</span><h2>{recipes.length ? (tab === 'favorites' ? 'Tus imprescindibles' : 'Recetas guardadas') : (tab === 'favorites' ? 'Todavía no hay favoritas' : 'Todavía no has guardado ninguna receta')}</h2></div><Heart size={20} /></div>
-              <div className="library-list">
+              <div className="library-photo-grid">
                 {recipes.map(recipe => (
-                  <div className="library-card" key={recipe.id} role="button" tabIndex={0} onClick={() => navigate(`/receta/${recipe.id}`)} onKeyDown={event => event.key === 'Enter' && navigate(`/receta/${recipe.id}`)}>
-                    <RecipeThumbnail recipe={recipe} />
-                    <div style={{ minWidth: 0, flex: 1 }}><strong>{recipe.title}</strong><small><Clock3 size={13} /> {recipe.prepMinutes + recipe.cookMinutes} min · {recipe.cuisine}</small></div>
+                  <article className="library-photo-card" key={recipe.id}>
+                    <button className="library-photo-open" aria-label={`Abrir ${recipe.title}`} onClick={() => navigate(`/receta/${recipe.id}`)}><RecipeThumbnail recipe={recipe} /><div className="library-photo-caption"><strong>{recipe.title}</strong><small><Clock3 size={13} /> {recipe.prepMinutes + recipe.cookMinutes} min</small></div></button><button type="button" className="library-photo-heart" aria-label={`${favorites.includes(recipe.id)?'Quitar':'Marcar'} ${recipe.title} ${favorites.includes(recipe.id)?'de favoritos':'como favorita'}`} aria-pressed={favorites.includes(recipe.id)} onClick={()=>toggleFavorite(recipe.id)}><Heart size={20} fill={favorites.includes(recipe.id)?'currentColor':'none'}/></button>
                     <button type="button" className="library-delete" aria-label={tab === 'favorites' ? `Quitar ${recipe.title} de favoritos` : `Quitar ${recipe.title} de Mis recetas`} onClick={event => { event.stopPropagation(); if (tab === 'favorites') toggleFavorite(recipe.id); else deleteRecipe(recipe); }}><Trash2 size={17} /></button>
-                  </div>
+                  </article>
                 ))}
                 {!recipes.length && <div className="empty-card">{tab === 'favorites' ? 'Marca una receta con ♥ y aparecerá aquí.' : 'Abre una receta y pulsa “Guardar receta” para conservarla aquí.'}</div>}
               </div>
