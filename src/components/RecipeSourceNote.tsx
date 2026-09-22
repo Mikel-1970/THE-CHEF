@@ -4,7 +4,7 @@ import type { Recipe, RecipeSource } from '../domain/types';
 import { getRecipeImage } from '../services/mediaGateway';
 import '../recipe-source.css';
 
-export function RecipeSourceNote({ recipe }: { recipe: Recipe }) {
+export function RecipeSourceNote({ recipe, showImage = true }: { recipe: Recipe; showImage?: boolean }) {
   const source: RecipeSource = recipe.source ?? { kind: 'local', label: 'Catálogo El Chef' };
   const isWeb = source.kind === 'web';
   const isAi = source.kind === 'ai';
@@ -31,8 +31,8 @@ export function RecipeSourceNote({ recipe }: { recipe: Recipe }) {
   useEffect(() => {
     setImageUrl(undefined);
     setImageError(undefined);
-    if (isAi) void loadImage();
-  }, [recipe.id, isAi]);
+    if (isAi && showImage) void loadImage();
+  }, [recipe.id, isAi, showImage]);
 
   const shareText = buildRecipeShareText(recipe);
 
@@ -55,7 +55,7 @@ export function RecipeSourceNote({ recipe }: { recipe: Recipe }) {
 
   return (
     <>
-      {isAi && (
+      {isAi && showImage && (
         <section className="generated-recipe-photo" aria-label="Imagen generada de la receta">
           {imageUrl ? (
             <img src={imageUrl} alt={`Presentación sugerida de ${recipe.title}`} />

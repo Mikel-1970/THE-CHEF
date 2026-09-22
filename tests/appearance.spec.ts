@@ -25,12 +25,12 @@ test('home greeting waits for Login, fixed avatar opens settings, collage remain
  await page.getByRole('button',{name:'Volver',exact:true}).click();await expect(page.locator('.welcome-entry')).toHaveCount(0);
 });
 
-test('recipe photograph precedes content and is twenty percent shorter',async({page},info)=>{
+test('recipe shows title then a single complete photograph then nutrition',async({page},info)=>{
  await page.route('**/chef-media/image',r=>r.fulfill({json:{imageUrl:'http://127.0.0.1:4175/THE-CHEF/home-photo-recipe.png'}}));
  await page.emulateMedia({colorScheme:'dark'});await page.goto('./#/receta/arroz-pollo-calabacin');
- await expect(page.locator('.recipe-hero img')).toBeVisible();
- const image=await page.locator('.recipe-hero').boundingBox(),title=await page.locator('.recipe-title-block').boundingBox();
- expect(image!.height).toBe(208);expect(image!.y).toBeLessThan(title!.y);expect(title!.y).toBeGreaterThan(image!.y+image!.height-30);
+ await expect(page.locator('.recipe-complete-photo img')).toBeVisible();
+ const image=await page.locator('.recipe-complete-photo').boundingBox(),title=await page.locator('.recipe-title-block').boundingBox();
+ expect(image!.y).toBeGreaterThan(title!.y+title!.height);await expect(page.locator('.generated-recipe-photo')).toHaveCount(0);await expect(page.locator('.servings-card')).toHaveCount(0);expect(await page.locator('.recipe-complete-photo img').evaluate(img=>getComputedStyle(img).objectFit)).toBe('contain');
  await page.screenshot({path:info.outputPath('recipe-dark.png'),fullPage:true});
  await page.getByRole('button',{name:'Ingredientes Lo que necesitas',exact:true}).click();await expect(page.getByRole('heading',{name:'Ingredientes',exact:true})).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
@@ -44,4 +44,22 @@ test('save settings returns to previous screen, persists changes and never logs 
  await page.getByRole('button',{name:'Guardar cambios',exact:true}).first().click();await expect(page).toHaveURL(/#\/cocina-despensa$/);
  expect(await page.evaluate(()=>sessionStorage.getItem('chef:auth:session:v1'))).toBe('1');expect(logout).toEqual([]);await page.reload();await expect(page.getByRole('heading',{name:'Abre la despensa',exact:true})).toBeVisible();
  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('chef:settings')!).displayName)).toBe('Mikel guardado');await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
+});
+
+test('personalization exposes options, submits without dictation and preserves original on failure',async({page},info)=>{
+ let payload:any;
+ await page.route('**/recipes/revise',r=>{payload=r.request().postDataJSON();return r.fulfill({status:500,json:{error:'test'}})});
+ await page.goto('./#/receta/arroz-pollo-calabacin');
+ const title=await page.locator('h1').textContent();
+ await page.getByRole('button',{name:'Marcar como favorita',exact:true}).click();await expect(page.getByRole('button',{name:'Quitar de favoritos',exact:true})).toHaveAttribute('aria-pressed','true');
+ await page.getByRole('button',{name:'Personalizar receta',exact:true}).click();
+ const dialog=page.getByRole('dialog',{name:'Personalizar receta'});
+ await expect(dialog.getByText('Comensales',{exact:true})).toBeVisible();await expect(dialog.getByLabel('Estilo',{exact:true})).toBeVisible();await expect(dialog.getByLabel('¿Quieres cambiar algo más? (opcional)')).toHaveValue('');
+ await expect(dialog.getByRole('button',{name:'Crear versión'})).toBeDisabled();
+ const servings=dialog.locator('.visual-option').filter({hasText:'Comensales'});const initial=Number(await servings.locator('.stepper-value').textContent());await servings.getByRole('button',{name:'Aumentar'}).click();
+ await dialog.getByLabel('Estilo',{exact:true}).selectOption('Casera');await dialog.getByLabel('Picante',{exact:true}).selectOption('Suave');
+ await page.screenshot({path:info.outputPath('personalization.png'),fullPage:true});
+ await dialog.getByRole('button',{name:'Crear versión'}).click();
+ await expect(dialog.locator('.recipe-revision-error')).toBeVisible();expect(payload.servings).toBe(initial+1);expect(payload.instruction).toContain('Estilo: Casera');expect(payload.instruction).toContain('Picante: Suave');expect(payload.instruction).not.toContain('Tiempo máximo');
+ await expect(page.locator('h1')).toHaveText(title!);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });

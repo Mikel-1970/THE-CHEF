@@ -16,7 +16,7 @@ export function useCookingOptions(settings:AppSettings, previous?:CookingRequest
 }
 export function cookingRequestOptions(v:CookingOptionsValue) { const {customRestriction,...rest}=v; return {...rest,restrictions:[...v.restrictions,...customRestriction.split(/[,;]+/).map(s=>s.trim()).filter(Boolean)]}; }
 const exclusions = ['Sin gluten','Sin lácteos','Sin huevo','Sin frutos secos','Sin pescado','Sin marisco','Vegetariana','Vegana'];
-export function CookingOptions({value,onChange}:{value:CookingOptionsValue;onChange:(patch:Partial<CookingOptionsValue>)=>void}) {
+export function CookingOptions({value,onChange,expanded=false}:{value:CookingOptionsValue;onChange:(patch:Partial<CookingOptionsValue>)=>void;expanded?:boolean}) {
  const [optionsOpen,setOptionsOpen]=useState(false);
  const {servings,maxMinutes,style,cuisine,difficulty,spiceLevel,restrictions,customRestriction}=value;
  const setServings=(v:CookingOptionsValue["servings"])=>onChange({servings:v});
@@ -28,8 +28,8 @@ export function CookingOptions({value,onChange}:{value:CookingOptionsValue;onCha
  const setRestrictions=(v:CookingOptionsValue["restrictions"])=>onChange({restrictions:v});
  const setCustomRestriction=(v:CookingOptionsValue["customRestriction"])=>onChange({customRestriction:v});
  return <>
-   <button type="button" className="advanced-toggle" aria-expanded={optionsOpen} onClick={()=>setOptionsOpen(v=>!v)}><span>Personalizar</span>{optionsOpen?<ChevronUp size={20}/>:<ChevronDown size={20}/>}</button>
-   {optionsOpen&&<section className="visual-options" aria-label="Personalizar receta">
+   {!expanded&&<button type="button" className="advanced-toggle" aria-expanded={optionsOpen} onClick={()=>setOptionsOpen(v=>!v)}><span>Personalizar</span>{optionsOpen?<ChevronUp size={20}/>:<ChevronDown size={20}/>}</button>}
+   {(expanded||optionsOpen)&&<section className="visual-options" aria-label="Personalizar receta">
     <div className="visual-option"><div className="visual-option-title"><UsersRound/><strong>Comensales</strong></div><NumberStepper value={servings} onChange={v=>{setServings(v)}}/></div>
     <div className="visual-option"><div className="visual-option-title"><Clock3/><strong>Tiempo máximo</strong></div><NumberStepper value={maxMinutes} min={15} max={120} step={5} suffix="min" editable onChange={v=>{setMaxMinutes(v)}}/></div>
     <label className="visual-option"><span className="visual-option-title"><Palette/><strong>Estilo</strong></span><select aria-label="Estilo" value={style??''} onChange={e=>setStyle(e.target.value||undefined)}><option value="">Indiferente</option>{RECIPE_STYLES.filter(v=>v!=='Indiferente').map(v=><option key={v}>{v}</option>)}</select></label>
