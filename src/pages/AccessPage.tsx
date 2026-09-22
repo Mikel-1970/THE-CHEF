@@ -134,7 +134,7 @@ export function AccessPage({ onAuthenticated }: Props) {
   }
 
   return (
-    <WelcomeSplash avatar={mode === 'register' ? avatar : settings.avatarEmoji} greeting={mode === 'login' && hasRegisteredUser ? `Bienvenido${settings.displayName ? `, ${settings.displayName}` : ''}` : undefined}>
+    <WelcomeSplash onChoose={chosen=>{setMode(chosen);setError('');setPassword('');setConfirmPassword('')}} avatar={mode === 'register' ? avatar : settings.avatarEmoji} greeting={mode === 'login' && hasRegisteredUser ? `Bienvenido${settings.displayName ? `, ${settings.displayName}` : ''}` : undefined}>
       <section key={mode} className="access-card">
         <span className="entry-eyebrow">ACCESO</span>
         {mode !== 'login' && <h2>{mode === 'register' ? 'Crear usuario' : 'Recuperar contraseña'}</h2>}

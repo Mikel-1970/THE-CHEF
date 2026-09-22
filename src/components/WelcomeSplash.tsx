@@ -1,17 +1,14 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useApp } from '../AppContext';
 import { ChefAvatar } from './ChefAvatar';
 import '../entry-flow.css';
 import { FoodCollage } from './FoodCollage';
 import './WelcomeSplash.css';
 
-export function WelcomeSplash({ children, avatar, greeting, onComplete }: { children: ReactNode; avatar?: string; greeting?: string; onComplete?:()=>void }) {
+export function WelcomeSplash({ children, avatar, greeting, onComplete, onChoose, notice }: { children: ReactNode; avatar?: string; greeting?: string; onComplete?:(mode:'login'|'register')=>void; onChoose?:(mode:'login'|'register')=>void; notice?:string }) {
   const { settings } = useApp();
   const [ready, setReady] = useState(false);
-  useEffect(() => {
-    const timer = window.setTimeout(() => {setReady(true);onComplete?.()}, 3500);
-    return () => window.clearTimeout(timer);
-  }, []);
+  const choose=(mode:'login'|'register')=>{if(onComplete){onComplete(mode);return}onChoose?.(mode);setReady(true)};
   return (
     <main className={`entry-page welcome-entry ${ready ? 'welcome-ready' : ''}`} aria-label="Acceso a The Chef">
       <FoodCollage/><div className="welcome-content">
@@ -19,7 +16,8 @@ export function WelcomeSplash({ children, avatar, greeting, onComplete }: { chil
         <div className="welcome-character"><ChefAvatar avatar={avatar ?? settings.avatarEmoji} size={220} showHat={false} /></div>
         <h1 key={greeting}>{greeting || '¿Qué cocinamos hoy?'}</h1>
         <p className="welcome-tagline">Tu cocina empieza aquí</p>
-        {!ready && <button className="welcome-skip" type="button" onClick={() => {setReady(true);onComplete?.()}}>Entrar ahora</button>}
+        {!ready && <div className="welcome-entry-actions"><button className="entry-secondary" type="button" onClick={()=>choose('register')}>Regístrate</button><button className="entry-primary" type="button" onClick={()=>choose('login')}>Login</button></div>}
+        {notice&&<p role="status" className="welcome-notice">{notice}</p>}
         <div className="welcome-fields" hidden={!ready}>{children}</div>
       </div>
     </main>

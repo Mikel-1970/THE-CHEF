@@ -11,8 +11,9 @@ import '../home-v04-refinements.css';
 export function HomePage() {
   const navigate = useNavigate();
   const { favorites, history, settings } = useApp();
-  const [greet,setGreet]=useState(()=>sessionStorage.getItem('chef:home-greeted')!=='1');
-  if(greet)return <WelcomeSplash greeting={`¡Hola${settings.displayName?', '+settings.displayName:''}!`} onComplete={()=>{sessionStorage.setItem('chef:home-greeted','1');setGreet(false)}}>{null}</WelcomeSplash>;
+  const [greet,setGreet]=useState(()=>sessionStorage.getItem('chef:home-greeted:v2')!=='1');
+  const [notice,setNotice]=useState('');
+  if(greet)return <WelcomeSplash greeting={`¡Hola${settings.displayName?', '+settings.displayName:''}!`} notice={notice} onComplete={mode=>{if(mode==='register'){setNotice('Tu cuenta ya está registrada. Pulsa Login para entrar.');return}sessionStorage.setItem('chef:home-greeted:v2','1');setGreet(false)}}>{null}</WelcomeSplash>;
   const desireImage = `${import.meta.env.BASE_URL}home-desire.webp`;
   const pantryImage = `${import.meta.env.BASE_URL}home-pantry-v2.png`;
   const photoRecipeImage = `${import.meta.env.BASE_URL}home-photo-recipe.png`;

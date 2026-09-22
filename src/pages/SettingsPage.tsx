@@ -1,3 +1,4 @@
+import { ChiliIcon } from '../components/ChiliIcon';
 import { SettingsAbout } from '../components/SettingsAbout';
 import { Edit3, LogOut, Sun, Moon, Monitor } from 'lucide-react';
 import { usePreviewIdentity } from '../components/PreviewIdentity';
@@ -16,7 +17,7 @@ const LANGUAGE_OPTIONS:Array<{value:AppLanguage;label:string}>=[{value:'es',labe
 export function SettingsPage(){
  const identity=usePreviewIdentity();
  const [editing,setEditing]=useState(false);
- const exit=()=>{sessionStorage.removeItem('chef:auth:session:v1');sessionStorage.removeItem('chef:home-greeted');if(identity)window.location.assign('/cdn-cgi/access/logout');else window.location.reload()};
+ const exit=()=>{sessionStorage.removeItem('chef:auth:session:v1');sessionStorage.removeItem('chef:home-greeted:v2');if(identity)window.location.assign('/cdn-cgi/access/logout');else window.location.reload()};
  const {settings,updateSettings}=useApp(); const currentAvatar=normalizeChefAvatar(settings.avatarEmoji); const [micPreference,setMicPreference]=useState<MicrophonePreference>(()=>loadMicrophonePreference()); const [micBusy,setMicBusy]=useState(false);
  const enableMicrophone=async()=>{if(micBusy)return;setMicBusy(true);setMicPreference(await requestMicrophoneAccess());setMicBusy(false)}; const disableMicrophone=()=>{saveMicrophonePreference('disabled');setMicPreference('disabled')};
  return <AppShell><div className="simple-page-header light-header"><span className="eyebrow">TU PERFIL DE COCINA</span><div className="settings-header-row"><h1>Ajustes</h1><button className="settings-exit" aria-label="Salir" onClick={exit}><LogOut/></button></div><p>Preferencias para que The Chef se adapte a tu forma de cocinar.</p></div><div className="page-content nav-safe settings-v03">
@@ -31,7 +32,7 @@ export function SettingsPage(){
   <section className="control-card"><div className="control-row"><div className="control-title"><UsersRound size={19}/><div><strong>Comensales habituales</strong><small>Valor inicial</small></div></div><NumberStepper value={settings.defaultServings} onChange={v=>updateSettings({defaultServings:v})}/></div></section>
   <section className="settings-card"><div className="settings-card-title"><Type size={20}/><div><strong>Tamaño de texto</strong><small>Legibilidad de toda la aplicación.</small></div></div><div className="chip-row">{fontScaleLabels.map(o=><Chip key={o.value} selected={settings.fontScale===o.value} onClick={()=>updateSettings({fontScale:o.value})}>{o.label}</Chip>)}</div></section>
   <section className="settings-card"><div className="settings-card-title"><ChefHat size={20}/><div><strong>Nivel de cocina</strong><small>Afecta al detalle y dificultad recomendada.</small></div></div><div className="chip-row">{(['Principiante','Intermedio','Avanzado'] as CookingLevel[]).map(v=><Chip key={v} selected={settings.cookingLevel===v} onClick={()=>updateSettings({cookingLevel:v})}>{v}</Chip>)}</div></section>
-  <section className="settings-card"><div className="settings-card-title"><strong>Picante habitual</strong><small>Preferencia, no restricción.</small></div><div className="chip-row">{(['Nada','Suave','Medio','Alto'] as SpiceLevel[]).map(v=><Chip key={v} selected={settings.spiceLevel===v} onClick={()=>updateSettings({spiceLevel:v})}>{v}</Chip>)}</div></section>
+  <section className="settings-card"><div className="settings-card-title"><ChiliIcon/><div><strong>Picante habitual</strong><small>Preferencia, no restricción.</small></div></div><div className="chip-row">{(['Nada','Suave','Medio','Alto'] as SpiceLevel[]).map(v=><Chip key={v} selected={settings.spiceLevel===v} onClick={()=>updateSettings({spiceLevel:v})}>{v}</Chip>)}</div></section>
   <section className="editorial-card small-info"><Smartphone size={21}/><div><strong>PWA privada</strong><p>La versión de pruebas se instala desde HTTPS y funciona como app.</p></div></section><section className="editorial-card small-info"><Info size={21}/><div><strong>Versión de prueba</strong><p>{__BUILD_COMMIT__?`${__BUILD_COMMIT__.slice(0,12)}${__BUILD_BRANCH__?` · ${__BUILD_BRANCH__}`:''}`:'Build local / sin metadatos de despliegue'}</p></div></section><section className="editorial-card small-info"><Info size={21}/><div><strong>Fase 1</strong><p>Versión destinada a beta privada con usuarios reales.</p></div></section>
  <SettingsAbout url={identity?.stableUrl||window.location.origin+import.meta.env.BASE_URL}/>
  </div></AppShell>;

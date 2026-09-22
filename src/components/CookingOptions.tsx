@@ -1,3 +1,4 @@
+import { ChiliIcon } from './ChiliIcon';
 import { ChevronDown, ChevronUp, Clock3, UsersRound, Palette, Globe2, ShieldCheck, Gauge } from 'lucide-react';
 import { useState } from 'react';
 import { CuisineSelect } from './CuisineSelect';
@@ -35,7 +36,7 @@ export function CookingOptions({value,onChange}:{value:CookingOptionsValue;onCha
     <div className="visual-option"><div className="visual-option-title"><Globe2/><strong>Tipo de cocina</strong></div><CuisineSelect value={cuisine} onChange={setCuisine}/></div>
     <div className="visual-option"><div className="visual-option-title"><ShieldCheck/><strong>Restricciones / exclusiones</strong></div><details className="visual-multiselect"><summary><span>{[...restrictions,...(customRestriction?['Otra exclusión']:[])].join(' · ')||'Seleccionar'}</span><ChevronDown/></summary><div>{exclusions.map(value=><label key={value}><input type="checkbox" checked={restrictions.includes(value)} onChange={e=>setRestrictions(e.target.checked?[...restrictions,value]:restrictions.filter(v=>v!==value))}/>{value}</label>)}<label className="custom-exclusion">Otra exclusión<input aria-label="Otra exclusión" value={customRestriction} onChange={e=>setCustomRestriction(e.target.value)} placeholder="Ej. cebolla, ajo…"/></label></div></details></div>
     <label className="visual-option"><span className="visual-option-title"><Gauge/><strong>Dificultad máxima</strong></span><select aria-label="Dificultad máxima" value={difficulty??''} onChange={e=>setDifficulty(e.target.value as Difficulty||undefined)}><option value="">Indiferente</option>{['Fácil','Media','Avanzada'].map(v=><option key={v}>{v}</option>)}</select></label>
-    <label className="visual-option"><span className="visual-option-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M17 7c1-3 0-5-2-5M15 7c-3 0-5 3-6 6s-3 5-6 7c7 1 15-3 16-9 0-2-2-4-4-4Z"/><path d="m12 9 3 1 3-1"/></svg><strong>Picante</strong></span><select aria-label="Picante" value={spiceLevel} onChange={e=>setSpiceLevel(e.target.value as SpiceLevel)}>{['Nada','Suave','Medio','Alto'].map(v=><option key={v}>{v}</option>)}</select></label>
+    <label className="visual-option"><span className="visual-option-title"><ChiliIcon/><strong>Picante</strong></span><select aria-label="Picante" value={spiceLevel} onChange={e=>setSpiceLevel(e.target.value as SpiceLevel)}>{['Nada','Suave','Medio','Alto'].map(v=><option key={v}>{v}</option>)}</select></label>
    </section>}
  </>;
 }

@@ -36,3 +36,18 @@
 
 [data-theme=dark] :is(.recipe-page,.trust-strip,.recipe-revision-launch,.recipe-ingredient-main,.visual-multiselect-menu,.visual-custom-restriction){background:var(--paper);color:var(--ink);border-color:var(--line)}
 [data-theme=dark] :is(.recipe-action-grid button span,.trust-strip span,.recipe-source-note small){color:var(--muted)}
+
+/* Single culinary scene: keep the photograph visible rather than bleaching it. */
+.welcome-entry .food-collage{opacity:1;background-position:center center}
+.welcome-entry .food-collage::after{background:linear-gradient(180deg,#111b1233,transparent 65%)}
+.welcome-entry:not(.welcome-ready) .welcome-content{background:#15201466;backdrop-filter:none;border-color:#fff4;box-shadow:0 20px 60px #0003}
+.welcome-entry:not(.welcome-ready) .welcome-content :is(h1,.entry-logo,.welcome-tagline,.welcome-notice){color:#fff9ea;text-shadow:0 2px 9px #0008}
+.welcome-entry-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.welcome-entry-actions .entry-primary{background:#47612b;color:white;border:1px solid #b8cc91}
+.welcome-entry-actions .entry-secondary{background:#fffaf1;color:#344923}
+.welcome-notice{font-size:.85rem;line-height:1.5}
+.reference-home>.food-collage{opacity:1;background-position:center top}
+.reference-home>.food-collage::after{background:linear-gradient(180deg,#17201122,#17201111 75%,#17201155)}
+.reference-quick-title{background:#fffaf1eb;border-radius:16px;padding:10px}
+[data-theme=dark] .reference-quick-title{background:#242a22ed}
+@media(min-width:760px){.welcome-entry .food-collage{background-position:center 70%}.welcome-entry:not(.welcome-ready) .welcome-content{margin-left:6vw;margin-right:auto}}

@@ -5,6 +5,7 @@ test.beforeEach(async({page})=>{
 });
 test('theme follows system, persists explicit selection and profile editing works',async({page},info)=>{
  await page.emulateMedia({colorScheme:'dark'});await page.goto('./#/ajustes');
+ await expect(page.locator('.settings-card').filter({hasText:'Picante habitual'}).locator('.settings-card-title svg')).toBeVisible();
  await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
  await page.getByRole('button',{name:'Claro',exact:true}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','light');
  await page.reload();await expect(page.locator('html')).toHaveAttribute('data-theme','light');
@@ -16,9 +17,9 @@ test('theme follows system, persists explicit selection and profile editing work
  await page.getByRole('button',{name:'Enviar comentarios',exact:true}).click();await page.getByLabel('¿Qué mejorarías?').fill('Prueba');await expect(page.getByRole('button',{name:'Compartir comentario',exact:true})).toBeEnabled();
  await page.getByRole('button',{name:'Eliminar datos de este dispositivo',exact:true}).click();await page.getByRole('button',{name:'Cancelar',exact:true}).click();expect(await page.evaluate(()=>localStorage.getItem('chef:settings'))).toContain('Mikel prueba');
 });
-test('home greeting lasts 3.5 seconds, fixed avatar opens settings, collage remains',async({page},info)=>{
+test('home greeting waits for Login, fixed avatar opens settings, collage remains',async({page},info)=>{
  await page.clock.install();await page.clock.pauseAt(new Date());await page.goto('./');
- await expect(page.locator('.welcome-entry')).toBeVisible();await page.clock.runFor(3200);await expect(page.locator('.welcome-entry')).toBeVisible();await page.clock.runFor(400);
+ await expect(page.locator('.welcome-entry')).toBeVisible();await page.clock.runFor(3200);await expect(page.locator('.welcome-entry')).toBeVisible();await page.clock.runFor(120000);await expect(page.locator('.welcome-entry')).toBeVisible();await page.getByRole('button',{name:'Regístrate',exact:true}).click();await expect(page.getByText('Tu cuenta ya está registrada. Pulsa Login para entrar.',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Login',exact:true}).click();
  await expect(page.locator('.reference-home')).toBeVisible();await expect(page.locator('.reference-home .food-collage')).toBeVisible();await page.screenshot({path:info.outputPath('home-collage.png'),fullPage:true});
  await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await page.getByRole('button',{name:'Perfil y ajustes',exact:true}).click();await expect(page.getByRole('button',{name:'Salir',exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Volver',exact:true}).click();await expect(page.locator('.welcome-entry')).toHaveCount(0);

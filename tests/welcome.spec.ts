@@ -4,7 +4,7 @@ test.beforeEach(async ({ page }) => {
   await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort());
 });
 
-test('first visit shows El Chef and automatically opens login in 3–4 seconds', async ({ page }, info) => {
+test('first visit stays until Login is pressed', async ({ page }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.clock.install();
@@ -16,14 +16,15 @@ test('first visit shows El Chef and automatically opens login in 3–4 seconds',
   await expect.poll(() => splash.locator('img').evaluate((img: HTMLImageElement) => img.naturalWidth)).toBe(1122);
   await page.clock.runFor(1400);
   const brand = await page.locator('.welcome-character').elementHandle();
-  const brandBox = await page.locator('.welcome-character').boundingBox();
+
   await page.clock.runFor(1100);
   await expect(splash).toBeVisible();
   await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeHidden();
-  await page.clock.runFor(1200);
+  await page.clock.runFor(120000);
   await expect(splash).toBeVisible();
   expect(await brand!.evaluate(node => node.isConnected)).toBe(true);
-  expect(await page.locator('.welcome-character').boundingBox()).toEqual(brandBox);
+  await expect(page.getByRole('button',{name:'Entrar',exact:true})).toBeHidden();
+  await page.getByRole('button',{name:'Login',exact:true}).click();
   await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible();
   await expect(page.getByPlaceholder('Usuario o correo', { exact: true })).toBeVisible();
   await expect(page.getByPlaceholder('Contraseña', { exact: true })).toBeVisible();
@@ -39,6 +40,7 @@ test('animated entry and login render without clipping', async ({ page }, info) 
   const heading = await page.locator('.welcome-content h1').boundingBox();
   expect(image!.y + image!.height).toBeLessThanOrEqual(heading!.y);
   await page.screenshot({ path: info.outputPath('splash.png'), fullPage: true });
+  await page.getByRole('button',{name:'Login',exact:true}).click();
   await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible();
   await expect(page.locator('.welcome-fields')).toHaveCSS('opacity', '1');
   await expect(page.locator('.entry-primary')).toHaveCSS('opacity', '1');
@@ -46,10 +48,9 @@ test('animated entry and login render without clipping', async ({ page }, info) 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
-test('explicit skip opens login and registration retains permissions and tutorial', async ({ page }, info) => {
+test('manual entry opens login and registration retains permissions and tutorial', async ({ page }, info) => {
   await page.goto('./');
-  await page.getByRole('button', { name: 'Entrar ahora' }).click();
-  await page.getByRole('button', { name: 'Registro', exact: true }).click();
+  await page.getByRole('button', { name: 'Regístrate', exact: true }).click();
   await page.getByPlaceholder('Tu nombre').fill('Prueba R1-03');
   await page.locator('.registration-avatar-picker summary').click();
   await expect(page.locator('.registration-avatar-grid button')).toHaveCount(16);
@@ -67,7 +68,7 @@ test('explicit skip opens login and registration retains permissions and tutoria
   await page.getByRole('button', { name: 'Ahora no', exact: true }).click();
   await page.evaluate(() => sessionStorage.removeItem('chef:auth:session:v1'));
   await page.reload();
-  await page.getByRole('button', { name: 'Entrar ahora' }).click();
+  await page.getByRole('button', { name: 'Login', exact: true }).click();
   await expect(page.getByRole('heading', {name:'Bienvenido, Prueba R1-03'})).toBeVisible();
   await expect(page.locator('.welcome-character img')).toHaveAttribute('src',/dachshund.png$/);
   await page.getByPlaceholder('Contraseña', { exact: true }).fill('wrong');
@@ -81,6 +82,7 @@ test('explicit skip opens login and registration retains permissions and tutoria
 
 test('avatar selected in settings persists into the next entry', async ({ page }) => {
   await page.addInitScript(() => {
+    sessionStorage.setItem('chef:home-greeted:v2','1');
     sessionStorage.setItem('chef:auth:session:v1', '1');
     sessionStorage.setItem('chef:entry-tutorial:seen-session:v1', '1');
     sessionStorage.setItem('chef:tutorial:invite-dismissed-session:v2', '1');
@@ -100,6 +102,7 @@ test('avatar selected in settings persists into the next entry', async ({ page }
 
 test('authenticated session goes directly to the requested route without splash or login', async ({ page }) => {
   await page.addInitScript(() => {
+    sessionStorage.setItem('chef:home-greeted:v2','1');
     sessionStorage.setItem('chef:auth:session:v1', '1');
     sessionStorage.setItem('chef:entry-tutorial:seen-session:v1', '1');
   });
@@ -111,10 +114,11 @@ test('authenticated session goes directly to the requested route without splash 
   await expect.poll(() => page.locator('.avatar-gallery img').evaluateAll(images => images.every(img => (img as HTMLImageElement).naturalWidth === 1122))).toBe(true);
 });
 
-test('reduced motion keeps the automatic transition without animation', async ({ page }) => {
+test('reduced motion keeps manual entry without animation', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./');
   await expect(page.locator('.welcome-character')).toHaveCSS('animation-name', 'none');
+  await page.getByRole('button',{name:'Login',exact:true}).click();
   await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible();
 });
 
@@ -127,6 +131,7 @@ test('invalid stored avatar safely defaults to El Chef', async ({ page }) => {
 
 test('home has two larger cards, aligned actions and upper-right hat', async ({ page }, info) => {
   await page.addInitScript(() => {
+    sessionStorage.setItem('chef:home-greeted:v2','1');
     sessionStorage.setItem('chef:auth:session:v1', '1');
     sessionStorage.setItem('chef:entry-tutorial:seen-session:v1', '1');
     sessionStorage.setItem('chef:tutorial:invite-dismissed-session:v2', '1');
