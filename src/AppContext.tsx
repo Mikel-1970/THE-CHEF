@@ -20,6 +20,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => { const fontSizes: Record<AppSettings['fontScale'], string> = { normal: '16px', large: '18px', xlarge: '20px' }; document.documentElement.style.fontSize = fontSizes[settings.fontScale]; }, [settings.fontScale]);
 
+  useEffect(() => {
+    const media=window.matchMedia('(prefers-color-scheme: dark)');
+    const apply=()=>{document.documentElement.dataset.theme=settings.theme==='dark'||((!settings.theme||settings.theme==='auto')&&media.matches)?'dark':'light'};
+    apply();media.addEventListener('change',apply);return()=>media.removeEventListener('change',apply);
+  },[settings.theme]);
   const setSearch = (request: CookingRequest, nextProposals: Proposal[]) => {
     setCurrentRequest(request); setProposals(nextProposals); saveActiveSearch(request, nextProposals);
     const label = request.mode === 'pantry' ? (request.pantryIngredients ?? []).map(i => i.name).join(', ') : request.desireText || 'Búsqueda por preferencias';

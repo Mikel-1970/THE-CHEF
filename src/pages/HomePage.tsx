@@ -1,18 +1,23 @@
 import { BookOpen, Camera, ChefHat, Clock3, Heart, PackageOpen, ShoppingBasket } from 'lucide-react';
+import { useState } from 'react';
+import { WelcomeSplash } from '../components/WelcomeSplash';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
 import '../home-v04.css';
+import { FoodCollage } from '../components/FoodCollage';
 import '../home-v04-refinements.css';
 
 export function HomePage() {
   const navigate = useNavigate();
-  const { favorites, history } = useApp();
+  const { favorites, history, settings } = useApp();
+  const [greet,setGreet]=useState(()=>sessionStorage.getItem('chef:home-greeted')!=='1');
+  if(greet)return <WelcomeSplash greeting={`¡Hola${settings.displayName?', '+settings.displayName:''}!`} onComplete={()=>{sessionStorage.setItem('chef:home-greeted','1');setGreet(false)}}>{null}</WelcomeSplash>;
   const desireImage = `${import.meta.env.BASE_URL}home-desire.webp`;
   const pantryImage = `${import.meta.env.BASE_URL}home-pantry-v2.png`;
   const photoRecipeImage = `${import.meta.env.BASE_URL}home-photo-recipe.png`;
   return <AppShell>
-    <section className="reference-home">
+    <section className="reference-home"><FoodCollage/>
       <div className="reference-decor reference-decor-right" style={{ backgroundImage: `url(${desireImage})` }} aria-hidden="true" />
       <header className="reference-brand"><div className="reference-chef-logo"><ChefHat size={68} strokeWidth={1.55} /></div><h1>The Chef</h1><div className="reference-divider" aria-hidden="true"><span /><i>◇</i><span /></div><p className="reference-brand-tagline">Vamos a cocinar algo delicioso.</p></header>
       <section className="reference-main-actions" aria-label="Acción principal">

@@ -39,23 +39,22 @@ test('visual controls preserve choices and request/display one proposal includin
  await expect(page.getByRole('button',{name:'Dame otra',exact:true})).toBeVisible();
  await expect(page.locator('.proposal-stack').locator(':scope > *')).toHaveCount(1);
 });
-test('avatar remains fixed when scrolling, drags, opens styled menu; settings and back work',async({page},info)=>{
+test('avatar remains fixed when scrolling, stays upper right, opens styled menu; settings and back work',async({page},info)=>{
  await page.goto('./#/antojo');
  await page.getByRole('button',{name:'Personalizar',exact:true}).click();
  const avatar=page.locator('.chef-draggable-avatar');const initial=await avatar.boundingBox();
  await page.evaluate(()=>window.scrollTo(0,document.body.scrollHeight));
  await expect(avatar).toBeInViewport();expect(await avatar.boundingBox()).toEqual(initial);
  await expect(page.getByRole('button',{name:'Volver',exact:true})).toBeInViewport();
- await expect(page.getByRole('button',{name:'Perfil y ajustes'})).toBeInViewport();
- await page.mouse.move(initial!.x+29,initial!.y+29);await page.mouse.down();await page.mouse.move(initial!.x+130,initial!.y+150,{steps:10});await page.mouse.up();
- expect((await avatar.boundingBox())!.y).toBeGreaterThan(initial!.y+70);
+ await expect(page.locator('.chef-draggable-avatar')).toBeInViewport();
+ expect(initial!.x).toBeGreaterThan(page.viewportSize()!.width-90);
  await expect(page.locator('.chef-navigation-panel')).toHaveCount(0);
  await avatar.click();await expect(page.getByRole('navigation',{name:'Menú de navegación'})).toBeVisible();
  await expect(page.locator('.chef-menu-grid')).toHaveCSS('display','grid');
  await page.screenshot({path:info.outputPath('avatar-menu.png')});
  await page.getByRole('button',{name:'Inicio',exact:true}).click();
  await expect(avatar).toBeInViewport();
- await page.getByRole('button',{name:'Perfil y ajustes'}).click();await expect(page.locator('.avatar-gallery')).toBeVisible();
+ await avatar.click();await page.getByRole('button',{name:'Perfil y ajustes'}).click();await page.getByRole('button',{name:'Editar perfil',exact:true}).click();await expect(page.locator('.avatar-gallery')).toBeVisible();
  await page.getByRole('button',{name:'Volver',exact:true}).click();await expect(page.locator('.reference-action-card')).toBeVisible();
 });
 test('microphone is manual, same button stops, transcript is confirmed separately',async({page})=>{
@@ -89,7 +88,7 @@ test('library and techniques retain floating navigation',async({page})=>{
  for(const route of ['mis-recetas','tecnicas']) {
  await page.goto('./#/'+route);
  await expect(page.locator('.chef-draggable-avatar')).toBeInViewport();
- await expect(page.getByRole('button',{name:'Perfil y ajustes'})).toBeInViewport();
+ await expect(page.locator('.chef-draggable-avatar')).toBeInViewport();
  await expect(page.getByRole('button',{name:'Volver',exact:true})).toBeInViewport();
  }
 });

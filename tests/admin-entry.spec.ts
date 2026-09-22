@@ -4,7 +4,7 @@ test('admin enters from empty storage and keeps avatar across reload and new tab
  await context.route('**/api/session',r=>r.fulfill({json:identity()}));
  await page.goto('./');await expect(page.locator('.reference-action-card')).toBeVisible();
  await expect(page.getByRole('button',{name:'Registro',exact:true})).toHaveCount(0);
- await page.getByRole('button',{name:'Perfil y ajustes'}).click();
+ await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await page.getByRole('button',{name:'Perfil y ajustes'}).click();await page.getByRole('button',{name:'Editar perfil',exact:true}).click();
  await expect(page.getByText('Administrador de pruebas · cuenta verificada',{exact:true})).toBeVisible();
  await expect(page.getByPlaceholder('Usuario',{exact:true})).toHaveValue('admin@example.test');
  await page.getByRole('button',{name:'Elegir avatar Voldi',exact:true}).click();

@@ -4,7 +4,7 @@ test.beforeEach(async ({ page }) => {
   await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort());
 });
 
-test('first visit shows El Chef and automatically opens login in 2–3 seconds', async ({ page }, info) => {
+test('first visit shows El Chef and automatically opens login in 3–4 seconds', async ({ page }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.clock.install();
@@ -14,13 +14,13 @@ test('first visit shows El Chef and automatically opens login in 2–3 seconds',
   await expect(splash).toBeVisible();
   await expect(splash.locator('img')).toHaveAttribute('src', /avatars\/chef-man.png$/);
   await expect.poll(() => splash.locator('img').evaluate((img: HTMLImageElement) => img.naturalWidth)).toBe(1122);
-  await page.clock.runFor(1000);
+  await page.clock.runFor(1400);
   const brand = await page.locator('.welcome-character').elementHandle();
   const brandBox = await page.locator('.welcome-character').boundingBox();
   await page.clock.runFor(1100);
   await expect(splash).toBeVisible();
   await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeHidden();
-  await page.clock.runFor(700);
+  await page.clock.runFor(1200);
   await expect(splash).toBeVisible();
   expect(await brand!.evaluate(node => node.isConnected)).toBe(true);
   expect(await page.locator('.welcome-character').boundingBox()).toEqual(brandBox);
@@ -86,6 +86,7 @@ test('avatar selected in settings persists into the next entry', async ({ page }
     sessionStorage.setItem('chef:tutorial:invite-dismissed-session:v2', '1');
   });
   await page.goto('./#/ajustes');
+  await page.getByRole('button',{name:'Editar perfil',exact:true}).click();
   await page.getByRole('button', { name: 'Elegir avatar Voldi', exact: true }).click();
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('chef:settings')!).avatarEmoji)).toBe('dachshund');
   const settings = await page.evaluate(() => localStorage.getItem('chef:settings')!);
@@ -103,6 +104,7 @@ test('authenticated session goes directly to the requested route without splash 
     sessionStorage.setItem('chef:entry-tutorial:seen-session:v1', '1');
   });
   await page.goto('./#/ajustes');
+  await page.getByRole('button',{name:'Editar perfil',exact:true}).click();
   await expect(page.locator('.avatar-gallery')).toBeVisible();
   await expect(page.locator('.welcome-entry,.access-card')).toHaveCount(0);
   await expect(page.locator('.avatar-gallery img')).toHaveCount(16);

@@ -13,7 +13,7 @@ ok('Una propuesta',pantry.includes('slice(0,1)')&&hybrid.includes('PROPOSAL_COUN
 ok('Tiempo máximo 120',read('src/components/CookingOptions.tsx').includes('max={120}')&&pantry.includes('<CookingOptions'));
 ok('Recipe sin panel elaboración duplicado',!recipe.includes("'elaboration'"));
 ok('CTA Elaboración',recipe.includes('> Elaboración</button>'));
-ok('Ficha título-resumen-foto-nutrición',recipe.indexOf('recipe-title-block')<recipe.indexOf('recipe-summary-content')&&recipe.indexOf('recipe-summary-content')<recipe.indexOf('recipe-hero')&&recipe.indexOf('recipe-hero')<recipe.indexOf('nutrition-card nutrition-card-priority'));
+ok('Ficha foto-título-resumen-nutrición',recipe.indexOf('recipe-hero')<recipe.indexOf('recipe-title-block')&&recipe.indexOf('recipe-title-block')<recipe.indexOf('recipe-summary-content')&&recipe.indexOf('recipe-summary-content')<recipe.indexOf('nutrition-card nutrition-card-priority'));
 ok('Imagen preparada antes de abrir ficha',results.includes('await getRecipeImage(recipe)')&&results.indexOf('await getRecipeImage(recipe)')<results.indexOf('navigate(`/receta/${recipe.id}`)'));
 ok('Reintento de imagen sin regenerar receta',results.includes('pendingRecipe')&&results.includes('getRecipeById(pendingRecipe.recipeId)'));
 ok('Variantes versionadas',recipe.includes('· v${version}'));
