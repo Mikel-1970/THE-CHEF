@@ -10,7 +10,7 @@ ok('Nombre Abre la despensa',home.includes('Abre la despensa')&&pantry.includes(
 ok('Foto Receta',home.includes('Foto Receta'));
 ok('Sin boton Crear tu receta',!home.includes('Crear tu receta'));
 ok('Una propuesta',pantry.includes('slice(0,1)')&&hybrid.includes('PROPOSAL_COUNT=1'));
-ok('Tiempo máximo 120',read('src/components/CookingOptions.tsx').includes('max={120}')&&pantry.includes('<CookingOptions'));
+ok('Tiempo máximo 120',read('src/components/CookingOptions.tsx').includes('max={120}')&&results.includes('<CookingOptions'));
 ok('Recipe sin panel elaboración duplicado',!recipe.includes("'elaboration'"));
 ok('CTA Elaboración',recipe.includes('> Elaboración</button>'));
 ok('Ficha foto-título-resumen-nutrición',recipe.indexOf('recipe-hero')<recipe.indexOf('recipe-title-block')&&recipe.indexOf('recipe-title-block')<recipe.indexOf('recipe-summary-content')&&recipe.indexOf('recipe-summary-content')<recipe.indexOf('nutrition-card nutrition-card-priority'));
@@ -26,7 +26,7 @@ ok('Capa multidioma activa',app.includes('<UiI18n>')&&i18n.includes('Apri la dis
 ok('Compra manual persiste entre recetas',context.includes('existingIsManual')&&context.includes('!item.recipeId || item.recipeId === recipeId'));
 ok('Proposal nutrition',/nutritionPerServing\?\s*:\s*NutritionSummary/.test(types));
 ok('jsPDF parcheado',/^\^?4\.2\.1$/.test(pkg.dependencies?.jspdf??''));
-ok('Inventario disponible separado de prioridades',pantry.includes("priority:selected.has")&&pantry.includes("pantryIngredients:available"));
+ok('Solo ingredientes seleccionados en propuesta',pantry.includes("const available=selectedItems.map")&&pantry.includes("pantryIngredients:available"));
 ok('Preferencia IA para una propuesta',hybrid.includes("Math.round(preference/100)")&&hybrid.includes('PROPOSAL_COUNT=1'));
 ok('Tutorial sin BottomNav obsoleto',!tour.includes('data-tour="bottom-nav"')&&!tour.includes('Empezar a cocinar'));
 ok('Contraseña no expuesta en Ajustes',!settings.includes('settings.loginPassword')&&!settings.includes('Mostrar contraseña'));
@@ -42,7 +42,7 @@ ok('Tiempo y dificultad son límites locales',mock.includes('r.prepMinutes+r.coo
 ok('Sustitución aceptada mediante variante',recipe.includes('Usar sustituto')&&recipe.includes('Ajusta cantidades, pasos, tiempos y valores nutricionales'));
 ok('Tengo reconoce inventario',recipe.includes('ingredientNamesMatch')&&recipe.includes('saveHaveIngredients'));
 ok('Cantidades de pasos escalan en cocina y PDF',cook.includes('scaleStepInstruction(recipe,step.instruction,servings)')&&pdf.includes('scaleStepInstruction(recipe,s.instruction,servings)')&&stepScaling.includes('scaleQuantity'));
-ok('PDF se carga bajo demanda',pdf.includes("await import('jspdf')"));
+ok('PDF disponible sin carga tardía de jsPDF',pdf.includes("import { jsPDF } from 'jspdf'")&&!pdf.includes("await import('jspdf')"));
 ok('Home sin URLs CSS obsoletas',!homeCss.includes("./home-pantry.jpg")&&!homeCss.includes("./home-desire.jpg"));
 ok('Propuestas IA respetan límites duros',hybrid.includes('proposalWithinLimits')&&hybrid.includes('proposal.minutes>request.maxMinutes')&&hybrid.includes('DIFFICULTY_RANK[proposal.difficulty]>DIFFICULTY_RANK[request.difficulty]'));
 ok('Nutrición escalada evita falsa precisión',recipe.includes('El escalado culinario puede variar ligeramente los valores'));

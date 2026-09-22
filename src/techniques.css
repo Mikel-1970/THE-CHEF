@@ -135,3 +135,5 @@
   .technique-card { padding: 17px; border-radius: 20px; }
   .technique-input-box { gap: 7px; }
 }
+.temperature-guide{margin:16px 0;font-size:.85rem}.temperature-guide table{width:100%;border-collapse:collapse}.temperature-guide td,.temperature-guide th{padding:8px 4px;text-align:left;border-bottom:1px solid #dadbce}.temperature-guide p{line-height:1.5}
+.techniques-library>input,.techniques-library>select{display:block;width:100%;box-sizing:border-box;padding:12px;margin:8px 0;border:1px solid #d8dacb;border-radius:12px;background:var(--surface,#fffaf1);color:inherit;font:inherit}.tip-review-card{margin:12px 0}.tip-review-card .chip-row{margin-top:12px}.techniques-page .olive-intro>.secondary-button{margin-bottom:14px}

@@ -1,3 +1,4 @@
+import { techniqueBasics } from '../data/techniqueBasics';
 import type { Technique } from './techniqueGateway';
 
 const STORAGE_KEY = 'the-chef.techniques.v1';
@@ -30,3 +31,5 @@ function isTechnique(value: unknown): value is Technique {
   const item = value as Partial<Technique>;
   return typeof item.id === 'string' && typeof item.title === 'string' && Array.isArray(item.steps) && Array.isArray(item.ingredients);
 }
+
+export function getTechniqueLibrary():Technique[]{return [...techniqueBasics,...getSavedTechniques().filter(t=>!techniqueBasics.some(b=>b.id===t.id))];}

@@ -18,6 +18,10 @@ export type TechniqueStep = {
 };
 
 export type Technique = {
+  temperatureGuide?: {conditions:string;rows:{product:string;temperatureC:number;minutes:number}[]};
+  builtin?: boolean;
+  timeLabel?: string;
+  sources?: {label:string;url:string}[];
   id: string;
   title: string;
   description: string;

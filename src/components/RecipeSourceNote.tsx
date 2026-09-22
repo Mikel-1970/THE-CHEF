@@ -1,4 +1,4 @@
-import { ExternalLink, Globe2, Image as ImageIcon, RefreshCw, Share2, ShieldCheck, Sparkles } from 'lucide-react';
+import { ExternalLink, Globe2, Image as ImageIcon, RefreshCw, ShieldCheck, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { Recipe, RecipeSource } from '../domain/types';
 import { getRecipeImage } from '../services/mediaGateway';
@@ -34,25 +34,6 @@ export function RecipeSourceNote({ recipe, showImage = true }: { recipe: Recipe;
     if (isAi && showImage) void loadImage();
   }, [recipe.id, isAi, showImage]);
 
-  const shareText = buildRecipeShareText(recipe);
-
-  const shareRecipe = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: `${recipe.title} · El Chef`, text: shareText });
-        return;
-      } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') return;
-      }
-    }
-    await navigator.clipboard?.writeText(shareText);
-    window.alert('Receta copiada. Ya puedes pegarla donde quieras.');
-  };
-
-  const sendWhatsApp = () => {
-    window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank', 'noopener,noreferrer');
-  };
-
   return (
     <>
       {isAi && showImage && (
@@ -68,15 +49,10 @@ export function RecipeSourceNote({ recipe, showImage = true }: { recipe: Recipe;
         </section>
       )}
 
-      <div className="recipe-share-actions">
-        <button type="button" className="secondary-button" onClick={() => void shareRecipe()}><Share2 size={17} /> Compartir receta</button>
-        <button type="button" className="secondary-button whatsapp-share-button" onClick={sendWhatsApp}>WhatsApp</button>
-      </div>
-
-      <section className="trust-strip recipe-source-note">
+<section className="trust-strip recipe-source-note">
         <Icon size={18} />
         <div>
-          <strong>{isWeb ? 'Fuente web adaptada' : isAi ? 'Receta generada por IA y comprobada automáticamente' : 'Receta del catálogo El Chef'}</strong>
+          <strong>{isWeb ? 'Fuente web adaptada' : isAi ? 'Receta generada por IA' : source.kind === 'user' ? 'Receta de tu biblioteca' : 'Receta del repositorio El Chef'}</strong>
           <span>
             {source.publisher || source.label}
             {source.adapted ? ' · Adaptada automáticamente por El Chef' : ''}
@@ -88,23 +64,4 @@ export function RecipeSourceNote({ recipe, showImage = true }: { recipe: Recipe;
       </section>
     </>
   );
-}
-
-function buildRecipeShareText(recipe: Recipe): string {
-  const ingredients = recipe.ingredients.map(item => `• ${item.quantity} ${item.unit} ${item.name}`.replace(/\s+/g, ' ').trim());
-  const steps = recipe.steps.map(step => `${step.number}. ${step.instruction}`);
-  return [
-    `👨‍🍳 ${recipe.title} · El Chef`,
-    recipe.description,
-    '',
-    `⏱ ${recipe.prepMinutes + recipe.cookMinutes} min · ${recipe.difficulty} · ${recipe.baseServings} raciones`,
-    '',
-    'INGREDIENTES',
-    ...ingredients,
-    '',
-    'ELABORACIÓN',
-    ...steps,
-    '',
-    'Compartida desde El Chef'
-  ].join('\n');
 }

@@ -16,6 +16,12 @@ export type DishEvaluation = {
 };
 
 export async function getRecipeImage(recipe: Recipe): Promise<string | undefined> {
+  // La foto aportada es la referencia también para recetas anteriores a imageOrigin.
+  let source: string | undefined;
+  try { source = sessionStorage.getItem(`chef:source-photo:${recipe.id}`) || undefined; } catch { /* almacenamiento restringido */ }
+  source ??= await getRecipeSourcePhoto(recipe.id).catch(() => undefined);
+  if (source) return source;
+  if (recipe.imageOrigin === 'user-photo') return undefined;
   const cacheKey = imageRequest(recipe.id);
   if ('caches' in window) {
     const cache = await caches.open(IMAGE_CACHE);

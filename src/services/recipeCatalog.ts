@@ -185,6 +185,7 @@ function normalizeStoredRecipe(value: unknown): Recipe | undefined {
     criticalPoints: strings(value.criticalPoints),
     substitutions: strings(value.substitutions),
     storage: text(value.storage) ?? '',
+    imageOrigin: value.imageOrigin === 'user-photo' ? 'user-photo' : undefined,
     nutritionPerServing: nutrition,
     source: normalizeStoredSource(value.source)
   };

@@ -34,7 +34,10 @@ export default defineConfig(({ mode }) => {
       }] : []),
       VitePWA({
         registerType: 'autoUpdate',
-        selfDestroying: true,
+        strategies: 'injectManifest',
+        srcDir: 'src',
+        filename: 'sw.js',
+        injectManifest: { injectionPoint: undefined },
         includeAssets: ['favicon.svg', 'home-pantry.jpg', 'home-desire.jpg'],
         manifest: {
           name: 'El Chef · Cocina inteligente',

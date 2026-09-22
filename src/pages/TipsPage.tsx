@@ -1,0 +1,12 @@
+import { queueTipReview, synchronizeCulinaryCatalog } from '../services/culinarySync';
+import { useEffect, useState } from 'react';
+import { AppShell } from '../components/AppShell';
+import { TopBar } from '../components/TopBar';
+import { cookingTips, getTipReviews, setTipReview } from '../data/cookingTips';
+export function TipsPage(){
+ const [reviews,setReviews]=useState(getTipReviews),[query,setQuery]=useState('');
+ const [error,setError]=useState('');const[sync,setSync]=useState(__PRIVATE_PREVIEW__?'Sincronizando…':'Guardado en este dispositivo');
+ useEffect(()=>{const updated=(event:Event)=>{setReviews(getTipReviews());setSync((event as CustomEvent).detail==='synced'?'Sincronizado entre dispositivos':'Guardado aquí; sincronización pendiente')};window.addEventListener('chef:catalog-sync',updated);void synchronizeCulinaryCatalog();return()=>window.removeEventListener('chef:catalog-sync',updated)},[]);
+ const review=(id:string,value:'keep'|'hide'|'pending')=>{try{setReviews(setTipReview(id,value));setSync(__PRIVATE_PREVIEW__?'Sincronizando…':'Guardado en este dispositivo');queueTipReview(id,value);setError('')}catch{setError('No se ha podido guardar tu selección en este navegador.')}};
+ return <AppShell><TopBar title="Consejos de cocina"/><div className="page-content nav-safe"><section className="editorial-card"><h2>{cookingTips.length} tips para descubrir</h2><p>Aparecen mientras se prepara tu receta. Puedes conservar los que te interesan y ocultar los demás.</p><small>{sync}</small><input aria-label="Buscar consejo" placeholder="Busca un ingrediente o una técnica" value={query} onChange={e=>setQuery(e.target.value)}/></section>{error&&<p role="alert">{error}</p>}{cookingTips.filter(t=>t.text.toLocaleLowerCase('es').includes(query.toLocaleLowerCase('es'))).map(t=><article className="editorial-card tip-review-card" key={t.id}><span className="cooking-tip-icon" aria-hidden="true">{t.icon}</span><p>{t.text}</p><a href={t.source} target="_blank" rel="noreferrer">Consultar fuente</a><div className="chip-row"><button className="chip" aria-pressed={reviews[t.id]==='keep'} onClick={()=>review(t.id,'keep')}>Me interesa</button><button className="chip" aria-pressed={reviews[t.id]==='hide'} onClick={()=>review(t.id,'hide')}>Ocultar</button><button className="chip" aria-pressed={!reviews[t.id]} onClick={()=>review(t.id,'pending')}>Sin decidir</button></div></article>)}</div></AppShell>;
+}
