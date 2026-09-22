@@ -21,7 +21,7 @@ test('home greeting waits for Login, fixed avatar opens settings, collage remain
  await page.clock.install();await page.clock.pauseAt(new Date());await page.goto('./');
  await expect(page.locator('.welcome-entry')).toBeVisible();await page.clock.runFor(3200);await expect(page.locator('.welcome-entry')).toBeVisible();await page.clock.runFor(120000);await expect(page.locator('.welcome-entry')).toBeVisible();await page.getByRole('button',{name:'Regístrate',exact:true}).click();await expect(page.getByText('Tu cuenta ya está registrada. Pulsa Login para entrar.',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Login',exact:true}).click();
  await expect(page.locator('.reference-home')).toBeVisible();await expect(page.locator('.reference-home .food-collage')).toBeVisible();await page.screenshot({path:info.outputPath('home-collage.png'),fullPage:true});
- await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await page.getByRole('button',{name:'Perfil y ajustes',exact:true}).click();await expect(page.getByRole('button',{name:'Salir',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await page.getByRole('button',{name:'Perfil y ajustes',exact:true}).click();await expect(page.getByRole('button',{name:'Guardar cambios',exact:true}).first()).toBeVisible();
  await page.getByRole('button',{name:'Volver',exact:true}).click();await expect(page.locator('.welcome-entry')).toHaveCount(0);
 });
 
@@ -34,4 +34,14 @@ test('recipe photograph precedes content and is twenty percent shorter',async({p
  await page.screenshot({path:info.outputPath('recipe-dark.png'),fullPage:true});
  await page.getByRole('button',{name:'Ingredientes Lo que necesitas',exact:true}).click();await expect(page.getByRole('heading',{name:'Ingredientes',exact:true})).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
+
+test('save settings returns to previous screen, persists changes and never logs out',async({page})=>{
+ const logout:string[]=[];page.on('request',r=>{if(r.url().includes('/cdn-cgi/access/logout'))logout.push(r.url())});
+ await page.goto('./#/cocina-despensa');await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await page.getByRole('button',{name:'Perfil y ajustes',exact:true}).click();
+ await page.getByRole('button',{name:'Editar perfil',exact:true}).click();await page.getByPlaceholder('Tu nombre',{exact:true}).fill('Mikel guardado');await page.getByRole('button',{name:'Oscuro',exact:true}).click();
+ await page.getByRole('button',{name:'Guardar cambios',exact:true}).first().click();await expect(page).toHaveURL(/#\/cocina-despensa$/);
+ expect(await page.evaluate(()=>sessionStorage.getItem('chef:auth:session:v1'))).toBe('1');expect(logout).toEqual([]);await page.reload();await expect(page.getByRole('heading',{name:'Abre la despensa',exact:true})).toBeVisible();
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('chef:settings')!).displayName)).toBe('Mikel guardado');await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
 });

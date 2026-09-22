@@ -1,9 +1,10 @@
 import { ChiliIcon } from '../components/ChiliIcon';
 import { SettingsAbout } from '../components/SettingsAbout';
-import { Edit3, LogOut, Sun, Moon, Monitor } from 'lucide-react';
+import { Edit3, Save, Sun, Moon, Monitor } from 'lucide-react';
 import { usePreviewIdentity } from '../components/PreviewIdentity';
 import { ChefHat, Info, Languages, Mic, MicOff, ShieldCheck, Smartphone, Type, UserRound, UsersRound, WandSparkles } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { ChefAvatar, CHEF_AVATARS, normalizeChefAvatar } from '../components/ChefAvatar';
 import { Chip } from '../components/Chip';
@@ -17,10 +18,11 @@ const LANGUAGE_OPTIONS:Array<{value:AppLanguage;label:string}>=[{value:'es',labe
 export function SettingsPage(){
  const identity=usePreviewIdentity();
  const [editing,setEditing]=useState(false);
- const exit=()=>{sessionStorage.removeItem('chef:auth:session:v1');sessionStorage.removeItem('chef:home-greeted:v2');if(identity)window.location.assign('/cdn-cgi/access/logout');else window.location.reload()};
+ const navigate=useNavigate();const [saveError,setSaveError]=useState('');
+ const saveAndReturn=()=>{try{updateSettings(settings);if(window.history.state?.idx>0)navigate(-1);else navigate('/')}catch{setSaveError('No se han podido guardar los cambios. Comprueba el almacenamiento del navegador e inténtalo de nuevo.')}};
  const {settings,updateSettings}=useApp(); const currentAvatar=normalizeChefAvatar(settings.avatarEmoji); const [micPreference,setMicPreference]=useState<MicrophonePreference>(()=>loadMicrophonePreference()); const [micBusy,setMicBusy]=useState(false);
  const enableMicrophone=async()=>{if(micBusy)return;setMicBusy(true);setMicPreference(await requestMicrophoneAccess());setMicBusy(false)}; const disableMicrophone=()=>{saveMicrophonePreference('disabled');setMicPreference('disabled')};
- return <AppShell><div className="simple-page-header light-header"><span className="eyebrow">TU PERFIL DE COCINA</span><div className="settings-header-row"><h1>Ajustes</h1><button className="settings-exit" aria-label="Salir" onClick={exit}><LogOut/></button></div><p>Preferencias para que The Chef se adapte a tu forma de cocinar.</p></div><div className="page-content nav-safe settings-v03">
+ return <AppShell><div className="simple-page-header light-header"><span className="eyebrow">TU PERFIL DE COCINA</span><div className="settings-header-row"><h1>Ajustes</h1><button className="settings-save" onClick={saveAndReturn}><Save size={19}/><span>Guardar cambios</span></button></div><p>Preferencias para que The Chef se adapte a tu forma de cocinar.</p></div><div className="page-content nav-safe settings-v03">
   <section className="settings-card"><div className="settings-profile-heading"><ChefAvatar avatar={settings.avatarEmoji} size={74} showHat={false}/><div><strong>{settings.displayName||'Tu perfil'}</strong><button aria-expanded={editing} onClick={()=>setEditing(v=>!v)}><Edit3 size={18}/>{editing?'Terminar edición':'Editar perfil'}</button></div></div></section>
   {editing&&<><section className="settings-card"><div className="settings-card-title"><UserRound size={20}/><div><strong>Datos de usuario</strong><small>{identity?'Administrador de pruebas · cuenta verificada':'Datos de acceso del usuario.'}</small></div></div><div className="settings-user-fields"><label><span>Nombre</span><input value={settings.displayName} onChange={e=>updateSettings({displayName:e.target.value})} autoComplete="name" placeholder="Tu nombre"/></label><label><span>Usuario / correo</span><input value={settings.loginUser} readOnly autoComplete="username" placeholder="Usuario"/></label></div>{identity?<div className="pantry-basics-note"><ShieldCheck size={15}/><span>Acceso automático con tu cuenta verificada. {identity.stableUrl&&<a href={identity.stableUrl}>Enlace fijo de pruebas</a>} · <a href="/cdn-cgi/access/logout">Cerrar sesión</a></span></div>:<div className="pantry-basics-note"><ShieldCheck size={15}/> La contraseña no se recupera ni se muestra desde Ajustes. En esta beta se conserva solo un derivado criptográfico local. El acceso definitivo se conectará al backend antes de producción.</div>}</section>
   <section className="settings-card profile-settings-card"><div className="settings-card-title"><ChefHat size={20}/><div><strong>Tu avatar</strong><small>Elige uno de los 16 personajes de The Chef.</small></div></div><div className="profile-preview-row"><ChefAvatar avatar={settings.avatarEmoji} size={74} showHat={false}/><div><strong>{avatarName(currentAvatar)}</strong><small>Será tu asistente en navegación, esperas y PDF.</small></div></div><div className="avatar-gallery" aria-label="Avatares disponibles">{CHEF_AVATARS.map(a=><button type="button" className={currentAvatar===a.id?'active':''} key={a.id} onClick={()=>updateSettings({avatarEmoji:a.id,profileImage:undefined})} aria-label={`Elegir avatar ${avatarName(a.id)}`} title={avatarName(a.id)}><ChefAvatar avatar={a.id} size={48} showHat={false}/></button>)}</div></section>
@@ -34,6 +36,8 @@ export function SettingsPage(){
   <section className="settings-card"><div className="settings-card-title"><ChefHat size={20}/><div><strong>Nivel de cocina</strong><small>Afecta al detalle y dificultad recomendada.</small></div></div><div className="chip-row">{(['Principiante','Intermedio','Avanzado'] as CookingLevel[]).map(v=><Chip key={v} selected={settings.cookingLevel===v} onClick={()=>updateSettings({cookingLevel:v})}>{v}</Chip>)}</div></section>
   <section className="settings-card"><div className="settings-card-title"><ChiliIcon/><div><strong>Picante habitual</strong><small>Preferencia, no restricción.</small></div></div><div className="chip-row">{(['Nada','Suave','Medio','Alto'] as SpiceLevel[]).map(v=><Chip key={v} selected={settings.spiceLevel===v} onClick={()=>updateSettings({spiceLevel:v})}>{v}</Chip>)}</div></section>
   <section className="editorial-card small-info"><Smartphone size={21}/><div><strong>PWA privada</strong><p>La versión de pruebas se instala desde HTTPS y funciona como app.</p></div></section><section className="editorial-card small-info"><Info size={21}/><div><strong>Versión de prueba</strong><p>{__BUILD_COMMIT__?`${__BUILD_COMMIT__.slice(0,12)}${__BUILD_BRANCH__?` · ${__BUILD_BRANCH__}`:''}`:'Build local / sin metadatos de despliegue'}</p></div></section><section className="editorial-card small-info"><Info size={21}/><div><strong>Fase 1</strong><p>Versión destinada a beta privada con usuarios reales.</p></div></section>
+ {saveError&&<p role="alert">{saveError}</p>}
+ <div className="settings-save-footer"><button className="entry-primary" onClick={saveAndReturn}><Save size={19}/> Guardar cambios</button></div>
  <SettingsAbout url={identity?.stableUrl||window.location.origin+import.meta.env.BASE_URL}/>
  </div></AppShell>;
 }

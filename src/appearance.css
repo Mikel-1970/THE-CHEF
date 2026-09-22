@@ -51,3 +51,6 @@
 .reference-quick-title{background:#fffaf1eb;border-radius:16px;padding:10px}
 [data-theme=dark] .reference-quick-title{background:#242a22ed}
 @media(min-width:760px){.welcome-entry .food-collage{background-position:center 70%}.welcome-entry:not(.welcome-ready) .welcome-content{margin-left:6vw;margin-right:auto}}
+
+.settings-save{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 14px;border:1px solid var(--line);border-radius:16px;background:var(--forest);color:var(--paper);font:inherit;font-size:.8rem;font-weight:700;cursor:pointer}
+.settings-save-footer{margin:22px 0}.settings-save-footer button{display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
