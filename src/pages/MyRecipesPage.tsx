@@ -1,4 +1,4 @@
-import { Check, Clock3, Heart, Mic, MicOff, Search, Sparkles, Trash2, Utensils, Wrench, X } from 'lucide-react';
+import { Check, Clock3, Heart, Mic, MicOff, Search, Sparkles, Trash2, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
@@ -9,8 +9,6 @@ import { useAiDictation } from '../hooks/useAiDictation';
 import type { CookingRequest, HistoryEntry, Recipe } from '../domain/types';
 import { getHybridProposals } from '../services/hybridRecommendationEngine';
 import { getAllRecipes, getRecipeById } from '../services/recipeCatalog';
-import { getTechniqueLibrary, removeTechnique } from '../services/techniqueCatalog';
-import type { Technique } from '../services/techniqueGateway';
 import '../my-recipes.css';
 import '../voice-input.css';
 
@@ -22,14 +20,11 @@ export function MyRecipesPage() {
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState('');
   const [isRepeating, setIsRepeating] = useState(false);
-  const [techniques, setTechniques] = useState<Technique[]>(() => getTechniqueLibrary());
-  const [techCategory,setTechCategory]=useState('Todas');
   const [dishCategory, setDishCategory] = useState('Todos');
   const [historyYear, setHistoryYear] = useState('Todos');
   const [historyMonth, setHistoryMonth] = useState('Todos');
   const voice = useAiDictation(transcript => setQuery(current => current.trim() ? `${current.trim()} ${transcript.trim()}` : transcript.trim()));
   const tab = params.get('tab') ?? 'all';
-  const libraryType = params.get('type') ?? 'dishes';
 
   const recipes = useMemo(() => {
     const ids = tab === 'favorites' ? favorites : Array.from(new Set([...savedRecipes, ...favorites]));
@@ -41,11 +36,6 @@ export function MyRecipesPage() {
       .filter(recipe => !normalizedQuery || recipe.title.toLocaleLowerCase('es').includes(normalizedQuery))
       .filter(recipe => dishCategory === 'Todos' || inferDishCategory(recipe) === dishCategory);
   }, [favorites, savedRecipes, query, tab, dishCategory]);
-
-  const visibleTechniques = useMemo(() => {
-    const normalizedQuery = query.trim().toLocaleLowerCase('es');
-    return techniques.filter(item => (techCategory==='Todas'||item.category===techCategory)&&(!normalizedQuery || [item.title,item.category,...item.uses].join(' ').toLocaleLowerCase('es').includes(normalizedQuery)));
-  }, [techniques, query, techCategory]);
 
   const historyYears = useMemo(() => Array.from(new Set(history.map(entry => String(new Date(entry.createdAt).getFullYear())))).sort((a, b) => Number(b) - Number(a)), [history]);
   const filteredHistory = useMemo(() => history.filter(entry => {
@@ -78,19 +68,13 @@ export function MyRecipesPage() {
     if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) document.activeElement.blur();
   };
 
-  const setDishTab = (nextTab: string) => setParams(nextTab === 'all' ? { type: 'dishes' } : { type: 'dishes', tab: nextTab });
+  const setDishTab = (nextTab: string) => setParams(nextTab === 'all' ? {} : { tab: nextTab });
 
   return (
     <AppShell>
       <ChefLoadingOverlay active={isRepeating} title="Repitiendo búsqueda" messages={['Recuperando tus preferencias…']} />
-      <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>Recetas guardadas, favoritas, técnicas e historial de actividad.</p></div>
+      <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>Recetas guardadas, favoritas e historial de actividad.</p></div>
       <div className="page-content nav-safe"><Link className="secondary-button" to="/consejos">Revisar tips de cocina</Link>
-        <div className="library-type-tabs">
-          <button className={libraryType === 'dishes' ? 'active' : ''} onClick={() => setParams({ type: 'dishes' })}><Utensils size={19} /><span><strong>Platos</strong><small>Recetas completas</small></span></button>
-          <button className={libraryType === 'techniques' ? 'active' : ''} onClick={() => setParams({ type: 'techniques' })}><Wrench size={19} /><span><strong>Técnicas</strong><small>Preparaciones reutilizables</small></span></button>
-        </div>
-
-        {libraryType === 'dishes' && <>
           <div className="library-tabs">
             <button className={tab === 'all' ? 'active' : ''} onClick={() => setDishTab('all')}>Todo</button>
             <button className={tab === 'favorites' ? 'active' : ''} onClick={() => setDishTab('favorites')}>Favoritas</button>
@@ -136,12 +120,8 @@ export function MyRecipesPage() {
               {!filteredHistory.length && <div className="empty-card">No hay actividad para ese periodo.</div>}
             </div>
           </section>}
-        </>}
 
-        {libraryType === 'techniques' && <>
-          <div className="search-box"><Search size={18} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar en mis técnicas…" /></div>
-          <label className="form-section">Tipo de técnica<select aria-label="Tipo de técnica" value={techCategory} onChange={e=>setTechCategory(e.target.value)}><option>Todas</option>{Array.from(new Set(techniques.map(t=>t.category))).map(c=><option key={c}>{c}</option>)}</select></label><section className="library-section"><div className="section-heading-row"><div><span className="eyebrow">TÉCNICAS</span><h2>{visibleTechniques.length ? 'Preparaciones guardadas' : 'Todavía no hay técnicas'}</h2></div><Wrench size={20} /></div><div className="library-list">{visibleTechniques.map(item => <div className="library-card" key={item.id} role="button" tabIndex={0} onClick={() => navigate(`/tecnicas?open=${encodeURIComponent(item.id)}`)} onKeyDown={event => event.key === 'Enter' && navigate(`/tecnicas?open=${encodeURIComponent(item.id)}`)}><span className="library-emoji">🧪</span><div style={{ minWidth: 0, flex: 1 }}><strong>{item.title}</strong><small><Clock3 size={13} /> {item.timeLabel??`${item.timeMinutes} min`} · {item.category}</small></div>{!item.builtin&&<button type="button" className="library-delete" aria-label={`Eliminar ${item.title}`} onClick={event => { event.stopPropagation(); removeTechnique(item.id); setTechniques(getTechniqueLibrary()); }}><Trash2 size={17} /></button>}</div>)}{!visibleTechniques.length && <div className="empty-card">Las técnicas que genere El Chef aparecerán aquí automáticamente.</div>}</div></section>
-        </>}
+
       </div>
     </AppShell>
   );
