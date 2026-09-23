@@ -9,7 +9,7 @@ export async function culinaryApi(request:Request,env:CatalogEnv,authenticate=pr
  const db=env.CHEF_CATALOG;
  if(request.method==='GET'){
   const [techniques,tips,reviews]=await Promise.all([db.prepare('SELECT payload FROM culinary_techniques ORDER BY id').all<{payload:string}>(),db.prepare('SELECT payload FROM culinary_tips ORDER BY id').all<{payload:string}>(),db.prepare('SELECT tip_id, state FROM tip_reviews WHERE user_id = ?').bind(identity.user.email).all<{tip_id:string;state:string}>()]);
-  return json({techniques:techniques.results.map(r=>JSON.parse(r.payload)),tips:tips.results.map(r=>JSON.parse(r.payload)),reviews:Object.fromEntries(reviews.results.filter(r=>r.state!=='pending').map(r=>[r.tip_id,r.state]))});
+  const parsedTips=tips.results.map(r=>JSON.parse(r.payload));const v2Tips=parsedTips.filter((t:any)=>typeof t?.id==='string'&&/^tip-v2-\\d{3}$/.test(t.id));\n  return json({techniques:techniques.results.map(r=>JSON.parse(r.payload)),tips:v2Tips.length?v2Tips:parsedTips,reviews:Object.fromEntries(reviews.results.filter(r=>r.state!=='pending').map(r=>[r.tip_id,r.state]))});
  }
  if(request.method!=='PUT')return json({error:'Método no permitido.'},405);
  if(request.headers.get('Origin')!==new URL(request.url).origin||!request.headers.get('Content-Type')?.startsWith('application/json'))return json({error:'Origen no válido.'},403);
