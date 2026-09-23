@@ -187,7 +187,8 @@ function normalizeStoredRecipe(value: unknown): Recipe | undefined {
     storage: text(value.storage) ?? '',
     imageOrigin: value.imageOrigin === 'user-photo' ? 'user-photo' : undefined,
     nutritionPerServing: nutrition,
-    source: normalizeStoredSource(value.source)
+    source: normalizeStoredSource(value.source),
+    techniqueIds: strings(value.techniqueIds)
   };
 }
 
@@ -228,7 +229,11 @@ function normalizeSteps(value: unknown): RecipeStep[] {
       instruction,
       minutes,
       temperatureC,
-      cue: text(item.cue)
+      cue: text(item.cue),
+      techniqueIds: strings(item.techniqueIds),
+      timerLabel: text(item.timerLabel),
+      successSignals: strings(item.successSignals),
+      criticalPoint: text(item.criticalPoint)
     }];
   });
 }
