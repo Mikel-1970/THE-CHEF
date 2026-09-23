@@ -1,0 +1,1000 @@
+{
+  "schema_version": "1.0",
+  "total_tecnicas": 180,
+  "tecnicas": [
+    {
+      "id": "TEC-PREP-001",
+      "legacy_id": "TEC-PREP-001",
+      "nombre": "Pelar",
+      "alias": [
+        "mondar"
+      ],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Básico",
+      "definicion_corta": "Retirar la piel o cáscara no deseada de un ingrediente.",
+      "definicion_completa": "Retirar la piel o cáscara no deseada de un ingrediente. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Retirar la piel o cáscara no deseada de un ingrediente",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Pelar» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [
+        "patata",
+        "zanahoria",
+        "manzana",
+        "calabaza"
+      ],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Retirar solo la capa necesaria para minimizar merma.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Pelar» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": false,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Pelar», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Pelar»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "pelar",
+        "mondar"
+      ],
+      "resumen_app": "Retirar la piel o cáscara no deseada de un ingrediente.",
+      "microcopy_modo_cocina": "Aplica «Pelar» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Pelar.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Pelar, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-002",
+      "legacy_id": null,
+      "nombre": "Despepitar",
+      "alias": [],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Básico",
+      "definicion_corta": "Retirar semillas o pepitas y, cuando procede, membranas interiores.",
+      "definicion_completa": "Retirar semillas o pepitas y, cuando procede, membranas interiores. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Retirar semillas o pepitas y, cuando procede, membranas interiores",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Despepitar» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Despepitar» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": false,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Despepitar», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Despepitar»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "despepitar"
+      ],
+      "resumen_app": "Retirar semillas o pepitas y, cuando procede, membranas interiores.",
+      "microcopy_modo_cocina": "Aplica «Despepitar» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Despepitar.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Despepitar, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-003",
+      "legacy_id": null,
+      "nombre": "Descorazonar",
+      "alias": [],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Básico",
+      "definicion_corta": "Retirar el corazón, pedúnculo o núcleo duro de una fruta u hortaliza.",
+      "definicion_completa": "Retirar el corazón, pedúnculo o núcleo duro de una fruta u hortaliza. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Retirar el corazón, pedúnculo o núcleo duro de una fruta u hortaliza",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Descorazonar» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Descorazonar» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": false,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Descorazonar», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Descorazonar»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "descorazonar"
+      ],
+      "resumen_app": "Retirar el corazón, pedúnculo o núcleo duro de una fruta u hortaliza.",
+      "microcopy_modo_cocina": "Aplica «Descorazonar» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Descorazonar.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Descorazonar, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-004",
+      "legacy_id": null,
+      "nombre": "Deshuesar",
+      "alias": [],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Intermedio",
+      "definicion_corta": "Separar los huesos de una pieza conservando la mayor cantidad posible de carne.",
+      "definicion_completa": "Separar los huesos de una pieza conservando la mayor cantidad posible de carne. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Separar los huesos de una pieza conservando la mayor cantidad posible de carne",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Deshuesar» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Deshuesar» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": true,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Deshuesar», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Deshuesar»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "deshuesar"
+      ],
+      "resumen_app": "Separar los huesos de una pieza conservando la mayor cantidad posible de carne.",
+      "microcopy_modo_cocina": "Aplica «Deshuesar» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Deshuesar.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Deshuesar, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-005",
+      "legacy_id": null,
+      "nombre": "Desespinar",
+      "alias": [],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Intermedio",
+      "definicion_corta": "Retirar las espinas de un pescado o filete sin desgarrarlo.",
+      "definicion_completa": "Retirar las espinas de un pescado o filete sin desgarrarlo. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Retirar las espinas de un pescado o filete sin desgarrarlo",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Desespinar» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Desespinar» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": true,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Desespinar», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Desespinar»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "desespinar"
+      ],
+      "resumen_app": "Retirar las espinas de un pescado o filete sin desgarrarlo.",
+      "microcopy_modo_cocina": "Aplica «Desespinar» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Desespinar.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Desespinar, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-006",
+      "legacy_id": null,
+      "nombre": "Escamar",
+      "alias": [],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Básico",
+      "definicion_corta": "Retirar las escamas adheridas a la piel de un pescado.",
+      "definicion_completa": "Retirar las escamas adheridas a la piel de un pescado. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Retirar las escamas adheridas a la piel de un pescado",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Escamar» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Escamar» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": true,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Escamar», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Escamar»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "escamar"
+      ],
+      "resumen_app": "Retirar las escamas adheridas a la piel de un pescado.",
+      "microcopy_modo_cocina": "Aplica «Escamar» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Escamar.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Escamar, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-007",
+      "legacy_id": null,
+      "nombre": "Eviscerar",
+      "alias": [],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Avanzado",
+      "definicion_corta": "Retirar vísceras y limpiar la cavidad interna de una pieza.",
+      "definicion_completa": "Retirar vísceras y limpiar la cavidad interna de una pieza. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Retirar vísceras y limpiar la cavidad interna de una pieza",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Eviscerar» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Eviscerar» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": true,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Eviscerar», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Eviscerar»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "eviscerar"
+      ],
+      "resumen_app": "Retirar vísceras y limpiar la cavidad interna de una pieza.",
+      "microcopy_modo_cocina": "Aplica «Eviscerar» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Eviscerar.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Eviscerar, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-008",
+      "legacy_id": null,
+      "nombre": "Filetear",
+      "alias": [],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Intermedio",
+      "definicion_corta": "Cortar o separar un alimento en filetes regulares.",
+      "definicion_completa": "Cortar o separar un alimento en filetes regulares. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Cortar o separar un alimento en filetes regulares",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Filetear» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Filetear» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": false,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Filetear», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Filetear»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "filetear"
+      ],
+      "resumen_app": "Cortar o separar un alimento en filetes regulares.",
+      "microcopy_modo_cocina": "Aplica «Filetear» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Filetear.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Filetear, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-009",
+      "legacy_id": null,
+      "nombre": "Sacar lomos",
+      "alias": [],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Intermedio",
+      "definicion_corta": "Separar los lomos limpios de un pescado siguiendo su estructura ósea.",
+      "definicion_completa": "Separar los lomos limpios de un pescado siguiendo su estructura ósea. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Separar los lomos limpios de un pescado siguiendo su estructura ósea",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Sacar lomos» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Sacar lomos» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": false,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Sacar lomos», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Sacar lomos»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "sacar lomos"
+      ],
+      "resumen_app": "Separar los lomos limpios de un pescado siguiendo su estructura ósea.",
+      "microcopy_modo_cocina": "Aplica «Sacar lomos» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Sacar lomos.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Sacar lomos, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-010",
+      "legacy_id": null,
+      "nombre": "Abrir en libro",
+      "alias": [],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Intermedio",
+      "definicion_corta": "Cortar una pieza sin separarla completamente para desplegarla.",
+      "definicion_completa": "Cortar una pieza sin separarla completamente para desplegarla. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Cortar una pieza sin separarla completamente para desplegarla",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Abrir en libro» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Abrir en libro» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": false,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Abrir en libro», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Abrir en libro»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "abrir en libro"
+      ],
+      "resumen_app": "Cortar una pieza sin separarla completamente para desplegarla.",
+      "microcopy_modo_cocina": "Aplica «Abrir en libro» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Abrir en libro.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Abrir en libro, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-011",
+      "legacy_id": null,
+      "nombre": "Trocear",
+      "alias": [],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Básico",
+      "definicion_corta": "Dividir un ingrediente en porciones adecuadas para la elaboración.",
+      "definicion_completa": "Dividir un ingrediente en porciones adecuadas para la elaboración. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Dividir un ingrediente en porciones adecuadas para la elaboración",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Trocear» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Trocear» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": false,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Trocear», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Trocear»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "trocear"
+      ],
+      "resumen_app": "Dividir un ingrediente en porciones adecuadas para la elaboración.",
+      "microcopy_modo_cocina": "Aplica «Trocear» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Trocear.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Trocear, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-012",
+      "legacy_id": "TEC-CORT-002",
+      "nombre": "Picar",
+      "alias": [
+        "trocear fino"
+      ],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Básico",
+      "definicion_corta": "Cortar un ingrediente en fragmentos pequeños, normalmente irregulares.",
+      "definicion_completa": "Cortar un ingrediente en fragmentos pequeños, normalmente irregulares. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Cortar un ingrediente en fragmentos pequeños, normalmente irregulares",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Picar» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Picar» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": false,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Picar», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Picar»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "picar",
+        "trocear fino"
+      ],
+      "resumen_app": "Cortar un ingrediente en fragmentos pequeños, normalmente irregulares.",
+      "microcopy_modo_cocina": "Aplica «Picar» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Picar.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Picar, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-013",
+      "legacy_id": "TEC-CORT-003",
+      "nombre": "Juliana",
+      "alias": [
+        "corte en tiras"
+      ],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Básico",
+      "definicion_corta": "Cortar en tiras finas y alargadas de grosor uniforme.",
+      "definicion_completa": "Cortar en tiras finas y alargadas de grosor uniforme. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Cortar en tiras finas y alargadas de grosor uniforme",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Juliana» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [
+        "zanahoria",
+        "pimiento",
+        "puerro",
+        "cebolla"
+      ],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [
+        "Brunoise",
+        "Bastones",
+        "Chiffonade"
+      ],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Mantener tiras de grosor uniforme para que se cocinen al mismo ritmo.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Juliana» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": false,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Juliana», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Juliana»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "juliana",
+        "corte en tiras"
+      ],
+      "resumen_app": "Cortar en tiras finas y alargadas de grosor uniforme.",
+      "microcopy_modo_cocina": "Aplica «Juliana» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Juliana.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Juliana, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-014",
+      "legacy_id": "TEC-CORT-004",
+      "nombre": "Brunoise",
+      "alias": [
+        "dados finos"
+      ],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Intermedio",
+      "definicion_corta": "Cortar en dados muy pequeños y uniformes.",
+      "definicion_completa": "Cortar en dados muy pequeños y uniformes. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Cortar en dados muy pequeños y uniformes",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Brunoise» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [
+        "cebolla",
+        "zanahoria",
+        "apio",
+        "pimiento"
+      ],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [
+        "Juliana",
+        "Mirepoix",
+        "Sofreír"
+      ],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "La regularidad importa más que la velocidad.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Brunoise» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
+        "trabajar con una base inestable",
+        "hacer tamaños incompatibles con la cocción"
+      ],
+      "como_corregir": [
+        "estabilizar el ingrediente",
+        "usar un utensilio bien afilado",
+        "repetir el corte con menor velocidad"
+      ],
+      "seguridad_e_higiene": [
+        "mantener la tabla estable",
+        "mantener los dedos fuera de la trayectoria del filo"
+      ],
+      "requiere_receta_validada": false,
+      "temporizador_recomendado": false,
+      "titulo_temporizador": "",
+      "tip_chef": "En «Brunoise», prioriza la señal culinaria real sobre un tiempo fijo cuando ambos entren en conflicto.",
+      "truco_profesional": "Prepara todo antes de empezar «Brunoise»; el control mejora mucho cuando no hay que improvisar durante la ejecución.",
+      "variantes": [],
+      "palabras_clave": [
+        "brunoise",
+        "dados finos"
+      ],
+      "resumen_app": "Cortar en dados muy pequeños y uniformes.",
+      "microcopy_modo_cocina": "Aplica «Brunoise» y avanza cuando alcances la señal indicada, no solo cuando termine el tiempo.",
+      "icono_sugerido": "prep",
+      "imagen_ejemplo": "Ejemplo visual claro de la técnica Brunoise.",
+      "image_prompt": "Fotografía culinaria editorial, primer plano didáctico de la técnica Brunoise, proceso visible, sin texto, iluminación natural, fondo limpio, estilo premium de The Chef.",
+      "version": "1.0",
+      "estado": "biblioteca_maestra"
+    },
+    {
+      "id": "TEC-PREP-015",
+      "legacy_id": null,
+      "nombre": "Mirepoix",
+      "alias": [],
+      "familia": "Preparación y corte",
+      "subfamilia": "Preparación y corte",
+      "nivel": "Básico",
+      "definicion_corta": "Cortar hortalizas aromáticas en dados irregulares medianos para fondos y guisos.",
+      "definicion_completa": "Cortar hortalizas aromáticas en dados irregulares medianos para fondos y guisos. The Chef debe adaptar la ejecución al ingrediente, tamaño, equipo y resultado buscado en la receta concreta.",
+      "objetivo_culinario": "Cortar hortalizas aromáticas en dados irregulares medianos para fondos y guisos",
+      "cuando_usarla": "Cuando la receta necesite el efecto culinario propio de «Mirepoix» y mejore sabor, textura, cocción o presentación.",
+      "cuando_no_usarla": "Cuando otra técnica más simple consiga mejor el resultado, o cuando no puedan controlarse sus parámetros esenciales.",
+      "ingredientes_habituales": [],
+      "ingredientes_no_recomendados": [],
+      "elaboraciones_frecuentes": [],
+      "tecnicas_relacionadas": [],
+      "utensilios": [
+        "cuchillo adecuado",
+        "tabla estable"
+      ],
+      "temperatura_orientativa": "No aplica salvo que la receta indique lo contrario.",
+      "tiempo_orientativo": "Minutos; depende de cantidad, tamaño y destreza.",
+      "punto_clave": "Buscar precisión, seguridad y el tamaño que necesita la cocción.",
+      "senales_de_exito": [
+        "corte o preparación uniforme",
+        "mínima merma",
+        "ingrediente sin daños innecesarios"
+      ],
+      "pasos_base": [
+        "Preparar ingrediente, utensilios y mise en place.",
+        "Aplicar la técnica «Mirepoix» controlando el parámetro crítico indicado.",
+        "Observar textura, color, aroma y/o consistencia.",
+        "Detener o completar la técnica al alcanzar la señal de éxito de la receta."
+      ],
+      "errores_frecuentes": [
+        "usar una herramienta inadecuada",
