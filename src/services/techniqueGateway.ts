@@ -35,6 +35,27 @@ export type Technique = {
   storage: string;
   uses: string[];
   createdAt: string;
+  aliases?: string[];
+  keywords?: string[];
+  family?: string;
+  subfamily?: string;
+  shortDefinition?: string;
+  fullDefinition?: string;
+  objective?: string;
+  whenToUse?: string;
+  whenNotToUse?: string;
+  successSignals?: string[];
+  frequentErrors?: string[];
+  corrections?: string[];
+  safety?: string[];
+  timerRecommended?: boolean;
+  timerTitle?: string;
+  requiresValidatedRecipe?: boolean;
+  chefTip?: string;
+  professionalTip?: string;
+  relatedTechniqueIds?: string[];
+  legacyId?: string;
+  imagePrompt?: string;
 };
 
 const techniqueTemplate = {
