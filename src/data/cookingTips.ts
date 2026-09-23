@@ -9179,6 +9179,7 @@ function scoreTip(tip:CookingTip,recipe:Recipe,step:RecipeStep,stepIndex:number,
  if(stepIndex===0&&tip.useMoment.some(x=>['antes de cocinar','inicio de coccion','durante la preparacion'].includes(normalize(x))))score+=3;
  if(stepIndex===recipe.steps.length-1&&tip.useMoment.some(x=>['final de coccion','antes de servir'].includes(normalize(x))))score+=3;
  if(duplicatesRecipeAdvice(tip,recipe))score-=20;
+ if(step.cue&&similarity(`${tip.title} ${tip.shortTip}`,step.cue)>=0.72)score-=20;
  return score;
 }
 
