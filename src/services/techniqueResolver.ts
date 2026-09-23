@@ -42,6 +42,22 @@ export function inferTechniqueIdsFromText(text:string,limit=3):string[]{
   return inferTechniquesFromText(text,limit).map(item=>item.id);
 }
 
+export function enrichRecipeTechniques(recipe:Recipe):Recipe{
+  const steps=recipe.steps.map(step=>{
+    const techniqueIds=(step.techniqueIds?.length?step.techniqueIds:inferTechniqueIdsFromText(step.instruction,3));
+    const techniques=techniqueIds.map(getTechniqueById).filter((value):value is Technique=>Boolean(value));
+    return {
+      ...step,
+      techniqueIds,
+      timerLabel:step.timerLabel||techniques.find(item=>item.timerRecommended)?.timerTitle,
+      successSignals:step.successSignals?.length?step.successSignals:techniques.flatMap(item=>item.successSignals||[]).slice(0,3),
+      criticalPoint:step.criticalPoint||techniques.map(item=>item.criticalPoints[0]).find(Boolean)
+    };
+  });
+  const techniqueIds=Array.from(new Set([...(recipe.techniqueIds||[]),...steps.flatMap(step=>step.techniqueIds||[])]));
+  return {...recipe,steps,techniqueIds};
+}
+
 export function inferTechniquesFromText(text:string,limit=3):Technique[]{
   const value=normalize(text);
   if(!value)return [];
