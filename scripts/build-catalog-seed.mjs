@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import ts from 'typescript';
 async function readData(path){const code=ts.transpileModule(fs.readFileSync(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;return import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));}
-const {techniqueMaster}=await readData('src/data/techniqueMaster.ts');
+const techniqueMaster=JSON.parse(fs.readFileSync('src/data/theChefTechniquesMaster.json','utf8')).tecnicas;
 const {cookingTips}=await readData('src/data/cookingTips.ts');
 const quote=value=>"'"+value.replaceAll("'","''")+"'";
 let sql=fs.readFileSync('migrations/0001_culinary_catalog.sql','utf8');
