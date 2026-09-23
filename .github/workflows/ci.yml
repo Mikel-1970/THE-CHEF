@@ -25,3 +25,10 @@ jobs:
         run: npm run audit:phase1
       - name: Compilar y validar TypeScript
         run: npm run build
+
+      - name: Simular build de Cloudflare Pages
+        env:
+          CF_PAGES: "1"
+          CF_PAGES_COMMIT_SHA: ${{ github.sha }}
+          CF_PAGES_BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: npm run build
