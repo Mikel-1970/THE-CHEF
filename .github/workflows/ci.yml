@@ -25,3 +25,7 @@ jobs:
         run: npm run audit:phase1
       - name: Compilar y validar TypeScript
         run: npm run build
+      - name: Preparar Chromium para pruebas E2E
+        run: npx playwright install --with-deps chromium
+      - name: Probar biblioteca de técnicas en escritorio y móvil
+        run: npx playwright test tests/technique-library.spec.ts tests/technique-stock.spec.ts tests/step-timer.spec.ts
