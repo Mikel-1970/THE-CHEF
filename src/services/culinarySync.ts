@@ -1,5 +1,4 @@
 import {cookingTips} from '../data/cookingTips';
-import {techniqueBasics} from '../data/techniqueBasics';
 const endpoint=()=>new URL('api/culinary-catalog',new URL(import.meta.env.BASE_URL,location.origin));
 const pendingKey='chef:tip-reviews-outbox:v1';
 let inFlight:Promise<void>|undefined;
@@ -13,7 +12,6 @@ export function synchronizeCulinaryCatalog():Promise<void>{
   const response=await fetch(endpoint(),{credentials:'same-origin',signal:AbortSignal.timeout(8000)});if(!response.ok)throw new Error('Sin conexión al catálogo');const data=await response.json();
   if(!Array.isArray(data.tips)||!Array.isArray(data.techniques)||typeof data.reviews!=='object')throw new Error('Catálogo no válido');
   if(data.tips.length&&data.tips.every((t:any)=>typeof t.id==='string'&&typeof t.text==='string'&&typeof t.source==='string'))cookingTips.splice(0,cookingTips.length,...data.tips);
-  if(data.techniques.length&&data.techniques.every((t:any)=>typeof t.id==='string'&&Array.isArray(t.steps)))techniqueBasics.splice(0,techniqueBasics.length,...data.techniques);
   const reviews={...data.reviews};for(const[id,state]of Object.entries(pending())){if(state==='pending')delete reviews[id];else reviews[id]=state;}localStorage.setItem('chef:tip-reviews:v1',JSON.stringify(reviews));
   retry=Object.keys(pending()).length>0;window.dispatchEvent(new CustomEvent('chef:catalog-sync',{detail:retry?'pending':'synced'}));
  }catch{window.dispatchEvent(new CustomEvent('chef:catalog-sync',{detail:'pending'}))}})().finally(()=>{inFlight=undefined;if(retry)void synchronizeCulinaryCatalog()});return inFlight;
