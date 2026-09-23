@@ -15,7 +15,7 @@ export async function culinaryApi(request:Request,env:CatalogEnv,authenticate=pr
  if(request.headers.get('Origin')!==new URL(request.url).origin||!request.headers.get('Content-Type')?.startsWith('application/json'))return json({error:'Origen no válido.'},403);
  const raw=await request.text();if(raw.length>512)return json({error:'Solicitud demasiado grande.'},413);
  let body:{id?:unknown;state?:unknown};try{body=JSON.parse(raw)}catch{return json({error:'Solicitud no válida.'},400)}
- if(!body||typeof body.id!=='string'||!/^tip-\d{1,4}$/.test(body.id)||!['keep','hide','pending'].includes(String(body.state)))return json({error:'Valoración no válida.'},400);
+ if(!body||typeof body.id!=='string'||!/^(?:tip-\d{1,4}|tip-v2-\d{3})$/.test(body.id)||!['keep','hide','pending'].includes(String(body.state)))return json({error:'Valoración no válida.'},400);
  if(!await db.prepare('SELECT id FROM culinary_tips WHERE id = ?').bind(body.id).first())return json({error:'Consejo no encontrado.'},404);
  await db.prepare("INSERT INTO tip_reviews (user_id,tip_id,state) VALUES (?,?,?) ON CONFLICT(user_id,tip_id) DO UPDATE SET state=excluded.state, updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now')").bind(identity.user.email,body.id,body.state).run();
  return json({saved:true,id:body.id,state:body.state});
