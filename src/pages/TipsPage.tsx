@@ -12,7 +12,7 @@ export function TipsPage(){
  useEffect(()=>{
   const updated=(event:Event)=>{
    setReviews(getTipReviews());
-   setSync((event as CustomEvent).detail==='synced'?'Sincronizado entre dispositivos':'Guardado aquí; sincronización pendiente');
+   const detail=(event as CustomEvent).detail;setSync(detail==='synced'?'Sincronizado entre dispositivos':detail==='local'?'Guardado en este dispositivo':'Guardado aquí; sincronización pendiente');
   };
   window.addEventListener('chef:catalog-sync',updated);
   void synchronizeCulinaryCatalog();
