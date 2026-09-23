@@ -23,6 +23,9 @@ jobs:
         run: npm audit --omit=dev --audit-level=critical
       - name: Auditoría estática Fase 1
         run: npm run audit:phase1
+
+      - name: Validar Pages Functions
+        run: npm run check:functions
       - name: Compilar y validar TypeScript
         run: npm run build
 
