@@ -38,8 +38,11 @@ export const cookingTips:CookingTip[]=[];
 let bundledTipsLoaded=false;
 export async function loadBundledCookingTips():Promise<void>{
  if(bundledTipsLoaded||cookingTips.length>=150){bundledTipsLoaded=true;return;}
- const {cookingTipsCatalog}=await import('./cookingTipsCatalog');
- cookingTips.splice(0,cookingTips.length,...cookingTipsCatalog);
+ const response=await fetch(`${import.meta.env.BASE_URL}cooking-tips-v2.json`,{cache:'force-cache'});
+ if(!response.ok)throw new Error('No se ha podido cargar la biblioteca de tips.');
+ const catalog=await response.json() as CookingTip[];
+ if(!Array.isArray(catalog)||catalog.length!==150)throw new Error('Biblioteca de tips incompleta.');
+ cookingTips.splice(0,cookingTips.length,...catalog);
  bundledTipsLoaded=true;
 }
 
