@@ -60,7 +60,7 @@ export function TechniquesPage() {
       <div className="page-content nav-safe techniques-page">
         <section className="editorial-card olive-intro"><Link className="secondary-button" to="/consejos">Revisar tips de cocina</Link><span className="eyebrow">BIBLIOTECA DE TÉCNICAS</span><h2>Preparaciones que podrás reutilizar.</h2><p>Aceites, marinados, confitados, salsas, fondos, esferificaciones y otras técnicas de cocina.</p></section>
 
-        {current && completedTechnique === current.id && <section className="editorial-card technique-completed-card"><Check size={26} /><div><span className="eyebrow">TÉCNICA TERMINADA</span><h2>{current.title}</h2><p>Has completado todos los pasos. Puedes consultar de nuevo la ficha, repetir la técnica o seguir navegando desde el menú inferior.</p></div></section>}
+        {current && completedTechnique === current.id && <section className="editorial-card technique-completed-card"><Check size={26} /><div><span className="eyebrow">TÉCNICA TERMINADA</span><h2>{current.title}</h2><p>Has completado todos los pasos. Puedes consultar de nuevo la ficha, repetir la técnica o seguir navegando desde el menú del avatar.</p></div></section>}
 
         <details><summary>Consultar al Chef una técnica adicional</summary><section className="form-section">
           <div className="section-label"><span>¿Qué quieres aprender o preparar?</span></div>
