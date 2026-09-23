@@ -16,21 +16,30 @@ export function synchronizeCulinaryCatalog():Promise<void>{
  if(inFlight)return inFlight;
  let retry=false;
  inFlight=(async()=>{try{
-  for(const [id,state] of Object.entries(pending())){
-   const response=await fetch(endpoint(),{method:'PUT',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,state}),signal:AbortSignal.timeout(8000)});
-   if(!response.ok)throw new Error('No se ha sincronizado');
-   const outbox=pending();if(outbox[id]===state){delete outbox[id];localStorage.setItem(pendingKey,JSON.stringify(outbox))}
-  }
   const response=await fetch(endpoint(),{credentials:'same-origin',signal:AbortSignal.timeout(8000)});
   if(!response.ok)throw new Error('Sin conexión al catálogo');
   const data=await response.json();
   if(!Array.isArray(data.tips)||!Array.isArray(data.techniques)||typeof data.reviews!=='object')throw new Error('Catálogo no válido');
-  // Solo una colección v2 completa puede sustituir la biblioteca local de 150.
-  if(data.tips.length>=150&&data.tips.every(validV2Tip))cookingTips.splice(0,cookingTips.length,...data.tips);
+  const remoteV2=data.tips.length>=150&&data.tips.every(validV2Tip);
+  if(remoteV2)cookingTips.splice(0,cookingTips.length,...data.tips);
   if(data.techniques.length&&data.techniques.every((t:any)=>typeof t.id==='string'&&Array.isArray(t.steps)))techniqueBasics.splice(0,techniqueBasics.length,...data.techniques);
+
+  if(!remoteV2){
+   // La app conserva la biblioteca v2 incluida y las valoraciones locales.
+   // La cola se mantiene para sincronizarla cuando D1 reciba el catálogo v2.
+   window.dispatchEvent(new CustomEvent('chef:catalog-sync',{detail:'local'}));
+   return;
+  }
+
+  for(const [id,state] of Object.entries(pending())){
+   const saved=await fetch(endpoint(),{method:'PUT',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,state}),signal:AbortSignal.timeout(8000)});
+   if(!saved.ok)throw new Error('No se ha sincronizado');
+   const outbox=pending();
+   if(outbox[id]===state){delete outbox[id];localStorage.setItem(pendingKey,JSON.stringify(outbox))}
+  }
   const reviews={...data.reviews};
   for(const[id,state]of Object.entries(pending())){if(state==='pending')delete reviews[id];else reviews[id]=state;}
-  localStorage.setItem(reviewKey,JSON.stringify(reviews));
+  localStorage.setItem(reviewKey,JSON.stringify({...reviews,...JSON.parse(localStorage.getItem(reviewKey)||'{}')}));
   retry=Object.keys(pending()).length>0;
   window.dispatchEvent(new CustomEvent('chef:catalog-sync',{detail:retry?'pending':'synced'}));
  }catch{window.dispatchEvent(new CustomEvent('chef:catalog-sync',{detail:'pending'}))}})().finally(()=>{
