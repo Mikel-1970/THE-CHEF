@@ -3,6 +3,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
+import { TechniqueThumbnail } from '../components/TechniqueThumbnail';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
 import { useAiDictation } from '../hooks/useAiDictation';
@@ -16,7 +17,7 @@ type TechniquePanel = 'ingredients' | 'prep' | 'recommendations' | 'critical' | 
 
 export function TechniquesPage() {
   const [params] = useSearchParams();
-  const [filter,setFilter]=useState('');const [category,setCategory]=useState('Todas');
+  const [filter,setFilter]=useState('');const [category,setCategory]=useState('Todas');const [level,setLevel]=useState('Todos');
   const [draft, setDraft] = useState('');
   const [current, setCurrent] = useState<Technique>();
   const [saved, setSaved] = useState<Technique[]>(() => getTechniqueLibrary());
@@ -53,12 +54,18 @@ export function TechniquesPage() {
   const startTechnique = (technique: Technique) => { setCompletedTechnique(undefined); setGuided(technique); setGuidedStep(0); };
   const finishTechnique = (technique: Technique) => { setGuided(undefined); setGuidedStep(0); setCurrent(technique); setCompletedTechnique(technique.id); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
+  const visibleTechniques=saved.filter(t=>
+    (category==='Todas'||t.category===category)&&
+    (level==='Todos'||t.difficulty===level)&&
+    [t.title,t.category,...t.uses,...(t.aliases||[]),...(t.keywords||[])].join(' ').toLocaleLowerCase('es').includes(filter.toLocaleLowerCase('es'))
+  );
+
   return (
     <AppShell>
       <ChefLoadingOverlay active={isGenerating} title="Preparando la técnica" messages={['Afinando la técnica…']} />
       <TopBar eyebrow="BASE CULINARIA" title="Técnicas" />
       <div className="page-content nav-safe techniques-page">
-        <section className="editorial-card olive-intro"><Link className="secondary-button" to="/consejos">Revisar tips de cocina</Link><span className="eyebrow">BIBLIOTECA DE TÉCNICAS</span><h2>Preparaciones que podrás reutilizar.</h2><p>Aceites, marinados, confitados, salsas, fondos, esferificaciones y otras técnicas de cocina.</p></section>
+        <section className="editorial-card olive-intro"><Link className="secondary-button" to="/consejos">Revisar tips de cocina</Link><span className="eyebrow">BIBLIOTECA DE TÉCNICAS</span><h2>180 técnicas para cocinar y aprender.</h2><p>Preparación, cortes, cocciones, salsas, panadería, pastelería y alta cocina. La misma ficha se reutiliza en recetas y en Elaboración.</p></section>
 
         {current && completedTechnique === current.id && <section className="editorial-card technique-completed-card"><Check size={26} /><div><span className="eyebrow">TÉCNICA TERMINADA</span><h2>{current.title}</h2><p>Has completado todos los pasos. Puedes consultar de nuevo la ficha, repetir la técnica o seguir navegando desde el menú del avatar.</p></div></section>}
 
@@ -72,7 +79,28 @@ export function TechniquesPage() {
 
         </details>{current && <TechniqueCard technique={current} onPanel={setPanel} onStart={() => startTechnique(current)} />}
 
-        <section className="library-section techniques-library"><div className="section-heading-row"><div><span className="eyebrow">TU REPOSITORIO</span><h2>{saved.length ? `${saved.length} técnicas disponibles` : 'Todavía vacío'}</h2></div></div><input aria-label="Buscar técnica o uso" placeholder="Buscar técnica o uso: salsas, huevo…" value={filter} onChange={e=>setFilter(e.target.value)}/><select aria-label="Categoría de técnica" value={category} onChange={e=>setCategory(e.target.value)}><option>Todas</option>{Array.from(new Set(saved.map(t=>t.category))).map(c=><option key={c}>{c}</option>)}</select><div className="library-list">{saved.filter(t=>(category==='Todas'||t.category===category)&&[t.title,t.category,...t.uses].join(' ').toLocaleLowerCase('es').includes(filter.toLocaleLowerCase('es'))).map(technique => <div className="library-card technique-library-card" key={technique.id}><button type="button" className="technique-open" onClick={() => selectTechnique(technique)}><span className="library-emoji">🧪</span><div><strong>{technique.title}</strong><small><Clock3 size={13} /> {technique.timeLabel??`${technique.timeMinutes} min`} · {technique.category}</small></div></button>{!technique.builtin&&<button type="button" className="icon-button" onClick={() => { removeTechnique(technique.id); setSaved(getTechniqueLibrary()); if (current?.id === technique.id) setCurrent(undefined); }} aria-label={`Eliminar ${technique.title}`}><Trash2 size={17} /></button>}</div>)}{!saved.length && <div className="empty-card">Pide al Chef una técnica y se guardará aquí automáticamente.</div>}</div></section>
+        <section className="library-section techniques-library">
+          <div className="section-heading-row"><div><span className="eyebrow">BIBLIOTECA MAESTRA</span><h2>{saved.length ? `${saved.length} técnicas disponibles` : 'Todavía vacío'}</h2></div></div>
+          <input aria-label="Buscar técnica o uso" placeholder="Buscar técnica, alias o uso: saltear, wok, salsas…" value={filter} onChange={e=>setFilter(e.target.value)}/>
+          <div className="technique-filter-row">
+            <select aria-label="Categoría de técnica" value={category} onChange={e=>setCategory(e.target.value)}><option>Todas</option>{Array.from(new Set(saved.map(t=>t.category))).map(name=><option key={name}>{name}</option>)}</select>
+            <select aria-label="Nivel de técnica" value={level} onChange={e=>setLevel(e.target.value)}><option>Todos</option><option>Fácil</option><option>Media</option><option>Avanzada</option></select>
+          </div>
+          <div className="technique-photo-grid">
+            {visibleTechniques.map(technique=><article className="technique-photo-card" key={technique.id}>
+              <button type="button" className="technique-photo-open" onClick={()=>selectTechnique(technique)} aria-label={`Abrir técnica ${technique.title}`}>
+                <TechniqueThumbnail technique={technique}/>
+                <div className="technique-photo-caption">
+                  <span>{technique.category}</span>
+                  <strong>{technique.title}</strong>
+                  <small>{technique.difficulty} · {technique.timeLabel??`${technique.timeMinutes} min`}</small>
+                </div>
+              </button>
+              {!technique.builtin&&<button type="button" className="technique-photo-delete" onClick={()=>{removeTechnique(technique.id);setSaved(getTechniqueLibrary());if(current?.id===technique.id)setCurrent(undefined)}} aria-label={`Eliminar ${technique.title}`}><Trash2 size={17}/></button>}
+            </article>)}
+            {!visibleTechniques.length&&<div className="empty-card technique-empty">No hay técnicas que coincidan con estos filtros.</div>}
+          </div>
+        </section>
       </div>
 
       {current && panel && <TechniqueSheet technique={current} panel={panel} onClose={() => setPanel(null)} />}
@@ -82,15 +110,15 @@ export function TechniquesPage() {
 }
 
 function TechniqueCard({ technique, onPanel, onStart }: { technique: Technique; onPanel: (panel: TechniquePanel) => void; onStart: () => void }) {
-  return <section className="technique-card"><div className="technique-title-row"><div><span className="eyebrow">{technique.category.toUpperCase()}</span><h2>{technique.title}</h2><p>{technique.description}</p></div><Save size={20} /></div><div className="technique-meta"><span><Clock3 size={15} /> {technique.timeLabel??`${technique.timeMinutes} min`}</span><span>{technique.difficulty}</span></div><section className="recipe-action-grid" aria-label="Información de la técnica"><button type="button" onClick={() => onPanel('ingredients')}><Sparkles size={22} /><strong>Ingredientes</strong><span>Lo que necesitas</span></button><button type="button" onClick={() => onPanel('prep')}><Wrench size={22} /><strong>Mise en place</strong><span>Utensilios y preparación</span></button><button type="button" onClick={() => onPanel('recommendations')}><Leaf size={22} /><strong>Recomendaciones</strong><span>Uso y conservación</span></button><button type="button" onClick={() => onPanel('critical')}><AlertTriangle size={22} /><strong>Puntos críticos</strong><span>Claves para acertar</span></button></section>{technique.temperatureGuide&&<section className="temperature-guide"><h3>Tiempo y temperatura</h3><p>{technique.temperatureGuide.conditions}</p><table><thead><tr><th>Producto</th><th>Baño</th><th>Tiempo</th></tr></thead><tbody>{technique.temperatureGuide.rows.map(row=><tr key={row.product}><td>{row.product}</td><td>{row.temperatureC} °C</td><td>{row.minutes} min</td></tr>)}</tbody></table></section>}{technique.sources&&<div className="technique-sources">{technique.sources.map(s=><p key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.label}</a></p>)}</div>}<PrimaryButton onClick={onStart}><Play size={18} /> Empezar técnica</PrimaryButton></section>;
+  return <section className="technique-card"><div className="technique-detail-photo"><TechniqueThumbnail technique={technique} eager/></div><div className="technique-title-row"><div><span className="eyebrow">{technique.category.toUpperCase()}</span><h2>{technique.title}</h2><p>{technique.description}</p></div><Save size={20} /></div><div className="technique-meta"><span><Clock3 size={15} /> {technique.timeLabel??`${technique.timeMinutes} min`}</span><span>{technique.difficulty}</span>{technique.timerRecommended&&<span>Temporizador opcional</span>}{technique.requiresValidatedRecipe&&<span>Parámetros de receta</span>}</div>{technique.chefTip&&<aside className="technique-chef-tip"><strong>Tip Chef</strong><span>{technique.chefTip}</span></aside>}<section className="recipe-action-grid" aria-label="Información de la técnica"><button type="button" onClick={() => onPanel('ingredients')}><Sparkles size={22} /><strong>Ingredientes</strong><span>Lo que necesitas</span></button><button type="button" onClick={() => onPanel('prep')}><Wrench size={22} /><strong>Mise en place</strong><span>Utensilios y preparación</span></button><button type="button" onClick={() => onPanel('recommendations')}><Leaf size={22} /><strong>Recomendaciones</strong><span>Uso y conservación</span></button><button type="button" onClick={() => onPanel('critical')}><AlertTriangle size={22} /><strong>Puntos críticos</strong><span>Claves para acertar</span></button></section>{technique.temperatureGuide&&<section className="temperature-guide"><h3>Tiempo y temperatura</h3><p>{technique.temperatureGuide.conditions}</p><table><thead><tr><th>Producto</th><th>Baño</th><th>Tiempo</th></tr></thead><tbody>{technique.temperatureGuide.rows.map(row=><tr key={row.product}><td>{row.product}</td><td>{row.temperatureC} °C</td><td>{row.minutes} min</td></tr>)}</tbody></table></section>}{technique.sources&&<div className="technique-sources">{technique.sources.map(s=><p key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.label}</a></p>)}</div>}<PrimaryButton onClick={onStart}><Play size={18} /> Empezar técnica</PrimaryButton></section>;
 }
 
 function TechniqueSheet({ technique, panel, onClose }: { technique: Technique; panel: Exclude<TechniquePanel, null>; onClose: () => void }) {
   const config: Record<Exclude<TechniquePanel, null>, { title: string; eyebrow: string; content: ReactNode }> = {
     ingredients: { title: 'Ingredientes', eyebrow: 'LO QUE NECESITAS', content: <div className="technique-ingredients">{technique.ingredients.map((item, index) => <div key={`${item.name}-${index}`}><span>{item.name}{item.optional ? ' · opcional' : ''}</span><strong>{item.quantity !== undefined ? `${formatNumber(item.quantity)} ${item.unit ?? ''}`.trim() : item.unit ?? ''}</strong></div>)}</div> },
     prep: { title: 'Mise en place', eyebrow: 'PREPARACIÓN PREVIA', content: <div className="technique-section"><p>{technique.equipment.length ? technique.equipment.join(' · ') : 'Sin utensilios especiales.'}</p></div> },
-    recommendations: { title: 'Recomendaciones', eyebrow: 'USO Y CONSERVACIÓN', content: <div className="technique-section"><p><strong>Conservación:</strong> {technique.storage}</p>{technique.uses.map((item, index) => <p key={`${item}-${index}`}>• {item}</p>)}</div> },
-    critical: { title: 'Puntos críticos', eyebrow: 'PARA QUE SALGA BIEN', content: <div className="technique-section">{technique.criticalPoints.map((item, index) => <p key={`${item}-${index}`}>• {item}</p>)}</div> }
+    recommendations: { title: 'Recomendaciones', eyebrow: 'USO Y CONSERVACIÓN', content: <div className="technique-section">{technique.whenToUse&&<p><strong>Cuándo usarla:</strong> {technique.whenToUse}</p>}{technique.whenNotToUse&&<p><strong>Cuándo no usarla:</strong> {technique.whenNotToUse}</p>}{technique.storage&&<p><strong>Seguridad / conservación:</strong> {technique.storage}</p>}{technique.uses.map((item, index) => <p key={`${item}-${index}`}>• {item}</p>)}</div> },
+    critical: { title: 'Puntos críticos', eyebrow: 'PARA QUE SALGA BIEN', content: <div className="technique-section">{technique.criticalPoints.map((item, index) => <p key={`critical-${item}-${index}`}>• {item}</p>)}{!!technique.successSignals?.length&&<><h3>Señales de éxito</h3>{technique.successSignals.map((item,index)=><p key={`success-${index}`}>✓ {item}</p>)}</>}{!!technique.frequentErrors?.length&&<><h3>Errores frecuentes</h3>{technique.frequentErrors.map((item,index)=><p key={`error-${index}`}>• {item}</p>)}</>}{!!technique.corrections?.length&&<><h3>Cómo corregir</h3>{technique.corrections.map((item,index)=><p key={`fix-${index}`}>• {item}</p>)}</>}{technique.requiresValidatedRecipe&&<p><strong>Control:</strong> los parámetros críticos de tiempo, temperatura, concentración o conservación deben venir de la receta concreta.</p>}</div> }
   };
   const current = config[panel];
   return <div className="recipe-panel-backdrop" role="presentation" onClick={onClose}><section className="recipe-panel-sheet" role="dialog" aria-modal="true" aria-label={current.title} onClick={event => event.stopPropagation()}><header className="recipe-panel-header"><div><span className="eyebrow">{current.eyebrow}</span><h2>{current.title}</h2></div><button type="button" onClick={onClose} aria-label="Cerrar"><X size={22} /></button></header><div className="recipe-panel-body">{current.content}<div className="recipe-panel-end-spacer" /></div></section></div>;
