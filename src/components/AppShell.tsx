@@ -13,7 +13,7 @@ export function AppShell({children,hideProfile=false,onBack}: {children:ReactNod
  const back=()=>{setOpen(false);if(onBack)onBack();else if(window.history.state?.idx>0)navigate(-1);else navigate('/')};
  useEffect(()=>{setOpen(false)},[location.pathname]);
  useEffect(()=>{if(!open)return;const escape=(e:KeyboardEvent)=>{if(e.key==='Escape'){setOpen(false);button.current?.focus()}};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape)},[open]);
- const items=[['/','Inicio',Home],['/mis-recetas?tab=favorites','Favoritos',Heart],['/mis-recetas','Mis recetas',BookOpen],['/tecnicas','Técnicas y Tips',CookingPot],['/nevera','Despensa y nevera',PackageOpen],['/lista-compra','Lista de la compra',ShoppingBasket],['/antojo','Qué cocinar',Sparkles],['/cocina-despensa','Abre la despensa',PackageOpen],['/foto','Foto Receta',Camera],['/buscar','Buscar',Search],['/tutorial','Guía',BookOpen],['/ajustes','Perfil y ajustes',Settings]] as const;
+ const items=[['/','Inicio',Home],['/mis-recetas?tab=favorites','Favoritos',Heart],['/mis-recetas','Mis recetas',BookOpen],['/tecnicas','Técnicas',CookingPot],['/nevera','Despensa y nevera',PackageOpen],['/lista-compra','Lista de la compra',ShoppingBasket],['/antojo','Qué cocinar',Sparkles],['/cocina-despensa','Abre la despensa',PackageOpen],['/foto','Foto Receta',Camera],['/buscar','Buscar',Search],['/tutorial','Guía',BookOpen],['/ajustes','Perfil y ajustes',Settings]] as const;
  return <div className="app-bg chef-app-shell">
   <div className="ambient ambient-one"/><div className="ambient ambient-two"/><div className="grain"/>
   <main className="phone-shell without-bottom-nav">{children}</main>
