@@ -28,7 +28,7 @@ test('five primary shortcuts and one culinary module in the menu',async({page},i
 test('technique detail restores filters, reloads and returns from subpanel',async({page})=>{
  await page.goto('./#/tecnicas');
  await page.getByLabel('Buscar técnica o uso').fill('emulsion');
- const count=await page.locator('.technique-photo-card').count();expect(count).toBeGreaterThan(0);
+ await expect(page.locator('.technique-photo-card')).toHaveCount(2);
  await page.locator('.technique-photo-open').first().click();
  await expect(page.locator('.technique-card')).toBeVisible();
  await expect(page.locator('.technique-photo-grid')).toHaveCount(0);
@@ -38,7 +38,7 @@ test('technique detail restores filters, reloads and returns from subpanel',asyn
  await expect(page.getByRole('dialog')).toHaveCount(0);
  await page.getByRole('button',{name:'Volver a la biblioteca',exact:true}).click();
  await expect(page.getByLabel('Buscar técnica o uso')).toHaveValue('emulsion');
- await expect(page.locator('.technique-photo-card')).toHaveCount(count);
+ await expect(page.locator('.technique-photo-card')).toHaveCount(2);
 });
 test('techniques and tips switch without a back-button loop',async({page},info)=>{
  await page.goto('./#/tecnicas');
