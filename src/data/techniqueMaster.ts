@@ -1,4 +1,4 @@
-import master from './theChefTechniquesMaster.json';
+import master from './theChefTechniquesMaster.json' with { type: 'json' };
 import type { Technique } from '../services/techniqueGateway';
 
 type RawTechnique = {

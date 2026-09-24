@@ -1,6 +1,6 @@
 import { AlertTriangle, Check, ChevronLeft, ChevronRight, Clock3, Home, Leaf, Mic, MicOff, Play, Save, Sparkles, Trash2, Wrench, X } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { TechniqueThumbnail } from '../components/TechniqueThumbnail';
@@ -16,8 +16,11 @@ const suggestions = ['Aceite de perejil', 'Caviar de tomate', 'Verduras marinada
 type TechniquePanel = 'ingredients' | 'prep' | 'recommendations' | 'critical' | null;
 
 export function TechniquesPage() {
-  const [params] = useSearchParams();
-  const [filter,setFilter]=useState('');const [category,setCategory]=useState('Todas');const [level,setLevel]=useState('Todos');
+  const [params,setParams] = useSearchParams();
+  const location=useLocation(),navigate=useNavigate();
+  const filter=params.get('q')||'',category=params.get('category')||'Todas',level=params.get('level')||'Todos';
+  const updateFilter=(key:string,value:string)=>{const next=new URLSearchParams(params);next.set(key,value);setParams(next,{replace:true,state:location.state});};
+  const setFilter=(value:string)=>updateFilter('q',value),setCategory=(value:string)=>updateFilter('category',value),setLevel=(value:string)=>updateFilter('level',value);
   const [draft, setDraft] = useState('');
   const [current, setCurrent] = useState<Technique>();
   const [saved, setSaved] = useState<Technique[]>(() => getTechniqueLibrary());
@@ -32,9 +35,9 @@ export function TechniquesPage() {
 
   useEffect(() => {
     const openId = params.get('open');
-    if (!openId) return;
+    if (!openId) {setCurrent(undefined);return;}
     const technique = getTechniqueLibrary().find(item => item.id === openId);
-    if (technique) setCurrent(technique);
+    setCurrent(technique);
   }, [params]);
 
   const submit = async () => {
@@ -43,34 +46,37 @@ export function TechniquesPage() {
     setIsGenerating(true); setError(undefined); setCompletedTechnique(undefined);
     try {
       const technique = await generateTechnique(request);
-      setCurrent(technique); saveTechnique(technique); setSaved(getTechniqueLibrary()); setDraft(''); setPanel(null);
+      saveTechnique(technique); setSaved(getTechniqueLibrary()); selectTechnique(technique); setDraft(''); setPanel(null);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se ha podido generar la técnica.');
     } finally { setIsGenerating(false); }
   };
 
-  const selectTechnique = (technique: Technique) => { setCurrent(technique); setPanel(null); setCompletedTechnique(undefined); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const selectTechnique = (technique: Technique) => { const next=new URLSearchParams(params);next.set('open',technique.id);setParams(next,{state:location.state});setCurrent(technique); setPanel(null); setCompletedTechnique(undefined); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const closeCard=()=>{const next=new URLSearchParams(params);next.delete('open');setParams(next,{replace:true});setCurrent(undefined);setPanel(null);};
+  const returnTo=typeof location.state?.returnTo==='string'&&/^\/(receta|cocinar)\//.test(location.state.returnTo)?location.state.returnTo:undefined;
+  const back=()=>{if(guided){setGuided(undefined);return;}if(panel){setPanel(null);return;}if(current){if(returnTo)navigate(returnTo,{replace:true});else closeCard();return;}navigate('/');};
   const startTechnique = (technique: Technique) => { setCompletedTechnique(undefined); setGuided(technique); setGuidedStep(0); };
   const finishTechnique = (technique: Technique) => { setGuided(undefined); setGuidedStep(0); setCurrent(technique); setCompletedTechnique(technique.id); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
   const visibleTechniques=saved.filter(t=>
     (category==='Todas'||t.category===category)&&
     (level==='Todos'||t.difficulty===level)&&
-    [t.title,t.category,...t.uses,...(t.aliases||[]),...(t.keywords||[])].join(' ').toLocaleLowerCase('es').includes(filter.toLocaleLowerCase('es'))
+    [t.title,t.category,...t.uses,...(t.aliases||[]),...(t.keywords||[])].join(' ').toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(filter.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,''))
   );
 
   return (
-    <AppShell>
+    <AppShell onBack={back}>
       <ChefLoadingOverlay active={isGenerating} title="Preparando la técnica" messages={['Afinando la técnica…']} />
       <TopBar eyebrow="BASE CULINARIA" title="Técnicas" />
       <div className="page-content nav-safe techniques-page">
-        <nav className="culinary-tabs" aria-label="Técnicas y tips"><Link className="active" to="/tecnicas">Técnicas</Link><Link to="/consejos">Tips</Link></nav>
-        <section className="editorial-card olive-intro"><span className="eyebrow">BIBLIOTECA DE TÉCNICAS</span><h2>180 técnicas para cocinar y aprender.</h2><p>Preparación, cortes, cocciones, salsas, panadería, pastelería y alta cocina. La misma ficha se reutiliza en recetas y en Elaboración.</p></section>
+        <nav className="culinary-tabs" aria-label="Técnicas y tips"><Link aria-current="page" className="active" replace to="/tecnicas">Técnicas</Link><Link replace to="/consejos">Tips</Link></nav>
+        {!current&&<section className="editorial-card olive-intro"><span className="eyebrow">BIBLIOTECA DE TÉCNICAS</span><h2>{saved.length} técnicas para cocinar y aprender.</h2><p>Preparación, cortes, cocciones, salsas, panadería, pastelería y alta cocina. La misma ficha se reutiliza en recetas y en Elaboración.</p></section>}
 
         {current && completedTechnique === current.id && <section className="editorial-card technique-completed-card"><Check size={26} /><div><span className="eyebrow">TÉCNICA TERMINADA</span><h2>{current.title}</h2><p>Has completado todos los pasos. Puedes consultar de nuevo la ficha, repetir la técnica o seguir navegando desde el menú del avatar.</p></div></section>}
 
-        <details><summary>Consultar al Chef una técnica adicional</summary><section className="form-section">
+        {!current&&<details><summary>Consultar al Chef una técnica adicional</summary><section className="form-section">
           <div className="section-label"><span>¿Qué quieres aprender o preparar?</span></div>
           <div className="technique-input-box"><textarea rows={4} value={draft} onChange={event => { setDraft(event.target.value); setValidated(false); }} placeholder="Ej. ¿Cómo hago un aceite verde de perejil?" /><div className="voice-action-stack"><button type="button" className="clear-input-button" onClick={() => { voice.stop(); setDraft(''); setValidated(false); }} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={18} /></button><button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing || isGenerating} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar técnica'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button><button type="button" className={`voice-confirm-button ${validated ? 'confirmed' : ''}`} onClick={() => setValidated(true)} disabled={!draft.trim() || voice.isListening || voice.isTranscribing || isGenerating} aria-label="Validar técnica"><Check size={19} /></button></div></div>
           {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando…</div>}{voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}{voice.error && <div className="voice-status error">{voice.error}</div>}{validated && <div className="voice-status confirmed"><Check size={14} /> Texto validado.</div>}{error && <div className="voice-status error">{error}</div>}
@@ -78,9 +84,9 @@ export function TechniquesPage() {
           <div className="technique-generate-action"><PrimaryButton onClick={() => void submit()} disabled={!draft.trim() || voice.isListening || voice.isTranscribing || isGenerating}>{isGenerating ? 'Preparando técnica…' : 'Generar técnica'}</PrimaryButton></div>
         </section>
 
-        </details>{current && <TechniqueCard technique={current} onPanel={setPanel} onStart={() => startTechnique(current)} />}
+        </details>}{current && <div className="technique-return-actions"><button className="secondary-button" onClick={back}>{returnTo?.startsWith('/cocinar/')?'Volver a elaboración':returnTo?'Volver a la receta':'Volver a la biblioteca'}</button>{returnTo&&<button className="secondary-button" onClick={closeCard}>Ver biblioteca</button>}</div>}{current && <TechniqueCard technique={current} onPanel={setPanel} onStart={() => startTechnique(current)} />}
 
-        <section className="library-section techniques-library">
+        {!current&&<section className="library-section techniques-library">
           <div className="section-heading-row"><div><span className="eyebrow">BIBLIOTECA MAESTRA</span><h2>{saved.length ? `${saved.length} técnicas disponibles` : 'Todavía vacío'}</h2></div></div>
           <input aria-label="Buscar técnica o uso" placeholder="Buscar técnica, alias o uso: saltear, wok, salsas…" value={filter} onChange={e=>setFilter(e.target.value)}/>
           <div className="technique-filter-row">
@@ -97,11 +103,11 @@ export function TechniquesPage() {
                   <small>{technique.difficulty} · {technique.timeLabel??`${technique.timeMinutes} min`}</small>
                 </div>
               </button>
-              {!technique.builtin&&<button type="button" className="technique-photo-delete" onClick={()=>{removeTechnique(technique.id);setSaved(getTechniqueLibrary());if(current?.id===technique.id)setCurrent(undefined)}} aria-label={`Eliminar ${technique.title}`}><Trash2 size={17}/></button>}
+              {!technique.builtin&&<button type="button" className="technique-photo-delete" onClick={()=>{removeTechnique(technique.id);setSaved(getTechniqueLibrary())}} aria-label={`Eliminar ${technique.title}`}><Trash2 size={17}/></button>}
             </article>)}
             {!visibleTechniques.length&&<div className="empty-card technique-empty">No hay técnicas que coincidan con estos filtros.</div>}
           </div>
-        </section>
+        </section>}
       </div>
 
       {current && panel && <TechniqueSheet technique={current} panel={panel} onClose={() => setPanel(null)} />}

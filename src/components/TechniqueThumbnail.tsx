@@ -24,8 +24,10 @@ export function TechniqueThumbnail({ technique, eager=false }: { technique: Tech
     let disposed=false;
     let objectUrl:string|undefined;
     setFailed(false);
+    setUrl(undefined);
     void getTechniqueImage(technique).then(value=>{
       objectUrl=value;
+      if(disposed){if(value?.startsWith('blob:'))URL.revokeObjectURL(value);return;}
       if(!disposed&&value)setUrl(value);
       else if(!disposed)setFailed(true);
     }).catch(()=>{if(!disposed)setFailed(true)});
@@ -36,7 +38,7 @@ export function TechniqueThumbnail({ technique, eager=false }: { technique: Tech
   },[visible,technique.id]);
 
   return <div ref={host} className="technique-photo-media">
-    {url?<img src={url} alt={`Ejemplo visual de ${technique.title}`} loading="lazy"/>:
+    {url?<img src={url} alt={`Ejemplo visual de ${technique.title}`} loading="lazy" onError={()=>{setUrl(undefined);setFailed(true)}}/>:
       <div className="technique-photo-placeholder" aria-label={failed?'Imagen no disponible':'Preparando imagen'}>
         <Camera size={25}/><span>{failed?'Vista técnica':'Preparando foto…'}</span>
       </div>}

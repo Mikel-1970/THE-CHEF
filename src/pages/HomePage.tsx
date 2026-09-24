@@ -36,7 +36,7 @@ export function HomePage() {
         <button className="reference-favorite" onClick={() => navigate('/mis-recetas?tab=favorites')}><Heart size={39} strokeWidth={1.55} fill="currentColor" /><strong>Favoritos</strong>{favorites.length > 0 && <small>{favorites.length}</small>}</button>
         <button onClick={() => navigate('/mis-recetas')}><BookOpen size={37} strokeWidth={1.65} /><strong>Mis recetas</strong></button>
         <button onClick={() => navigate('/tecnicas')}><CookingPot size={39} strokeWidth={1.55} /><strong>Técnicas</strong></button>
-        <button onClick={() => navigate('/nevera')}><PackageOpen size={39} strokeWidth={1.55} /><strong>Despensa y nevera</strong></button>
+        <button onClick={() => navigate('/nevera')}><PackageOpen size={39} strokeWidth={1.55} /><strong>Despensa</strong></button>
         <button onClick={() => navigate('/lista-compra')}><ShoppingBasket size={39} strokeWidth={1.55} /><strong>Lista de la compra</strong></button>
       </div></section>
     </section>

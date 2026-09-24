@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { TopBar } from '../components/TopBar';
 import { cookingTips, getTipReviews, setTipReview } from '../data/cookingTips';
@@ -9,6 +9,7 @@ import '../tips.css';
 const ALL_CATEGORIES='Todas las categorías';
 
 export function TipsPage(){
+ const navigate=useNavigate();
  const [reviews,setReviews]=useState(getTipReviews);
  const [query,setQuery]=useState('');
  const [category,setCategory]=useState(ALL_CATEGORIES);
@@ -62,10 +63,10 @@ export function TipsPage(){
   return [...groups.entries()].sort(([a],[b])=>a.localeCompare(b,'es'));
  },[filtered]);
 
- return <AppShell>
+ return <AppShell onBack={()=>navigate('/tecnicas',{replace:true})}>
   <TopBar title="Tips de cocina"/>
   <div className="page-content nav-safe tips-page">
-   <nav className="culinary-tabs" aria-label="Técnicas y tips"><Link to="/tecnicas">Técnicas</Link><Link className="active" to="/consejos">Tips</Link></nav>
+   <nav className="culinary-tabs" aria-label="Técnicas y tips"><Link replace to="/tecnicas">Técnicas</Link><Link aria-current="page" replace className="active" to="/consejos">Tips</Link></nav>
    <section className="editorial-card tips-intro">
     <span className="eyebrow">BIBLIOTECA DE TIPS</span>
     <h2>{cookingTips.length} tips organizados por categorías</h2>

@@ -273,3 +273,21 @@
 .cook-context-tip small{font-size:.7rem;font-weight:800;letter-spacing:.1em;color:#9a681f}
 .cook-context-tip strong{font-size:.98rem;line-height:1.25}
 .cook-context-tip p{margin:0;font-size:.9rem;line-height:1.45;color:#625746}
+
+/* Technique knowledge + optional timer */
+.cook-screen .cook-header{grid-template-columns:minmax(0,1fr);gap:10px}
+.cook-header .cook-return-recipe{width:auto;min-height:40px;height:auto;border-radius:12px;padding:8px 12px;display:inline-flex;justify-self:start;gap:7px}
+.cook-header .cook-return-recipe span{font-size:.72rem;opacity:1;letter-spacing:0;text-transform:none}
+.cook-header>div{min-width:0;padding:0 8px 4px}
+.cook-header>span:last-child{display:none}
+.cook-footer{max-width:620px;margin-inline:auto;z-index:30}
+.cook-technique-context,.cook-timer-section{width:min(100%,460px);margin:14px auto 0;text-align:left}
+.cook-tool-toggle{width:100%;min-height:52px;border:1px solid rgba(64,85,38,.14);border-radius:16px;background:#f5f2e7;color:#405526;display:flex;align-items:center;gap:10px;padding:10px 13px;font:inherit;text-align:left}
+.cook-tool-toggle span{display:grid;gap:1px}.cook-tool-toggle small{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:#7b806e}.cook-tool-toggle strong{font-size:.84rem}
+.cook-technique-detail{margin-top:8px;padding:14px;border:1px solid rgba(64,85,38,.12);border-radius:16px;background:#fffdf7;display:grid;gap:10px}
+.cook-technique-detail>p{margin:0;color:#59634d;line-height:1.45;font-size:.78rem}.cook-technique-detail>div{display:grid;gap:3px}.cook-technique-detail>div strong{color:#405526;font-size:.7rem}.cook-technique-detail>div span{color:#60685a;font-size:.75rem;line-height:1.4}
+.cook-technique-safety{padding:9px 10px;border-radius:12px;background:#f8ebd8!important;color:#7a5520!important}
+.cook-learn-technique{justify-self:start;border:0;background:transparent;color:#405526;font:inherit;font-size:.74rem;font-weight:800;padding:2px 0;text-decoration:underline;text-underline-offset:3px}
+.cook-timer-section .timer-card{margin-top:8px}
+.timer-custom-minutes{display:grid;grid-template-columns:auto 70px;align-items:center;gap:8px;margin:6px 0;color:#626b56;font-size:.72rem}
+.timer-custom-minutes input{width:70px;box-sizing:border-box;border:1px solid rgba(64,85,38,.2);border-radius:9px;background:#fff;padding:7px 8px;color:inherit;font:inherit}

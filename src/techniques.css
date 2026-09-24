@@ -282,3 +282,5 @@
   .technique-filter-row{grid-template-columns:1fr}
   .technique-photo-caption{padding:48px 10px 12px}
 }
+
+.technique-return-actions{display:flex;flex-wrap:wrap;gap:8px}.technique-return-actions button{flex:1;min-height:44px}
