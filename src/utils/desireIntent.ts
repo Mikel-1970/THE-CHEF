@@ -39,39 +39,27 @@ export function textMatchesDesireIntent(candidateText:string,request:CookingRequ
  if(request.mode!=='desire')return true;
  const query=(request.desireText??'').split('\n')[0].trim();
  if(!query)return true;
- const roots=meaningfulRoots(query);
- if(!roots.length)return true;
- const candidateRoots=expandedRoots(candidateText);
- const matched=roots.filter(token=>candidateRoots.has(token)).length;
- // Una petición concreta debe conservar al menos su núcleo culinario.
- // Con dos o más términos significativos exigimos dos coincidencias para evitar sustituciones ajenas.
- return roots.length===1?matched>=1:matched>=2;
+ const required=concepts(query,true);
+ if(!required.length)return true;
+ const candidate=concepts(candidateText,false);
+ const matched=required.filter(concept=>candidate.has(concept)).length;
+ // Una petición concreta debe conservar su núcleo culinario.
+ // Con dos o más conceptos significativos exigimos dos coincidencias; con uno, ese concepto debe estar presente.
+ return required.length===1?matched===1:matched>=2;
 }
 
-function meaningfulRoots(value:string){
- const tokens=normalize(value).split(/\s+/).filter(Boolean);
- const roots=[...new Set(tokens.filter(token=>token.length>=3&&!STOP.has(token)).map(root))];
- return expandAliases(roots);
-}
-
-function expandedRoots(value:string){
- const base=new Set(normalize(value).split(/\s+/).filter(token=>token.length>=3).map(root));
- for(const group of GROUPS){
-  if(group.some(token=>base.has(token)))group.forEach(token=>base.add(token));
+function concepts(value:string,removeStopwords:boolean){
+ const out=new Set<string>();
+ for(const token of normalize(value).split(/\s+/).filter(Boolean)){
+  if(token.length<3||(removeStopwords&&STOP.has(token)))continue;
+  const r=root(token);
+  const groupIndex=GROUPS.findIndex(group=>group.includes(r));
+  out.add(groupIndex>=0?`group:${groupIndex}`:`root:${r}`);
  }
- return base;
-}
-
-function expandAliases(roots:string[]){
- const result=new Set(roots);
- for(const group of GROUPS){
-  if(group.some(token=>result.has(token)))group.forEach(token=>result.add(token));
- }
- return [...result];
+ return removeStopwords?[...out]:out;
 }
 
 function normalize(value:string){
  return value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9ñ]+/g,' ').trim();
 }
-
 function root(value:string){return value.length>5?value.slice(0,5):value}
