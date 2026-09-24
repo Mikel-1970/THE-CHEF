@@ -39,7 +39,7 @@ export function textMatchesDesireIntent(candidateText:string,request:CookingRequ
  if(request.mode!=='desire')return true;
  const query=(request.desireText??'').split('\n')[0].trim();
  if(!query)return true;
- const required=concepts(query,true);
+ const required=[...concepts(query,true)];
  if(!required.length)return true;
  const candidate=concepts(candidateText,false);
  const matched=required.filter(concept=>candidate.has(concept)).length;
@@ -56,7 +56,7 @@ function concepts(value:string,removeStopwords:boolean){
   const groupIndex=GROUPS.findIndex(group=>group.includes(r));
   out.add(groupIndex>=0?`group:${groupIndex}`:`root:${r}`);
  }
- return removeStopwords?[...out]:out;
+ return out;
 }
 
 function normalize(value:string){
