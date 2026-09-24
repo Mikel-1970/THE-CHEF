@@ -65,7 +65,8 @@ export function TechniquesPage() {
       <ChefLoadingOverlay active={isGenerating} title="Preparando la técnica" messages={['Afinando la técnica…']} />
       <TopBar eyebrow="BASE CULINARIA" title="Técnicas" />
       <div className="page-content nav-safe techniques-page">
-        <section className="editorial-card olive-intro"><Link className="secondary-button" to="/consejos">Revisar tips de cocina</Link><span className="eyebrow">BIBLIOTECA DE TÉCNICAS</span><h2>180 técnicas para cocinar y aprender.</h2><p>Preparación, cortes, cocciones, salsas, panadería, pastelería y alta cocina. La misma ficha se reutiliza en recetas y en Elaboración.</p></section>
+        <nav className="culinary-tabs" aria-label="Técnicas y tips"><Link className="active" to="/tecnicas">Técnicas</Link><Link to="/consejos">Tips</Link></nav>
+        <section className="editorial-card olive-intro"><span className="eyebrow">BIBLIOTECA DE TÉCNICAS</span><h2>180 técnicas para cocinar y aprender.</h2><p>Preparación, cortes, cocciones, salsas, panadería, pastelería y alta cocina. La misma ficha se reutiliza en recetas y en Elaboración.</p></section>
 
         {current && completedTechnique === current.id && <section className="editorial-card technique-completed-card"><Check size={26} /><div><span className="eyebrow">TÉCNICA TERMINADA</span><h2>{current.title}</h2><p>Has completado todos los pasos. Puedes consultar de nuevo la ficha, repetir la técnica o seguir navegando desde el menú del avatar.</p></div></section>}
 
