@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { TopBar } from '../components/TopBar';
 import { cookingTips, getTipReviews, setTipReview } from '../data/cookingTips';
@@ -64,6 +65,7 @@ export function TipsPage(){
  return <AppShell>
   <TopBar title="Tips de cocina"/>
   <div className="page-content nav-safe tips-page">
+   <nav className="culinary-tabs" aria-label="Técnicas y tips"><Link to="/tecnicas">Técnicas</Link><Link className="active" to="/consejos">Tips</Link></nav>
    <section className="editorial-card tips-intro">
     <span className="eyebrow">BIBLIOTECA DE TIPS</span>
     <h2>{cookingTips.length} tips organizados por categorías</h2>
