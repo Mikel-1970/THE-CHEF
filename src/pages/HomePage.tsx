@@ -35,7 +35,7 @@ export function HomePage() {
       <section data-tour="quick" className="reference-quick-section" aria-label="Accesos rápidos"><div className="reference-quick-title"><span>❧</span><h2>Accesos rápidos</h2><span>❧</span></div><div className="reference-quick-grid">
         <button className="reference-favorite" onClick={() => navigate('/mis-recetas?tab=favorites')}><Heart size={39} strokeWidth={1.55} fill="currentColor" /><strong>Favoritos</strong>{favorites.length > 0 && <small>{favorites.length}</small>}</button>
         <button onClick={() => navigate('/mis-recetas')}><BookOpen size={37} strokeWidth={1.65} /><strong>Mis recetas</strong></button>
-        <button onClick={() => navigate('/tecnicas')}><CookingPot size={39} strokeWidth={1.55} /><strong>Técnicas</strong></button>
+        <button onClick={() => navigate('/tecnicas')}><CookingPot size={39} strokeWidth={1.55} /><strong>Técnicas y Tips</strong></button>
         <button onClick={() => navigate('/nevera')}><PackageOpen size={39} strokeWidth={1.55} /><strong>Despensa y nevera</strong></button>
         <button onClick={() => navigate('/lista-compra')}><ShoppingBasket size={39} strokeWidth={1.55} /><strong>Lista de la compra</strong></button>
       </div></section>
