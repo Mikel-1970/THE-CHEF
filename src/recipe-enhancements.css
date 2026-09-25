@@ -84,3 +84,8 @@
 .recipe-technique-chips{display:flex;flex-wrap:wrap;gap:8px}
 .recipe-technique-chips button{border:1px solid rgba(64,85,38,.16);border-radius:999px;background:#fffdf7;color:#405526;min-height:36px;padding:7px 11px;display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:.76rem;font-weight:800}
 .recipe-technique-chips button:active{transform:translateY(1px)}
+
+.recipe-technique-chips{justify-content:center;gap:10px}
+.recipe-techniques-heading{text-align:center}
+.nutrition-grid{display:flex;flex-wrap:wrap;justify-content:center}
+.nutrition-grid>div{flex:1 1 65px}

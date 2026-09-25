@@ -15,3 +15,4 @@
 
 .chef-draggable-avatar {right:14px;top:calc(12px + env(safe-area-inset-top,0px));touch-action:manipulation;}
 .chef-navigation-panel {left:auto;right:12px;}
+.chef-menu-grid button:disabled{cursor:default;opacity:.65}.chef-menu-grid button small{font-size:.65rem;font-weight:500}

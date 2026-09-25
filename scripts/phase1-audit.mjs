@@ -41,8 +41,8 @@ ok('Otra cocina editable',cuisine.includes('Otra cocina…')&&cuisine.includes('
 ok('Tiempo y dificultad son límites locales',mock.includes('r.prepMinutes+r.cookMinutes<=request.maxMinutes')&&mock.includes('difficultyRank[r.difficulty]<=difficultyRank[request.difficulty]'));
 ok('Sustitución aceptada mediante variante',recipe.includes('Usar sustituto')&&recipe.includes('Ajusta cantidades, pasos, tiempos y valores nutricionales'));
 ok('Inventario ayuda sin marcar Tengo automáticamente',recipe.includes('availableNames')&&recipe.includes('findAvailableSubstitute')&&recipe.includes('saveHaveIngredients')&&!recipe.includes('ingredientNamesMatch'));
-ok('Cantidades de pasos escalan en cocina y PDF',cook.includes('scaleStepInstruction(recipe,step.instruction,servings)')&&pdf.includes('scaleStepInstruction(recipe,s.instruction,servings)')&&stepScaling.includes('scaleQuantity'));
-ok('PDF disponible sin carga tardía de jsPDF',pdf.includes("import { jsPDF } from 'jspdf'")&&!pdf.includes("await import('jspdf')"));
+ok('Cantidades de pasos escalan en cocina y PDF',cook.includes('scaleStepInstruction(recipe,step.instruction,servings)')&&pdf.includes('scaleStepInstruction(recipe,step.instruction,servings)')&&stepScaling.includes('scaleQuantity'));
+ok('PDF disponible sin carga tardía de jsPDF',pdf.includes("import {jsPDF} from 'jspdf'")&&!pdf.includes("await import('jspdf')"));
 ok('Home sin URLs CSS obsoletas',!homeCss.includes("./home-pantry.jpg")&&!homeCss.includes("./home-desire.jpg"));
 ok('Propuestas IA respetan límites duros',hybrid.includes('proposalWithinLimits')&&hybrid.includes('proposal.minutes>request.maxMinutes')&&hybrid.includes('DIFFICULTY_RANK[proposal.difficulty]>DIFFICULTY_RANK[request.difficulty]'));
 ok('Nutrición escalada evita falsa precisión',recipe.includes('El escalado culinario puede variar ligeramente los valores'));

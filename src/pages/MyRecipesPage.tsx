@@ -2,7 +2,7 @@ import {chefLibrary} from '../data/library';
 import {CATALOG_EMPTY} from '../services/hybridRecommendationEngine';
 import { Check, Clock3, Heart, Mic, MicOff, Search, Sparkles, Trash2, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { RecipeThumbnail } from '../components/RecipeThumbnail';
@@ -28,6 +28,9 @@ export function MyRecipesPage() {
   const [kind,setKind]=useState('all');
   const [cuisine,setCuisine]=useState('');
   const [alcohol,setAlcohol]=useState('all');
+  const [historyCategory,setHistoryCategory]=useState('Todos');
+  const [historyQuery,setHistoryQuery]=useState('');
+  const [historyPeriod,setHistoryPeriod]=useState('all');
   const [historyYear, setHistoryYear] = useState('Todos');
   const [historyMonth, setHistoryMonth] = useState('Todos');
   const voice = useAiDictation(transcript => setQuery(current => current.trim() ? `${current.trim()} ${transcript.trim()}` : transcript.trim()));
@@ -50,10 +53,14 @@ export function MyRecipesPage() {
   const historyYears = useMemo(() => Array.from(new Set(history.map(entry => String(new Date(entry.createdAt).getFullYear())))).sort((a, b) => Number(b) - Number(a)), [history]);
   const filteredHistory = useMemo(() => history.filter(entry => {
     const date = new Date(entry.createdAt);
+    const recipe=entry.recipeId?getRecipeById(entry.recipeId):undefined;
+    if(historyCategory!=='Todos'&&(!recipe||(recipe.libraryCategory??inferDishCategory(recipe))!==historyCategory))return false;
+    if(historyQuery.trim()&&!((recipe?.title??entry.label).toLocaleLowerCase('es').includes(historyQuery.trim().toLocaleLowerCase('es'))))return false;
+    if(historyPeriod!=='all'&&date.getTime()<Date.now()-Number(historyPeriod)*86400000)return false;
     if (historyYear !== 'Todos' && String(date.getFullYear()) !== historyYear) return false;
     if (historyMonth !== 'Todos' && String(date.getMonth() + 1) !== historyMonth) return false;
     return true;
-  }), [history, historyYear, historyMonth]);
+  }), [history, historyYear, historyMonth,historyCategory,historyQuery,historyPeriod]);
 
   const repeatSearch = async (entry: HistoryEntry,forceAi=false) => {
     if (isRepeating) return;
@@ -87,7 +94,7 @@ export function MyRecipesPage() {
     <AppShell>
       <ChefLoadingOverlay active={isRepeating} title="Preparando tu receta" messages={['Recuperando tus preferencias…','Preparando la receta completa…','Preparando la imagen…']} />
       <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>150 recetas y 20 cócteles listos para preparar. Guarda tus favoritos y tus propias versiones.</p></div>
-      <div className="page-content nav-safe"><Link className="secondary-button" to="/consejos">Revisar tips de cocina</Link>
+      <div className="page-content nav-safe">
           <div className="library-tabs">
             <button className={tab === 'library' ? 'active' : ''} onClick={() => setDishTab('library')}>Biblioteca del Chef</button>
             <button className={tab === 'all' ? 'active' : ''} onClick={() => setDishTab('all')}>Mis guardadas</button>
@@ -120,12 +127,15 @@ export function MyRecipesPage() {
             {repeatError&&<p role="alert">{repeatError}</p>}
             {repeatError===CATALOG_EMPTY&&repeatEntry&&<button className="secondary-button" disabled={isRepeating} onClick={()=>void repeatSearch(repeatEntry,true)}>Crear receta con IA</button>}
             <div className="section-heading-row"><div><span className="eyebrow">HISTORIAL</span><h2>Actividad reciente</h2></div></div>
+            <div className="search-box"><Search size={18}/><input aria-label="Buscar en el historial" placeholder="Buscar en el historial…" value={historyQuery} onChange={e=>setHistoryQuery(e.target.value)}/></div>
             <div className="history-filter-row">
-              <label><span>Año</span><select value={historyYear} onChange={event => setHistoryYear(event.target.value)}><option value="Todos">Todos</option>{historyYears.map(year => <option value={year} key={year}>{year}</option>)}</select></label>
-              <label><span>Mes</span><select value={historyMonth} onChange={event => setHistoryMonth(event.target.value)}><option value="Todos">Todos</option>{MONTHS.slice(1).map((month, index) => <option value={String(index + 1)} key={month}>{month}</option>)}</select></label>
+              <label>Comida<select aria-label="Comida del historial" value={historyCategory} onChange={e=>setHistoryCategory(e.target.value)}>{['Todos','Arroces','Pastas','Carnes','Pescados','Guisos','Verduras','Tapas y huevos','Sopas y cremas','Postres','Cócteles','Otros'].map(c=><option key={c}>{c}</option>)}</select></label>
+              <label>Periodo<select aria-label="Periodo del historial" value={historyPeriod} onChange={e=>{setHistoryPeriod(e.target.value);setHistoryYear('Todos');setHistoryMonth('Todos')}}><option value="all">Cualquier fecha</option><option value="7">Últimos 7 días</option><option value="30">Últimos 30 días</option><option value="90">Últimos 3 meses</option></select></label>
+              <label><span>Año</span><select value={historyYear} onChange={event => {setHistoryYear(event.target.value);setHistoryPeriod('all')}}><option value="Todos">Todos</option>{historyYears.map(year => <option value={year} key={year}>{year}</option>)}</select></label>
+              <label><span>Mes</span><select value={historyMonth} onChange={event => {setHistoryMonth(event.target.value);setHistoryPeriod('all')}}><option value="Todos">Todos</option>{MONTHS.slice(1).map((month, index) => <option value={String(index + 1)} key={month}>{month}</option>)}</select></label>
             </div>
             <div className="history-list">
-              {filteredHistory.slice(0, 40).map(entry => {
+              {filteredHistory.map(entry => {
                 const recipe = entry.recipeId ? getRecipeById(entry.recipeId) : undefined;
                 const date = new Date(entry.createdAt).toLocaleString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
                 if (entry.kind === 'recipe') {
@@ -133,7 +143,7 @@ export function MyRecipesPage() {
                 }
                 return <div className="history-card" role="button" tabIndex={0} key={entry.id} onClick={() => void repeatSearch(entry)} onKeyDown={event => event.key === 'Enter' && void repeatSearch(entry)}><span>{entry.mode === 'pantry' ? 'Cocina con lo que hay' : 'Chef'}</span><strong>{entry.label}</strong><small>{date} · Repetir búsqueda</small><button className="history-delete" type="button" aria-label="Borrar del historial" onClick={event => { event.stopPropagation(); removeHistoryEntry(entry.id); }}><Trash2 size={16} /></button></div>;
               })}
-              {!filteredHistory.length && <div className="empty-card">No hay actividad para ese periodo.</div>}
+              {!filteredHistory.length && <div className="empty-card">No hay actividad con estos filtros.</div>}
             </div>
           </section>}
 

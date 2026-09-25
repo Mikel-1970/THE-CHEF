@@ -24,6 +24,9 @@ jobs:
       - name: Auditoría estática Fase 1
         run: npm run audit:phase1
 
+      - name: Verificar cálculos nutricionales de la biblioteca
+        run: npm run check:nutrition
+
       - name: Validar Pages Functions
         run: npm run check:functions
       - name: Compilar y validar TypeScript

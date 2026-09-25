@@ -18,9 +18,9 @@ test('five primary shortcuts and one culinary module in the menu',async({page},i
  await expect(page.locator('.reference-quick-grid strong')).toHaveText(['Favoritos','Mis recetas','Técnicas','Despensa','Lista de la compra']);
  await page.screenshot({path:info.outputPath('home.png'),fullPage:true});
  await page.getByRole('button',{name:'Abrir menú',exact:true}).click();
- await expect(page.locator('.chef-menu-grid').getByRole('button',{name:'Técnicas',exact:true})).toHaveCount(1);
+ await expect(page.locator('.chef-menu-grid').getByRole('button',{name:'Técnicas y tips',exact:true})).toHaveCount(1);
  await expect(page.locator('.chef-menu-grid').getByRole('button',{name:'Tips',exact:true})).toHaveCount(0);
- await page.locator('.chef-menu-grid').getByRole('button',{name:'Técnicas',exact:true}).click();
+ await page.locator('.chef-menu-grid').getByRole('button',{name:'Técnicas y tips',exact:true}).click();
  await expect(page.locator('.technique-photo-card')).toHaveCount(180);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await page.screenshot({path:info.outputPath('techniques.png'),fullPage:true});

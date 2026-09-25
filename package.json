@@ -8,11 +8,13 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "audit:phase1": "node scripts/phase1-audit.mjs",
-    "validate": "npm run audit:phase1 && npm run check:functions && npm run build",
+    "validate": "npm run audit:phase1 && npm run check:nutrition && npm run check:functions && npm run build",
     "preview": "vite preview --host 0.0.0.0",
-    "check:functions": "tsc -p tsconfig.functions.json"
+    "check:functions": "tsc -p tsconfig.functions.json",
+    "check:nutrition": "node scripts/calculate-library-nutrition.mjs --check"
   },
   "dependencies": {
+    "html2canvas": "^1.4.1",
     "jose": "6.2.12",
     "jspdf": "^4.2.1",
     "lucide-react": "^0.468.0",

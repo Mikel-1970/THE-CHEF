@@ -9,7 +9,7 @@ El catálogo incluido contiene 150 recetas y 20 cócteles. Se distribuye con la 
 - 5 recetas por cocina: francesa, portuguesa, griega, mexicana, peruana, japonesa, china, tailandesa, india, árabe/oriental y estadounidense.
 - 20 cócteles, incluidos tres sin alcohol. Las cantidades iniciales de bebidas corresponden a una copa; las de platos y postres, a cuatro personas.
 
-Las recetas son formulaciones editoriales predefinidas, con tiempos orientativos. No constituyen una certificación culinaria. La información nutricional no se ha calculado y se omite expresamente, tanto en la ficha como en el PDF, en lugar de mostrar valores inventados. Los tiempos totales de las preparaciones que requieren remojo, reposo o frío incluyen esos periodos indicados.
+Las recetas son formulaciones editoriales predefinidas, con tiempos orientativos. No constituyen una certificación culinaria. La información nutricional se estima por ingredientes con CoFID 2021 y USDA SR Legacy 2018. Véase LIBRARY_NUTRITION.md para fuentes, hipótesis y reproducción de los cálculos. Los tiempos totales de las preparaciones que requieren remojo, reposo o frío incluyen esos periodos indicados.
 
 ## Comportamiento
 
