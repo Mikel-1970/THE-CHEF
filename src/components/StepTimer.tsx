@@ -31,6 +31,7 @@ export function StepTimer({
   const[deadline,setDeadline]=useState<number|undefined>(initial.deadline);
   const[finished,setFinished]=useState(Boolean(initial.finished));
   const alarmed=useRef(false);
+  const wakeLock=useRef<any>(null);
 
   useEffect(()=>{
     const next=readState(timerId,suggestedSeconds);
@@ -62,6 +63,22 @@ export function StepTimer({
     return()=>window.removeEventListener('chef:step-timer-finished',listener);
   },[timerId,suggestedSeconds]);
 
+
+  useEffect(()=>{
+    let disposed=false;
+    const acquire=async()=>{
+      if(!running||document.visibilityState!=='visible'||!('wakeLock' in navigator))return;
+      try{
+        const lock=await (navigator as any).wakeLock.request('screen');
+        if(disposed){await lock.release?.();return;}
+        wakeLock.current=lock;
+      }catch{/* opcional */}
+    };
+    const visibility=()=>{if(running&&document.visibilityState==='visible'&&!wakeLock.current)void acquire()};
+    if(running)void acquire();
+    document.addEventListener('visibilitychange',visibility);
+    return()=>{disposed=true;document.removeEventListener('visibilitychange',visibility);void wakeLock.current?.release?.();wakeLock.current=null};
+  },[running]);
 
   useEffect(()=>{
     if(!running||!deadline)return;
