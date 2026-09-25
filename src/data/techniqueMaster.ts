@@ -92,7 +92,7 @@ export const techniqueMaster: Technique[] = raw.map(item => {
     cue: step.cue || (index === (curated?.steps?.length || editorial.steps.length) - 1 ? item.senales_de_exito?.[0] : index === 1 ? item.punto_clave : undefined)
   })),
   criticalPoints: [...(curated?.criticalPoints || []), item.punto_clave, ...(item.seguridad_e_higiene || [])].filter((value,index,array): value is string => Boolean(value) && array.indexOf(value)===index),
-  storage: curated?.storage || (item.seguridad_e_higiene || []).join(' '),
+  storage: curated?.storage || ((item.seguridad_e_higiene || []).length ? (item.seguridad_e_higiene || []).join('. ') + '.' : ''),
   uses: [...(curated?.uses || []), ...(item.elaboraciones_frecuentes || [])].filter(Boolean),
   createdAt: '2026-09-23T00:00:00Z',
   builtin: true,
