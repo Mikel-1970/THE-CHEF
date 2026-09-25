@@ -22,3 +22,8 @@
 .technique-guide .step-timer{margin-top:24px}
 .technique-guide .step-timer-trigger{background:#fffaf1}
 @media(max-width:390px){.step-timer-panel{padding:14px}.step-timer-actions{grid-template-columns:1fr}.step-timer-display{font-size:3rem}}
+.global-timer{position:fixed;right:16px;bottom:max(90px,env(safe-area-inset-bottom));z-index:1500;width:max-content;max-width:calc(100vw - 32px);border:2px solid #b8811b;border-radius:18px;background:#fffaf1;color:#334525;box-shadow:0 6px 25px #0004;padding:8px}
+.global-timer button{min-height:44px;border:0;border-radius:12px;background:#405526;color:white;padding:10px 14px;font-weight:800;cursor:pointer}
+.global-timer-summary{font-variant-numeric:tabular-nums;width:100%;font-size:1rem}
+.global-timer-controls{display:grid;gap:8px;padding-top:8px;max-width:280px}
+.global-timer-controls strong{padding:4px;overflow-wrap:anywhere;font-size:.8rem}

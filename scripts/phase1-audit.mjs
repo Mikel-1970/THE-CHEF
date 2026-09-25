@@ -17,7 +17,7 @@ ok('Ficha foto-título-resumen-nutrición',recipe.indexOf('recipe-hero')<recipe.
 ok('Imagen preparada antes de abrir ficha',directRecipe.includes('await getRecipeImage(recipe)')&&read('src/pages/DesirePage.tsx').includes('navigate(`/receta/${result.recipe.id}`)'));
 ok('Reintento de imagen sin regenerar receta',directRecipe.includes('getRecipeImage(recipe).catch')&&recipe.includes('Reintentar imagen'));
 ok('Variantes versionadas',recipe.includes('· v${version}'));
-ok('Timer con deadline real',stepTimer.includes('deadline')&&stepTimer.includes('Date.now()')&&stepTimer.includes('role="timer"'));
+ok('Timer con deadline real',read('src/components/timerStore.ts').includes('deadline')&&read('src/components/timerStore.ts').includes('Date.now()')&&stepTimer.includes('role="timer"'));
 ok('Cook sin BottomNav',!cook.includes('BottomNav'));
 ok('Foto corrección confirmada',photo.includes('CONFIRMADOS por el usuario'));
 ok('Métrica IA',gateway.includes('recordAiUsage'));
@@ -36,7 +36,7 @@ ok('Restricciones deterministas en fallback',mock.includes('recipeViolatesRestri
 ok('Restricciones verificadas tras generación IA',gateway.includes('assertRecipeRestrictions(recipe,request.restrictions)'));
 ok('Restricciones disponibles en Abre la nevera',read('src/components/CookingOptions.tsx').includes('Restricciones / exclusiones')&&pantry.includes('...cookingRequestOptions(options.value)'));
 ok('Tengo y Me falta persisten por receta',recipe.includes('loadMissingIngredients')&&recipe.includes('saveMissingIngredients'));
-ok('Temporizador editable por paso',cook.includes("timerId={'recipe:'")&&read('src/pages/TechniquesPage.tsx').includes("timerId={'technique:'")&&stepTimer.includes('Minutos del temporizador')&&stepTimer.includes('Segundos del temporizador')&&stepTimer.includes('playAlarm'));
+ok('Temporizador editable por paso',cook.includes("timerId={'recipe:'")&&read('src/pages/TechniquesPage.tsx').includes("timerId={'technique:'")&&stepTimer.includes('Minutos del temporizador')&&stepTimer.includes('Segundos del temporizador')&&read('src/components/timerStore.ts').includes('playAlarm'));
 ok('Otra cocina editable',cuisine.includes('Otra cocina…')&&cuisine.includes('Escribe el tipo de cocina'));
 ok('Tiempo y dificultad son límites locales',mock.includes('r.prepMinutes+r.cookMinutes<=request.maxMinutes')&&mock.includes('difficultyRank[r.difficulty]<=difficultyRank[request.difficulty]'));
 ok('Sustitución aceptada mediante variante',recipe.includes('Usar sustituto')&&recipe.includes('Ajusta cantidades, pasos, tiempos y valores nutricionales'));
