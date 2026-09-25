@@ -1,0 +1,24 @@
+.step-timer{width:min(100%,520px);margin:20px auto 0;text-align:left}
+.step-timer-trigger{width:100%;min-height:58px;border:1px solid rgba(64,86,38,.14);border-radius:18px;background:#fffaf1;color:#405526;display:flex;align-items:center;gap:12px;padding:10px 14px;box-shadow:0 8px 22px rgba(72,62,38,.08)}
+.step-timer-clock{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#405526;color:#fff;flex:0 0 auto}
+.step-timer-trigger-copy{display:grid;gap:2px;min-width:0}
+.step-timer-trigger-copy strong{font-size:.9rem}
+.step-timer-trigger-copy small{font-size:.69rem;color:#74796d;font-weight:600}
+.step-timer.running .step-timer-clock{background:#b8811b}
+.step-timer.finished .step-timer-clock{background:#9a3d25}
+.step-timer-panel{margin-top:10px;padding:16px;border:1px solid rgba(64,86,38,.13);border-radius:20px;background:#fffdf8;box-shadow:0 12px 28px rgba(72,62,38,.09);display:grid;gap:14px}
+.step-timer-inputs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:end}
+.step-timer-inputs label{display:grid;gap:5px}
+.step-timer-inputs label span{font-size:.65rem;font-weight:800;color:#758066;text-transform:uppercase;letter-spacing:.06em}
+.step-timer-inputs input{width:100%;min-width:0;border:1px solid #d8dacb;border-radius:13px;background:#fffaf1;color:#334525;padding:11px 10px;font:inherit;font-weight:800;text-align:center}
+.step-timer-colon{padding-bottom:11px;font-weight:900;color:#7f866f}
+.step-timer-suggestion{border:0;border-radius:999px;background:#eef0df;color:#506232;padding:8px 11px;font-size:.7rem;font-weight:800;justify-self:start}
+.step-timer-display{text-align:center;font-family:'DM Sans',system-ui,sans-serif;font-variant-numeric:tabular-nums;font-size:clamp(2.7rem,13vw,4.2rem);line-height:1;font-weight:800;color:#405526;letter-spacing:.02em}
+.step-timer-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.step-timer-actions button{min-height:46px;border:1px solid rgba(64,86,38,.14);border-radius:14px;background:#fffaf1;color:#506232;font-weight:800;display:flex;align-items:center;justify-content:center;gap:7px}
+.step-timer-actions button.primary{border:0;background:#405526;color:#fff}
+.step-timer-actions button:disabled{opacity:.42}
+.step-timer-finished{text-align:center;padding:9px 12px;border-radius:12px;background:#f8e6df;color:#8d3d27;font-weight:850;font-size:.78rem}
+.technique-guide .step-timer{margin-top:24px}
+.technique-guide .step-timer-trigger{background:#fffaf1}
+@media(max-width:390px){.step-timer-panel{padding:14px}.step-timer-actions{grid-template-columns:1fr}.step-timer-display{font-size:3rem}}
