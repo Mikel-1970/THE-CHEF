@@ -70,6 +70,7 @@ export const techniqueMaster: Technique[] = raw.map(item => {
     commonIngredients: item.ingredientes_habituales || [],
     requiresValidatedRecipe: Boolean(item.requiere_receta_validada)
   });
+  const stepSource: Technique['steps'] = curated?.steps?.length ? curated.steps : editorial.steps.map((instruction,index)=>({number:index+1,instruction}));
   return ({
   id: item.id,
   title: item.nombre,
@@ -83,7 +84,7 @@ export const techniqueMaster: Technique[] = raw.map(item => {
   equipment: curated?.equipment?.length ? curated.equipment : (item.utensilios || []),
   miseEnPlace: curated?.miseEnPlace?.length ? curated.miseEnPlace : editorial.miseEnPlace,
   ingredients: curated?.ingredients?.length ? curated.ingredients : editorial.ingredients.map(name => ({ name })),
-  steps: (curated?.steps?.length ? curated.steps : editorial.steps.map((instruction,index)=>({number:index+1,instruction}))).map((step, index) => ({
+  steps: stepSource.map((step, index) => ({
     number: index + 1,
     instruction: step.instruction,
     minutes: step.minutes,
