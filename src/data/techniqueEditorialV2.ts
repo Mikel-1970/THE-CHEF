@@ -270,6 +270,21 @@ function miseEnPlace(input: TechniqueEditorialInput, steps: string[]): string[] 
   return items;
 }
 
+
+function timeLabelFor(input: TechniqueEditorialInput): string {
+  if (input.family === 'Preparación y corte') return 'Normalmente minutos; depende de cantidad y precisión';
+  if (input.family === 'Preelaboración y conservación') return 'Según producto, proporción y procedimiento';
+  if (input.family === 'Agua, vapor y presión') return 'Según alimento, tamaño y punto de cocción';
+  if (input.family === 'Sartén y fritura') return 'Normalmente minutos; controla el punto real';
+  if (input.family === 'Horno, fuego y guisos') return 'Según pieza, grosor, temperatura y equipo';
+  if (input.family === 'Salsas y fondos') return 'Según volumen, concentración y textura';
+  if (input.family === 'Huevos, arroces y pasta') return 'Tiempo específico según elaboración y producto';
+  if (input.family === 'Carnes, pescados y mariscos') return 'Según especie, pieza, grosor y método';
+  if (input.family === 'Panadería, pastelería y heladería') return 'Según fórmula, temperatura y desarrollo';
+  if (input.family === 'Alta cocina y emplatado') return 'Según fórmula, producto y equipo';
+  return 'Según producto y método';
+}
+
 export function buildTechniqueEditorial(input: TechniqueEditorialInput): TechniqueEditorial {
   const steps = SPECIFIC_STEPS[input.title] || (CUT_SHAPES[input.title]
     ? [
@@ -291,6 +306,7 @@ export function buildTechniqueEditorial(input: TechniqueEditorialInput): Techniq
     whenNotToUse: input.requiresValidatedRecipe
       ? 'No la improvises sin una receta o procedimiento que fije los parámetros críticos para el producto concreto.'
       : 'Elige otra técnica cuando el resultado buscado requiera un efecto distinto o no puedas ' + point.toLocaleLowerCase('es') + '.',
-    chefTip: 'Clave práctica: ' + point + '.'
+    chefTip: 'Clave práctica: ' + point + '.',
+    timeLabel: timeLabelFor(input)
   };
 }
