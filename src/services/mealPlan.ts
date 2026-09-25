@@ -96,6 +96,7 @@ export function chooseRecipe(catalog:Recipe[],o:PlanOptions,meal:Meal,used:strin
  const target=o.goal?o.goal.kcal*o.shares[meal]/100:undefined;
  const rank=(r:Recipe)=>{
   const n=recipeNutrition(r,o.servings);let score=used.filter(id=>id===r.id).length*8+(n.kcal===null?100:0);
+  if(r.libraryCategory){score+=used.filter(id=>catalog.find(item=>item.id===id)?.libraryCategory===r.libraryCategory).length*.6;if(catalog.find(item=>item.id===used.at(-1))?.libraryCategory===r.libraryCategory)score+=1;}
   if(target)score+=n.kcal===null?100:Math.abs(n.kcal-target)/target;
   if(o.goal)for(const k of ['proteinG','carbsG','fatG'] as const){const t=o.goal[k];if(t&&n[k]!==null)score+=Math.abs(n[k]!-t*o.shares[meal]/100)/t;}
   if(o.preferred.includes(r.id))score-=.3;

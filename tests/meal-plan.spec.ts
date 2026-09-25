@@ -73,5 +73,7 @@ test('AI is explicit, excludes personal data and rejects incompatible recipes',a
  const unknown={...chefLibrary[0],id:'aaa-unknown',ingredients:[{name:'mezcla secreta',quantity:100,unit:'g',scalingMode:'linear' as const}]};
  const plan=makePlan(options(),[dessert,unknown,...chefLibrary]);
  expect(plan.slots.every(s=>s.recipe?.recipeKind==='dish'&&recipeNutrition(s.recipe,4).kcal!==null)).toBe(true);
+ expect(new Set(plan.slots.map(s=>s.recipe?.libraryCategory)).size).toBeGreaterThanOrEqual(5);
+ for(let day=0;day<7;day++)expect(plan.slots[day*2].recipe?.libraryCategory).not.toBe(plan.slots[day*2+1].recipe?.libraryCategory);
  const capitalized={...chefLibrary[0],ingredients:chefLibrary[0].ingredients.map(i=>({...i,name:i.name.toUpperCase()}))};expect(recipeNutrition(capitalized,4)).toEqual(recipeNutrition(chefLibrary[0],4));
  });
