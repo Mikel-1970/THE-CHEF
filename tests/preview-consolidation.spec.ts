@@ -69,18 +69,38 @@ test('optional manual timer and cooking step survive technique round trip',async
  const titleBox=await page.locator('.cook-header>div').boundingBox();
  expect(backBox!.y+backBox!.height).toBeLessThanOrEqual(titleBox!.y);
  await expect(page.getByRole('button',{name:'Volver',exact:true})).toHaveCount(0);
- await page.getByRole('button',{name:/Herramienta opcional/}).click();
- const custom=page.locator('.timer-custom-minutes input');
- if(await custom.count())await custom.fill('3');
- await expect(page.getByLabel('Iniciar temporizador',{exact:true})).toBeVisible();
- await page.getByLabel('Iniciar temporizador',{exact:true}).click();
- await expect(page.getByLabel('Pausar temporizador')).toBeVisible();
+ await page.getByRole('button',{name:'Abrir temporizador',exact:true}).click();
+ await expect(page.getByLabel('Minutos del temporizador')).toBeVisible();
+ await page.getByLabel('Minutos del temporizador').fill('3');
+ await page.getByLabel('Segundos del temporizador').fill('0');
+ await page.getByRole('button',{name:'Iniciar',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Pausar',exact:true})).toBeVisible();
  const step=await page.locator('.cook-step-label').textContent();
  await page.locator('.cook-technique-context .cook-tool-toggle').click();
  await page.getByRole('button',{name:'Aprender técnica completa'}).click();
  await page.getByRole('button',{name:'Volver a elaboración',exact:true}).click();
  await expect(page.locator('.cook-step-label')).toHaveText(step!);
- await expect(page.getByLabel('Pausar temporizador')).toBeVisible();
+ await expect(page.getByRole('button',{name:'Pausar',exact:true})).toBeVisible();
  await expect(page.locator('.cook-serving')).toContainText('2 personas');
  await page.screenshot({path:info.outputPath('cooking.png'),fullPage:true});
+});
+
+
+test('every technique step exposes an editable timer',async({page})=>{
+ await page.goto('./#/tecnicas');
+ await page.locator('.technique-photo-open').first().click();
+ await page.getByRole('button',{name:/Empezar técnica/}).click();
+ await expect(page.getByRole('button',{name:'Abrir temporizador',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Abrir temporizador',exact:true}).click();
+ await expect(page.getByLabel('Minutos del temporizador')).toBeVisible();
+ await expect(page.getByLabel('Segundos del temporizador')).toBeVisible();
+});
+
+test('proposal route is retired and entry points say Generar receta',async({page})=>{
+ await page.goto('./#/antojo');
+ await expect(page.getByRole('button',{name:'Generar receta',exact:true})).toBeVisible();
+ await page.goto('./#/cocina-despensa');
+ await expect(page.getByRole('button',{name:'Generar receta',exact:true})).toBeVisible();
+ await page.goto('./#/propuestas');
+ await expect(page).toHaveURL(/#\/$/);
 });
