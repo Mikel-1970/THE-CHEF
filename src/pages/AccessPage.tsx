@@ -138,7 +138,7 @@ export function AccessPage({ onAuthenticated }: Props) {
       <section key={mode} className="access-card">
         <span className="entry-eyebrow">ACCESO</span>
         {mode !== 'login' && <h2>{mode === 'register' ? 'Crear usuario' : 'Recuperar contraseña'}</h2>}
-        <p>{mode === 'login' ? 'Identifícate para entrar en tu cocina.' : mode === 'register' ? 'Crea el usuario de acceso para esta versión de The Chef.' : 'Define una nueva contraseña para el usuario registrado.'}</p>
+        <p>{mode === 'login' ? 'Identifícate para entrar en tu cocina.' : mode === 'register' ? 'Crea el usuario de acceso para esta versión de Chef Voldi.' : 'Define una nueva contraseña para el usuario registrado.'}</p>
 
         <form className="entry-form" onSubmit={safeSubmit}>
           {mode === 'register' && (

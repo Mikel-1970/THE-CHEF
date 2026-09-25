@@ -1,0 +1,11 @@
+/* Approved Chef Voldi palette. Text/button contrasts use the darker brand browns. */
+:root{--brand-brown:#B84513;--brand-caramel:#D98947;--brand-cream:#FFF7E9;--brand-beige:#EEDDC4;--brand-sand:#D7C9B8;--brand-chocolate:#3A2A1F}
+:root:not([data-theme=dark]){--ivory:#FFF7E9;--paper:#fffaf3;--forest:#6c3217;--olive:#8f3a15;--sage:#976b4d;--gold:#D98947;--terracotta:#B84513;--ink:#3A2A1F;--muted:#766451;--line:rgba(93,55,29,.18);color:var(--ink)}
+:root:not([data-theme=dark]) .app-bg{background:radial-gradient(circle at 10% 2%,#d9894714,transparent 28%),linear-gradient(180deg,#fffaf1,#f5e8d5)}
+:root:not([data-theme=dark]) :is(.primary-button,.entry-primary,.sticky-action,.chef-menu-grid button:hover,.visual-option-enable:hover){background:#934018;color:#fffaf3}
+:root:not([data-theme=dark]) :is(.olive-intro,.visual-options,.chef-navigation-panel){background:#fff7e9;color:#54301d}
+:root:not([data-theme=dark]) :is(.chef-menu-grid button,.secondary-button,.advanced-toggle,.visual-option-title){color:#713817}
+:root:not([data-theme=dark]) :is(.chip.selected,.library-tabs button.active,.recipe-nutrition-card){background:#934018;color:#fffaf3}
+:root:not([data-theme=dark]) .reference-brand h1{color:#3a2a1f}
+.recipe-export-brand img{display:block;width:143px;height:34px;object-fit:contain}.recipe-export-brand{padding-bottom:8px}
+.recipe-export-page{background:#fff7e9}.recipe-export-host{color:#3a2a1f}.recipe-export-heading h1{color:#3a2a1f}.recipe-export-nutrition{background:linear-gradient(145deg,#894018,#56321e)}

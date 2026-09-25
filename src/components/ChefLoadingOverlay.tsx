@@ -6,7 +6,7 @@ import { nextCookingTip } from '../data/cookingTips';
 import { ChefAvatar } from './ChefAvatar';
 import './ChefLoadingOverlay.css';
 type Props={active:boolean;title?:string;messages?:string[];showTips?:boolean};
-export function ChefLoadingOverlay({active,title='The Chef está trabajando',messages=[],showTips=true}:Props){
+export function ChefLoadingOverlay({active,title='Chef Voldi está trabajando',messages=[],showTips=true}:Props){
  const {settings}=useApp();
  const [visible,setVisible]=useState(active),[completed,setCompleted]=useState(false);
  const [tip,setTip]=useState<ReturnType<typeof nextCookingTip>>();

@@ -70,7 +70,7 @@ export function TipsPage(){
    <section className="editorial-card tips-intro">
     <span className="eyebrow">BIBLIOTECA DE TIPS</span>
     <h2>{cookingTips.length} tips organizados por categorías</h2>
-    <p>Consulta la biblioteca completa o entra directamente en una categoría. The Chef seguirá mostrando en Elaboración solo los tips que aporten valor al paso concreto.</p>
+    <p>Consulta la biblioteca completa o entra directamente en una categoría. Chef Voldi seguirá mostrando en Elaboración solo los tips que aporten valor al paso concreto.</p>
     <small>{sync}</small>
 
     <label className="tips-filter-label">
@@ -110,7 +110,7 @@ export function TipsPage(){
        <p><strong>Momento:</strong> {t.useMoment.join(' · ')}</p>
        <p><strong>Error que evita:</strong> {t.commonError}</p>
        <p><strong>Señal:</strong> {t.sensorySignal}</p>
-       <p><strong>The Chef:</strong> {t.chefQuickTip}</p>
+       <p><strong>Chef Voldi:</strong> {t.chefQuickTip}</p>
       </details>
       {t.source&&<a href={t.source} target="_blank" rel="noreferrer">Consultar fuente</a>}
       <div className="chip-row">

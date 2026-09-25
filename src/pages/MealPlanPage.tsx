@@ -55,7 +55,7 @@ export function MealPlanPage(){
  const points=weights.map((w,i)=>`${20+(weights.length===1?130:i*260/(weights.length-1))},${100-(w.kg-min)/(max-min||1)*80}`).join(' ');
  const coverage=p?.options.goal?p.options.meals.reduce((s,m)=>s+p.options.shares[m],0):0;
  return <AppShell><div className="page-content nav-safe meal-plan-page">
-  <section className="editorial-card olive-intro"><CalendarDays/><h1>Mi plan de comidas</h1><p>Tú eliges el objetivo. The Chef organiza las comidas.</p><p>Planifica de una a cuatro semanas, también sin contar calorías.</p><small>Para conservar tus datos al cerrar, guarda una copia cifrada.</small></section>
+  <section className="editorial-card olive-intro"><CalendarDays/><h1>Mi plan de comidas</h1><p>Tú eliges el objetivo. Chef Voldi organiza las comidas.</p><p>Planifica de una a cuatro semanas, también sin contar calorías.</p><small>Para conservar tus datos al cerrar, guarda una copia cifrada.</small></section>
   <details className="settings-card"><summary><ShieldCheck size={18}/> Tus datos, bajo tu control</summary><p>El plan y el peso permanecen en esta sesión y se pierden al recargar o cerrar. Para conservarlos, descarga una copia cifrada y recupérala con tu contraseña. No se sincronizan con una cuenta.</p><p>No es una prescripción nutricional. La validación profesional y jurídica para comercializar el módulo está pendiente.</p></details>
   <details className="settings-card" open={!p}><summary>Preparar o cambiar mi plan</summary><div className="plan-stack">
    <label>Duración<select aria-label="Duración" value={weeks} onChange={e=>setWeeks(Number(e.target.value))}>{[1,2,3,4].map(n=><option key={n} value={n}>{n} {n===1?'semana':'semanas'}</option>)}</select></label>

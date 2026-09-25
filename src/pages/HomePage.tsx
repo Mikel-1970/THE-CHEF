@@ -1,3 +1,4 @@
+import {BrandMark} from '../components/BrandMark';
 import { BookOpen, Camera, ChefHat, CookingPot, Heart, PackageOpen, ShoppingBasket } from 'lucide-react';
 import { useState } from 'react';
 import { WelcomeSplash } from '../components/WelcomeSplash';
@@ -20,7 +21,7 @@ export function HomePage() {
   return <AppShell>
     <section className="reference-home"><FoodCollage/>
       <div className="reference-decor reference-decor-right" style={{ backgroundImage: `url(${desireImage})` }} aria-hidden="true" />
-      <header className="reference-brand"><div className="reference-chef-logo"><ChefHat size={68} strokeWidth={1.55} /></div><h1>The Chef</h1><div className="reference-divider" aria-hidden="true"><span /><i>◇</i><span /></div><p className="reference-brand-tagline">Vamos a cocinar algo delicioso.</p></header>
+      <header className="reference-brand"><BrandMark/><h1 className="brand-sr-only">Chef Voldi</h1><div className="reference-divider" aria-hidden="true"><span /><i>◇</i><span /></div><p className="reference-brand-tagline">Vamos a cocinar algo delicioso.</p></header>
       <section className="reference-main-actions" aria-label="Acción principal">
         <button data-tour="desire" className="reference-action-card reference-desire-card" onClick={() => navigate('/antojo')}>
           <div className="reference-action-text"><h3>¿Qué quieres<br />que te prepare?</h3><span className="reference-action-line reference-action-line-gold" /><p>Dímelo a tu manera</p><span className="reference-card-cta">Empezar</span></div>

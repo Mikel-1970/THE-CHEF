@@ -1,3 +1,4 @@
+import {BrandMark} from './BrandMark';
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { useApp } from '../AppContext';
 
@@ -51,6 +52,6 @@ export function PreviewIdentity({ children }: { children: ReactNode }) {
     document.addEventListener('visibilitychange', refresh);
     return () => { alive = false; controller.abort(); clearTimeout(expiry); document.removeEventListener('visibilitychange', refresh); };
   }, []);
-  if (!ready || error) return <div className="entry-page"><section className="entry-card"><div className="entry-logo"><span>THE</span><strong>CHEF</strong></div><p role="status">{error || 'Entrando en tu cocina…'}</p>{error && <button className="entry-primary" onClick={() => window.location.reload()}>Volver a verificar acceso</button>}</section></div>;
+  if (!ready || error) return <div className="entry-page"><section className="entry-card"><BrandMark compact/><p role="status">{error || 'Entrando en tu cocina…'}</p>{error && <button className="entry-primary" onClick={() => window.location.reload()}>Volver a verificar acceso</button>}</section></div>;
   return <Context.Provider value={identity}>{children}</Context.Provider>;
 }

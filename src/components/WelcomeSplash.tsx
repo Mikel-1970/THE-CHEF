@@ -1,3 +1,4 @@
+import {BrandMark} from './BrandMark';
 import { useState, type ReactNode } from 'react';
 import { useApp } from '../AppContext';
 import { ChefAvatar } from './ChefAvatar';
@@ -10,9 +11,9 @@ export function WelcomeSplash({ children, avatar, greeting, onComplete, onChoose
   const [ready, setReady] = useState(false);
   const choose=(mode:'login'|'register')=>{if(onComplete){onComplete(mode);return}onChoose?.(mode);setReady(true)};
   return (
-    <main className={`entry-page welcome-entry ${ready ? 'welcome-ready' : ''}`} aria-label="Acceso a The Chef">
+    <main className={`entry-page welcome-entry ${ready ? 'welcome-ready' : ''}`} aria-label="Acceso a Chef Voldi">
       <FoodCollage/><div className="welcome-content">
-        <div className="entry-logo welcome-logo" aria-label="The Chef"><span>THE</span><strong>CHEF</strong></div>
+        <div className="welcome-brand"><BrandMark/></div>
         <div className="welcome-character"><ChefAvatar avatar={avatar ?? settings.avatarEmoji} size={220} showHat={false} /></div>
         <h1 key={greeting}>{greeting || '¿Qué cocinamos hoy?'}</h1>
         <p className="welcome-tagline">Tu cocina empieza aquí</p>

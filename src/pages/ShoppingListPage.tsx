@@ -46,7 +46,7 @@ export function ShoppingListPage() {
     const next = [...stock]; if (index >= 0) next[index] = { ...next[index], ...nextIngredient }; else next.push(nextIngredient);
     updateSettings({ pantryStock: next }); removeShoppingItem(item.id);
   };
-  const shareList = async () => { const text = buildShoppingShareText(shoppingList, settings.avatarEmoji); if (!shoppingList.some(item => !item.checked)) return; if (navigator.share) { try { await navigator.share({ title: 'Lista de compra · The Chef', text }); return; } catch (error) { if (error instanceof DOMException && error.name === 'AbortError') return; } } await navigator.clipboard?.writeText(text); window.alert('Lista copiada. Ya puedes pegarla donde quieras.'); };
+  const shareList = async () => { const text = buildShoppingShareText(shoppingList, settings.avatarEmoji); if (!shoppingList.some(item => !item.checked)) return; if (navigator.share) { try { await navigator.share({ title: 'Lista de compra · Chef Voldi', text }); return; } catch (error) { if (error instanceof DOMException && error.name === 'AbortError') return; } } await navigator.clipboard?.writeText(text); window.alert('Lista copiada. Ya puedes pegarla donde quieras.'); };
 
   return <AppShell>
     <div className="simple-page-header light-header"><span className="eyebrow">TU CESTA</span><h1>Lista de compra</h1><p>Independiente y conectada con recetas, despensa y nevera.</p></div>

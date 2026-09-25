@@ -10,10 +10,10 @@ test('first visit stays until Login is pressed', async ({ page }, info) => {
   await page.clock.install();
   await page.clock.pauseAt(new Date());
   await page.goto('./');
-  const splash = page.getByRole('main', { name: 'Acceso a The Chef' });
+  const splash = page.getByRole('main', { name: 'Acceso a Chef Voldi' });
   await expect(splash).toBeVisible();
-  await expect(splash.locator('img')).toHaveAttribute('src', /avatars\/chef-man.png$/);
-  await expect.poll(() => splash.locator('img').evaluate((img: HTMLImageElement) => img.naturalWidth)).toBe(1122);
+  await expect(splash.locator('.welcome-character img')).toHaveAttribute('src', /brand\/chef-voldi-board.png$/);
+  await expect.poll(() => splash.locator('.welcome-character img').evaluate((img: HTMLImageElement) => img.naturalWidth)).toBe(1448);
   await page.clock.runFor(1400);
   const brand = await page.locator('.welcome-character').elementHandle();
 
@@ -36,7 +36,7 @@ test('animated entry and login render without clipping', async ({ page }, info) 
   await page.goto('./');
   await expect(page.locator('.welcome-character')).toHaveCSS('opacity', '1');
   await expect(page.locator('.welcome-tagline')).toHaveCSS('opacity', '1');
-  const image = await page.locator('.welcome-character img').boundingBox();
+  const image = await page.locator('.welcome-character .chef-avatar').boundingBox();
   const heading = await page.locator('.welcome-content h1').boundingBox();
   expect(image!.y + image!.height).toBeLessThanOrEqual(heading!.y);
   await page.screenshot({ path: info.outputPath('splash.png'), fullPage: true });
@@ -54,7 +54,7 @@ test('manual entry opens login and registration retains permissions and tutorial
   await page.getByPlaceholder('Tu nombre').fill('Prueba R1-03');
   await page.locator('.registration-avatar-picker summary').click();
   await expect(page.locator('.registration-avatar-grid button')).toHaveCount(16);
-  await expect.poll(()=>page.locator('.registration-avatar-grid img').evaluateAll(images=>images.every(img=>(img as HTMLImageElement).naturalWidth===1122))).toBe(true);
+  await expect.poll(()=>page.locator('.registration-avatar-grid img').evaluateAll(images=>images.every(img=>[1122,1448].includes((img as HTMLImageElement).naturalWidth)))).toBe(true);
   await expect(page.locator('.entry-form .entry-primary')).toHaveCSS('opacity','1');
   await page.screenshot({path:info.outputPath('registration-avatars.png'),fullPage:true});
   await page.getByRole('button', {name:'Elegir avatar Voldi',exact:true}).click();
@@ -70,7 +70,7 @@ test('manual entry opens login and registration retains permissions and tutorial
   await page.reload();
   await page.getByRole('button', { name: 'Login', exact: true }).click();
   await expect(page.getByRole('heading', {name:'Bienvenido, Prueba R1-03'})).toBeVisible();
-  await expect(page.locator('.welcome-character img')).toHaveAttribute('src',/dachshund.png$/);
+  await expect(page.locator('.welcome-character img')).toHaveAttribute('src',/chef-voldi-board.png$/);
   await page.getByPlaceholder('Contraseña', { exact: true }).fill('wrong');
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   await expect(page.getByText('Usuario o contraseña incorrectos.')).toBeVisible();
@@ -96,7 +96,7 @@ test('avatar selected in settings persists into the next entry', async ({ page }
   await clean.addInitScript(value => localStorage.setItem('chef:settings', value), settings);
   const entry = await clean.newPage();
   await entry.goto('http://127.0.0.1:4175/THE-CHEF/');
-  await expect(entry.locator('.welcome-character img')).toHaveAttribute('src', /dachshund.png$/);
+  await expect(entry.locator('.welcome-character img')).toHaveAttribute('src', /chef-voldi-board.png$/);
   await clean.close();
 });
 
@@ -111,7 +111,7 @@ test('authenticated session goes directly to the requested route without splash 
   await expect(page.locator('.avatar-gallery')).toBeVisible();
   await expect(page.locator('.welcome-entry,.access-card')).toHaveCount(0);
   await expect(page.locator('.avatar-gallery img')).toHaveCount(16);
-  await expect.poll(() => page.locator('.avatar-gallery img').evaluateAll(images => images.every(img => (img as HTMLImageElement).naturalWidth === 1122))).toBe(true);
+  await expect.poll(() => page.locator('.avatar-gallery img').evaluateAll(images => images.every(img => [1122,1448].includes((img as HTMLImageElement).naturalWidth)))).toBe(true);
 });
 
 test('reduced motion keeps manual entry without animation', async ({ page }) => {

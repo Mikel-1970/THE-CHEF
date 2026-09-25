@@ -1,3 +1,4 @@
+import {BrandCrop} from './BrandMark';
 import './ChefAvatar.css';
 
 export type ChefAvatarId =
@@ -61,7 +62,7 @@ export function ChefAvatar({ avatar, image, size = 64, showHat: _showHat = true,
   const id = normalizeChefAvatar(avatar);
   return (
     <span className={`chef-avatar chef-avatar-${id} ${image ? '' : 'chef-avatar-official'} ${className}`} style={{ width: size, height: size }} aria-hidden="true">
-      <img src={image || `${import.meta.env.BASE_URL}avatars/${id}.png`} alt="" decoding="async" />
+      {!image && id === 'dachshund' ? <BrandCrop part="icon"/> : <img src={image || `${import.meta.env.BASE_URL}avatars/${id}.png`} alt="" decoding="async" />}
     </span>
   );
 }
