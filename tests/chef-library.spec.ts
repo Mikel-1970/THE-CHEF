@@ -75,8 +75,8 @@ test('reviewed library layout and menu keep every group accessible',async({page}
  expect(positions[0].y).toBe(positions[1].y);expect(positions[2].y).toBe(positions[3].y);expect(positions[2].y).toBeGreaterThan(positions[0].y);expect(positions[0].font).toBeGreaterThanOrEqual(15);
  expect(await page.locator('.dish-category-row').evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);
  await page.getByRole('button',{name:'Cócteles',exact:true}).click();await expect(page.locator('.library-photo-card')).toHaveCount(20);
- await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await expect(page.locator('.chef-menu-grid button')).toHaveText(['Inicio','Mis recetas','Favoritos','Técnicas y tips','Qué cocinar','Abre la despensa','Foto Receta','Mi plan de comidas','Lista de la compra','Despensa','Buscar','Perfil y ajustes']);
- await expect(page.getByRole('button',{name:'Mi plan de comidas',exact:true})).toBeEnabled();await page.screenshot({path:info.outputPath('review-menu.png')});
+ await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await expect(page.locator('.chef-menu-grid button')).toHaveText(['Inicio','Mis recetas','Favoritos','Técnicas y tips','Qué cocinar','Abre la despensa','Foto Receta','Lista de la compra','Despensa','Buscar','Perfil y ajustes']);
+ await expect(page.getByRole('button',{name:'Mi plan de comidas',exact:true})).toHaveCount(0);await page.screenshot({path:info.outputPath('review-menu.png')});
 });
 
 test('history combines food filters, text and approximate dates',async({page})=>{

@@ -129,7 +129,7 @@ test('invalid stored avatar safely defaults to El Chef', async ({ page }) => {
 });
 
 
-test('home has four cards in two rows with aligned actions and icons', async ({ page }, info) => {
+test('home has two larger cards, aligned actions and upper-right hat', async ({ page }, info) => {
   await page.addInitScript(() => {
     sessionStorage.setItem('chef:home-greeted:v2','1');
     sessionStorage.setItem('chef:auth:session:v1', '1');
@@ -137,14 +137,14 @@ test('home has four cards in two rows with aligned actions and icons', async ({ 
     sessionStorage.setItem('chef:tutorial:invite-dismissed-session:v2', '1');
   });
   await page.goto('./');
-  await expect(page.locator('.reference-secondary-card')).toHaveCount(4);
+  await expect(page.locator('.reference-secondary-card')).toHaveCount(2);
   await expect(page.getByText('Crear tu receta', { exact:true })).toHaveCount(0);
   await expect(page.getByText('Abre la despensa', { exact:true })).toBeVisible();
   const actions = await page.locator('.reference-secondary-copy b').all();
   const a = await actions[0].boundingBox(); const b = await actions[1].boundingBox();
   expect(Math.abs(a!.y - b!.y)).toBeLessThan(1);
-  const hero = await page.locator('.reference-secondary-card').first().boundingBox();
-  const hat = await page.locator('.reference-secondary-icon').first().boundingBox();
+  const hero = await page.locator('.reference-action-card').boundingBox();
+  const hat = await page.locator('.reference-card-icon').boundingBox();
   expect(hat!.x).toBeGreaterThan(hero!.x + hero!.width/2);
   expect(hat!.y - hero!.y).toBeLessThan(20);
   for (const card of await page.locator('.reference-secondary-card').all()) {
