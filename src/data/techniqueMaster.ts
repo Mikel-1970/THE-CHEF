@@ -64,7 +64,7 @@ export const techniqueMaster: Technique[] = raw.map(item => {
   family: item.familia,
   subfamily: item.subfamilia,
   timeMinutes: 0,
-  timeLabel: item.tiempo_orientativo || 'Según producto y método',
+  timeLabel: editorial.timeLabel || item.tiempo_orientativo || 'Según producto y método',
   difficulty: difficulty(item.nivel),
   equipment: item.utensilios || [],
   miseEnPlace: editorial.miseEnPlace,
@@ -72,7 +72,7 @@ export const techniqueMaster: Technique[] = raw.map(item => {
   steps: editorial.steps.map((instruction, index) => ({
     number: index + 1,
     instruction,
-    cue: index === (item.pasos_base?.length || 0) - 1 ? item.senales_de_exito?.[0] : undefined
+    cue: index === editorial.steps.length - 1 ? item.senales_de_exito?.[0] : index === 1 ? item.punto_clave : undefined
   })),
   criticalPoints: [item.punto_clave, ...(item.seguridad_e_higiene || [])].filter((value): value is string => Boolean(value)),
   storage: (item.seguridad_e_higiene || []).join(' '),
