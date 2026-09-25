@@ -41,7 +41,7 @@ test('library filters, photo, servings and saved recipes work without AI',async(
  await page.getByLabel('Filtrar por cocina').selectOption('');await page.getByLabel('Tipo de receta').selectOption('cocktail');await expect(page.locator('.library-photo-card')).toHaveCount(20);
  await page.getByLabel('Filtrar por alcohol').selectOption('no');await expect(page.locator('.library-photo-card')).toHaveCount(3);
  await page.getByLabel('Tipo de receta').selectOption('all');await page.getByPlaceholder('Buscar recetas y cócteles…').fill('Paella valenciana');await page.getByRole('button',{name:'Abrir Paella valenciana',exact:true}).click();
- await expect(page.locator('.recipe-complete-photo img')).toHaveAttribute('src',/lib-001.webp$/);
+ await expect(page.locator('.recipe-complete-photo img')).toHaveAttribute('src',/lib-001\.webp\?v=editorial-20260925$/);
  await expect.poll(()=>page.locator('.recipe-complete-photo img').evaluate((e:HTMLImageElement)=>e.naturalWidth)).toBe(960);
  await page.getByRole('button',{name:'Ingredientes Lo que necesitas',exact:true}).click();await page.getByLabel('Comensales',{exact:true}).selectOption('5');await page.reload();
  await page.getByRole('button',{name:'Ingredientes Lo que necesitas',exact:true}).click();await expect(page.getByLabel('Comensales',{exact:true})).toHaveValue('5');await expect(page.getByRole('dialog')).toContainText('400 g');await page.getByRole('button',{name:'Volver',exact:true}).click();
