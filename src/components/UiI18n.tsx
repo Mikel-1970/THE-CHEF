@@ -3,6 +3,15 @@ import { useApp } from '../AppContext';
 import type { AppLanguage } from '../services/storage';
 
 const COMMON:Record<string,Partial<Record<AppLanguage,string>>>={
+ 'Compartir PDF':{es:'Compartir PDF',en:'Share PDF'},
+ 'Compartir en redes':{es:'Compartir en redes',en:'Share on social media'},
+ 'Compartir imagen':{es:'Compartir imagen',en:'Share image'},
+ 'Descargar imagen':{es:'Descargar imagen',en:'Download image'},
+ 'Copiar texto y enlace':{es:'Copiar texto y enlace',en:'Copy text and link'},
+ 'Publicación · 4:5':{es:'Publicación · 4:5',en:'Post · 4:5'},
+ 'Historia · 9:16':{es:'Historia · 9:16',en:'Story · 9:16'},
+ 'Cerrar compartir en redes':{es:'Cerrar compartir en redes',en:'Close social sharing'},
+
  "Técnicas y tips":{"es": "Técnicas y tips", "en": "Techniques and tips"},
  "Favoritos":{"es": "Favoritos", "en": "Favorites"},
  "Qué cocinar":{"es": "Qué cocinar", "en": "What to cook"},
