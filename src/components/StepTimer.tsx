@@ -24,7 +24,7 @@ export function StepTimer({
   label?:string;
 }){
   const initial=useMemo(()=>readState(timerId,suggestedSeconds),[timerId,suggestedSeconds]);
-  const[open,setOpen]=useState(false);
+  const[open,setOpen]=useState(initial.running);
   const[configured,setConfigured]=useState(initial.configuredSeconds);
   const[remaining,setRemaining]=useState(initial.remainingSeconds);
   const[running,setRunning]=useState(initial.running);
@@ -40,6 +40,7 @@ export function StepTimer({
     setRunning(next.running);
     setDeadline(next.deadline);
     setFinished(Boolean(next.finished));
+    if(next.running)setOpen(true);
     alarmed.current=Boolean(next.finished);
     if(next.running&&next.deadline)scheduleAlarm(timerId,next.deadline,label);
   },[timerId,suggestedSeconds,label]);
