@@ -32,3 +32,20 @@ test('old recipes can be enriched without breaking their schema',()=>{
   expect(enriched.steps[0].techniqueIds).toContain('TEC-SART-001');
   expect(enriched.steps[0].successSignals?.length).toBeGreaterThan(0);
 });
+
+
+test('master technique content is specific and teachable',()=>{
+  expect(techniqueMaster.every(item=>item.steps.length>=3)).toBeTruthy();
+  expect(techniqueMaster.every(item=>item.ingredients.length>0)).toBeTruthy();
+  expect(techniqueMaster.every(item=>(item.miseEnPlace?.length??0)>0)).toBeTruthy();
+  expect(techniqueMaster.some(item=>item.steps.some(step=>step.instruction.includes('Aplicar la técnica')))).toBeFalsy();
+  expect(techniqueMaster.some(item=>item.whenToUse?.includes('Cuando la receta necesite el efecto culinario propio'))).toBeFalsy();
+  expect(techniqueMaster.some(item=>item.chefTip?.includes('prioriza la señal culinaria real sobre un tiempo fijo'))).toBeFalsy();
+
+  const boil=techniqueMaster.find(item=>item.title==='Hervir');
+  expect(boil).toBeTruthy();
+  expect(boil?.steps.join(' ')).toContain('ebullición');
+  expect(boil?.steps.join(' ')).toContain('hervor');
+  expect(boil?.ingredients.length).toBeGreaterThanOrEqual(2);
+  expect(boil?.miseEnPlace?.join(' ')).toContain('olla');
+});
