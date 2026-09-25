@@ -30,7 +30,7 @@ export async function generateDirectRecipe(request:CookingRequest):Promise<Direc
   rememberLibraryRecipe(recipe);
 
   // Mantiene el criterio vigente de abrir la ficha completa con su imagen ya preparada.
-  await getRecipeImage(recipe);
+  await getRecipeImage(recipe).catch(()=>undefined);
 
   return{recipe,proposal,recommendation};
 }
