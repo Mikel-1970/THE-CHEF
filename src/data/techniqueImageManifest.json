@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-25T07:19:45.597Z",
+  "generatedAt": "2026-09-25T07:21:10.274Z",
   "items": {
     "TEC-PREP-001": {
       "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_071421_36ebfccc-62ab-4bd0-ae04-9c6ce2282768.png",
@@ -121,6 +121,102 @@
     "TEC-PREL-012": {
       "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_071927_ab4b16f8-b9a1-4262-8f5f-92d4de337b65_min.webp",
       "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_071927_ab4b16f8-b9a1-4262-8f5f-92d4de337b65.png"
+    },
+    "TEC-PREL-013": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_8288cf06-0f78-4d91-a8a9-cf8c44943e33_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_8288cf06-0f78-4d91-a8a9-cf8c44943e33.png"
+    },
+    "TEC-PREL-014": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_5f1901e1-a571-49fd-88dc-4ce582eb66f2_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_5f1901e1-a571-49fd-88dc-4ce582eb66f2.png"
+    },
+    "TEC-PREL-015": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_ce50856c-d00c-40f4-ab67-80c42fc70daa_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_ce50856c-d00c-40f4-ab67-80c42fc70daa.png"
+    },
+    "TEC-PREL-016": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_6b39b810-8f22-47c6-8fb1-6ea90e3d6220_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_6b39b810-8f22-47c6-8fb1-6ea90e3d6220.png"
+    },
+    "TEC-PREL-017": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_34286e09-d786-480c-bbe2-6f15a61e98f8_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_34286e09-d786-480c-bbe2-6f15a61e98f8.png"
+    },
+    "TEC-PREL-018": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_c797d66a-3a78-4181-810d-ae0eab340632_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072001_c797d66a-3a78-4181-810d-ae0eab340632.png"
+    },
+    "TEC-PREL-019": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_e044bd94-4324-41e1-af94-3c94fbb45e89_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_e044bd94-4324-41e1-af94-3c94fbb45e89.png"
+    },
+    "TEC-PREL-020": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_84079bdc-7496-42b8-9357-73ab0758c379_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_84079bdc-7496-42b8-9357-73ab0758c379.png"
+    },
+    "TEC-AGUA-001": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_72bb4318-0f1e-4788-abae-c0f13cf61849_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_72bb4318-0f1e-4788-abae-c0f13cf61849.png"
+    },
+    "TEC-AGUA-002": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_68e9f90e-5141-4954-9bbe-6e38cb19a2ea_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_68e9f90e-5141-4954-9bbe-6e38cb19a2ea.png"
+    },
+    "TEC-AGUA-003": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_aff907f9-e8ca-4d69-a58c-56f9a98d2bb8_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_aff907f9-e8ca-4d69-a58c-56f9a98d2bb8.png"
+    },
+    "TEC-AGUA-004": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_06d818c2-0e6f-4cb8-8acd-6a014c08dcf0_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072019_06d818c2-0e6f-4cb8-8acd-6a014c08dcf0.png"
+    },
+    "TEC-AGUA-005": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072037_613c4ea0-4a45-4eef-8992-03c7459f34e1_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072037_613c4ea0-4a45-4eef-8992-03c7459f34e1.png"
+    },
+    "TEC-AGUA-006": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072037_c6ca4cd6-5b9b-4e38-accd-694d500727e8_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072037_c6ca4cd6-5b9b-4e38-accd-694d500727e8.png"
+    },
+    "TEC-AGUA-007": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072038_acb3837e-94de-42a5-9646-96784df66a43_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072038_acb3837e-94de-42a5-9646-96784df66a43.png"
+    },
+    "TEC-AGUA-008": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072038_80c10294-6da6-4154-888d-94b7a8ad75b2_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072038_80c10294-6da6-4154-888d-94b7a8ad75b2.png"
+    },
+    "TEC-AGUA-009": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072038_df4ae4d9-78e7-4b70-b067-fb7deb994f2a_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072038_df4ae4d9-78e7-4b70-b067-fb7deb994f2a.png"
+    },
+    "TEC-AGUA-010": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072037_5e5b166c-a8da-49ee-85c3-e6ebb05ef263_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072037_5e5b166c-a8da-49ee-85c3-e6ebb05ef263.png"
+    },
+    "TEC-AGUA-011": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072054_49295533-1c1a-4233-a3b5-4bae3b428b68_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072054_49295533-1c1a-4233-a3b5-4bae3b428b68.png"
+    },
+    "TEC-AGUA-012": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072054_73c7bb2c-04b9-4b0f-a1ea-66eea08fbd9f_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072054_73c7bb2c-04b9-4b0f-a1ea-66eea08fbd9f.png"
+    },
+    "TEC-AGUA-013": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072054_afbd4d2b-050e-4b10-aab9-13561451ad60_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072054_afbd4d2b-050e-4b10-aab9-13561451ad60.png"
+    },
+    "TEC-SART-001": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072054_6974f608-e6f6-486d-893c-804ca7a3ffd3_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072054_6974f608-e6f6-486d-893c-804ca7a3ffd3.png"
+    },
+    "TEC-SART-002": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072054_659801fd-27f6-49ff-a40d-a96d7634ca71_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072054_659801fd-27f6-49ff-a40d-a96d7634ca71.png"
+    },
+    "TEC-SART-003": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072055_c469dbb8-1be6-4a9f-ae98-e1bb3ce98af0_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072055_c469dbb8-1be6-4a9f-ae98-e1bb3ce98af0.png"
     }
   }
 }
