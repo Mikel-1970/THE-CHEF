@@ -1,6 +1,7 @@
 import master from './theChefTechniquesMaster.json' with { type: 'json' };
 import type { Technique } from '../services/techniqueGateway';
 import { buildTechniqueEditorial } from './techniqueEditorialV2';
+import { techniqueBasics } from './techniqueBasics';
 
 type RawTechnique = {
   id: string;
@@ -44,8 +45,21 @@ const difficulty = (value: RawTechnique['nivel']): Technique['difficulty'] =>
   value === 'Avanzado' ? 'Avanzada' : value === 'Intermedio' ? 'Media' : 'Fácil';
 
 const relatedNameToId = new Map(raw.map(item => [normalize(item.nombre), item.id]));
+const curatedIds: Record<string,string> = {
+  'Huevo duro': 'base-huevo-duro',
+  'Baño María': 'base-bano-maria',
+  'Cocer marisco': 'base-marisco',
+  Fumet: 'base-fumet',
+  'Fondo oscuro': 'base-fondo-oscuro',
+  'Sous-vide': 'base-baja-temperatura',
+  'Esferificación directa': 'base-esferificacion',
+  'Esferificación inversa': 'base-esferificacion-inversa',
+  'Espuma con sifón': 'base-espuma-fria'
+};
+const curatedById = new Map(techniqueBasics.map(item => [item.id,item]));
 
 export const techniqueMaster: Technique[] = raw.map(item => {
+  const curated = curatedIds[item.nombre] ? curatedById.get(curatedIds[item.nombre]) : undefined;
   const editorial = buildTechniqueEditorial({
     title: item.nombre,
     family: item.familia,
@@ -59,24 +73,26 @@ export const techniqueMaster: Technique[] = raw.map(item => {
   return ({
   id: item.id,
   title: item.nombre,
-  description: item.resumen_app || item.definicion_corta,
+  description: curated?.description || item.resumen_app || item.definicion_corta,
   category: item.familia,
   family: item.familia,
   subfamily: item.subfamilia,
   timeMinutes: 0,
-  timeLabel: editorial.timeLabel || item.tiempo_orientativo || 'Según producto y método',
+  timeLabel: curated?.timeLabel || editorial.timeLabel || item.tiempo_orientativo || 'Según producto y método',
   difficulty: difficulty(item.nivel),
-  equipment: item.utensilios || [],
-  miseEnPlace: editorial.miseEnPlace,
-  ingredients: editorial.ingredients.map(name => ({ name })),
-  steps: editorial.steps.map((instruction, index) => ({
+  equipment: curated?.equipment?.length ? curated.equipment : (item.utensilios || []),
+  miseEnPlace: curated?.miseEnPlace?.length ? curated.miseEnPlace : editorial.miseEnPlace,
+  ingredients: curated?.ingredients?.length ? curated.ingredients : editorial.ingredients.map(name => ({ name })),
+  steps: (curated?.steps?.length ? curated.steps : editorial.steps.map((instruction,index)=>({number:index+1,instruction}))).map((step, index) => ({
     number: index + 1,
-    instruction,
-    cue: index === editorial.steps.length - 1 ? item.senales_de_exito?.[0] : index === 1 ? item.punto_clave : undefined
+    instruction: step.instruction,
+    minutes: step.minutes,
+    temperatureC: step.temperatureC,
+    cue: step.cue || (index === (curated?.steps?.length || editorial.steps.length) - 1 ? item.senales_de_exito?.[0] : index === 1 ? item.punto_clave : undefined)
   })),
-  criticalPoints: [item.punto_clave, ...(item.seguridad_e_higiene || [])].filter((value): value is string => Boolean(value)),
-  storage: (item.seguridad_e_higiene || []).join(' '),
-  uses: [...(item.elaboraciones_frecuentes || [])].filter(Boolean),
+  criticalPoints: [...(curated?.criticalPoints || []), item.punto_clave, ...(item.seguridad_e_higiene || [])].filter((value,index,array): value is string => Boolean(value) && array.indexOf(value)===index),
+  storage: curated?.storage || (item.seguridad_e_higiene || []).join(' '),
+  uses: [...(curated?.uses || []), ...(item.elaboraciones_frecuentes || [])].filter(Boolean),
   createdAt: '2026-09-23T00:00:00Z',
   builtin: true,
   aliases: item.alias || [],
@@ -97,7 +113,9 @@ export const techniqueMaster: Technique[] = raw.map(item => {
   professionalTip: item.truco_profesional,
   relatedTechniqueIds: (item.tecnicas_relacionadas || []).map(name => relatedNameToId.get(normalize(name))).filter((value): value is string => Boolean(value)),
   legacyId: item.legacy_id || undefined,
-  imagePrompt: item.image_prompt
+  imagePrompt: item.image_prompt,
+  sources: curated?.sources,
+  temperatureGuide: curated?.temperatureGuide
   });
 });
 
