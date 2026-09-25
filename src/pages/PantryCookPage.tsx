@@ -57,7 +57,7 @@ export function PantryCookPage() {
   if(!selectedItems.length||searching||analysing)return;setSearching(true);setError('');
   const available=selectedItems.map(i=>({...i,priority:selected.has(normalize(i.name))}));
   const request:CookingRequest={mode:'pantry',generationMode:forceAi?'ai':'catalog',...cookingRequestOptions(options.value),pantryIngredients:available,pantryBasics:settings.pantryBasics,pantryPolicy:'prioritize',aiPreference:settings.aiPreference};
-  try{const result=await generateDirectRecipe(request);setSearch(request,[result.proposal]);navigate(`/receta/${result.recipe.id}?servings=${request.servings}`)}
+  try{let result;try{result=await generateDirectRecipe(request)}catch(e){if(!forceAi&&settings.autoAiFallback!==false&&e instanceof Error&&e.message===CATALOG_EMPTY){request.generationMode='ai';result=await generateDirectRecipe(request)}else throw e;}setSearch(request,[result.proposal]);navigate(`/receta/${result.recipe.id}?servings=${request.servings}`)}
   catch(e){setError(e instanceof Error?e.message:'No se ha podido preparar la receta.')}
   finally{setSearching(false)}
  };

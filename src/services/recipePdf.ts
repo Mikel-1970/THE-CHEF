@@ -21,17 +21,22 @@ export async function shareRecipePdf(recipe:Recipe,servings:number,options:PdfOp
   if(imageUrl){const img=document.createElement('img');img.className='recipe-export-photo';img.alt=recipe.title;img.src=imageUrl;await img.decode().catch(()=>undefined);if(img.naturalWidth)blocks.push(img);}
   const n=recipe.nutritionPerServing;
   if(n){const card=element('section','recipe-export-nutrition');card.append(element('small','','VALORES NUTRICIONALES ESTIMADOS'),element('h2','','Por ración'));const grid=element('div','recipe-export-nutrients');for(const [value,label] of [[n.kcal,'kcal'],[n.proteinG,'g proteína'],[n.carbsG,'g hidratos'],[n.fatG,'g grasas'],...(n.fiberG!==undefined?[[n.fiberG,'g fibra']]:[])] as [number,string][]){const cell=element('div');cell.append(element('strong','',String(Math.round(value))),element('span','',label));grid.append(cell);}card.append(grid,element('p','recipe-export-note','Estimación de la formulación original; los ingredientes, las marcas y el escalado culinario pueden modificar los valores.'));blocks.push(card);}
-  const addCard=(title:string,rows:string[])=>{for(let start=0;start<rows.length;start+=6){const card=element('section','recipe-export-card');card.append(element('h2','',title+(start?' · continuación':'')));for(const row of rows.slice(start,start+6))card.append(element('p','',row));blocks.push(card);}};
+  let chapter='ingredients';
+  const addCard=(title:string,rows:string[])=>{for(let start=0;start<rows.length;start+=18){const card=element('section','recipe-export-card');card.dataset.chapter=chapter;card.append(element('h2','',title+(start?' · continuación':'')));for(const row of rows.slice(start,start+18))card.append(element('p','',row));blocks.push(card);}};
   const ingredients=recipe.ingredients.map(i=>`${i.name} · ${formatQuantity(scaleQuantity(i,recipe.baseServings,servings))} ${i.unit}${i.optional?' (opcional)':''}`);
   addCard(`Ingredientes · ${servings} ${recipe.recipeKind==='cocktail'?'copas':'comensales'}`,ingredients);
+  chapter='advice';
   addCard('Mise en place',recipe.miseEnPlace.map((s,i)=>`${i+1}. ${s}`));
-  const techniques=getTechniquesForRecipe(recipe);if(techniques.length){const card=element('section','recipe-export-card');card.append(element('h2','','Técnicas utilizadas'));const chips=element('div','recipe-export-chips');techniques.forEach(t=>chips.append(element('span','',t.title)));card.append(chips);blocks.push(card);}
+  addCard('Recomendaciones',recipe.substitutions);addCard('Puntos críticos',recipe.criticalPoints);if(recipe.storage)addCard('Conservación',[recipe.storage]);
+  const techniques=getTechniquesForRecipe(recipe).filter(t=>/emulsion|sous.vide|vacío|ferment|esferific|confit|atemper|clarific/i.test(t.title));if(techniques.length){const card=element('section','recipe-export-card');card.dataset.chapter=chapter;card.append(element('h2','','Técnicas utilizadas'));const chips=element('div','recipe-export-chips');techniques.forEach(t=>chips.append(element('span','',t.title)));card.append(chips);blocks.push(card);}
+  chapter='steps';
   for(const step of recipe.steps)addCard(`Paso ${step.number}`, [scaleStepInstruction(recipe,step.instruction,servings),...(step.minutes?[`${step.minutes} min${step.temperatureC?' · '+step.temperatureC+' °C':''}`]:step.temperatureC?[`${step.temperatureC} °C`]:[]),...(step.cue?['Fíjate en esto: '+step.cue]:[])]);
-  if(recipe.nutritionNotes?.length)addCard('Sobre la estimación nutricional',recipe.nutritionNotes);
-  addCard('Puntos críticos',recipe.criticalPoints);addCard('Recomendaciones',recipe.substitutions);if(recipe.storage)addCard('Conservación',[recipe.storage]);
   const pages:HTMLElement[]=[];let content:HTMLElement;
   const newPage=()=>{const page=element('article','recipe-export-page');const header=element('header','recipe-export-brand','The Chef');content=element('main','recipe-export-content');page.append(header,content,element('footer','recipe-export-footer'));host.append(page);pages.push(page);};newPage();
-  for(const block of blocks){content!.append(block);if(content!.scrollHeight>content!.clientHeight){block.remove();if(content!.children.length)newPage();content!.append(block);
+  let currentChapter='cover';content!.dataset.chapter=currentChapter;
+  for(const block of blocks){const nextChapter=block.dataset.chapter??'cover';if(nextChapter!==currentChapter){newPage();currentChapter=nextChapter;}content!.dataset.chapter=currentChapter;content!.append(block);
+    if(currentChapter==='cover'&&content!.scrollHeight>content!.clientHeight){const photo=content!.querySelector<HTMLImageElement>('.recipe-export-photo');if(photo){const excess=content!.scrollHeight-content!.clientHeight;photo.style.maxHeight=Math.max(100,photo.height-excess-8)+'px';}}
+if(content!.scrollHeight>content!.clientHeight){block.remove();if(content!.children.length)newPage();content!.dataset.chapter=currentChapter;content!.append(block);
     // Long generated paragraphs are split into readable cards, never cropped or shrunk.
     if(content!.scrollHeight>content!.clientHeight){block.remove();const title=block.querySelector('h2,h1')?.textContent??'Receta';const words=(block.textContent??'').replace(title,'').trim().split(/\s+/);let chunk='';for(const word of words){if(chunk.length+word.length>600){addOverflow(title,chunk);chunk='';}chunk+=(chunk?' ':'')+word;}if(chunk)addOverflow(title,chunk);}
   }}

@@ -37,3 +37,4 @@
 .visual-option-enable span{font-weight:800}.visual-option-enable small{font-size:.68rem;color:#7b806f}
 .visual-option-active-control{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .visual-option-clear{border:0;background:transparent;color:#7a6b50;font:inherit;font-size:.72rem;text-decoration:underline;cursor:pointer}
+.visual-options .visual-option>select{flex:0 0 100%;width:100%;max-width:100%}.visual-options .visual-option-title{flex-shrink:0}

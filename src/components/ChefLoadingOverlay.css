@@ -65,7 +65,7 @@
   place-items: center;
   background: #eef0e3;
   color: #405626;
-  animation: chef-avatar-float 1.4s ease-in-out infinite;
+  animation: chef-progress-spin 2.4s linear infinite;
 }
 
 .chef-loading-card.completed .chef-progress-ring::before {
@@ -102,3 +102,5 @@
 .chef-progress-ring::before{display:none}.chef-visible-spinner{position:absolute;inset:0;color:#405626;animation:chef-progress-spin 1.05s linear infinite}
 @media(prefers-reduced-motion:reduce){.chef-visible-spinner{animation:none}}
 .cooking-tip{display:grid;justify-items:center;gap:8px;min-height:150px}.cooking-tip-icon{font-size:2rem}.cooking-tip small{font-size:.66rem;letter-spacing:.09em;color:#687748}.cooking-tip p{margin:0;line-height:1.55;font-size:.94rem}
+
+.chef-loading-card.completed .chef-hat-spinner{animation:none}

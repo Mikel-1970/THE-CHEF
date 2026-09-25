@@ -10,7 +10,7 @@ export function AppShell({children,hideProfile=false,hideBack=false,onBack}: {ch
  const [open,setOpen]=useState(false);
  const button=useRef<HTMLButtonElement>(null);
  const go=(path:string)=>{setOpen(false);navigate(path)};
- const back=()=>{setOpen(false);if(onBack)onBack();else if(window.history.state?.idx>0)navigate(-1);else navigate('/')};
+ const back=()=>{setOpen(false);if(onBack)onBack();else navigate(location.pathname.startsWith('/receta/')?'/mis-recetas':location.pathname.startsWith('/cocinar/')?location.pathname.replace('/cocinar/','/receta/'):'/')};
  useEffect(()=>{setOpen(false)},[location.pathname]);
  useEffect(()=>{if(!open)return;const escape=(e:KeyboardEvent)=>{if(e.key==='Escape'){setOpen(false);button.current?.focus()}};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape)},[open]);
  const items=[['/','Inicio',Home],['/mis-recetas','Mis recetas',BookOpen],['/mis-recetas?tab=favorites','Favoritos',Heart],['/tecnicas','Técnicas y tips',CookingPot],['/antojo','Qué cocinar',Sparkles],['/cocina-despensa','Abre la despensa',PackageOpen],['/foto','Foto Receta',Camera],['/plan-semanal','Mi plan semanal',CalendarDays],['/lista-compra','Lista de la compra',ShoppingBasket],['/nevera','Despensa',PackageOpen],['/buscar','Buscar',Search],['/ajustes','Perfil y ajustes',Settings]] as const;

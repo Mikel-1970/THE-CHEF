@@ -1,3 +1,4 @@
+import {normalizeShoppingItem} from './utils/shoppingQuantity';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { CookingRequest, HistoryEntry, Proposal, ShoppingListItem } from './domain/types';
 import { loadActiveSearch, loadFavorites, loadHistory, loadSavedRecipes, loadSettings, loadShoppingList, saveActiveSearch, saveFavorites, saveHistory, saveSavedRecipes, saveSettings, saveShoppingList, type AppSettings } from './services/storage';
@@ -16,7 +17,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [savedRecipes, setSavedRecipes] = useState<string[]>(() => loadSavedRecipes());
   const [history, setHistory] = useState<HistoryEntry[]>(() => loadHistory());
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings());
-  const [shoppingList, setShoppingList] = useState<ShoppingListItem[]>(() => loadShoppingList());
+  const [shoppingList, setShoppingList] = useState<ShoppingListItem[]>(() => loadShoppingList().map(normalizeShoppingItem));
 
   useEffect(() => { const fontSizes: Record<AppSettings['fontScale'], string> = { normal: '16px', large: '18px', xlarge: '20px' }; document.documentElement.style.fontSize = fontSizes[settings.fontScale]; }, [settings.fontScale]);
 
@@ -50,6 +51,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const updateSettings = (next: Partial<AppSettings>) => { const merged = { ...settings, ...next }; setSettings(merged); saveSettings(merged); };
 
   const upsertShoppingItem = (item: ShoppingListItem) => {
+    item = normalizeShoppingItem(item);
     setShoppingList(current => {
       const exactIndex = current.findIndex(entry => entry.id === item.id);
       if (exactIndex >= 0) { const next = [...current]; next[exactIndex] = { ...current[exactIndex], ...item }; saveShoppingList(next); return next; }

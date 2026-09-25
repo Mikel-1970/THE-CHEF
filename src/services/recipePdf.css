@@ -19,3 +19,11 @@
 .recipe-export-nutrients span{font-size:11px;margin-top:4px}
 .recipe-export-note{font-size:10px;line-height:1.4;margin:12px 0 0;color:#e2e6d7}
 .recipe-export-footer{margin-top:auto;text-align:center;font-size:10px;color:#747b68}
+
+.recipe-export-content[data-chapter=ingredients] .recipe-export-card p{display:flex;align-items:center;border-bottom:1px solid #e5e2d5;padding:10px 0;margin:0}
+.recipe-export-content[data-chapter=advice] .recipe-export-card{padding:14px 18px}
+.recipe-export-content[data-chapter=advice] .recipe-export-card p{font-size:14px;line-height:1.45}
+.recipe-export-content[data-chapter=steps] .recipe-export-card{padding:12px 18px}
+.recipe-export-content[data-chapter=steps] .recipe-export-card h2{font-size:19px;margin-bottom:6px}
+.recipe-export-content[data-chapter=steps] .recipe-export-card p{font-size:14px;line-height:1.45;margin:5px 0}
+.recipe-export-content[data-chapter=steps] .recipe-export-card{border-left:5px solid #718252}

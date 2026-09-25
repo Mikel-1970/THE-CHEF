@@ -66,3 +66,12 @@
 .recipe-revision-toolbar .revision-confirm-button{display:flex;justify-content:center;gap:8px;padding:0 10px}
 
 .recipe-revision-backdrop{z-index:1400}.recipe-personalization-options,.recipe-extra-change,.recipe-revision-toolbar,.recipe-revision-body>.panel-intro{flex-shrink:0}
+
+/* Shared rhythm for recipe blocks and photo input stages. */
+:root{--chef-section-gap:16px}
+.photo-recipe-layout{display:flex;flex-direction:column;gap:var(--chef-section-gap)}
+.photo-recipe-layout>*,.recipe-page>.recipe-content>*,.recipe-editorial-intro .editorial-card{margin-top:0!important;margin-bottom:0!important}
+.recipe-page>.recipe-content{display:flex;flex-direction:column;gap:var(--chef-section-gap);padding-top:var(--chef-section-gap)}
+.recipe-page .recipe-editorial-intro{border-radius:26px;overflow:hidden}
+.recipe-page .recipe-summary-content{padding-bottom:20px}
+.photo-recipe-layout .photo-recipe-button{margin-top:0}
