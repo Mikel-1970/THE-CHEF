@@ -88,6 +88,10 @@ export async function getRecipeResultPhoto(recipeId: string): Promise<string | u
   return getCachedImage(RESULT_PHOTO_CACHE, resultPhotoRequest(recipeId));
 }
 
+export async function getCachedTechniqueImage(techniqueId: string): Promise<string | undefined> {
+  return getCachedImage(TECHNIQUE_IMAGE_CACHE, techniqueImageRequest(techniqueId));
+}
+
 export async function getTechniqueImage(technique: Technique): Promise<string | undefined> {
   const cacheKey = techniqueImageRequest(technique.id);
   if ('caches' in window) {
