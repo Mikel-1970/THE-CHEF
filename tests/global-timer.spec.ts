@@ -33,3 +33,10 @@ for(const finishedAlarm of [false,true])test(`finishing recipe clears ${finished
  const sounds=await page.evaluate(()=>(window as any).alarmStarts);await page.clock.runFor(65000);expect(await page.evaluate(()=>(window as any).alarmStarts)).toBe(sounds);
  await page.reload();await expect(page.locator('.global-timer')).toHaveCount(0);
 });
+
+test('recipe back arrow returns to library after cooking instead of browser history',async({page})=>{
+ await page.goto('./#/cocinar/lib-097?servings=4');
+ await page.getByRole('button',{name:'Volver a receta',exact:true}).click();
+ await page.getByRole('button',{name:'Volver',exact:true}).click();
+ await expect(page).toHaveURL(/#\/mis-recetas$/);
+});
