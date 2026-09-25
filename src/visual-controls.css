@@ -25,7 +25,7 @@
 .visual-multiselect input:not([type=checkbox]) { width:100%; min-height:44px; border:1px solid #dedbce; border-radius:12px; padding:10px; font:inherit; background:#fffdf8; }
 .visual-generate { margin-top:18px; }
 
-.visual-option:nth-child(-n+2) { flex-wrap:nowrap; }
+.visual-option:has(> .stepper) { flex-wrap:nowrap; }
 .visual-option:nth-child(-n+2) .visual-option-title { min-width:0; line-height:1.25; }
 .visual-option .stepper { flex-shrink:0; }
 .visual-multiselect summary { display:flex; align-items:center; justify-content:space-between; gap:8px; cursor:pointer; list-style:none; }
