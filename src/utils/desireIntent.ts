@@ -25,7 +25,7 @@ const GROUPS=[
 export function recipeMatchesDesireIntent(recipe:Recipe,request:CookingRequest){
  if(isChefChoice(request)&&!matchesChosenCuisine(recipe.cuisine,request.cuisine))return false;
  return textMatchesDesireIntent([
-  recipe.title,recipe.description,recipe.cuisine,recipe.style,recipe.mealType,
+  recipe.title,recipe.description,recipe.cuisine,recipe.style,recipe.mealType,recipe.libraryCategory??'',
   ...recipe.ingredients.map(item=>item.name)
  ].join(' '),request);
 }

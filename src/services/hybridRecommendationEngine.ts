@@ -3,6 +3,7 @@ import type { CookingRequest, Proposal } from '../domain/types';
 import { proposalMatchesDesireIntent } from '../utils/desireIntent';
 import { fetchAiProposals, isAiProposalApiConfigured } from './aiProposalGateway';
 import { getMockProposals } from './mockRecommendationEngine';
+import {getRecipeById} from './recipeCatalog';
 
 export const HYBRID_NOTICE_STORAGE_KEY='the-chef:last-hybrid-notice';
 const PROPOSAL_COUNT=1;
@@ -17,55 +18,26 @@ export type HybridRecommendationResult={
 
 export async function getHybridProposals(request:CookingRequest,excludeRecipeIds:string[]=[]):Promise<HybridRecommendationResult>{
  request=prepareDesireRequest(request);
- const preference=Math.max(0,Math.min(100,request.aiPreference??100));
- const aiCount=Math.max(0,Math.min(PROPOSAL_COUNT,Math.round(preference/100)));
- const localCount=PROPOSAL_COUNT-aiCount;
- let externalError:string|undefined;
- let aiPool:Proposal[]=[];
-
- if(aiCount>0&&isAiProposalApiConfigured()){
-  try{
-   aiPool=(await fetchAiProposals(request))
-    .filter(proposal=>proposalWithinLimits(proposal,request))
-    .filter(proposal=>proposalMatchesDesireIntent(proposal,request))
-    .slice(0,PROPOSAL_COUNT);
-  }catch(error){
-   externalError=error instanceof Error&&error.message?error.message:'No se ha podido consultar la IA.';
-  }
- }
-
- const ai=aiPool.slice(0,aiCount);
- const local=getMockProposals(request,[...excludeRecipeIds,...ai.map(proposal=>proposal.recipeId)])
-  .slice(0,localCount+(aiCount-ai.length));
- const proposals=[...ai,...local];
-
- if(proposals.length<PROPOSAL_COUNT&&preference>0){
-  for(const extra of aiPool){
-   if(proposals.length>=PROPOSAL_COUNT)break;
-   if(!proposals.some(proposal=>proposal.recipeId===extra.recipeId))proposals.push(extra);
-  }
- }
-
- const finalProposals=proposals.slice(0,PROPOSAL_COUNT);
- if(!finalProposals.length){
+ const excluded=[...excludeRecipeIds,...(request.excludeRecipeIds??[])];
+ if(request.generationMode!=='ai'){
+  const proposals=getMockProposals(request,excluded,true).slice(0,PROPOSAL_COUNT);
   persistEngineNotice(undefined);
-  if(externalError){
-   throw new Error(`${externalError} No se mostrará otra receta distinta a la que has pedido. Reintenta la búsqueda.`);
-  }
-  if(request.mode==='desire'){
-   throw new Error('No he encontrado una propuesta que mantenga lo que has pedido. Prueba a reformularlo o genera de nuevo.');
-  }
-  throw new Error('No hay recetas que cumplan los límites indicados. Amplía los criterios o revisa las restricciones.');
+  if(!proposals.length)throw new Error(CATALOG_EMPTY);
+  return {proposals,mode:'local',externalRecipesAdded:0};
  }
-
- if(finalProposals.length<PROPOSAL_COUNT&&!externalError){
-  externalError='Solo se ha encontrado una propuesta que cumple todos tus criterios.';
- }
-
- const usesAi=finalProposals.some(proposal=>aiPool.some(aiProposal=>aiProposal.id===proposal.id));
- persistEngineNotice(externalError);
- return{proposals:finalProposals,mode:usesAi?'hybrid':'local',externalRecipesAdded:0,externalError};
+ if(!isAiProposalApiConfigured())throw new Error('La generación con IA no está disponible ahora.');
+ const excludedTitles=excluded.map(id=>getRecipeById(id)?.title).filter(Boolean);
+ if(excludedTitles.length)request={...request,desireText:(request.desireText??'')+'\nElige un plato distinto. No repitas: '+excludedTitles.join(', ')+'.'};
+ const proposals=(await fetchAiProposals(request))
+  .filter(proposal=>!excluded.includes(proposal.recipeId))
+  .filter(proposal=>proposalWithinLimits(proposal,request))
+  .filter(proposal=>proposalMatchesDesireIntent(proposal,request))
+  .slice(0,PROPOSAL_COUNT);
+ if(!proposals.length)throw new Error('La IA no ha encontrado una alternativa que respete tus criterios. Puedes volver a intentarlo.');
+ persistEngineNotice(undefined);
+ return {proposals,mode:'hybrid',externalRecipesAdded:0};
 }
+export const CATALOG_EMPTY='No hay una receta de la biblioteca que cumpla tu petición. Puedes ajustar las opciones o crear una con IA.';
 
 function persistEngineNotice(message?:string){
  if(typeof sessionStorage==='undefined')return;

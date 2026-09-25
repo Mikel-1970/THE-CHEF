@@ -1,3 +1,4 @@
+import {CATALOG_EMPTY} from '../services/hybridRecommendationEngine';
 import { Camera, Check, ImagePlus, Mic, MicOff, PackageOpen, Refrigerator, Star, X } from 'lucide-react';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -52,11 +53,11 @@ export function PantryCookPage() {
   if(!items.length)return;
   addItems(items);setSelected(new Set(items.map(i=>normalize(i.name))));setCandidates([]);setPhoto(undefined);setSource('all');
  };
- const search=async()=>{
+ const search=async(forceAi=false)=>{
   if(!selectedItems.length||searching||analysing)return;setSearching(true);setError('');
   const available=selectedItems.map(i=>({...i,priority:selected.has(normalize(i.name))}));
-  const request:CookingRequest={mode:'pantry',...cookingRequestOptions(options.value),pantryIngredients:available,pantryBasics:settings.pantryBasics,pantryPolicy:'prioritize',aiPreference:settings.aiPreference};
-  try{const result=await generateDirectRecipe(request);setSearch(request,[result.proposal]);navigate(`/receta/${result.recipe.id}`)}
+  const request:CookingRequest={mode:'pantry',generationMode:forceAi?'ai':'catalog',...cookingRequestOptions(options.value),pantryIngredients:available,pantryBasics:settings.pantryBasics,pantryPolicy:'prioritize',aiPreference:settings.aiPreference};
+  try{const result=await generateDirectRecipe(request);setSearch(request,[result.proposal]);navigate(`/receta/${result.recipe.id}?servings=${request.servings}`)}
   catch(e){setError(e instanceof Error?e.message:'No se ha podido preparar la receta.')}
   finally{setSearching(false)}
  };
@@ -80,7 +81,7 @@ export function PantryCookPage() {
    {(voice.isListening||voice.isTranscribing)&&<p role="status">{voice.isListening?'Escuchando… pulsa el micrófono para parar.':'Transcribiendo…'}</p>}
    <div className="pantry-selection-summary" role="status"><strong>{selectedItems.length} elegidos</strong><span>{selectedItems.map(i=>i.name).join(' · ')}</span></div>
 
-   {(error||voice.error)&&<p className="voice-status error" role="alert">{error||voice.error}</p>}
+   {error===CATALOG_EMPTY&&<button className="secondary-button" disabled={searching} onClick={()=>void search(true)}>Crear receta con IA</button>}{(error||voice.error)&&<p className="voice-status error" role="alert">{error||voice.error}</p>}
    <div className="visual-generate"><PrimaryButton onClick={()=>void search()} disabled={!selectedItems.length||searching||analysing||candidates.length>0}>{searching?'Preparando…':'Generar receta'}</PrimaryButton></div>
   </div>
  </AppShell>

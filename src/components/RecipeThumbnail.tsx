@@ -6,6 +6,7 @@ export function RecipeThumbnail({ recipe }: { recipe: Recipe }) {
   const [url, setUrl] = useState<string>();
 
   useEffect(() => {
+    setUrl(undefined);
     let disposed = false;
     let objectUrl: string | undefined;
     getRecipeThumbnail(recipe.id).then(result => {
@@ -19,6 +20,6 @@ export function RecipeThumbnail({ recipe }: { recipe: Recipe }) {
   }, [recipe.id]);
 
   return url
-    ? <span className="library-emoji library-photo"><img src={url} alt="" /></span>
+    ? <span className="library-emoji library-photo"><img src={url} alt="" loading="lazy" decoding="async" /></span>
     : <span className="library-emoji">{recipe.emoji}</span>;
 }

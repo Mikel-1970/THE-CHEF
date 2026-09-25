@@ -1,3 +1,4 @@
+import {chefLibrary} from '../data/library';
 import { mockRecipes } from '../data/mockRecipes';
 import type { Difficulty, MealType, Recipe, RecipeIngredient, RecipeSource, RecipeStep } from '../domain/types';
 import { validRecipes } from './recipeValidator';
@@ -12,7 +13,7 @@ const localSource: RecipeSource = {
   label: 'Catálogo El Chef'
 };
 
-const localRecipes = validRecipes(mockRecipes).map(recipe => ({
+const localRecipes = validRecipes([...chefLibrary,...mockRecipes]).map(recipe => ({
   ...recipe,
   source: recipe.source ?? localSource
 }));
@@ -41,6 +42,7 @@ export function rememberActiveRecipe(recipe: Recipe): void {
 }
 
 export function rememberLibraryRecipe(recipe: Recipe): void {
+  if(chefLibrary.some(item=>item.id===recipe.id))return;
   const normalized = normalizeStoredRecipe(recipe);
   if (!normalized || !validRecipes([normalized]).length || typeof localStorage === 'undefined') return;
 
@@ -153,13 +155,15 @@ function normalizeStoredRecipe(value: unknown): Recipe | undefined {
   const id = text(value.id);
   const title = text(value.title);
   if (!id || !title) return undefined;
+  const builtin=chefLibrary.find(recipe=>recipe.id===id);
+  if(builtin)return builtin;
 
   const ingredients = normalizeIngredients(value.ingredients);
   const steps = normalizeSteps(value.steps);
   if (!ingredients.length || !steps.length) return undefined;
 
   const nutrition = normalizeNutrition(value.nutritionPerServing);
-  if (!nutrition) return undefined;
+  if (!nutrition && value.nutritionStatus !== 'unavailable') return undefined;
 
   const baseServings = positiveNumber(value.baseServings);
   const prepMinutes = nonNegativeNumber(value.prepMinutes);

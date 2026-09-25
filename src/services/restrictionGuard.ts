@@ -1,14 +1,14 @@
 import type { Recipe } from '../domain/types';
 
 const GROUPS:Record<string,string[]>={
-  lacteos:['leche','queso','mantequilla','nata','yogur','lacteo','lacteos','crema de leche'],
-  gluten:['trigo','harina de trigo','pan','pasta','cuscus','bulgur','seitan'],
-  huevo:['huevo','huevos','mayonesa'],
+  lacteos:['leche','queso','mantequilla','nata','yogur','lacteo','lacteos','crema de leche','paneer','mascarpone','pecorino','gruyer','mozzarella','parmesano','feta','cheddar'],
+  gluten:['trigo','harina de trigo','pan','pasta','cuscus','bulgur','seitan','harina','espagueti','tagliatelle','lasana','penne','trofie','macarron','fideo','noqui','hojaldre','masa filo','galleta','bizcocho','salsa de soja','oblea'],
+  huevo:['huevo','huevos','mayonesa','yema','clara pasteurizada'],
   huevos:['huevo','huevos','mayonesa'],
   frutossecos:['almendra','nuez','avellana','pistacho','cacahuete','anacardo','pinon'],
   cacahuete:['cacahuete','mani'],
   marisco:['gamba','langostino','camaron','centollo','cangrejo','mejillon','almeja','ostra','calamar','sepia','pulpo'],
-  pescado:['pescado','merluza','salmon','bacalao','atun','bonito','lubina','dorada','sardina','anchoa'],
+  pescado:['pescado','merluza','salmon','bacalao','atun','bonito','lubina','dorada','sardina','anchoa','ventresca','dashi','worcestershire'],
   soja:['soja','tofu','tamari','miso'],
   sesamo:['sesamo','tahini'],
   apio:['apio'],
@@ -18,7 +18,10 @@ const GROUPS:Record<string,string[]>={
 export function recipeViolatesRestrictions(recipe:Recipe,restrictions?:string[]):string|undefined{
   if(!restrictions?.length)return;
   const haystack=normalize([recipe.title,recipe.description,...recipe.ingredients.map(i=>i.name)].join(' '));
+  const animal=['pollo','ternera','cerdo','cordero','conejo','pato','carne','jamon','beicon','chorizo','morcilla','guanciale','gelatina',...GROUPS.pescado,...GROUPS.marisco];
   for(const raw of restrictions){
+    const normalized=normalize(raw);
+    if(/vegetarian|vegan/.test(normalized)){const blocked=/vegan/.test(normalized)?[...animal,...GROUPS.lacteos,...GROUPS.huevo,'miel']:animal;if(blocked.some(term=>containsTerm(haystack,term)))return raw;continue;}
     const terms=restrictionTerms(raw);
     if(!terms.length)continue;
     const hit=terms.find(term=>containsTerm(haystack,term));

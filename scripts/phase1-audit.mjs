@@ -14,7 +14,7 @@ ok('Tiempo máximo 120',read('src/components/CookingOptions.tsx').includes('max=
 ok('Recipe sin panel elaboración duplicado',!recipe.includes("'elaboration'"));
 ok('CTA Elaboración',recipe.includes('> Elaboración</button>'));
 ok('Ficha foto-título-resumen-nutrición',recipe.indexOf('recipe-hero')<recipe.indexOf('recipe-title-block')&&recipe.indexOf('recipe-title-block')<recipe.indexOf('recipe-summary-content')&&recipe.indexOf('recipe-summary-content')<recipe.indexOf('nutrition-card nutrition-card-priority'));
-ok('Imagen preparada antes de abrir ficha',directRecipe.includes('await getRecipeImage(recipe)')&&read('src/pages/DesirePage.tsx').includes('navigate(`/receta/${result.recipe.id}`)'));
+ok('Imagen preparada antes de abrir ficha',directRecipe.includes('await getRecipeImage(recipe)')&&read('src/pages/DesirePage.tsx').includes('navigate(`/receta/${result.recipe.id}?servings=${request.servings}`)'));
 ok('Reintento de imagen sin regenerar receta',directRecipe.includes('getRecipeImage(recipe).catch')&&recipe.includes('Reintentar imagen'));
 ok('Variantes versionadas',recipe.includes('· v${version}'));
 ok('Timer con deadline real',read('src/components/timerStore.ts').includes('deadline')&&read('src/components/timerStore.ts').includes('Date.now()')&&stepTimer.includes('role="timer"'));
@@ -27,7 +27,7 @@ ok('Compra manual persiste entre recetas',context.includes('existingIsManual')&&
 ok('Proposal nutrition',/nutritionPerServing\?\s*:\s*NutritionSummary/.test(types));
 ok('jsPDF parcheado',/^\^?4\.2\.1$/.test(pkg.dependencies?.jspdf??''));
 ok('Solo ingredientes seleccionados en propuesta',pantry.includes("const available=selectedItems.map")&&pantry.includes("pantryIngredients:available"));
-ok('Preferencia IA para una propuesta',hybrid.includes("Math.round(preference/100)")&&hybrid.includes('PROPOSAL_COUNT=1'));
+ok('Biblioteca primero e IA explícita para una propuesta',hybrid.includes("request.generationMode!=='ai'")&&hybrid.includes('PROPOSAL_COUNT=1')&&hybrid.includes('CATALOG_EMPTY'));
 ok('Tutorial sin BottomNav obsoleto',!tour.includes('data-tour="bottom-nav"')&&!tour.includes('Empezar a cocinar'));
 ok('Contraseña no expuesta en Ajustes',!settings.includes('settings.loginPassword')&&!settings.includes('Mostrar contraseña'));
 ok('Credencial local derivada con PBKDF2',localAuth.includes("name:'PBKDF2'")&&localAuth.includes("hash:'SHA-256'")&&localAuth.includes('150000'));

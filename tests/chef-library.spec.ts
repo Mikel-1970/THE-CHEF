@@ -1,0 +1,70 @@
+import {test,expect} from '@playwright/test';
+import {chefLibrary} from '../src/data/library';
+import {validateRecipe} from '../src/services/recipeValidator';
+import {getMockProposals} from '../src/services/mockRecommendationEngine';
+import {recipeViolatesRestrictions} from '../src/services/restrictionGuard';
+import {mockRecipes} from '../src/data/mockRecipes';
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+
+test('every library item has a distinct lightweight thumbnail and detail image',()=>{
+ const hashes=new Set<string>();
+ for(const recipe of chefLibrary){for(const suffix of ['','_min']){const bytes=fs.readFileSync(`public/library/${recipe.id}${suffix}.webp`);expect(bytes.subarray(0,4).toString()).toBe('RIFF');expect(bytes.subarray(8,12).toString()).toBe('WEBP');expect(bytes.length).toBeGreaterThan(1000);expect(bytes.length).toBeLessThan(suffix?60000:220000);hashes.add(createHash('sha256').update(bytes).digest('hex'));}}
+ expect(hashes.size).toBe(340);
+});
+
+test('catalog contains 150 complete recipes and 20 cocktails with unique instructions',()=>{
+ expect(chefLibrary).toHaveLength(170);expect(new Set(chefLibrary.map(r=>r.id)).size).toBe(170);
+ expect(new Set(chefLibrary.map(r=>r.steps.map(s=>s.instruction).join(' '))).size).toBe(170);
+ expect(chefLibrary.filter(r=>r.recipeKind==='cocktail')).toHaveLength(20);
+ expect(chefLibrary.filter(r=>r.cuisine==='Española')).toHaveLength(80);
+ expect(chefLibrary.filter(r=>r.cuisine==='Italiana')).toHaveLength(15);
+ for(const recipe of chefLibrary){expect(validateRecipe(recipe).errors,recipe.title).toEqual([]);expect(recipe.steps.length).toBeGreaterThanOrEqual(4);expect(recipe.ingredients.length).toBeGreaterThan(1);expect(recipe.nutritionPerServing).toBeUndefined();}
+});
+test('catalog selection respects cuisine, limits, exclusions and unknown dishes',()=>{
+ const request={mode:'desire' as const,servings:5,cuisine:'Peruana',desireText:''};
+ const results=getMockProposals(request,[],true);expect(results.length).toBeGreaterThan(0);
+ for(const p of results)expect(chefLibrary.find(r=>r.id===p.recipeId)?.cuisine).toBe('Peruana');
+ expect(getMockProposals({...request,maxMinutes:1},[],true)).toHaveLength(0);
+ expect(getMockProposals({...request,desireText:'Un plato de unicornio con plutonio'},[],true)).toHaveLength(0);
+ const vegan=getMockProposals({...request,cuisine:'Española',restrictions:['Vegana']},[],true);expect(vegan.length).toBeGreaterThan(0);
+ for(const p of vegan){const r=chefLibrary.find(r=>r.id===p.recipeId)!;expect(recipeViolatesRestrictions(r,['Vegana'])).toBeUndefined();expect(r.ingredients.some(i=>/pollo|huevo|leche|jamón/.test(i.name))).toBe(false);}
+ expect(recipeViolatesRestrictions(chefLibrary.find(r=>r.title==='Espaguetis a la carbonara')!,['Sin gluten'])).toBeTruthy();
+ expect(recipeViolatesRestrictions(chefLibrary.find(r=>r.title==='Palak paneer')!,['Sin lácteos'])).toBeTruthy();
+});
+test.beforeEach(async({page})=>{await page.addInitScript(()=>{for(const key of ['chef:auth:session:v1','chef:entry-tutorial:seen-session:v1','chef:tutorial:invite-dismissed-session:v2'])sessionStorage.setItem(key,'1')});});
+test('library filters, photo, servings and saved recipes work without AI',async({page},info)=>{
+ let ai=0;await page.route('**/*',r=>{const url=new URL(r.request().url());if(url.hostname==='127.0.0.1')return r.continue();if(url.pathname.includes('/recipes/')||url.pathname.includes('/chef-media/'))ai++;return r.abort()});
+ await page.goto('./#/mis-recetas');await expect(page.locator('.library-photo-card')).toHaveCount(170);
+ await page.screenshot({path:info.outputPath('library-home.png')});
+ await page.getByLabel('Filtrar por cocina').selectOption('Peruana');await expect(page.locator('.library-photo-card')).toHaveCount(5);
+ await page.getByLabel('Filtrar por cocina').selectOption('');await page.getByLabel('Tipo de receta').selectOption('cocktail');await expect(page.locator('.library-photo-card')).toHaveCount(20);
+ await page.getByLabel('Filtrar por alcohol').selectOption('no');await expect(page.locator('.library-photo-card')).toHaveCount(3);
+ await page.getByLabel('Tipo de receta').selectOption('all');await page.getByPlaceholder('Buscar recetas y cócteles…').fill('Paella valenciana');await page.getByRole('button',{name:'Abrir Paella valenciana',exact:true}).click();
+ await expect(page.locator('.recipe-complete-photo img')).toHaveAttribute('src',/lib-001.webp$/);
+ await expect.poll(()=>page.locator('.recipe-complete-photo img').evaluate((e:HTMLImageElement)=>e.naturalWidth)).toBe(960);
+ await page.getByLabel('Comensales',{exact:true}).selectOption('5');await page.reload();await expect(page.getByLabel('Comensales',{exact:true})).toHaveValue('5');
+ await page.getByRole('button',{name:'Ingredientes Lo que necesitas',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('400 g');await page.getByRole('button',{name:'Volver',exact:true}).click();
+ await page.getByRole('button',{name:'Guardar en Mis recetas',exact:true}).click();await page.goto('./#/mis-recetas?tab=all');await expect(page.locator('.library-photo-card')).toHaveCount(1);
+ expect(ai).toBe(0);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:info.outputPath('library-saved.png')});
+});
+
+test('history without a catalog match offers explicit generation and settings explain the policy',async({page})=>{
+ let calls=0;await page.route('**/*',r=>{const u=new URL(r.request().url());if(u.hostname==='127.0.0.1')return r.continue();if(u.pathname.includes('/recipes/'))calls++;return r.abort()});
+ await page.addInitScript(()=>localStorage.setItem('chef:history',JSON.stringify([{id:'old-search',kind:'search',createdAt:'2026-09-25T12:00:00Z',label:'Guiso de unicornio',mode:'desire',request:{mode:'desire',desireText:'Un guiso de unicornio',servings:4,generationMode:'ai'}}])));
+ await page.goto('./#/mis-recetas?tab=history');await page.getByRole('button',{name:/Guiso de unicornio/}).click();await expect(page.getByRole('alert')).toContainText('biblioteca');await expect(page.getByRole('button',{name:'Crear receta con IA',exact:true})).toBeVisible();expect(calls).toBe(0);
+ await page.goto('./#/ajustes');await expect(page.getByText('Biblioteca primero',{exact:true})).toBeVisible();await expect(page.getByLabel('Porcentaje de uso de IA')).toHaveCount(0);
+});
+test('no match requires an explicit AI action',async({page})=>{
+ let calls=0;await page.route('**/*',r=>{const u=new URL(r.request().url());if(u.hostname==='127.0.0.1')return r.continue();if(u.pathname.endsWith('/recipes/suggest')){calls++;return r.fulfill({status:500,body:'{}',contentType:'application/json'})}return r.abort()});
+ await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill('Un guiso de unicornio');await page.getByRole('button',{name:'Confirmar petición'}).click();await page.getByRole('button',{name:'Generar receta',exact:true}).click();await expect(page.getByRole('button',{name:'Crear receta con IA',exact:true})).toBeVisible();expect(calls).toBe(0);
+ await page.getByRole('button',{name:'Crear receta con IA',exact:true}).click();await expect.poll(()=>calls).toBe(1);await expect(page.getByRole('alert')).toContainText('fallo temporal');
+});
+
+test('another recipe uses AI only after clicking and keeps diners and cuisine',async({page})=>{
+ const calls:string[]=[];let request:any;
+ const recipe={...mockRecipes[0],id:'ai-library-alternative',title:'Arroz de verduras del chef',cuisine:'Española',source:{kind:'ai',label:'Prueba controlada'}};
+ await page.route('**/*',r=>{const url=new URL(r.request().url());if(url.hostname==='127.0.0.1')return r.continue();if(url.pathname.endsWith('/recipes/suggest')){calls.push('suggest');request=r.request().postDataJSON().request;return r.fulfill({contentType:'application/json',body:JSON.stringify({proposals:[{id:'alt',recipeId:recipe.id,title:recipe.title,subtitle:'Una alternativa de arroz',emoji:'🍚',minutes:35,difficulty:'Fácil',usedIngredients:['arroz'],missingIngredients:[],reason:'Alternativa a la paella'}]})})}if(url.pathname.endsWith('/recipes/generate')){calls.push('generate');return r.fulfill({contentType:'application/json',body:JSON.stringify({recipes:[recipe]})})}if(url.pathname.endsWith('/chef-media/image')){calls.push('image');return r.fulfill({contentType:'application/json',body:JSON.stringify({imageUrl:'/THE-CHEF/library/lib-001.webp'})})}return r.abort()});
+ await page.goto('./#/receta/lib-001?servings=5');await expect(page.getByRole('button',{name:'Crear otra con IA',exact:true})).toBeVisible();expect(calls).toEqual([]);
+ await page.getByRole('button',{name:'Crear otra con IA',exact:true}).click();await expect(page).toHaveURL(/receta\/ai-library-alternative\?servings=5/);expect(request.cuisine).toBe('Española');expect(request.servings).toBe(5);expect(request.desireText).toContain('No repitas: Paella valenciana');expect(calls.filter(c=>c==='suggest')).toHaveLength(1);expect(calls.filter(c=>c==='generate')).toHaveLength(1);
+});

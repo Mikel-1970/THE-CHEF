@@ -1,3 +1,5 @@
+import {chefLibrary} from '../data/library';
+import {CATALOG_EMPTY} from '../services/hybridRecommendationEngine';
 import { Check, Clock3, Heart, Mic, MicOff, Search, Sparkles, Trash2, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -20,22 +22,30 @@ export function MyRecipesPage() {
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState('');
   const [isRepeating, setIsRepeating] = useState(false);
+  const [repeatError,setRepeatError]=useState('');
+  const [repeatEntry,setRepeatEntry]=useState<HistoryEntry>();
   const [dishCategory, setDishCategory] = useState('Todos');
+  const [kind,setKind]=useState('all');
+  const [cuisine,setCuisine]=useState('');
+  const [alcohol,setAlcohol]=useState('all');
   const [historyYear, setHistoryYear] = useState('Todos');
   const [historyMonth, setHistoryMonth] = useState('Todos');
   const voice = useAiDictation(transcript => setQuery(current => current.trim() ? `${current.trim()} ${transcript.trim()}` : transcript.trim()));
-  const tab = params.get('tab') ?? 'all';
+  const tab = params.get('tab') ?? 'library';
 
   const recipes = useMemo(() => {
-    const ids = tab === 'favorites' ? favorites : Array.from(new Set([...savedRecipes, ...favorites]));
+    const ids = tab === 'library' ? chefLibrary.map(r=>r.id) : tab === 'favorites' ? favorites : Array.from(new Set([...savedRecipes, ...favorites]));
     const normalizedQuery = query.trim().toLocaleLowerCase('es');
     const catalog = getAllRecipes();
     return ids
       .map(id => catalog.find(recipe => recipe.id === id))
       .filter((recipe): recipe is Recipe => Boolean(recipe))
       .filter(recipe => !normalizedQuery || recipe.title.toLocaleLowerCase('es').includes(normalizedQuery))
-      .filter(recipe => dishCategory === 'Todos' || inferDishCategory(recipe) === dishCategory);
-  }, [favorites, savedRecipes, query, tab, dishCategory]);
+      .filter(recipe => dishCategory === 'Todos' || (recipe.libraryCategory??inferDishCategory(recipe)) === dishCategory)
+      .filter(recipe=>kind==='all'||recipe.recipeKind===kind)
+      .filter(recipe=>!cuisine||recipe.cuisine===cuisine)
+      .filter(recipe=>alcohol==='all'||recipe.recipeKind==='cocktail'&&recipe.alcohol===(alcohol==='yes'));
+  }, [favorites, savedRecipes, query, tab, dishCategory,kind,cuisine,alcohol]);
 
   const historyYears = useMemo(() => Array.from(new Set(history.map(entry => String(new Date(entry.createdAt).getFullYear())))).sort((a, b) => Number(b) - Number(a)), [history]);
   const filteredHistory = useMemo(() => history.filter(entry => {
@@ -45,14 +55,17 @@ export function MyRecipesPage() {
     return true;
   }), [history, historyYear, historyMonth]);
 
-  const repeatSearch = async (entry: HistoryEntry) => {
+  const repeatSearch = async (entry: HistoryEntry,forceAi=false) => {
     if (isRepeating) return;
-    const request = entry.request ?? buildLegacyRequest(entry, settings.defaultServings, settings.pantryBasics);
+    const request:CookingRequest = {...(entry.request ?? buildLegacyRequest(entry, settings.defaultServings, settings.pantryBasics)),generationMode:forceAi?'ai':'catalog'};
+    setRepeatEntry(entry);setRepeatError('');
     setIsRepeating(true);
     try {
       const result = await generateDirectRecipe(request);
       setSearch(request, [result.proposal]);
-      navigate(`/receta/${result.recipe.id}`);
+      navigate(`/receta/${result.recipe.id}?servings=${request.servings}`);
+    } catch(error) {
+      setRepeatError(error instanceof Error?error.message:'No se ha podido recuperar la búsqueda.');
     } finally {
       setIsRepeating(false);
     }
@@ -68,41 +81,44 @@ export function MyRecipesPage() {
     if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) document.activeElement.blur();
   };
 
-  const setDishTab = (nextTab: string) => setParams(nextTab === 'all' ? {} : { tab: nextTab });
+  const setDishTab = (nextTab: string) => setParams(nextTab === 'library' ? {} : { tab: nextTab });
 
   return (
     <AppShell>
       <ChefLoadingOverlay active={isRepeating} title="Preparando tu receta" messages={['Recuperando tus preferencias…','Preparando la receta completa…','Preparando la imagen…']} />
-      <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>Recetas guardadas, favoritas e historial de actividad.</p></div>
+      <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>150 recetas y 20 cócteles listos para preparar. Guarda tus favoritos y tus propias versiones.</p></div>
       <div className="page-content nav-safe"><Link className="secondary-button" to="/consejos">Revisar tips de cocina</Link>
           <div className="library-tabs">
-            <button className={tab === 'all' ? 'active' : ''} onClick={() => setDishTab('all')}>Todo</button>
+            <button className={tab === 'library' ? 'active' : ''} onClick={() => setDishTab('library')}>Biblioteca del Chef</button>
+            <button className={tab === 'all' ? 'active' : ''} onClick={() => setDishTab('all')}>Mis guardadas</button>
             <button className={tab === 'favorites' ? 'active' : ''} onClick={() => setDishTab('favorites')}>Favoritas</button>
             <button className={tab === 'history' ? 'active' : ''} onClick={() => setDishTab('history')}>Historial</button>
           </div>
 
           {tab !== 'history' && <>
-            <div className="search-box"><Search size={18} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar en mis recetas…" /><div className="voice-inline-actions"><button type="button" className="clear-input-button" onClick={() => { voice.stop(); setQuery(''); }} disabled={!query.trim() && !voice.isListening} aria-label="Borrar búsqueda"><X size={17} /></button><button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar búsqueda'}>{voice.isListening ? <MicOff size={18} /> : <Mic size={18} />}</button><button type="button" className="voice-confirm-button" onClick={confirmQuery} disabled={!query.trim() || voice.isListening || voice.isTranscribing} aria-label="Confirmar búsqueda"><Check size={18} /></button></div></div>
+            <div className="search-box"><Search size={18} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar recetas y cócteles…" /><div className="voice-inline-actions"><button type="button" className="clear-input-button" onClick={() => { voice.stop(); setQuery(''); }} disabled={!query.trim() && !voice.isListening} aria-label="Borrar búsqueda"><X size={17} /></button><button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar búsqueda'}>{voice.isListening ? <MicOff size={18} /> : <Mic size={18} />}</button><button type="button" className="voice-confirm-button" onClick={confirmQuery} disabled={!query.trim() || voice.isListening || voice.isTranscribing} aria-label="Confirmar búsqueda"><Check size={18} /></button></div></div>
             {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
             {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
             {voice.error && <div className="voice-status error">{voice.error}</div>}
-            <div className="dish-category-row">{['Todos','Arroces','Pastas','Carnes','Pescados','Guisos','Postres','Otros'].map(category => <button type="button" className={dishCategory === category ? 'active' : ''} onClick={() => setDishCategory(category)} key={category}>{category}</button>)}</div>
+            <div className="library-filters"><label>Tipo<select aria-label="Tipo de receta" value={kind} onChange={e=>{setKind(e.target.value);setDishCategory('Todos');setAlcohol('all')}}><option value="all">Todos</option><option value="dish">Platos</option><option value="dessert">Postres</option><option value="cocktail">Cócteles</option></select></label><label>Cocina<select aria-label="Filtrar por cocina" value={cuisine} onChange={e=>setCuisine(e.target.value)}><option value="">Todas las cocinas</option>{Array.from(new Set(chefLibrary.map(r=>r.cuisine))).sort().map(c=><option key={c}>{c}</option>)}</select></label>{(kind==='cocktail'||dishCategory==='Cócteles')&&<label>Alcohol<select aria-label="Filtrar por alcohol" value={alcohol} onChange={e=>setAlcohol(e.target.value)}><option value="all">Todos</option><option value="yes">Con alcohol</option><option value="no">Sin alcohol</option></select></label>}</div><div className="dish-category-row">{['Todos','Arroces','Pastas','Carnes','Pescados','Guisos','Verduras','Tapas y huevos','Sopas y cremas','Postres','Cócteles','Otros'].map(category => <button type="button" className={dishCategory === category ? 'active' : ''} onClick={() => setDishCategory(category)} key={category}>{category}</button>)}</div>
 
             <section className="library-section">
-              <div className="section-heading-row"><div><span className="eyebrow">{tab === 'favorites' ? 'FAVORITAS' : 'MIS RECETAS'}</span><h2>{recipes.length ? (tab === 'favorites' ? 'Tus imprescindibles' : 'Recetas guardadas') : (tab === 'favorites' ? 'Todavía no hay favoritas' : 'Todavía no has guardado ninguna receta')}</h2></div><Heart size={20} /></div>
+              <div className="section-heading-row"><div><span className="eyebrow">{tab === 'library' ? 'BIBLIOTECA DEL CHEF' : tab === 'favorites' ? 'FAVORITAS' : 'MIS RECETAS'}</span><h2>{tab==='library'? recipes.length+' recetas disponibles' : recipes.length ? (tab === 'favorites' ? 'Tus imprescindibles' : 'Recetas guardadas') : (tab === 'favorites' ? 'Todavía no hay favoritas' : 'Todavía no has guardado ninguna receta')}</h2></div><Heart size={20} /></div>
               <div className="library-photo-grid">
                 {recipes.map(recipe => (
                   <article className="library-photo-card" key={recipe.id}>
                     <button className="library-photo-open" aria-label={`Abrir ${recipe.title}`} onClick={() => navigate(`/receta/${recipe.id}`)}><RecipeThumbnail recipe={recipe} /><div className="library-photo-caption"><strong>{recipe.title}</strong><small><Clock3 size={13} /> {recipe.prepMinutes + recipe.cookMinutes} min</small></div></button><button type="button" className="library-photo-heart" aria-label={`${favorites.includes(recipe.id)?'Quitar':'Marcar'} ${recipe.title} ${favorites.includes(recipe.id)?'de favoritos':'como favorita'}`} aria-pressed={favorites.includes(recipe.id)} onClick={()=>toggleFavorite(recipe.id)}><Heart size={20} fill={favorites.includes(recipe.id)?'currentColor':'none'}/></button>
-                    <button type="button" className="library-delete" aria-label={tab === 'favorites' ? `Quitar ${recipe.title} de favoritos` : `Quitar ${recipe.title} de Mis recetas`} onClick={event => { event.stopPropagation(); if (tab === 'favorites') toggleFavorite(recipe.id); else deleteRecipe(recipe); }}><Trash2 size={17} /></button>
+                    {tab!=='library'&&<button type="button" className="library-delete" aria-label={tab === 'favorites' ? `Quitar ${recipe.title} de favoritos` : `Quitar ${recipe.title} de Mis recetas`} onClick={event => { event.stopPropagation(); if (tab === 'favorites') toggleFavorite(recipe.id); else deleteRecipe(recipe); }}><Trash2 size={17} /></button>}
                   </article>
                 ))}
-                {!recipes.length && <div className="empty-card">{tab === 'favorites' ? 'Marca una receta con ♥ y aparecerá aquí.' : 'Abre una receta y pulsa “Guardar receta” para conservarla aquí.'}</div>}
+                {!recipes.length && <div className="empty-card">{tab === 'library' ? 'No hay recetas con estos filtros. Prueba otra categoría o cocina.' : tab === 'favorites' ? 'Marca una receta con ♥ y aparecerá aquí.' : 'Abre una receta y pulsa “Guardar receta” para conservarla aquí.'}</div>}
               </div>
             </section>
           </>}
 
           {tab === 'history' && <section className="library-section history-only-section">
+            {repeatError&&<p role="alert">{repeatError}</p>}
+            {repeatError===CATALOG_EMPTY&&repeatEntry&&<button className="secondary-button" disabled={isRepeating} onClick={()=>void repeatSearch(repeatEntry,true)}>Crear receta con IA</button>}
             <div className="section-heading-row"><div><span className="eyebrow">HISTORIAL</span><h2>Actividad reciente</h2></div></div>
             <div className="history-filter-row">
               <label><span>Año</span><select value={historyYear} onChange={event => setHistoryYear(event.target.value)}><option value="Todos">Todos</option>{historyYears.map(year => <option value={year} key={year}>{year}</option>)}</select></label>

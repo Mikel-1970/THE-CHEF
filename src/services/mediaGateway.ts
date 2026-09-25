@@ -1,3 +1,4 @@
+import {libraryImage} from '../data/library';
 import type { Recipe } from '../domain/types';
 import type { Technique } from './techniqueGateway';
 
@@ -24,6 +25,8 @@ export async function getRecipeImage(recipe: Recipe): Promise<string | undefined
   source ??= await getRecipeSourcePhoto(recipe.id).catch(() => undefined);
   if (source) return source;
   if (recipe.imageOrigin === 'user-photo') return undefined;
+  const staticImage=libraryImage(recipe.id);
+  if(staticImage)return staticImage;
   const cacheKey = imageRequest(recipe.id);
   if ('caches' in window) {
     const cache = await caches.open(IMAGE_CACHE);
@@ -65,7 +68,7 @@ export async function getRecipeImage(recipe: Recipe): Promise<string | undefined
 }
 
 export async function getRecipeThumbnail(recipeId: string): Promise<string | undefined> {
-  return getCachedImage(THUMBNAIL_CACHE, thumbnailRequest(recipeId));
+  return libraryImage(recipeId,true) ?? getCachedImage(THUMBNAIL_CACHE, thumbnailRequest(recipeId));
 }
 
 export async function saveRecipeThumbnail(recipeId: string, imageUrl: string): Promise<void> {

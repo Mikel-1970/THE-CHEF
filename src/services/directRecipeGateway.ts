@@ -1,4 +1,4 @@
-import {prepareDesireRequest,isChefChoice,matchesChosenCuisine} from '../utils/chefChoice';
+import {prepareDesireRequest,matchesChosenCuisine} from '../utils/chefChoice';
 import type { CookingRequest, Proposal, Recipe } from '../domain/types';
 import { generateAiRecipe } from './aiProposalGateway';
 import { getHybridProposals, type HybridRecommendationResult } from './hybridRecommendationEngine';
@@ -19,7 +19,7 @@ export async function generateDirectRecipe(request:CookingRequest):Promise<Direc
   const proposal=recommendation.proposals[0];
   if(!proposal)throw new Error('No se ha encontrado una receta que cumpla tus criterios.');
 
-  let recipe=getRecipeById(proposal.recipeId);
+  let recipe=request.generationMode==='ai'?undefined:getRecipeById(proposal.recipeId);
   if(!recipe){
     const generated=await generateAiRecipe(request,proposal);
     const accepted=registerExternalRecipes([generated]);
@@ -27,8 +27,9 @@ export async function generateDirectRecipe(request:CookingRequest):Promise<Direc
     if(!recipe)throw new Error('La receta generada no ha podido validarse.');
   }
 
-  if(isChefChoice(request)&&!matchesChosenCuisine(recipe.cuisine,request.cuisine))throw new Error('La receta generada no corresponde a la cocina elegida. Vuelve a intentarlo.');
+  if(!matchesChosenCuisine(recipe.cuisine,request.cuisine))throw new Error('La receta generada no corresponde a la cocina elegida. Vuelve a intentarlo.');
   assertRecipeLimits(recipe,request);
+  if(request.excludeRecipeIds?.some(id=>getRecipeById(id)?.title.toLocaleLowerCase('es')===recipe.title.toLocaleLowerCase('es')))throw new Error('La IA ha repetido el plato. Vuelve a intentarlo para obtener otra opción.');
   rememberActiveRecipe(recipe);
   rememberLibraryRecipe(recipe);
 
