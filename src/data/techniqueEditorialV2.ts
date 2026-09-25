@@ -306,7 +306,7 @@ export function buildTechniqueEditorial(input: TechniqueEditorialInput): Techniq
     whenNotToUse: input.requiresValidatedRecipe
       ? 'No la improvises sin una receta o procedimiento que fije los parámetros críticos para el producto concreto.'
       : 'Elige otra técnica cuando el resultado buscado requiera un efecto distinto o no puedas ' + point.toLocaleLowerCase('es') + '.',
-    chefTip: 'Clave práctica: ' + point + '.',
+    chefTip: 'La clave es ' + lowerFirst(point) + '.',
     timeLabel: timeLabelFor(input)
   };
 }
