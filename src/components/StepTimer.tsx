@@ -11,6 +11,8 @@ type TimerState = {
 };
 
 const PREFIX='chef:step-timer:v2:';
+const scheduledAlarms=new Map<string,number>();
+const firedAlarms=new Set<string>();
 
 export function StepTimer({
   timerId,
@@ -38,11 +40,28 @@ export function StepTimer({
     setDeadline(next.deadline);
     setFinished(Boolean(next.finished));
     alarmed.current=Boolean(next.finished);
-  },[timerId,suggestedSeconds]);
+    if(next.running&&next.deadline)scheduleAlarm(timerId,next.deadline,label);
+  },[timerId,suggestedSeconds,label]);
 
   useEffect(()=>{
     persist(timerId,{configuredSeconds:configured,remainingSeconds:remaining,running,deadline,finished});
   },[timerId,configured,remaining,running,deadline,finished]);
+  useEffect(()=>{
+    const listener=(event:Event)=>{
+      const detail=(event as CustomEvent<{timerId:string}>).detail;
+      if(detail?.timerId!==timerId)return;
+      const next=readState(timerId,suggestedSeconds);
+      setConfigured(next.configuredSeconds);
+      setRemaining(next.remainingSeconds);
+      setRunning(next.running);
+      setDeadline(next.deadline);
+      setFinished(Boolean(next.finished));
+      alarmed.current=Boolean(next.finished);
+    };
+    window.addEventListener('chef:step-timer-finished',listener);
+    return()=>window.removeEventListener('chef:step-timer-finished',listener);
+  },[timerId,suggestedSeconds]);
+
 
   useEffect(()=>{
     if(!running||!deadline)return;
@@ -55,7 +74,7 @@ export function StepTimer({
         setFinished(true);
         if(!alarmed.current){
           alarmed.current=true;
-          playAlarm(label);
+          ringAlarm(timerId,label);
         }
       }
     };
@@ -69,6 +88,8 @@ export function StepTimer({
 
   const setDuration=(minutes:number,seconds:number)=>{
     const total=Math.max(0,Math.min(24*60*60,Math.trunc(minutes)*60+Math.trunc(seconds)));
+    cancelScheduled(timerId);
+    firedAlarms.delete(timerId);
     setConfigured(total);
     setRemaining(total);
     setRunning(false);
@@ -80,6 +101,7 @@ export function StepTimer({
   const startPause=async()=>{
     if(running){
       const left=deadline?Math.max(0,Math.ceil((deadline-Date.now())/1000)):remaining;
+      cancelScheduled(timerId);
       setRemaining(left);
       setRunning(false);
       setDeadline(undefined);
@@ -91,15 +113,21 @@ export function StepTimer({
     if(typeof Notification!=='undefined'&&Notification.permission==='default'){
       try{await Notification.requestPermission()}catch{/* opcional */}
     }
+    cancelScheduled(timerId);
+    firedAlarms.delete(timerId);
     alarmed.current=false;
     setFinished(false);
     setRemaining(base);
-    setDeadline(Date.now()+base*1000);
+    const nextDeadline=Date.now()+base*1000;
+    setDeadline(nextDeadline);
     setRunning(true);
+    scheduleAlarm(timerId,nextDeadline,label);
   };
 
   const reset=()=>{
     const base=configured||suggestedSeconds||0;
+    cancelScheduled(timerId);
+    firedAlarms.delete(timerId);
     setRemaining(base);
     setRunning(false);
     setDeadline(undefined);
@@ -165,6 +193,35 @@ async function primeAudio(){
     sharedAudioContext??=new Ctx();
     if(sharedAudioContext.state==='suspended')await sharedAudioContext.resume();
   }catch{/* vibración/notificación siguen disponibles */}
+}
+
+
+function scheduleAlarm(timerId:string,deadline:number,label:string){
+  cancelScheduled(timerId);
+  const delay=Math.max(0,deadline-Date.now());
+  const handle=window.setTimeout(()=>ringAlarm(timerId,label),delay);
+  scheduledAlarms.set(timerId,handle);
+}
+
+function cancelScheduled(timerId:string){
+  const handle=scheduledAlarms.get(timerId);
+  if(handle!==undefined)window.clearTimeout(handle);
+  scheduledAlarms.delete(timerId);
+}
+
+function ringAlarm(timerId:string,label:string){
+  if(firedAlarms.has(timerId))return;
+  firedAlarms.add(timerId);
+  cancelScheduled(timerId);
+  try{
+    const raw=sessionStorage.getItem(PREFIX+timerId);
+    if(raw){
+      const state=JSON.parse(raw) as TimerState;
+      persist(timerId,{...state,remainingSeconds:0,running:false,deadline:undefined,finished:true});
+    }
+  }catch{/* no bloquea */}
+  playAlarm(label);
+  window.dispatchEvent(new CustomEvent('chef:step-timer-finished',{detail:{timerId}}));
 }
 
 function playAlarm(label:string){
