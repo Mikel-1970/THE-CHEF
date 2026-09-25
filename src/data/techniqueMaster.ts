@@ -1,5 +1,6 @@
 import master from './theChefTechniquesMaster.json' with { type: 'json' };
 import type { Technique } from '../services/techniqueGateway';
+import { buildTechniqueEditorial } from './techniqueEditorialV2';
 
 type RawTechnique = {
   id: string;
@@ -44,7 +45,18 @@ const difficulty = (value: RawTechnique['nivel']): Technique['difficulty'] =>
 
 const relatedNameToId = new Map(raw.map(item => [normalize(item.nombre), item.id]));
 
-export const techniqueMaster: Technique[] = raw.map(item => ({
+export const techniqueMaster: Technique[] = raw.map(item => {
+  const editorial = buildTechniqueEditorial({
+    title: item.nombre,
+    family: item.familia,
+    definition: item.definicion_corta,
+    objective: item.objetivo_culinario,
+    pointKey: item.punto_clave,
+    equipment: item.utensilios || [],
+    commonIngredients: item.ingredientes_habituales || [],
+    requiresValidatedRecipe: Boolean(item.requiere_receta_validada)
+  });
+  return ({
   id: item.id,
   title: item.nombre,
   description: item.resumen_app || item.definicion_corta,
@@ -55,15 +67,16 @@ export const techniqueMaster: Technique[] = raw.map(item => ({
   timeLabel: item.tiempo_orientativo || 'Según producto y método',
   difficulty: difficulty(item.nivel),
   equipment: item.utensilios || [],
-  ingredients: (item.ingredientes_habituales || []).map(name => ({ name })),
-  steps: (item.pasos_base || []).map((instruction, index) => ({
+  miseEnPlace: editorial.miseEnPlace,
+  ingredients: editorial.ingredients.map(name => ({ name })),
+  steps: editorial.steps.map((instruction, index) => ({
     number: index + 1,
     instruction,
     cue: index === (item.pasos_base?.length || 0) - 1 ? item.senales_de_exito?.[0] : undefined
   })),
   criticalPoints: [item.punto_clave, ...(item.seguridad_e_higiene || [])].filter((value): value is string => Boolean(value)),
   storage: (item.seguridad_e_higiene || []).join(' '),
-  uses: [...(item.elaboraciones_frecuentes || []), item.cuando_usarla || ''].filter(Boolean),
+  uses: [...(item.elaboraciones_frecuentes || [])].filter(Boolean),
   createdAt: '2026-09-23T00:00:00Z',
   builtin: true,
   aliases: item.alias || [],
@@ -71,8 +84,8 @@ export const techniqueMaster: Technique[] = raw.map(item => ({
   shortDefinition: item.definicion_corta,
   fullDefinition: item.definicion_completa,
   objective: item.objetivo_culinario,
-  whenToUse: item.cuando_usarla,
-  whenNotToUse: item.cuando_no_usarla,
+  whenToUse: editorial.whenToUse,
+  whenNotToUse: editorial.whenNotToUse,
   successSignals: item.senales_de_exito || [],
   frequentErrors: item.errores_frecuentes || [],
   corrections: item.como_corregir || [],
@@ -80,12 +93,13 @@ export const techniqueMaster: Technique[] = raw.map(item => ({
   timerRecommended: Boolean(item.temporizador_recomendado),
   timerTitle: item.titulo_temporizador || item.nombre,
   requiresValidatedRecipe: Boolean(item.requiere_receta_validada),
-  chefTip: item.tip_chef,
+  chefTip: editorial.chefTip,
   professionalTip: item.truco_profesional,
   relatedTechniqueIds: (item.tecnicas_relacionadas || []).map(name => relatedNameToId.get(normalize(name))).filter((value): value is string => Boolean(value)),
   legacyId: item.legacy_id || undefined,
   imagePrompt: item.image_prompt
-}));
+  });
+});
 
 export const techniqueMasterById = new Map(techniqueMaster.map(item => [item.id, item]));
 
