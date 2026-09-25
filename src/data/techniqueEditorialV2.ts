@@ -260,12 +260,20 @@ function defaultIngredients(input: TechniqueEditorialInput): string[] {
   return ['Ingrediente o preparación sobre la que se aplicará la técnica'];
 }
 
-function miseEnPlace(input: TechniqueEditorialInput, steps: string[]): string[] {
+function miseEnPlace(input: TechniqueEditorialInput, _steps: string[]): string[] {
   const items: string[] = [];
   if (input.equipment?.length) items.push('Prepara: ' + input.equipment.join(' · ') + '.');
+  if (input.family === 'Preparación y corte') items.push('Lava y seca el ingrediente, retira partes no aprovechables y define el tamaño o forma final antes de cortar.');
+  else if (input.family === 'Preelaboración y conservación') items.push('Pesa los componentes, prepara un recipiente limpio y deja anotados el inicio, el tiempo y las condiciones del proceso.');
+  else if (input.family === 'Agua, vapor y presión') items.push('Limpia y porciona el alimento de forma uniforme; mide el líquido necesario y deja listo colador, espumadera o sistema de enfriado cuando proceda.');
+  else if (input.family === 'Sartén y fritura') items.push('Corta el producto de forma regular, sécalo bien y ordena los ingredientes por el momento en que entrarán en la sartén o fritura.');
+  else if (input.family === 'Horno, fuego y guisos') items.push('Prepara bandeja o recipiente, seca y sazona la pieza y precalienta la fuente de calor cuando la técnica lo requiera.');
+  else if (input.family === 'Salsas y fondos') items.push('Mide líquidos, grasas, aromáticos y agentes de ligazón; deja preparados varilla, espátula y colador antes de empezar.');
+  else if (input.family === 'Huevos, arroces y pasta') items.push('Mide el ingrediente principal y los líquidos, prepara temporizador cuando sea útil y deja listo el recipiente de cocción o enfriado.');
+  else if (input.family === 'Carnes, pescados y mariscos') items.push('Mantén el producto frío hasta el momento de trabajarlo, sécalo, porciónalo y separa utensilios de producto crudo cuando corresponda.');
+  else if (input.family === 'Panadería, pastelería y heladería') items.push('Pesa todos los ingredientes con precisión y prepara superficie, recipientes y equipo antes de mezclar o manipular la elaboración.');
+  else if (input.family === 'Alta cocina y emplatado') items.push('Pesa la formulación con precisión, prepara el equipo específico y comprueba las medidas de seguridad antes de iniciar el proceso.');
   if (input.requiresValidatedRecipe) items.push('Ten a la vista la receta validada con sus parámetros de tiempo, temperatura o proporción.');
-  const first = steps[0];
-  if (first && !items.some(item => item.includes(first))) items.push(first);
   if (!items.length) items.push('Organiza el puesto de trabajo y deja a mano todo lo necesario antes de empezar.');
   return items;
 }
@@ -305,7 +313,7 @@ export function buildTechniqueEditorial(input: TechniqueEditorialInput): Techniq
     whenToUse: 'Úsala cuando necesites ' + objective + '.',
     whenNotToUse: input.requiresValidatedRecipe
       ? 'No la improvises sin una receta o procedimiento que fije los parámetros críticos para el producto concreto.'
-      : 'Elige otra técnica cuando el resultado buscado requiera un efecto distinto o no puedas ' + point.toLocaleLowerCase('es') + '.',
+      : 'No la uses si no puedes garantizar este control: ' + lowerFirst(point) + '.',
     chefTip: 'La clave es ' + lowerFirst(point) + '.',
     timeLabel: timeLabelFor(input)
   };
