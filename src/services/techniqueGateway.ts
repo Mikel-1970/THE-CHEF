@@ -29,6 +29,7 @@ export type Technique = {
   timeMinutes: number;
   difficulty: 'Fácil' | 'Media' | 'Avanzada';
   equipment: string[];
+  miseEnPlace?: string[];
   ingredients: TechniqueIngredient[];
   steps: TechniqueStep[];
   criticalPoints: string[];
