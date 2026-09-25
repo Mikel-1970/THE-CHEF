@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-25T07:22:32.789Z",
+  "generatedAt": "2026-09-25T07:23:51.723Z",
   "items": {
     "TEC-PREP-001": {
       "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_071421_36ebfccc-62ab-4bd0-ae04-9c6ce2282768.png",
@@ -313,6 +313,102 @@
     "TEC-FUEG-006": {
       "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072219_1244a28d-fa5b-4e17-a993-7e5de3d1254d_min.webp",
       "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072219_1244a28d-fa5b-4e17-a993-7e5de3d1254d.png"
+    },
+    "TEC-FUEG-007": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_6c35806d-74bb-488c-97b2-ace554c054df_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_6c35806d-74bb-488c-97b2-ace554c054df.png"
+    },
+    "TEC-FUEG-008": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_7e2d0ea5-b276-41f0-83fb-989c35ebc2e9_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_7e2d0ea5-b276-41f0-83fb-989c35ebc2e9.png"
+    },
+    "TEC-FUEG-009": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_0ab6b448-1076-4443-923a-1bf3b6c90546_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_0ab6b448-1076-4443-923a-1bf3b6c90546.png"
+    },
+    "TEC-FUEG-010": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_722bd091-a849-4e68-baf5-c88cea539c46_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_722bd091-a849-4e68-baf5-c88cea539c46.png"
+    },
+    "TEC-FUEG-011": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_72abff4f-4dbd-47ef-a2d2-f8662b35430f_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_72abff4f-4dbd-47ef-a2d2-f8662b35430f.png"
+    },
+    "TEC-FUEG-012": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_c490be7e-f2f3-473d-9a60-4c7547c2c0fb_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072249_c490be7e-f2f3-473d-9a60-4c7547c2c0fb.png"
+    },
+    "TEC-FUEG-013": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072305_8dcd4931-69a3-4044-8a57-29242499e338_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072305_8dcd4931-69a3-4044-8a57-29242499e338.png"
+    },
+    "TEC-FUEG-014": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072306_faf3d20e-0ec4-4f8e-bfda-3a58690e3299_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072306_faf3d20e-0ec4-4f8e-bfda-3a58690e3299.png"
+    },
+    "TEC-FUEG-015": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072305_b8cee46a-e012-4b0f-a111-06f5ef9ae211_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072305_b8cee46a-e012-4b0f-a111-06f5ef9ae211.png"
+    },
+    "TEC-FUEG-016": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072305_f09c8b61-7f9e-4092-bd02-721badb664bc_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072305_f09c8b61-7f9e-4092-bd02-721badb664bc.png"
+    },
+    "TEC-FUEG-017": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072305_089e58fb-6fa6-4a50-8669-5869edecc9a0_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072305_089e58fb-6fa6-4a50-8669-5869edecc9a0.png"
+    },
+    "TEC-FUEG-018": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072307_9246f7be-40bf-495b-96d2-f93128c562c6_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072307_9246f7be-40bf-495b-96d2-f93128c562c6.png"
+    },
+    "TEC-FUEG-019": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072321_f2cce29e-dbd9-4112-8e84-1f521f2ad2f1_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072321_f2cce29e-dbd9-4112-8e84-1f521f2ad2f1.png"
+    },
+    "TEC-FUEG-020": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072321_50e5e6f0-f9ac-42a3-bf08-8072c6344a30_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072321_50e5e6f0-f9ac-42a3-bf08-8072c6344a30.png"
+    },
+    "TEC-FUEG-021": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072321_8d074e2a-ede0-41e1-8af8-ae4e25794984_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072321_8d074e2a-ede0-41e1-8af8-ae4e25794984.png"
+    },
+    "TEC-SALS-001": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072321_e218cffd-91f3-458d-b047-183149ad0417_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072321_e218cffd-91f3-458d-b047-183149ad0417.png"
+    },
+    "TEC-SALS-002": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072321_6976ab74-d9ef-42f2-8b91-e04e2b564035_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072321_6976ab74-d9ef-42f2-8b91-e04e2b564035.png"
+    },
+    "TEC-SALS-003": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072322_73668c8c-e792-45ac-a69b-4c624cfc1799_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072322_73668c8c-e792-45ac-a69b-4c624cfc1799.png"
+    },
+    "TEC-SALS-004": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072337_02b579cc-24d0-4459-a49a-6d27d5b0c813_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072337_02b579cc-24d0-4459-a49a-6d27d5b0c813.png"
+    },
+    "TEC-SALS-005": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072336_d6ada19d-a684-4fb9-9953-c4e1bf85a03b_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072336_d6ada19d-a684-4fb9-9953-c4e1bf85a03b.png"
+    },
+    "TEC-SALS-006": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072337_a8754c98-016f-48c0-a07e-43c2c358f2e6_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072337_a8754c98-016f-48c0-a07e-43c2c358f2e6.png"
+    },
+    "TEC-SALS-007": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072336_d6b48c5b-4085-49fe-8c80-962f89d52ec4_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072336_d6b48c5b-4085-49fe-8c80-962f89d52ec4.png"
+    },
+    "TEC-SALS-008": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072337_5103c2ad-9086-4808-aea9-1262cad31a15_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072337_5103c2ad-9086-4808-aea9-1262cad31a15.png"
+    },
+    "TEC-SALS-009": {
+      "thumb": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072337_056553f4-adc7-4695-bab4-dd11f88b118f_min.webp",
+      "detail": "https://d8j0ntlcm91z4.cloudfront.net/user_3JENDABI0V7V0gfRk2Dvmg43eic/hf_20260925_072337_056553f4-adc7-4695-bab4-dd11f88b118f.png"
     }
   }
 }
