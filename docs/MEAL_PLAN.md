@@ -42,3 +42,5 @@ Shopping: manual explicit export to the existing local shopping list, containing
 `tests/meal-plan.spec.ts` covers formulas, domain limits, 1–4 weeks, restrictions and gaps, missing nutrition, quantity conversion, partial-day targets, explicit confirmation, navigation, replacement, idempotent shopping, independent weight edits, encrypted export/import/wrong password/deletion, and AI payload/rejection. Both Playwright device profiles are included in `test:preview`.
 
 Remaining acceptance: physical-device usability, professional review of nutritional methodology and allergy coverage, legal/privacy/commercial review, and protected account persistence if desired. No claim of those acceptances is made by build or CI success.
+
+Automatic lunch/dinner selection requires explicit dish classification and prioritizes recipes whose energy can be recomputed. Legacy unclassified saved recipes remain available elsewhere; they do not become automatic main meals. Ingredient lookup ignores case and accents while preserving missing-data semantics.

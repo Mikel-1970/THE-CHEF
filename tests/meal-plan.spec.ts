@@ -56,13 +56,22 @@ test('calculation never adopts a goal; partial-day plan and weight remain indepe
 test('encrypted backup rejects wrong password, restores and deletes without plaintext persistence',async({page})=>{
  await page.goto('./#/plan-semanal');await page.getByRole('button',{name:'Crear plan de comidas',exact:true}).click();await page.getByText('Guardar, recuperar o borrar mis datos',{exact:true}).click();await page.getByLabel('Contraseña de la copia',{exact:true}).fill('Una clave larga de prueba');await page.getByLabel('Repetir contraseña para guardar',{exact:true}).fill('Una clave larga de prueba');
  const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Descargar copia cifrada',exact:true}).click();const download=await pending;const path=await download.path();const fs=await import('node:fs/promises');const raw=await fs.readFile(path!,'utf8');expect(raw).not.toContain('Paella');expect(raw).not.toContain('slots');expect(JSON.parse(raw).cipher.length).toBeGreaterThan(100);
- await page.getByLabel('Quiero borrar el plan',{exact:false}).check();await page.getByRole('button',{name:'Borrar datos de esta sesión',exact:true}).click();await expect(page.getByText('Tu plan · 1 semanas',{exact:true})).toHaveCount(0);
+ await page.getByLabel('Quiero borrar el plan',{exact:false}).check();await page.getByRole('button',{name:'Borrar datos de esta sesión',exact:true}).click();await expect(page.getByText('Tu plan · 1 semana',{exact:true})).toHaveCount(0);
  await page.getByLabel('Archivo de copia cifrada',{exact:true}).setInputFiles(path!);await page.getByLabel('Contraseña de la copia',{exact:true}).fill('Otra clave larga incorrecta');await page.getByRole('button',{name:'Recuperar copia y sustituir sesión',exact:true}).click();await expect(page.getByRole('alert')).toContainText('No se ha podido abrir');
- await page.getByLabel('Contraseña de la copia',{exact:true}).fill('Una clave larga de prueba');await page.getByRole('button',{name:'Recuperar copia y sustituir sesión',exact:true}).click();await expect(page.getByText('Tu plan · 1 semanas',{exact:true})).toBeVisible();
- await page.reload();await expect(page.getByText('Tu plan · 1 semanas',{exact:true})).toHaveCount(0);
+ await page.getByLabel('Contraseña de la copia',{exact:true}).fill('Una clave larga de prueba');await page.getByRole('button',{name:'Recuperar copia y sustituir sesión',exact:true}).click();await expect(page.getByText('Tu plan · 1 semana',{exact:true})).toBeVisible();
+ await page.reload();await expect(page.getByText('Tu plan · 1 semana',{exact:true})).toHaveCount(0);
 });
 test('AI is explicit, excludes personal data and rejects incompatible recipes',async({page})=>{
  let payload:any;await page.route('**/recipes/generate',async r=>{payload=r.request().postDataJSON();await r.fulfill({status:200,json:{recipes:[{...chefLibrary[0],source:{kind:'ai',label:'test'},cuisine:'Española'}]}})});
  await page.goto('./#/plan-semanal');await page.getByLabel('Tipo de cocina',{exact:true}).selectOption('Peruana');await page.getByRole('button',{name:'Crear plan de comidas',exact:true}).click();await expect(page.getByRole('button',{name:'Pedir alternativa con IA',exact:true}).first()).toBeDisabled();await page.getByLabel('Autorizo enviar al servicio de IA',{exact:false}).check();await page.getByRole('button',{name:'Pedir alternativa con IA',exact:true}).first().click();await expect(page.getByRole('alert')).toContainText('no cumple las condiciones');
  expect(payload.request.cuisine).toBe('Peruana');for(const field of ['weight','height','age','sex','maintenance','goal','weights'])expect(payload.request).not.toHaveProperty(field);
 });
+
+ test('legacy unclassified desserts cannot displace classified meals with known nutrition',()=>{
+ const dessert={...chefLibrary[0],id:'aaa-old',title:'Tarta Sacher clásica',recipeKind:undefined};
+ expect(compatible(dessert,options(),'Comida')).toBe(false);
+ const unknown={...chefLibrary[0],id:'aaa-unknown',ingredients:[{name:'mezcla secreta',quantity:100,unit:'g',scalingMode:'linear' as const}]};
+ const plan=makePlan(options(),[dessert,unknown,...chefLibrary]);
+ expect(plan.slots.every(s=>s.recipe?.recipeKind==='dish'&&recipeNutrition(s.recipe,4).kcal!==null)).toBe(true);
+ const capitalized={...chefLibrary[0],ingredients:chefLibrary[0].ingredients.map(i=>({...i,name:i.name.toUpperCase()}))};expect(recipeNutrition(capitalized,4)).toEqual(recipeNutrition(chefLibrary[0],4));
+ });

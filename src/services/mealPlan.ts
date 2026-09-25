@@ -48,11 +48,12 @@ export function validateOptions(o:PlanOptions){
 }
 type Food={basis:string;per100:Partial<Record<typeof NUTRIENTS[number],number>>;gramsPerUnitEstimate?:number;densityEstimate?:number;edibleFractionEstimate:number};
 const foods=foodsJson as Record<string,Food>;
+const foodNames=Object.fromEntries(Object.entries(foods).map(([name,food])=>[normalize(name),food]));
 // Recompute the actual culinary quantities, including rounding, rather than multiplying rounded label values.
 export function recipeNutrition(recipe:Recipe,servings:number):Nutrients {
  const totals:Nutrients={kcal:0,proteinG:0,carbsG:0,fatG:0,fiberG:0};
  for(const i of recipe.ingredients.filter(i=>!i.optional)){
-  const food=foods[i.name];let q=scaleQuantity(i,recipe.baseServings,servings),known=!!food;
+  const food=foodNames[normalize(i.name)];let q=scaleQuantity(i,recipe.baseServings,servings),known=!!food;
   if(food){
    if(i.unit==='unidad') {if(food.gramsPerUnitEstimate)q*=food.gramsPerUnitEstimate;else known=false;}
    else if(i.unit==='ml'&&food.basis!=='100ml'){if(food.densityEstimate)q*=food.densityEstimate;else known=false;}
@@ -80,6 +81,7 @@ const extraAllergens:Record<string,string[]>={
 export const ALLERGENS=['Sin gluten','Sin lácteos','Sin huevo','Sin cacahuete','Sin frutos secos','Sin pescado','Sin crustáceos','Sin moluscos','Sin soja','Sin sésamo','Sin apio','Sin mostaza','Sin altramuces','Sin sulfitos'];
 export function compatible(r:Recipe,o:PlanOptions,meal:Meal){
  if(!r.ingredients.length||r.recipeKind==='cocktail'||r.alcohol)return false;
+ if((meal==='Comida'||meal==='Cena')&&/\b(tarta|tartaleta|bizcocho|brownie|helado|flan|natillas|tiramis[uú]|postre|cocktail|coctel)\b/.test(normalize(r.title)))return false;
  if((meal==='Comida'||meal==='Cena')?(r.recipeKind==='dessert'||!['Comida','Cena','Brunch'].includes(r.mealType)):!([meal,'Brunch'] as string[]).includes(r.mealType))return false;
  if(!matchesChosenCuisine(r.cuisine,o.cuisine)||o.maxMinutes&&r.prepMinutes+r.cookMinutes>o.maxMinutes)return false;
  if(o.style&&normalize(r.style)!==normalize(o.style))return false;
@@ -87,20 +89,20 @@ export function compatible(r:Recipe,o:PlanOptions,meal:Meal){
  const hay=normalize(r.ingredients.map(i=>i.name).join(' '));
  if(o.restrictions.some(a=>extraAllergens[a]?.some(t=>hay.includes(t))))return false;
  // Composite ingredients have no complete allergen declarations: fail closed when an allergy is selected.
- if(o.restrictions.some(a=>ALLERGENS.includes(a))&&(/caldo|salsa|masa|embutido|chorizo|morcilla|surimi|pesto|curry|mayonesa|pan rallado/.test(hay)||r.ingredients.some(i=>!foods[i.name])))return false;
+ if(o.restrictions.some(a=>ALLERGENS.includes(a))&&(/caldo|salsa|masa|embutido|chorizo|morcilla|surimi|pesto|curry|mayonesa|pan rallado/.test(hay)||r.ingredients.some(i=>!foodNames[normalize(i.name)])))return false;
  return true;
 }
 export function chooseRecipe(catalog:Recipe[],o:PlanOptions,meal:Meal,used:string[],exclude?:string):Recipe|undefined {
  const target=o.goal?o.goal.kcal*o.shares[meal]/100:undefined;
  const rank=(r:Recipe)=>{
-  const n=recipeNutrition(r,o.servings);let score=used.filter(id=>id===r.id).length*8;
+  const n=recipeNutrition(r,o.servings);let score=used.filter(id=>id===r.id).length*8+(n.kcal===null?100:0);
   if(target)score+=n.kcal===null?100:Math.abs(n.kcal-target)/target;
   if(o.goal)for(const k of ['proteinG','carbsG','fatG'] as const){const t=o.goal[k];if(t&&n[k]!==null)score+=Math.abs(n[k]!-t*o.shares[meal]/100)/t;}
   if(o.preferred.includes(r.id))score-=.3;
   if(o.likes&&normalize(r.title+' '+r.ingredients.map(i=>i.name).join(' ')).includes(normalize(o.likes)))score-=.2;
   return score;
  };
- return catalog.filter(r=>r.id!==exclude&&compatible(r,o,meal)).map(r=>({r,score:rank(r)})).sort((a,b)=>a.score-b.score||a.r.id.localeCompare(b.r.id))[0]?.r;
+ return catalog.filter(r=>r.id!==exclude&&compatible(r,o,meal)&&(!['Comida','Cena'].includes(meal)||r.recipeKind==='dish')).map(r=>({r,score:rank(r)})).sort((a,b)=>a.score-b.score||a.r.id.localeCompare(b.r.id))[0]?.r;
 }
 export function makePlan(o:PlanOptions,catalog:Recipe[]):Plan {
  validateOptions(o);const slots:PlanSlot[]=[];
