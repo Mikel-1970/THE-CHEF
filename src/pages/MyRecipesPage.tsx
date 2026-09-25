@@ -7,7 +7,7 @@ import { RecipeThumbnail } from '../components/RecipeThumbnail';
 import { useApp } from '../AppContext';
 import { useAiDictation } from '../hooks/useAiDictation';
 import type { CookingRequest, HistoryEntry, Recipe } from '../domain/types';
-import { getHybridProposals } from '../services/hybridRecommendationEngine';
+import { generateDirectRecipe } from '../services/directRecipeGateway';
 import { getAllRecipes, getRecipeById } from '../services/recipeCatalog';
 import '../my-recipes.css';
 import '../voice-input.css';
@@ -50,9 +50,9 @@ export function MyRecipesPage() {
     const request = entry.request ?? buildLegacyRequest(entry, settings.defaultServings, settings.pantryBasics);
     setIsRepeating(true);
     try {
-      const result = await getHybridProposals(request);
-      setSearch(request, result.proposals);
-      navigate('/propuestas');
+      const result = await generateDirectRecipe(request);
+      setSearch(request, [result.proposal]);
+      navigate(`/receta/${result.recipe.id}`);
     } finally {
       setIsRepeating(false);
     }
@@ -72,7 +72,7 @@ export function MyRecipesPage() {
 
   return (
     <AppShell>
-      <ChefLoadingOverlay active={isRepeating} title="Repitiendo búsqueda" messages={['Recuperando tus preferencias…']} />
+      <ChefLoadingOverlay active={isRepeating} title="Preparando tu receta" messages={['Recuperando tus preferencias…','Preparando la receta completa…','Preparando la imagen…']} />
       <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>Recetas guardadas, favoritas e historial de actividad.</p></div>
       <div className="page-content nav-safe"><Link className="secondary-button" to="/consejos">Revisar tips de cocina</Link>
           <div className="library-tabs">
