@@ -9,7 +9,7 @@ export const MEALS = ['Desayuno','Comida','Merienda','Cena'] as const;
 export type Meal = typeof MEALS[number];
 export const NUTRIENTS = ['kcal','proteinG','carbsG','fatG','fiberG'] as const;
 export type Nutrients = Record<typeof NUTRIENTS[number],number|null>;
-export type Goal = {kcal:number; proteinG?:number; carbsG?:number; fatG?:number; origin:string; confirmedAt:string};
+export type Goal = {kcal:number; proteinG?:number; carbsG?:number; fatG?:number; fiberG?:number; origin:string; confirmedAt:string};
 export type Maintenance = {rest:number;low:number;high:number;method:string;calculatedAt:string};
 export type PlanOptions = {weeks:number;servings:number;meals:Meal[];shares:Record<Meal,number>;goal?:Goal;restrictions:string[];cuisine:string;style:string;likes:string;maxMinutes?:number;preferred:string[]};
 export type PlanSlot = {day:number;meal:Meal;recipe?:Recipe};
@@ -39,7 +39,7 @@ export function validateOptions(o:PlanOptions){
  if(o.maxMinutes!==undefined&&!positive(o.maxMinutes))throw Error('Revisa el tiempo disponible.');
  if(o.goal){
   if(!positive(o.goal.kcal)||!['Lo he decidido yo','Me lo ha indicado un profesional','Otro'].includes(o.goal.origin)||!Number.isFinite(Date.parse(o.goal.confirmedAt)))throw Error('Confirma un objetivo energético válido y su origen.');
-  for(const k of ['proteinG','carbsG','fatG'] as const)if(o.goal[k]!==undefined&&(!Number.isFinite(o.goal[k])||o.goal[k]!<0))throw Error('Los macronutrientes deben ser números no negativos.');
+  for(const k of ['proteinG','carbsG','fatG','fiberG'] as const)if(o.goal[k]!==undefined&&(!Number.isFinite(o.goal[k])||o.goal[k]!<0))throw Error('Los macronutrientes deben ser números no negativos.');
   const macroEnergy=(o.goal.proteinG??0)*4+(o.goal.carbsG??0)*4+(o.goal.fatG??0)*9;
   if(macroEnergy>o.goal.kcal*1.05)throw Error('Los macros introducidos superan la energía elegida. Revisa ambos objetivos.');
   const coverage=o.meals.reduce((sum,m)=>sum+o.shares[m],0);

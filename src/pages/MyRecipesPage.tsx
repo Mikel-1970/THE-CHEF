@@ -1,3 +1,4 @@
+import {DISH_CATEGORIES,matchesDishCategory} from '../utils/dishCategories';
 import {chefLibrary} from '../data/library';
 import {CATALOG_EMPTY} from '../services/hybridRecommendationEngine';
 import { Check, Clock3, Heart, Mic, MicOff, Search, Sparkles, Trash2, X } from 'lucide-react';
@@ -44,7 +45,7 @@ export function MyRecipesPage() {
       .map(id => catalog.find(recipe => recipe.id === id))
       .filter((recipe): recipe is Recipe => Boolean(recipe))
       .filter(recipe => !normalizedQuery || recipe.title.toLocaleLowerCase('es').includes(normalizedQuery))
-      .filter(recipe => dishCategory === 'Todos' || (recipe.libraryCategory??inferDishCategory(recipe)) === dishCategory)
+      .filter(recipe => matchesDishCategory(recipe,dishCategory))
       .filter(recipe=>kind==='all'||recipe.recipeKind===kind)
       .filter(recipe=>!cuisine||recipe.cuisine===cuisine)
       .filter(recipe=>alcohol==='all'||recipe.recipeKind==='cocktail'&&recipe.alcohol===(alcohol==='yes'));
@@ -54,7 +55,7 @@ export function MyRecipesPage() {
   const filteredHistory = useMemo(() => history.filter(entry => {
     const date = new Date(entry.createdAt);
     const recipe=entry.recipeId?getRecipeById(entry.recipeId):undefined;
-    if(historyCategory!=='Todos'&&(!recipe||(recipe.libraryCategory??inferDishCategory(recipe))!==historyCategory))return false;
+    if(historyCategory!=='Todos'&&(!recipe||!matchesDishCategory(recipe,historyCategory)))return false;
     if(historyQuery.trim()&&!((recipe?.title??entry.label).toLocaleLowerCase('es').includes(historyQuery.trim().toLocaleLowerCase('es'))))return false;
     if(historyPeriod!=='all'&&date.getTime()<Date.now()-Number(historyPeriod)*86400000)return false;
     if (historyYear !== 'Todos' && String(date.getFullYear()) !== historyYear) return false;
@@ -94,7 +95,7 @@ export function MyRecipesPage() {
     <AppShell>
       <ChefLoadingOverlay active={isRepeating} title="Preparando tu receta" messages={['Recuperando tus preferencias…','Preparando la receta completa…','Preparando la imagen…']} />
       <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>150 recetas y 20 cócteles listos para preparar. Guarda tus favoritos y tus propias versiones.</p></div>
-      <div className="page-content nav-safe">
+      <div className="page-content nav-safe"><button className="secondary-button" onClick={()=>navigate('/importar-receta')}>Importar receta</button>
           <div className="library-tabs">
             <button className={tab === 'library' ? 'active' : ''} onClick={() => setDishTab('library')}>Biblioteca del Chef</button>
             <button className={tab === 'all' ? 'active' : ''} onClick={() => setDishTab('all')}>Mis guardadas</button>
@@ -107,7 +108,7 @@ export function MyRecipesPage() {
             {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
             {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
             {voice.error && <div className="voice-status error">{voice.error}</div>}
-            <div className="library-filters"><label>Tipo<select aria-label="Tipo de receta" value={kind} onChange={e=>{setKind(e.target.value);setDishCategory('Todos');setAlcohol('all')}}><option value="all">Todos</option><option value="dish">Platos</option><option value="dessert">Postres</option><option value="cocktail">Cócteles</option></select></label><label>Cocina<select aria-label="Filtrar por cocina" value={cuisine} onChange={e=>setCuisine(e.target.value)}><option value="">Todas las cocinas</option>{Array.from(new Set(chefLibrary.map(r=>r.cuisine))).sort().map(c=><option key={c}>{c}</option>)}</select></label>{(kind==='cocktail'||dishCategory==='Cócteles')&&<label>Alcohol<select aria-label="Filtrar por alcohol" value={alcohol} onChange={e=>setAlcohol(e.target.value)}><option value="all">Todos</option><option value="yes">Con alcohol</option><option value="no">Sin alcohol</option></select></label>}</div><div className="dish-category-row">{['Todos','Arroces','Pastas','Carnes','Pescados','Guisos','Verduras','Tapas y huevos','Sopas y cremas','Postres','Cócteles','Otros'].map(category => <button type="button" className={dishCategory === category ? 'active' : ''} onClick={() => setDishCategory(category)} key={category}>{category}</button>)}</div>
+            <div className="library-filters"><label>Tipo<select aria-label="Tipo de receta" value={kind} onChange={e=>{setKind(e.target.value);setDishCategory('Todos');setAlcohol('all')}}><option value="all">Todos</option><option value="dish">Platos</option><option value="dessert">Postres</option><option value="cocktail">Cócteles</option></select></label><label>Cocina<select aria-label="Filtrar por cocina" value={cuisine} onChange={e=>setCuisine(e.target.value)}><option value="">Todas las cocinas</option>{Array.from(new Set(chefLibrary.map(r=>r.cuisine))).sort().map(c=><option key={c}>{c}</option>)}</select></label>{(kind==='cocktail'||dishCategory==='Cócteles')&&<label>Alcohol<select aria-label="Filtrar por alcohol" value={alcohol} onChange={e=>setAlcohol(e.target.value)}><option value="all">Todos</option><option value="yes">Con alcohol</option><option value="no">Sin alcohol</option></select></label>}</div><div className="dish-category-row">{DISH_CATEGORIES.map(category => <button type="button" className={dishCategory === category ? 'active' : ''} onClick={() => setDishCategory(category)} key={category}>{category}</button>)}</div>
 
             <section className="library-section">
               <div className="section-heading-row"><div><span className="eyebrow">{tab === 'library' ? 'BIBLIOTECA DEL CHEF' : tab === 'favorites' ? 'FAVORITAS' : 'MIS RECETAS'}</span><h2>{tab==='library'? recipes.length+' recetas disponibles' : recipes.length ? (tab === 'favorites' ? 'Tus imprescindibles' : 'Recetas guardadas') : (tab === 'favorites' ? 'Todavía no hay favoritas' : 'Todavía no has guardado ninguna receta')}</h2></div><Heart size={20} /></div>
@@ -129,7 +130,7 @@ export function MyRecipesPage() {
             <div className="section-heading-row"><div><span className="eyebrow">HISTORIAL</span><h2>Actividad reciente</h2></div></div>
             <div className="search-box"><Search size={18}/><input aria-label="Buscar en el historial" placeholder="Buscar en el historial…" value={historyQuery} onChange={e=>setHistoryQuery(e.target.value)}/></div>
             <div className="history-filter-row">
-              <label>Comida<select aria-label="Comida del historial" value={historyCategory} onChange={e=>setHistoryCategory(e.target.value)}>{['Todos','Arroces','Pastas','Carnes','Pescados','Guisos','Verduras','Tapas y huevos','Sopas y cremas','Postres','Cócteles','Otros'].map(c=><option key={c}>{c}</option>)}</select></label>
+              <label>Comida<select aria-label="Comida del historial" value={historyCategory} onChange={e=>setHistoryCategory(e.target.value)}>{DISH_CATEGORIES.map(c=><option key={c}>{c}</option>)}</select></label>
               <label>Periodo<select aria-label="Periodo del historial" value={historyPeriod} onChange={e=>{setHistoryPeriod(e.target.value);setHistoryYear('Todos');setHistoryMonth('Todos')}}><option value="all">Cualquier fecha</option><option value="7">Últimos 7 días</option><option value="30">Últimos 30 días</option><option value="90">Últimos 3 meses</option></select></label>
               <label><span>Año</span><select value={historyYear} onChange={event => {setHistoryYear(event.target.value);setHistoryPeriod('all')}}><option value="Todos">Todos</option>{historyYears.map(year => <option value={year} key={year}>{year}</option>)}</select></label>
               <label><span>Mes</span><select value={historyMonth} onChange={event => {setHistoryMonth(event.target.value);setHistoryPeriod('all')}}><option value="Todos">Todos</option>{MONTHS.slice(1).map((month, index) => <option value={String(index + 1)} key={month}>{month}</option>)}</select></label>
@@ -156,15 +157,4 @@ export function MyRecipesPage() {
 function buildLegacyRequest(entry: HistoryEntry, servings: number, pantryBasics: string[]): CookingRequest {
   if (entry.mode === 'pantry') return { mode: 'pantry', servings, maxMinutes: 60, pantryIngredients: entry.label.split(',').map(name => ({ name: name.trim() })).filter(item => item.name), pantryBasics };
   return { mode: 'desire', servings, maxMinutes: 60, desireText: entry.label };
-}
-
-function inferDishCategory(recipe: Recipe) {
-  const text = `${recipe.title} ${recipe.ingredients.map(item => item.name).join(' ')}`.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  if (/arroz|paella|risotto/.test(text)) return 'Arroces';
-  if (/pasta|espagueti|macarron|tallarin|lasana|ravioli/.test(text)) return 'Pastas';
-  if (/pollo|ternera|cerdo|cordero|carne|pavo/.test(text)) return 'Carnes';
-  if (/pescado|lubina|salmon|merluza|bacalao|atun|dorada|marisco/.test(text)) return 'Pescados';
-  if (/guiso|cocido|estofado|potaje|lenteja|garbanzo/.test(text)) return 'Guisos';
-  if (/postre|tarta|bizcocho|crema|helado|chocolate/.test(text)) return 'Postres';
-  return 'Otros';
 }

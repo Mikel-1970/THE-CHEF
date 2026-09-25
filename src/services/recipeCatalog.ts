@@ -191,6 +191,9 @@ function normalizeStoredRecipe(value: unknown): Recipe | undefined {
     storage: text(value.storage) ?? '',
     imageOrigin: value.imageOrigin === 'user-photo' ? 'user-photo' : undefined,
     nutritionPerServing: nutrition,
+    nutritionStatus: value.nutritionStatus === 'unavailable' ? 'unavailable' : value.nutritionStatus === 'estimated' ? 'estimated' : undefined,
+    recipeKind: value.recipeKind==='dish'||value.recipeKind==='dessert'||value.recipeKind==='cocktail'?value.recipeKind:undefined,
+    libraryCategory: text(value.libraryCategory),
     source: normalizeStoredSource(value.source), techniqueIds: strings(value.techniqueIds)
   };
 }

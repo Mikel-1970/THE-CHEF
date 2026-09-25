@@ -5,3 +5,5 @@
 .social-share-preview{display:block;width:auto;max-width:100%;height:auto;max-height:420px;justify-self:center;border-radius:16px}
 .social-caption{display:grid;gap:8px}.social-caption textarea{width:100%;resize:vertical;min-height:130px;padding:12px;border:1px solid #dedccd;border-radius:12px;font:inherit;font-size:.85rem;background:var(--paper,#fffaf1);color:inherit}
 .social-share-actions{display:grid;gap:10px}.recipe-social-launch{grid-column:1/-1}
+
+.social-network-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.social-network-options button[aria-pressed=true]{outline:2px solid var(--forest);outline-offset:1px}

@@ -24,7 +24,7 @@ export async function getRecipeImage(recipe: Recipe): Promise<string | undefined
   try { source = sessionStorage.getItem(`chef:source-photo:${recipe.id}`) || undefined; } catch { /* almacenamiento restringido */ }
   source ??= await getRecipeSourcePhoto(recipe.id).catch(() => undefined);
   if (source) return source;
-  if (recipe.imageOrigin === 'user-photo') return undefined;
+  if (recipe.imageOrigin === 'user-photo'||recipe.id.startsWith('import-')) return undefined;
   const staticImage=libraryImage(recipe.id);
   if(staticImage)return staticImage;
   const cacheKey = imageRequest(recipe.id);

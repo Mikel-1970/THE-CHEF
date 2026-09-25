@@ -4,7 +4,7 @@
   "version": "1.0.0-rc2",
   "type": "module",
   "scripts": {
-    "test:preview": "playwright test tests/preview-consolidation.spec.ts tests/technique-library.spec.ts tests/step-timer.spec.ts tests/welcome.spec.ts tests/library-grid.spec.ts tests/catalog-share.spec.ts tests/technique-stock.spec.ts tests/shopping-return.spec.ts tests/global-timer.spec.ts tests/chef-choice.spec.ts tests/chef-library.spec.ts tests/review-feedback.spec.ts tests/social-share.spec.ts tests/meal-plan.spec.ts",
+    "test:preview": "playwright test tests/preview-consolidation.spec.ts tests/technique-library.spec.ts tests/step-timer.spec.ts tests/welcome.spec.ts tests/library-grid.spec.ts tests/catalog-share.spec.ts tests/technique-stock.spec.ts tests/shopping-return.spec.ts tests/global-timer.spec.ts tests/chef-choice.spec.ts tests/chef-library.spec.ts tests/review-feedback.spec.ts tests/social-share.spec.ts tests/meal-plan.spec.ts tests/dish-categories.spec.ts tests/recipe-import.spec.ts",
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "audit:phase1": "node scripts/phase1-audit.mjs",
@@ -18,9 +18,12 @@
     "jose": "6.2.12",
     "jspdf": "^4.2.1",
     "lucide-react": "^0.468.0",
+    "mammoth": "^1.12.3",
+    "pdfjs-dist": "^6.3.289",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.1.1"
+    "react-router-dom": "^7.1.1",
+    "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
