@@ -130,6 +130,7 @@ function fromRecipe(recipe: Record<string, any>): Technique {
     timeMinutes: Math.max(1, prep + cook),
     difficulty: recipe.difficulty === 'Media' || recipe.difficulty === 'Avanzada' ? recipe.difficulty : 'Fácil',
     equipment: strings(recipe.miseEnPlace),
+    miseEnPlace: strings(recipe.miseEnPlace),
     ingredients: Array.isArray(recipe.ingredients) ? recipe.ingredients.filter(isRecord).map(item => ({
       name: text(item.name),
       quantity: finiteNumber(item.quantity),
