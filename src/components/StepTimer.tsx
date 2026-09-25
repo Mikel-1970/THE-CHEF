@@ -142,7 +142,7 @@ export function StepTimer({
   };
 
   const reset=()=>{
-    const base=configured||suggestedSeconds||0;
+    const base=configured;
     cancelScheduled(timerId);
     firedAlarms.delete(timerId);
     setRemaining(base);
