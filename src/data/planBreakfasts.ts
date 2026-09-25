@@ -1,0 +1,11 @@
+import type {Recipe} from '../domain/types';
+// Simple culinary additions. Nutrition is computed from the existing attributed ingredient table.
+const entries:[string,string,[string,number,string][],string[]][]=[
+ ['tostada-tomate','Tostada de tomate y aceite',[['pan',70,'g'],['tomate rallado',100,'g'],['aceite de oliva',8,'g']],['Tuesta el pan.','Reparte el tomate rallado y termina con el aceite de oliva.']],
+ ['yogur-manzana','Yogur con manzana',[['yogur natural',200,'g'],['manzana',150,'g']],['Lava la manzana, retira el corazón y córtala en dados.','Sirve la manzana con el yogur natural.']],
+ ['huevo-tostada','Huevo con tostada y tomate',[['huevo',1,'unidad'],['pan',60,'g'],['tomate',100,'g'],['aceite de oliva',5,'g']],['Lava y corta el tomate. Tuesta el pan.','Cuaja el huevo completamente en una sartén con el aceite. Sirve con el pan y el tomate.']],
+ ['pan-yogur','Pan con yogur y manzana',[['pan',50,'g'],['yogur natural',125,'g'],['manzana',120,'g']],['Lava y trocea la manzana sin el corazón.','Tuesta el pan y sirve con el yogur y la fruta.']],
+ ['tostada-queso','Tostada de queso y tomate',[['pan',60,'g'],['queso fresco',60,'g'],['tomate',100,'g']],['Lava y corta el tomate.','Tuesta el pan y coloca encima el queso fresco y el tomate.']],
+ ['manzana-leche','Manzana, leche y tostada',[['manzana',150,'g'],['leche',200,'ml'],['pan',50,'g']],['Lava y trocea la manzana retirando el corazón.','Tuesta el pan y sirve con la leche.']]
+];
+export const planBreakfasts:Recipe[]=entries.map(([id,title,ingredients,steps])=>({id:'plan-'+id,title,description:'Preparación sencilla para desayuno o merienda.',emoji:'🍽️',baseServings:1,prepMinutes:5,cookMinutes:5,difficulty:'Fácil',mealType:'Brunch',style:'Casera',cuisine:'Española',recipeKind:'dish',ingredients:ingredients.map(([name,quantity,unit])=>({name,quantity,unit,scalingMode:'linear'})),miseEnPlace:['Prepara y pesa los ingredientes.'],steps:steps.map((instruction,i)=>({number:i+1,instruction})),criticalPoints:['Comprueba las etiquetas y posibles trazas si tienes alergias.'],substitutions:[],storage:'Preparar preferentemente para consumir en el momento.',nutritionStatus:'unavailable',source:{kind:'local',label:'Preparaciones del plan de comidas'}}));

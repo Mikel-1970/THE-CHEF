@@ -5,6 +5,7 @@ import { loadActiveSearch, loadFavorites, loadHistory, loadSavedRecipes, loadSet
 
 interface AppState {
   currentRequest: CookingRequest | null; proposals: Proposal[]; favorites: string[]; savedRecipes: string[]; history: HistoryEntry[]; settings: AppSettings; shoppingList: ShoppingListItem[];
+  replacePlanShopping: (items: ShoppingListItem[]) => void;
   setSearch: (request: CookingRequest, proposals: Proposal[]) => void; replaceProposals: (proposals: Proposal[]) => void; toggleFavorite: (recipeId: string) => void; toggleSavedRecipe: (recipeId: string) => void; recordRecipeView: (recipeId: string, recipeTitle: string) => void; removeHistoryEntry: (entryId: string) => void; removeRecipeFromLibrary: (recipeId: string) => void; updateSettings: (next: Partial<AppSettings>) => void; upsertShoppingItem: (item: ShoppingListItem) => void; removeShoppingItem: (id: string) => void; toggleShoppingItem: (id: string) => void; clearShoppingList: () => void;
 }
 const AppContext = createContext<AppState | null>(null);
@@ -55,7 +56,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setShoppingList(current => {
       const exactIndex = current.findIndex(entry => entry.id === item.id);
       if (exactIndex >= 0) { const next = [...current]; next[exactIndex] = { ...current[exactIndex], ...item }; saveShoppingList(next); return next; }
-      const sameNameIndex = current.findIndex(entry => normalize(entry.name) === normalize(item.name));
+      const sameNameIndex = current.findIndex(entry => !entry.id.startsWith('meal-plan:') && normalize(entry.name) === normalize(item.name));
       if (sameNameIndex >= 0) {
         const existing = current[sameNameIndex], compatibleUnits = !existing.unit || !item.unit || normalize(existing.unit) === normalize(item.unit), canSum = compatibleUnits && existing.quantity !== undefined && item.quantity !== undefined, existingIsManual = !existing.recipeId || existing.id.startsWith('manual:');
         const nextItem: ShoppingListItem = { ...existing, ...item, id: existing.id, quantity: canSum ? existing.quantity! + item.quantity! : (item.quantity ?? existing.quantity), unit: item.unit ?? existing.unit, category: item.category ?? existing.category, checked: false, recipeId: existingIsManual ? undefined : (existing.recipeId === item.recipeId ? existing.recipeId : item.recipeId), recipeTitle: existingIsManual ? undefined : (existing.recipeTitle === item.recipeTitle ? existing.recipeTitle : item.recipeTitle) };
@@ -66,9 +67,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
   const removeShoppingItem = (id: string) => setShoppingList(current => { if (!current.some(item => item.id === id)) return current; const next = current.filter(item => item.id !== id); saveShoppingList(next); return next; });
   const toggleShoppingItem = (id: string) => setShoppingList(current => { const next = current.map(item => item.id === id ? { ...item, checked: !item.checked } : item); saveShoppingList(next); return next; });
+  const replacePlanShopping = (items: ShoppingListItem[]) => setShoppingList(current => { const next = [...current.filter(i => !i.id.startsWith('meal-plan:')), ...items.map(normalizeShoppingItem)]; saveShoppingList(next); return next; });
   const clearShoppingList = () => { setShoppingList([]); saveShoppingList([]); };
 
-  const value = useMemo(() => ({ currentRequest, proposals, favorites, savedRecipes, history, settings, shoppingList, setSearch, replaceProposals, toggleFavorite, toggleSavedRecipe, recordRecipeView, removeHistoryEntry, removeRecipeFromLibrary, updateSettings, upsertShoppingItem, removeShoppingItem, toggleShoppingItem, clearShoppingList }), [currentRequest, proposals, favorites, savedRecipes, history, settings, shoppingList]);
+  const value = useMemo(() => ({ currentRequest, proposals, favorites, savedRecipes, history, settings, shoppingList, setSearch, replaceProposals, toggleFavorite, toggleSavedRecipe, recordRecipeView, removeHistoryEntry, removeRecipeFromLibrary, updateSettings, upsertShoppingItem, removeShoppingItem, toggleShoppingItem, clearShoppingList, replacePlanShopping }), [currentRequest, proposals, favorites, savedRecipes, history, settings, shoppingList]);
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
 export function useApp() { const ctx = useContext(AppContext); if (!ctx) throw new Error('useApp must be used inside AppProvider'); return ctx; }

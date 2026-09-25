@@ -15,6 +15,7 @@ const COMMON:Record<string,Partial<Record<AppLanguage,string>>>={
  "Técnicas y tips":{"es": "Técnicas y tips", "en": "Techniques and tips"},
  "Favoritos":{"es": "Favoritos", "en": "Favorites"},
  "Qué cocinar":{"es": "Qué cocinar", "en": "What to cook"},
+ "Mi plan de comidas":{"es":"Mi plan de comidas","en":"My meal plan"},
  "Mi plan semanal":{"es": "Mi plan semanal", "en": "My weekly plan"},
  "Lista de la compra":{"es": "Lista de la compra", "en": "Shopping list"},
  "Perfil y ajustes":{"es": "Perfil y ajustes", "en": "Profile and settings"},
