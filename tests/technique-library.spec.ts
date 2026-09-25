@@ -44,8 +44,8 @@ test('master technique content is specific and teachable',()=>{
 
   const boil=techniqueMaster.find(item=>item.title==='Hervir');
   expect(boil).toBeTruthy();
-  expect(boil?.steps.join(' ')).toContain('ebullición');
-  expect(boil?.steps.join(' ')).toContain('hervor');
+  expect(boil?.steps.map(step=>step.instruction).join(' ')).toContain('ebullición');
+  expect(boil?.steps.map(step=>step.instruction).join(' ')).toContain('hervor');
   expect(boil?.ingredients.length).toBeGreaterThanOrEqual(2);
   expect(boil?.miseEnPlace?.join(' ')).toContain('olla');
 });
