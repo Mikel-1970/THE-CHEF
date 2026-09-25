@@ -9,7 +9,7 @@ import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
 import type { CookingRequest } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
-import { getHybridProposals } from '../services/hybridRecommendationEngine';
+import { generateDirectRecipe } from '../services/directRecipeGateway';
 import { interpretDesireText } from '../services/requestInterpreter';
 import '../voice-input.css';
 import '../visual-controls.css';
@@ -27,11 +27,11 @@ export function DesirePage() {
   const parsed=interpretDesireText(text);
   const request:CookingRequest={mode:'desire',desireText:text.trim(),...cookingRequestOptions(options.value),servings:options.touched.has('servings')?options.value.servings:parsed.servings??options.value.servings,maxMinutes:options.touched.has('maxMinutes')?options.value.maxMinutes:parsed.maxMinutes??options.value.maxMinutes,style:options.value.style??parsed.style,cuisine:options.value.cuisine??parsed.cuisine,difficulty:options.value.difficulty??parsed.difficulty,aiPreference:settings.aiPreference,pantryPolicy:'ignore'};
   setBusy(true);setError('');
-  try{const result=await getHybridProposals(request);setSearch(request,result.proposals.slice(0,1));navigate('/propuestas')}
-  catch(e){setError(e instanceof Error?e.message:'No se ha podido preparar la propuesta.')}
+  try{const result=await generateDirectRecipe(request);setSearch(request,[result.proposal]);navigate(`/receta/${result.recipe.id}`)}
+  catch(e){setError(e instanceof Error?e.message:'No se ha podido preparar la receta.')}
   finally{setBusy(false)}
  };
- return <AppShell><ChefLoadingOverlay active={busy} title="Preparando tu propuesta" messages={['Buscando el plato que mejor encaja…']}/>
+ return <AppShell><ChefLoadingOverlay active={busy} title="Preparando tu receta" messages={['Eligiendo el plato que mejor encaja…','Preparando la receta completa…','Revisando cantidades y elaboración…','Preparando la imagen…']}/>
   <TopBar title="¿Qué quieres que te prepare?"/>
   <div className="page-content desire-visual">
    <p className="visual-hint">Con una frase basta.</p>
@@ -48,7 +48,7 @@ export function DesirePage() {
    {!voice.isSupported&&<p className="voice-status">El dictado no está disponible en este navegador. Puedes escribir.</p>}
    <CookingOptions value={options.value} onChange={options.change}/>
    {error&&<p role="alert" className="voice-status error">{error}</p>}
-   <div className="visual-generate"><PrimaryButton onClick={()=>void search()} disabled={!confirmed||busy||voice.isListening||voice.isTranscribing}>{busy?'Preparando…':'Generar propuesta'}</PrimaryButton></div>
+   <div className="visual-generate"><PrimaryButton onClick={()=>void search()} disabled={!confirmed||busy||voice.isListening||voice.isTranscribing}>{busy?'Preparando…':'Generar receta'}</PrimaryButton></div>
   </div>
  </AppShell>
 }
