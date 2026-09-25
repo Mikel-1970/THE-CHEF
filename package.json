@@ -4,7 +4,7 @@
   "version": "1.0.0-rc2",
   "type": "module",
   "scripts": {
-    "test:preview": "playwright test tests/preview-consolidation.spec.ts tests/technique-library.spec.ts tests/step-timer.spec.ts tests/welcome.spec.ts tests/library-grid.spec.ts tests/catalog-share.spec.ts tests/technique-stock.spec.ts tests/shopping-return.spec.ts tests/global-timer.spec.ts",
+    "test:preview": "playwright test tests/preview-consolidation.spec.ts tests/technique-library.spec.ts tests/step-timer.spec.ts tests/welcome.spec.ts tests/library-grid.spec.ts tests/catalog-share.spec.ts tests/technique-stock.spec.ts tests/shopping-return.spec.ts tests/global-timer.spec.ts tests/chef-choice.spec.ts",
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "audit:phase1": "node scripts/phase1-audit.mjs",

@@ -1,3 +1,4 @@
+import {CUISINE_REQUIRED,prepareDesireRequest} from '../utils/chefChoice';
 import { CookingOptions, useCookingOptions, cookingRequestOptions } from '../components/CookingOptions';
 import { Check, Mic, MicOff, X } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -23,9 +24,10 @@ export function DesirePage() {
  const ignoreVoice=useRef(false);
  const voice=useAiDictation(value=>{if(ignoreVoice.current){ignoreVoice.current=false;return}setText(value.trim());setConfirmed(false)});
  const search=async()=>{
-  if(busy||voice.isListening||voice.isTranscribing||!confirmed||!text.trim())return;
+  if(busy||voice.isListening||voice.isTranscribing||(!confirmed&&Boolean(text.trim())))return;
   const parsed=interpretDesireText(text);
   const request:CookingRequest={mode:'desire',desireText:text.trim(),...cookingRequestOptions(options.value),servings:options.touched.has('servings')?options.value.servings:parsed.servings??options.value.servings,maxMinutes:options.touched.has('maxMinutes')?options.value.maxMinutes:parsed.maxMinutes??options.value.maxMinutes,style:options.value.style??parsed.style,cuisine:options.value.cuisine??parsed.cuisine,difficulty:options.value.difficulty??parsed.difficulty,aiPreference:settings.aiPreference,pantryPolicy:'ignore'};
+  try{prepareDesireRequest(request)}catch(e){setError(e instanceof Error?e.message:CUISINE_REQUIRED);return;}
   setBusy(true);setError('');
   try{const result=await generateDirectRecipe(request);setSearch(request,[result.proposal]);navigate(`/receta/${result.recipe.id}`)}
   catch(e){setError(e instanceof Error?e.message:'No se ha podido preparar la receta.')}
@@ -34,7 +36,7 @@ export function DesirePage() {
  return <AppShell><ChefLoadingOverlay active={busy} title="Preparando tu receta" messages={['Eligiendo el plato que mejor encaja…','Preparando la receta completa…','Revisando cantidades y elaboración…','Preparando la imagen…']}/>
   <TopBar title="¿Qué quieres que te prepare?"/>
   <div className="page-content desire-visual">
-   <p className="visual-hint">Con una frase basta.</p>
+   <p className="visual-hint">Pide un plato o deja que el chef elija según el tipo de cocina.</p>
    <div className={`visual-request ${confirmed?'confirmed':''}`}>
     <textarea aria-label="Tu petición" rows={4} placeholder="Escribe qué te apetece…" value={text} disabled={voice.isListening||voice.isTranscribing} onChange={e=>{setText(e.target.value);setConfirmed(false)}}/>
     <div className="visual-voice-actions">
@@ -46,9 +48,9 @@ export function DesirePage() {
    <div className="visual-status" role="status">{voice.isListening?'Escuchando… pulsa el micrófono para parar.':voice.isTranscribing?'Transcribiendo…':confirmed?'Petición confirmada.':''}</div>
    {voice.error&&<p role="alert" className="voice-status error">{voice.error}</p>}
    {!voice.isSupported&&<p className="voice-status">El dictado no está disponible en este navegador. Puedes escribir.</p>}
-   <CookingOptions value={options.value} onChange={options.change}/>
+   <CookingOptions value={options.value} onChange={patch=>{options.change(patch);setError('')}} expanded={error===CUISINE_REQUIRED}/>
    {error&&<p role="alert" className="voice-status error">{error}</p>}
-   <div className="visual-generate"><PrimaryButton onClick={()=>void search()} disabled={!confirmed||busy||voice.isListening||voice.isTranscribing}>{busy?'Preparando…':'Generar receta'}</PrimaryButton></div>
+   <div className="visual-generate"><PrimaryButton onClick={()=>void search()} disabled={(!confirmed&&Boolean(text.trim()))||busy||voice.isListening||voice.isTranscribing}>{busy?'Preparando…':'Generar receta'}</PrimaryButton></div>
   </div>
  </AppShell>
 }

@@ -1,3 +1,4 @@
+import {prepareDesireRequest} from '../utils/chefChoice';
 import type { CookingRequest, Proposal } from '../domain/types';
 import { proposalMatchesDesireIntent } from '../utils/desireIntent';
 import { fetchAiProposals, isAiProposalApiConfigured } from './aiProposalGateway';
@@ -15,6 +16,7 @@ export type HybridRecommendationResult={
 };
 
 export async function getHybridProposals(request:CookingRequest,excludeRecipeIds:string[]=[]):Promise<HybridRecommendationResult>{
+ request=prepareDesireRequest(request);
  const preference=Math.max(0,Math.min(100,request.aiPreference??100));
  const aiCount=Math.max(0,Math.min(PROPOSAL_COUNT,Math.round(preference/100)));
  const localCount=PROPOSAL_COUNT-aiCount;

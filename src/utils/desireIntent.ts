@@ -1,3 +1,4 @@
+import {isChefChoice,matchesChosenCuisine,desireFoodText} from './chefChoice';
 import type { CookingRequest, Proposal, Recipe } from '../domain/types';
 
 const STOP=new Set([
@@ -22,6 +23,7 @@ const GROUPS=[
 ].map(group=>group.map(root));
 
 export function recipeMatchesDesireIntent(recipe:Recipe,request:CookingRequest){
+ if(isChefChoice(request)&&!matchesChosenCuisine(recipe.cuisine,request.cuisine))return false;
  return textMatchesDesireIntent([
   recipe.title,recipe.description,recipe.cuisine,recipe.style,recipe.mealType,
   ...recipe.ingredients.map(item=>item.name)
@@ -36,8 +38,8 @@ export function proposalMatchesDesireIntent(proposal:Proposal,request:CookingReq
 }
 
 export function textMatchesDesireIntent(candidateText:string,request:CookingRequest){
- if(request.mode!=='desire')return true;
- const query=(request.desireText??'').split('\n')[0].trim();
+ if(request.mode!=='desire'||isChefChoice(request))return true;
+ const query=desireFoodText(request);
  if(!query)return true;
  const required=[...concepts(query,true)];
  if(!required.length)return true;
