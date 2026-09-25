@@ -11,8 +11,9 @@ export function TechniqueThumbnail({ technique, eager=false }: { technique: Tech
   const host=useRef<HTMLDivElement>(null);
   const [visible,setVisible]=useState(eager);
   const staticEntry=useMemo(()=>staticItems[technique.id],[technique.id]);
-  const staticThumbUrl=staticEntry?import.meta.env.BASE_URL+staticEntry.thumb:undefined;
-  const staticDetailUrl=staticEntry?import.meta.env.BASE_URL+staticEntry.detail:undefined;
+  const resolveStatic=(value?:string)=>!value?undefined:/^https?:\/\//i.test(value)?value:import.meta.env.BASE_URL+value;
+  const staticThumbUrl=resolveStatic(staticEntry?.thumb);
+  const staticDetailUrl=resolveStatic(staticEntry?.detail);
   const staticUrl=staticThumbUrl;
   const [url,setUrl]=useState<string|undefined>(staticThumbUrl);
   const [failed,setFailed]=useState(false);
