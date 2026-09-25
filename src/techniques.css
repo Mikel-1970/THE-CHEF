@@ -284,3 +284,8 @@
 }
 
 .technique-return-actions{display:flex;flex-wrap:wrap;gap:8px}.technique-return-actions button{flex:1;min-height:44px}
+
+.technique-critical-groups{display:grid;gap:20px}
+.technique-critical-groups section{display:grid;gap:10px}
+.technique-critical-groups h3{margin:0;color:#334525;font-family:'Playfair Display',Georgia,serif;font-size:1.05rem}
+.technique-critical-groups .expanded-list{margin:0}
