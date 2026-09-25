@@ -9,7 +9,7 @@ import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
 import type { CookingRequest, IngredientInput, StockLocation } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
-import { getHybridProposals } from '../services/hybridRecommendationEngine';
+import { generateDirectRecipe } from '../services/directRecipeGateway';
 import { identifyPantryPhoto } from '../services/pantryPhotoGateway';
 import { parseIngredientInput } from '../utils/ingredientInput';
 import { inferStockLocation } from '../utils/stockLocation';
@@ -56,11 +56,11 @@ export function PantryCookPage() {
   if(!selectedItems.length||searching||analysing)return;setSearching(true);setError('');
   const available=selectedItems.map(i=>({...i,priority:selected.has(normalize(i.name))}));
   const request:CookingRequest={mode:'pantry',...cookingRequestOptions(options.value),pantryIngredients:available,pantryBasics:settings.pantryBasics,pantryPolicy:'prioritize',aiPreference:settings.aiPreference};
-  try{const result=await getHybridProposals(request);setSearch(request,result.proposals.slice(0,1));navigate('/propuestas')}
-  catch(e){setError(e instanceof Error?e.message:'No se ha podido preparar la propuesta.')}
+  try{const result=await generateDirectRecipe(request);setSearch(request,[result.proposal]);navigate(`/receta/${result.recipe.id}`)}
+  catch(e){setError(e instanceof Error?e.message:'No se ha podido preparar la receta.')}
   finally{setSearching(false)}
  };
- return <AppShell><ChefLoadingOverlay active={searching} title="Preparando tu propuesta" messages={['Cocinando con lo que tienes…']}/><TopBar title="Abre la despensa"/>
+ return <AppShell><ChefLoadingOverlay active={searching} title="Preparando tu receta" messages={['Cocinando con lo que tienes…','Preparando la receta completa…','Revisando cantidades y elaboración…','Preparando la imagen…']}/><TopBar title="Abre la despensa"/>
   <div className="page-content pantry-cook-visual">
    <p className="visual-hint">Elige los ingredientes con los que quieres cocinar.</p>
    <div className="pantry-source-tabs" aria-label="Ver inventario">
@@ -81,7 +81,7 @@ export function PantryCookPage() {
    <div className="pantry-selection-summary" role="status"><strong>{selectedItems.length} elegidos</strong><span>{selectedItems.map(i=>i.name).join(' · ')}</span></div>
 
    {(error||voice.error)&&<p className="voice-status error" role="alert">{error||voice.error}</p>}
-   <div className="visual-generate"><PrimaryButton onClick={()=>void search()} disabled={!selectedItems.length||searching||analysing||candidates.length>0}>{searching?'Preparando…':'Generar propuesta'}</PrimaryButton></div>
+   <div className="visual-generate"><PrimaryButton onClick={()=>void search()} disabled={!selectedItems.length||searching||analysing||candidates.length>0}>{searching?'Preparando…':'Generar receta'}</PrimaryButton></div>
   </div>
  </AppShell>
 }
