@@ -7,6 +7,7 @@ test('photo library has two columns, favorites and recipe navigation',async({pag
  await expect(page.locator('.library-photo-card')).toHaveCount(2);await expect(page.locator('.library-photo-card img')).toHaveCount(2);
  const boxes=await page.locator('.library-photo-card').evaluateAll(es=>es.map(e=>({x:e.getBoundingClientRect().x,y:e.getBoundingClientRect().y})));expect(boxes[0].y).toBe(boxes[1].y);expect(boxes[1].x).toBeGreaterThan(boxes[0].x);
  await page.screenshot({path:info.outputPath('library.png'),fullPage:true});
- await page.locator('.library-photo-heart').first().click();await page.getByRole('button',{name:'Favoritas',exact:true}).click();await expect(page.locator('.library-photo-card')).toHaveCount(1);
+ await page.locator('.library-photo-heart').first().click();await page.getByRole('button',{name:'Favoritos',exact:true}).click();await expect(page.locator('.library-photo-card')).toHaveCount(1);
  await page.locator('.library-photo-open').click();await expect(page).toHaveURL(/receta\/arroz-pollo-calabacin$/);
 });
+
