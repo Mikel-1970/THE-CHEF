@@ -7,17 +7,37 @@ import {mockRecipes} from '../src/data/mockRecipes';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 
+test('chef additions are attributed domestic adaptations with separate baking categories',()=>{
+ const added=chefLibrary.filter(r=>Number(r.id.slice(4))>=171);
+ expect(added).toHaveLength(10);
+ expect(added.filter(r=>r.libraryCategory==='Alta cocina')).toHaveLength(6);
+ expect(added.filter(r=>r.libraryCategory==='Bizcochos, muffins y donuts')).toHaveLength(4);
+ for(const r of added){expect(r.source?.kind).toBe('web');expect(r.source?.adapted).toBe(true);expect(new URL(r.source!.url!).protocol).toBe('https:');expect(r.nutritionPerServing!.kcal).toBeGreaterThan(0);}
+});
+
+test('haute cuisine can be found by chef and opens its published source without AI',async({page})=>{
+ await page.route('**/*',r=>new URL(r.request().url()).hostname==='127.0.0.1'?r.continue():r.abort());
+ await page.goto('./#/mis-recetas');
+ await page.getByRole('button',{name:'Alta cocina',exact:true}).click();
+ await expect(page.locator('.library-photo-card')).toHaveCount(6);
+ await page.getByPlaceholder('Buscar recetas y cócteles…').fill('berASategui');
+ await expect(page.locator('.library-photo-card')).toHaveCount(1);
+ await page.getByRole('button',{name:'Abrir Crema de coliflor y mascarpone',exact:true}).click();
+ await expect(page.locator('.recipe-source-note')).toContainText('Martín Berasategui');
+ await expect(page.getByRole('link',{name:'Ver fuente'})).toHaveAttribute('href','https://www.lavozdegalicia.es/xlsemanal/gastronomia/recetas/crema-coliflor-martin-berasategui.html');
+});
+
 test('every library item has a distinct lightweight thumbnail and detail image',()=>{
  const hashes=new Set<string>();
  for(const recipe of chefLibrary){for(const suffix of ['','_min']){const bytes=fs.readFileSync(`public/library/${recipe.id}${suffix}.webp`);expect(bytes.subarray(0,4).toString()).toBe('RIFF');expect(bytes.subarray(8,12).toString()).toBe('WEBP');expect(bytes.length).toBeGreaterThan(1000);expect(bytes.length).toBeLessThan(suffix?60000:220000);hashes.add(createHash('sha256').update(bytes).digest('hex'));}}
- expect(hashes.size).toBe(340);
+ expect(hashes.size).toBe(chefLibrary.length*2);
 });
 
-test('catalog contains 150 complete recipes and 20 cocktails with unique instructions',()=>{
- expect(chefLibrary).toHaveLength(170);expect(new Set(chefLibrary.map(r=>r.id)).size).toBe(170);
- expect(new Set(chefLibrary.map(r=>r.steps.map(s=>s.instruction).join(' '))).size).toBe(170);
+test('catalog contains 160 complete recipes and 20 cocktails with unique instructions',()=>{
+ expect(chefLibrary).toHaveLength(180);expect(new Set(chefLibrary.map(r=>r.id)).size).toBe(180);
+ expect(new Set(chefLibrary.map(r=>r.steps.map(s=>s.instruction).join(' '))).size).toBe(180);
  expect(chefLibrary.filter(r=>r.recipeKind==='cocktail')).toHaveLength(20);
- expect(chefLibrary.filter(r=>r.cuisine==='Española')).toHaveLength(80);
+ expect(chefLibrary.filter(r=>r.cuisine==='Española')).toHaveLength(85);
  expect(chefLibrary.filter(r=>r.cuisine==='Italiana')).toHaveLength(15);
  for(const recipe of chefLibrary){expect(validateRecipe(recipe).errors,recipe.title).toEqual([]);expect(recipe.steps.length).toBeGreaterThanOrEqual(4);expect(recipe.ingredients.length).toBeGreaterThan(1);expect(recipe.nutritionStatus).toBe('estimated');expect(recipe.nutritionPerServing!.kcal).toBeGreaterThan(0);}
 });
@@ -33,15 +53,36 @@ test('catalog selection respects cuisine, limits, exclusions and unknown dishes'
  expect(recipeViolatesRestrictions(chefLibrary.find(r=>r.title==='Palak paneer')!,['Sin lácteos'])).toBeTruthy();
 });
 test.beforeEach(async({page})=>{await page.addInitScript(()=>{for(const key of ['chef:auth:session:v1','chef:entry-tutorial:seen-session:v1','chef:tutorial:invite-dismissed-session:v2'])sessionStorage.setItem(key,'1')});});
+test('general library includes personal recipes once and keeps saved and favorite views separate',async({page})=>{
+ const own={...chefLibrary[0],id:'import-family',title:'Arroz de mi familia',cuisine:'Familiar',source:{kind:'user',label:'Receta familiar'}};
+ await page.addInitScript(r=>{
+  localStorage.setItem('the-chef:library-recipe-snapshots:v1',JSON.stringify([r]));
+  localStorage.setItem('chef:saved-recipes',JSON.stringify([r.id,'lib-001']));
+  localStorage.setItem('chef:favorites',JSON.stringify([r.id,'lib-002']));
+ },own);
+ await page.goto('./#/mis-recetas');
+ await expect(page.locator('.library-tabs button')).toHaveText(['Biblioteca','Mis recetas','Favoritos','Historial']);
+ await expect(page.locator('.library-photo-card')).toHaveCount(181);
+ await page.getByLabel('Filtrar por cocina').selectOption('Familiar');
+ await expect(page.locator('.library-photo-card')).toHaveCount(1);
+ await page.getByLabel('Filtrar por cocina').selectOption('');
+ await page.locator('.library-tabs').getByRole('button',{name:'Mis recetas',exact:true}).click();
+ await expect(page.locator('.library-photo-card')).toHaveCount(2);
+ await expect(page.getByRole('button',{name:'Abrir Arroz del senyoret',exact:true})).toHaveCount(0);
+ await page.locator('.library-tabs').getByRole('button',{name:'Favoritos',exact:true}).click();
+ await expect(page.locator('.library-photo-card')).toHaveCount(2);
+ await page.getByRole('button',{name:'Abrir menú',exact:true}).click();
+ await expect(page.locator('.chef-menu-grid').getByRole('button',{name:'Favoritos',exact:true})).toHaveCount(0);
+});
 test('library filters, photo, servings and saved recipes work without AI',async({page},info)=>{
  let ai=0;await page.route('**/*',r=>{const url=new URL(r.request().url());if(url.hostname==='127.0.0.1')return r.continue();if(url.pathname.includes('/recipes/')||url.pathname.includes('/chef-media/'))ai++;return r.abort()});
- await page.goto('./#/mis-recetas');await expect(page.locator('.library-photo-card')).toHaveCount(170);
+ await page.goto('./#/mis-recetas');await expect(page.locator('.library-photo-card')).toHaveCount(180);
  await page.screenshot({path:info.outputPath('library-home.png')});
  await page.getByLabel('Filtrar por cocina').selectOption('Peruana');await expect(page.locator('.library-photo-card')).toHaveCount(5);
  await page.getByLabel('Filtrar por cocina').selectOption('');await page.getByLabel('Tipo de receta').selectOption('cocktail');await expect(page.locator('.library-photo-card')).toHaveCount(20);
  await page.getByLabel('Filtrar por alcohol').selectOption('no');await expect(page.locator('.library-photo-card')).toHaveCount(3);
  await page.getByLabel('Tipo de receta').selectOption('all');await page.getByPlaceholder('Buscar recetas y cócteles…').fill('Paella valenciana');await page.getByRole('button',{name:'Abrir Paella valenciana',exact:true}).click();
- await expect(page.locator('.recipe-complete-photo img')).toHaveAttribute('src',/lib-001\.webp\?v=editorial-20260925$/);
+ await expect(page.locator('.recipe-complete-photo img')).toHaveAttribute('src',/lib-001\.webp\?v=plated-20260926$/);
  await expect.poll(()=>page.locator('.recipe-complete-photo img').evaluate((e:HTMLImageElement)=>e.naturalWidth)).toBe(960);
  await page.getByRole('button',{name:'Ingredientes Lo que necesitas',exact:true}).click();await page.getByLabel('Comensales',{exact:true}).selectOption('5');await page.reload();
  await page.getByRole('button',{name:'Ingredientes Lo que necesitas',exact:true}).click();await expect(page.getByLabel('Comensales',{exact:true})).toHaveValue('5');await expect(page.getByRole('dialog')).toContainText('400 g');await page.getByRole('button',{name:'Volver',exact:true}).click();
@@ -75,7 +116,7 @@ test('reviewed library layout and menu keep every group accessible',async({page}
  expect(positions[0].y).toBe(positions[1].y);expect(positions[2].y).toBe(positions[3].y);expect(positions[2].y).toBeGreaterThan(positions[0].y);expect(positions[0].font).toBeGreaterThanOrEqual(15);
  expect(await page.locator('.dish-category-row').evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);
  await page.getByRole('button',{name:'Cócteles',exact:true}).click();await expect(page.locator('.library-photo-card')).toHaveCount(20);
- await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await expect(page.locator('.chef-menu-grid button')).toHaveText(['Inicio','Mis recetas','Favoritos','Técnicas y tips','Qué cocinar','Abre la despensa','Foto Receta','Lista de la compra','Despensa','Buscar','Perfil y ajustes']);
+ await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await expect(page.locator('.chef-menu-grid button')).toHaveText(['Inicio','Mis recetas','Qué cocinar','Abre la despensa','Foto Receta','Técnicas y tips','Lista de la compra','Despensa','Buscar','Perfil y ajustes']);
  await expect(page.getByRole('button',{name:'Mi plan de comidas',exact:true})).toHaveCount(0);await page.screenshot({path:info.outputPath('review-menu.png')});
 });
 

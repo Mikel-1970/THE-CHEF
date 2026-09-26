@@ -21,10 +21,11 @@ for(const recipe of recipes){
  recipe.nutritionPerServing=Object.fromEntries(Object.entries(totals).map(([k,v])=>[k,Math.round(v/recipe.baseServings*10)/10]));
  recipe.nutritionStatus='estimated';
  recipe.nutritionNotes=['Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.','Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados.'];
+ if(recipe.ingredients.some(i=>i.name==='espárrago blanco en conserva escurrido'))recipe.nutritionNotes.push('Espárrago en conserva aproximado con espárrago crudo; puede diferir según la marca.');
  if(recipe.ingredients.some(i=>i.name.includes('freír')))recipe.nutritionNotes.push('Fritura: se estiman 10 g de aceite absorbido por ración; puede variar considerablemente.');
  if(recipe.ingredients.some(i=>foods[i.name].basis==='100ml'))recipe.nutritionNotes.push('Se incluye toda la energía del alcohol añadido; la cocción puede reducirla.');
  if(recipe.ingredients.some(i=>foods[i.name].code==='composite'))recipe.nutritionNotes.push('Ñoquis y sirope simple, cuando aparecen, se calculan mediante formulaciones aproximadas.');
  audit.push({id:recipe.id,baseServings:recipe.baseServings,ingredients:rows,nutritionPerServing:recipe.nutritionPerServing});
 }
-if(process.argv.includes('--check')){const stored=JSON.parse(fs.readFileSync(path,'utf8'));for(let n=0;n<recipes.length;n++)if(JSON.stringify(stored[n].nutritionPerServing)!==JSON.stringify(recipes[n].nutritionPerServing))throw Error('Stale nutrition: '+stored[n].id);console.log('170 nutrition calculations reproduced.');}
+if(process.argv.includes('--check')){const stored=JSON.parse(fs.readFileSync(path,'utf8'));for(let n=0;n<recipes.length;n++)if(JSON.stringify(stored[n].nutritionPerServing)!==JSON.stringify(recipes[n].nutritionPerServing))throw Error('Stale nutrition: '+stored[n].id);console.log(recipes.length+' nutrition calculations reproduced.');}
 else{fs.writeFileSync(path,JSON.stringify(recipes,null,2)+'\n');fs.writeFileSync('docs/LIBRARY_NUTRITION_AUDIT.json',JSON.stringify(audit,null,2)+'\n');console.log('Calculated nutrition for '+recipes.length+' recipes.');}

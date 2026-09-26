@@ -12116,5 +12116,878 @@
       "carbsG": 36.7,
       "fatG": 6.7
     }
+  },
+  {
+    "id": "lib-171",
+    "baseServings": 4,
+    "ingredients": [
+      {
+        "ingredient": "guisantes",
+        "amountUsed": 600,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-438",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "jamón serrano",
+        "amountUsed": 60,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "19-496",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "cebolleta",
+        "amountUsed": 150,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-352",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "hierbabuena",
+        "amountUsed": 2,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-836",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "canela molida",
+        "amountUsed": 0.2,
+        "basis": "100g",
+        "source": "USDA SR Legacy 2018",
+        "code": "171320",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "caldo de pollo",
+        "amountUsed": 180,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-681",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "aceite de oliva",
+        "amountUsed": 20,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-038",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "sal",
+        "amountUsed": 1,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-367",
+        "optionalExcluded": false
+      }
+    ],
+    "nutritionPerServing": {
+      "kcal": 199.9,
+      "proteinG": 14.9,
+      "carbsG": 18.4,
+      "fatG": 8
+    }
+  },
+  {
+    "id": "lib-172",
+    "baseServings": 4,
+    "ingredients": [
+      {
+        "ingredient": "arroz redondo",
+        "amountUsed": 320,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "11-865",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "setas",
+        "amountUsed": 350,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-505",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "chalota",
+        "amountUsed": 180,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-342",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "diente de ajo",
+        "amountUsed": 9,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-244",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "caldo de pollo",
+        "amountUsed": 1200,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-681",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "mantequilla",
+        "amountUsed": 30,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-685",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "aceite de oliva",
+        "amountUsed": 20,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-038",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "parmesano",
+        "amountUsed": 40,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-526",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "espárrago verde",
+        "amountUsed": 150,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-157",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "sal",
+        "amountUsed": 2,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-367",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "pimienta",
+        "amountUsed": 0.5,
+        "basis": "100g",
+        "source": "USDA SR Legacy 2018",
+        "code": "170931",
+        "optionalExcluded": false
+      }
+    ],
+    "nutritionPerServing": {
+      "kcal": 486.9,
+      "proteinG": 17.9,
+      "carbsG": 72.2,
+      "fatG": 16
+    }
+  },
+  {
+    "id": "lib-173",
+    "baseServings": 4,
+    "ingredients": [
+      {
+        "ingredient": "espárrago blanco en conserva escurrido",
+        "amountUsed": 600,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-157",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "mayonesa comercial",
+        "amountUsed": 100,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-654",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "zumo de naranja",
+        "amountUsed": 100,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "14-369",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "naranja",
+        "amountUsed": 130,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "14-327",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "zumo de lima",
+        "amountUsed": 10,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "14-279",
+        "optionalExcluded": false
+      }
+    ],
+    "nutritionPerServing": {
+      "kcal": 229.2,
+      "proteinG": 5,
+      "carbsG": 8.3,
+      "fatG": 19.7
+    }
+  },
+  {
+    "id": "lib-174",
+    "baseServings": 6,
+    "ingredients": [
+      {
+        "ingredient": "patata",
+        "amountUsed": 1000,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-489",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "mantequilla",
+        "amountUsed": 250,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-685",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "leche",
+        "amountUsed": 206,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-596",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "sal",
+        "amountUsed": 3,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-367",
+        "optionalExcluded": false
+      }
+    ],
+    "nutritionPerServing": {
+      "kcal": 468.3,
+      "proteinG": 4.6,
+      "carbsG": 34.5,
+      "fatG": 35.7
+    }
+  },
+  {
+    "id": "lib-175",
+    "baseServings": 6,
+    "ingredients": [
+      {
+        "ingredient": "coliflor",
+        "amountUsed": 600,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-512",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "caldo de pollo",
+        "amountUsed": 1000,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-681",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "mascarpone",
+        "amountUsed": 25,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-490",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "nata",
+        "amountUsed": 200,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-332",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "leche",
+        "amountUsed": 51.5,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-596",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "aceite de oliva",
+        "amountUsed": 30,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-038",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "diente de ajo",
+        "amountUsed": 6,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-244",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "jamón serrano",
+        "amountUsed": 30,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "19-496",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "sal",
+        "amountUsed": 2,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-367",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "pimienta negra",
+        "amountUsed": 0.5,
+        "basis": "100g",
+        "source": "USDA SR Legacy 2018",
+        "code": "170931",
+        "optionalExcluded": false
+      }
+    ],
+    "nutritionPerServing": {
+      "kcal": 189.4,
+      "proteinG": 8.9,
+      "carbsG": 6.3,
+      "fatG": 14.4
+    }
+  },
+  {
+    "id": "lib-176",
+    "baseServings": 4,
+    "ingredients": [
+      {
+        "ingredient": "merluza sin espinas",
+        "amountUsed": 600,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "16-070",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "espárrago blanco en conserva escurrido",
+        "amountUsed": 300,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-157",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "espárrago verde",
+        "amountUsed": 250,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-157",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "hinojo",
+        "amountUsed": 100,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "13-241",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "caldo de pescado",
+        "amountUsed": 200,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-681",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "vino blanco",
+        "amountUsed": 50,
+        "basis": "100ml",
+        "source": "CoFID 2021",
+        "code": "17-755",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "nata",
+        "amountUsed": 30,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-332",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "aceite de oliva",
+        "amountUsed": 30,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-038",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "sal",
+        "amountUsed": 2,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-367",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "pimienta",
+        "amountUsed": 0.5,
+        "basis": "100g",
+        "source": "USDA SR Legacy 2018",
+        "code": "170931",
+        "optionalExcluded": false
+      }
+    ],
+    "nutritionPerServing": {
+      "kcal": 273,
+      "proteinG": 32.6,
+      "carbsG": 3.6,
+      "fatG": 13.2
+    }
+  },
+  {
+    "id": "lib-177",
+    "baseServings": 12,
+    "ingredients": [
+      {
+        "ingredient": "harina",
+        "amountUsed": 240,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "11-886",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "cacao puro",
+        "amountUsed": 57,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-545",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "azúcar moreno",
+        "amountUsed": 266,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-060",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "levadura química",
+        "amountUsed": 4,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-355",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "bicarbonato",
+        "amountUsed": 5,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-356",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "sal",
+        "amountUsed": 3,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-367",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "chocolate negro",
+        "amountUsed": 170,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-491",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "huevo",
+        "amountUsed": 100,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-937",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "leche",
+        "amountUsed": 170,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-596",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "extracto de vainilla",
+        "amountUsed": 10,
+        "basis": "100g",
+        "source": "USDA SR Legacy 2018",
+        "code": "173471",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "vinagre",
+        "amountUsed": 10,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-339",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "mantequilla",
+        "amountUsed": 113,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-685",
+        "optionalExcluded": false
+      }
+    ],
+    "nutritionPerServing": {
+      "kcal": 334.7,
+      "proteinG": 5,
+      "carbsG": 49.1,
+      "fatG": 14.3
+    }
+  },
+  {
+    "id": "lib-178",
+    "baseServings": 12,
+    "ingredients": [
+      {
+        "ingredient": "mantequilla",
+        "amountUsed": 113,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-685",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "azúcar",
+        "amountUsed": 248,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-063",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "huevo",
+        "amountUsed": 100,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-937",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "levadura química",
+        "amountUsed": 8,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-355",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "sal",
+        "amountUsed": 2,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-367",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "extracto de vainilla",
+        "amountUsed": 5,
+        "basis": "100g",
+        "source": "USDA SR Legacy 2018",
+        "code": "173471",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "harina",
+        "amountUsed": 240,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "11-886",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "leche",
+        "amountUsed": 113,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-596",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "arándanos",
+        "amountUsed": 354,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "14-325",
+        "optionalExcluded": false
+      }
+    ],
+    "nutritionPerServing": {
+      "kcal": 252.8,
+      "proteinG": 3.5,
+      "carbsG": 41.4,
+      "fatG": 9.2
+    }
+  },
+  {
+    "id": "lib-179",
+    "baseServings": 12,
+    "ingredients": [
+      {
+        "ingredient": "mantequilla",
+        "amountUsed": 57,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-685",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "aceite de girasol",
+        "amountUsed": 50,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-045",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "azúcar",
+        "amountUsed": 149,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-063",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "azúcar moreno",
+        "amountUsed": 71,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-060",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "huevo",
+        "amountUsed": 100,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-937",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "levadura química",
+        "amountUsed": 6,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-355",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "bicarbonato",
+        "amountUsed": 1,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-356",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "nuez moscada",
+        "amountUsed": 1,
+        "basis": "100g",
+        "source": "USDA SR Legacy 2018",
+        "code": "171326",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "sal",
+        "amountUsed": 3,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-367",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "extracto de vainilla",
+        "amountUsed": 5,
+        "basis": "100g",
+        "source": "USDA SR Legacy 2018",
+        "code": "173471",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "harina",
+        "amountUsed": 320,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "11-886",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "leche",
+        "amountUsed": 227,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-596",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "canela molida",
+        "amountUsed": 2,
+        "basis": "100g",
+        "source": "USDA SR Legacy 2018",
+        "code": "171320",
+        "optionalExcluded": false
+      }
+    ],
+    "nutritionPerServing": {
+      "kcal": 263.8,
+      "proteinG": 4.2,
+      "carbsG": 41.9,
+      "fatG": 9.9
+    }
+  },
+  {
+    "id": "lib-180",
+    "baseServings": 16,
+    "ingredients": [
+      {
+        "ingredient": "harina",
+        "amountUsed": 360,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "11-886",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "azúcar",
+        "amountUsed": 50,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-063",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "sal",
+        "amountUsed": 2,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-367",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "levadura seca de panadería",
+        "amountUsed": 6,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-379",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "nuez moscada",
+        "amountUsed": 0.5,
+        "basis": "100g",
+        "source": "USDA SR Legacy 2018",
+        "code": "171326",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "huevo",
+        "amountUsed": 50,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-937",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "leche",
+        "amountUsed": 227,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "12-596",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "mantequilla",
+        "amountUsed": 28,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-685",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "extracto de vainilla",
+        "amountUsed": 2.5,
+        "basis": "100g",
+        "source": "USDA SR Legacy 2018",
+        "code": "173471",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "aceite para freír",
+        "amountUsed": 160,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-045",
+        "optionalExcluded": false,
+        "assumption": "Aceite absorbido estimado: 10 g por ración, limitado al aceite utilizado."
+      },
+      {
+        "ingredient": "azúcar glas",
+        "amountUsed": 150,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-062",
+        "optionalExcluded": false
+      },
+      {
+        "ingredient": "agua",
+        "amountUsed": 25,
+        "basis": "100g",
+        "source": "CoFID 2021",
+        "code": "17-377",
+        "optionalExcluded": false
+      }
+    ],
+    "nutritionPerServing": {
+      "kcal": 245.6,
+      "proteinG": 3.1,
+      "carbsG": 32,
+      "fatG": 12.6
+    }
   }
 ]

@@ -36,20 +36,25 @@ export function MyRecipesPage() {
   const [historyMonth, setHistoryMonth] = useState('Todos');
   const voice = useAiDictation(transcript => setQuery(current => current.trim() ? `${current.trim()} ${transcript.trim()}` : transcript.trim()));
   const tab = params.get('tab') ?? 'library';
+  const libraryRecipes = useMemo(() => {
+    const catalog = getAllRecipes();
+    const ids = new Set([...chefLibrary.map(r=>r.id), ...savedRecipes, ...favorites]);
+    return catalog.filter(recipe => ids.has(recipe.id));
+  }, [savedRecipes, favorites]);
 
   const recipes = useMemo(() => {
-    const ids = tab === 'library' ? chefLibrary.map(r=>r.id) : tab === 'favorites' ? favorites : Array.from(new Set([...savedRecipes, ...favorites]));
-    const normalizedQuery = query.trim().toLocaleLowerCase('es');
+    const ids = tab === 'library' ? libraryRecipes.map(r=>r.id) : tab === 'favorites' ? favorites : savedRecipes;
+    const normalizedQuery = query.trim().toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
     const catalog = getAllRecipes();
     return ids
       .map(id => catalog.find(recipe => recipe.id === id))
       .filter((recipe): recipe is Recipe => Boolean(recipe))
-      .filter(recipe => !normalizedQuery || recipe.title.toLocaleLowerCase('es').includes(normalizedQuery))
+      .filter(recipe => !normalizedQuery || [recipe.title,recipe.source?.label??''].join(' ').toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(normalizedQuery))
       .filter(recipe => matchesDishCategory(recipe,dishCategory))
       .filter(recipe=>kind==='all'||recipe.recipeKind===kind)
       .filter(recipe=>!cuisine||recipe.cuisine===cuisine)
       .filter(recipe=>alcohol==='all'||recipe.recipeKind==='cocktail'&&recipe.alcohol===(alcohol==='yes'));
-  }, [favorites, savedRecipes, query, tab, dishCategory,kind,cuisine,alcohol]);
+  }, [libraryRecipes, favorites, savedRecipes, query, tab, dishCategory,kind,cuisine,alcohol]);
 
   const historyYears = useMemo(() => Array.from(new Set(history.map(entry => String(new Date(entry.createdAt).getFullYear())))).sort((a, b) => Number(b) - Number(a)), [history]);
   const filteredHistory = useMemo(() => history.filter(entry => {
@@ -94,12 +99,12 @@ export function MyRecipesPage() {
   return (
     <AppShell>
       <ChefLoadingOverlay active={isRepeating} title="Preparando tu receta" messages={['Recuperando tus preferencias…','Preparando la receta completa…','Preparando la imagen…']} />
-      <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>150 recetas y 20 cócteles listos para preparar. Guarda tus favoritos y tus propias versiones.</p></div>
+      <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>{libraryRecipes.filter(r=>r.recipeKind!=='cocktail').length} recetas y {libraryRecipes.filter(r=>r.recipeKind==='cocktail').length} cócteles listos para preparar. Guarda tus favoritos y tus propias versiones.</p></div>
       <div className="page-content nav-safe"><button className="secondary-button" onClick={()=>navigate('/importar-receta')}>Importar receta</button>
           <div className="library-tabs">
-            <button className={tab === 'library' ? 'active' : ''} onClick={() => setDishTab('library')}>Biblioteca del Chef</button>
-            <button className={tab === 'all' ? 'active' : ''} onClick={() => setDishTab('all')}>Mis guardadas</button>
-            <button className={tab === 'favorites' ? 'active' : ''} onClick={() => setDishTab('favorites')}>Favoritas</button>
+            <button className={tab === 'library' ? 'active' : ''} onClick={() => setDishTab('library')}>Biblioteca</button>
+            <button className={tab === 'all' ? 'active' : ''} onClick={() => setDishTab('all')}>Mis recetas</button>
+            <button className={tab === 'favorites' ? 'active' : ''} onClick={() => setDishTab('favorites')}>Favoritos</button>
             <button className={tab === 'history' ? 'active' : ''} onClick={() => setDishTab('history')}>Historial</button>
           </div>
 
@@ -108,10 +113,10 @@ export function MyRecipesPage() {
             {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
             {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
             {voice.error && <div className="voice-status error">{voice.error}</div>}
-            <div className="library-filters"><label>Tipo<select aria-label="Tipo de receta" value={kind} onChange={e=>{setKind(e.target.value);setDishCategory('Todos');setAlcohol('all')}}><option value="all">Todos</option><option value="dish">Platos</option><option value="dessert">Postres</option><option value="cocktail">Cócteles</option></select></label><label>Cocina<select aria-label="Filtrar por cocina" value={cuisine} onChange={e=>setCuisine(e.target.value)}><option value="">Todas las cocinas</option>{Array.from(new Set(chefLibrary.map(r=>r.cuisine))).sort().map(c=><option key={c}>{c}</option>)}</select></label>{(kind==='cocktail'||dishCategory==='Cócteles')&&<label>Alcohol<select aria-label="Filtrar por alcohol" value={alcohol} onChange={e=>setAlcohol(e.target.value)}><option value="all">Todos</option><option value="yes">Con alcohol</option><option value="no">Sin alcohol</option></select></label>}</div><div className="dish-category-row">{DISH_CATEGORIES.map(category => <button type="button" className={dishCategory === category ? 'active' : ''} onClick={() => setDishCategory(category)} key={category}>{category}</button>)}</div>
+            <div className="library-filters"><label>Tipo<select aria-label="Tipo de receta" value={kind} onChange={e=>{setKind(e.target.value);setDishCategory('Todos');setAlcohol('all')}}><option value="all">Todos</option><option value="dish">Platos</option><option value="dessert">Postres</option><option value="cocktail">Cócteles</option></select></label><label>Cocina<select aria-label="Filtrar por cocina" value={cuisine} onChange={e=>setCuisine(e.target.value)}><option value="">Todas las cocinas</option>{Array.from(new Set(libraryRecipes.map(r=>r.cuisine))).sort().map(c=><option key={c}>{c}</option>)}</select></label>{(kind==='cocktail'||dishCategory==='Cócteles')&&<label>Alcohol<select aria-label="Filtrar por alcohol" value={alcohol} onChange={e=>setAlcohol(e.target.value)}><option value="all">Todos</option><option value="yes">Con alcohol</option><option value="no">Sin alcohol</option></select></label>}</div><div className="dish-category-row">{DISH_CATEGORIES.map(category => <button type="button" className={dishCategory === category ? 'active' : ''} onClick={() => setDishCategory(category)} key={category}>{category}</button>)}</div>
 
             <section className="library-section">
-              <div className="section-heading-row"><div><span className="eyebrow">{tab === 'library' ? 'BIBLIOTECA DEL CHEF' : tab === 'favorites' ? 'FAVORITAS' : 'MIS RECETAS'}</span><h2>{tab==='library'? recipes.length+' recetas disponibles' : recipes.length ? (tab === 'favorites' ? 'Tus imprescindibles' : 'Recetas guardadas') : (tab === 'favorites' ? 'Todavía no hay favoritas' : 'Todavía no has guardado ninguna receta')}</h2></div><Heart size={20} /></div>
+              <div className="section-heading-row"><div><span className="eyebrow">{tab === 'library' ? 'BIBLIOTECA' : tab === 'favorites' ? 'FAVORITOS' : 'MIS RECETAS'}</span><h2>{tab==='library'? recipes.length+' recetas disponibles' : recipes.length ? (tab === 'favorites' ? 'Tus imprescindibles' : 'Recetas guardadas') : (tab === 'favorites' ? 'Todavía no hay favoritas' : 'Todavía no has guardado ninguna receta')}</h2></div><Heart size={20} /></div>
               <div className="library-photo-grid">
                 {recipes.map(recipe => (
                   <article className="library-photo-card" key={recipe.id}>

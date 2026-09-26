@@ -5005,5 +5005,96 @@
     "match": "Aproximación: 70% patata cruda y 30% harina por peso; usar etiqueta del producto para mayor precisión.",
     "densityEstimate": 1,
     "edibleFractionEstimate": 1
+  },
+  "chalota": {
+    "source": "CoFID 2021",
+    "code": "13-342",
+    "food": "Shallots, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 20.0,
+      "proteinG": 1.5,
+      "carbsG": 3.3,
+      "fatG": 0.2
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación."
+  },
+  "hinojo": {
+    "source": "CoFID 2021",
+    "code": "13-241",
+    "food": "Fennel, Florence, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 12.0,
+      "proteinG": 0.9,
+      "carbsG": 1.8,
+      "fatG": 0.2
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación."
+  },
+  "arándanos": {
+    "source": "CoFID 2021",
+    "code": "14-325",
+    "food": "Blueberries",
+    "basis": "100g",
+    "per100": {
+      "kcal": 40.0,
+      "proteinG": 0.9,
+      "carbsG": 9.1,
+      "fatG": 0.2,
+      "fiberG": 1.5
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación."
+  },
+  "bicarbonato": {
+    "source": "CoFID 2021",
+    "code": "17-356",
+    "food": "Bicarbonate of soda",
+    "basis": "100g",
+    "per100": {
+      "kcal": 0.0,
+      "proteinG": 0.0,
+      "carbsG": 0.0,
+      "fatG": 0.0
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación."
+  },
+  "levadura seca de panadería": {
+    "source": "CoFID 2021",
+    "code": "17-379",
+    "food": "Yeast, dried",
+    "basis": "100g",
+    "per100": {
+      "kcal": 169.0,
+      "proteinG": 35.6,
+      "carbsG": 3.5,
+      "fatG": 1.5
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación."
+  },
+  "espárrago blanco en conserva escurrido": {
+    "source": "CoFID 2021",
+    "code": "13-157",
+    "food": "Asparagus, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 25.0,
+      "proteinG": 2.9,
+      "carbsG": 2.0,
+      "fatG": 0.6
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Aproximación con espárrago crudo: la conserva escurrida puede diferir; no se estima sodio."
   }
 }

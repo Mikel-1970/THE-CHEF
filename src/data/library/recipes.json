@@ -18140,5 +18140,1231 @@
       "Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.",
       "Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados."
     ]
+  },
+  {
+    "id": "lib-171",
+    "title": "Guisantes con jamón, menta y canela",
+    "description": "Adaptación de la cocina cotidiana de Ferran Adrià, con caldo de pollo y hierbabuena. Un entrante aromático.",
+    "emoji": "🍽️",
+    "baseServings": 4,
+    "prepMinutes": 10,
+    "cookMinutes": 25,
+    "difficulty": "Fácil",
+    "mealType": "Comida",
+    "style": "Alta cocina",
+    "cuisine": "Española",
+    "libraryCategory": "Alta cocina",
+    "recipeKind": "dish",
+    "ingredients": [
+      {
+        "name": "guisantes",
+        "quantity": 600,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "jamón serrano",
+        "quantity": 60,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "cebolleta",
+        "quantity": 150,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "hierbabuena",
+        "quantity": 2,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "canela molida",
+        "quantity": 0.2,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "caldo de pollo",
+        "quantity": 180,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "sal",
+        "quantity": 1,
+        "unit": "g",
+        "scalingMode": "linear"
+      }
+    ],
+    "miseEnPlace": [
+      "Pesa los ingredientes y calienta el caldo."
+    ],
+    "steps": [
+      {
+        "number": 1,
+        "instruction": "Pica la cebolleta y corta el jamón en tiras. Ablanda la cebolleta con el aceite.",
+        "minutes": 6
+      },
+      {
+        "number": 2,
+        "instruction": "Incorpora el jamón durante 2 minutos y después los guisantes durante 4.",
+        "minutes": 6
+      },
+      {
+        "number": 3,
+        "instruction": "Añade hierbabuena y canela; tapa y cocina suavemente.",
+        "minutes": 5
+      },
+      {
+        "number": 4,
+        "instruction": "Vierte el caldo caliente y cuece hasta que el guisante esté tierno.",
+        "minutes": 5
+      },
+      {
+        "number": 5,
+        "instruction": "Reposa tapado 3 minutos. Machaca dos cucharadas de guisantes e incorpóralas para ligar; prueba antes de añadir sal.",
+        "minutes": 3
+      }
+    ],
+    "criticalPoints": [
+      "El jamón ya aporta sal. Ajusta el caldo si utilizas guisantes congelados."
+    ],
+    "substitutions": [],
+    "storage": "Enfría y refrigera en recipiente cerrado; consume en 2 días.",
+    "source": {
+      "kind": "web",
+      "label": "Ferran Adrià · adaptación doméstica",
+      "publisher": "Recetas de Esbieta; referencia a La comida de la familia",
+      "url": "https://www.recetasdesbieta.com/guisantes-con-jamon/",
+      "retrievedAt": "2026-09-26",
+      "adapted": true
+    },
+    "nutritionPerServing": {
+      "kcal": 199.9,
+      "proteinG": 14.9,
+      "carbsG": 18.4,
+      "fatG": 8
+    },
+    "nutritionStatus": "estimated",
+    "nutritionNotes": [
+      "Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.",
+      "Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados."
+    ]
+  },
+  {
+    "id": "lib-172",
+    "title": "Arroz meloso de setas y parmesano",
+    "description": "Adaptación de Jordi Cruz para casa: caldo preparado, setas de cultivo y acabado de parmesano, sin trufa.",
+    "emoji": "🍽️",
+    "baseServings": 4,
+    "prepMinutes": 15,
+    "cookMinutes": 30,
+    "difficulty": "Media",
+    "mealType": "Comida",
+    "style": "Alta cocina",
+    "cuisine": "Española",
+    "libraryCategory": "Alta cocina",
+    "recipeKind": "dish",
+    "ingredients": [
+      {
+        "name": "arroz redondo",
+        "quantity": 320,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "setas",
+        "quantity": 350,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "chalota",
+        "quantity": 180,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "diente de ajo",
+        "quantity": 3,
+        "unit": "unidad",
+        "scalingMode": "discrete"
+      },
+      {
+        "name": "caldo de pollo",
+        "quantity": 1200,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "mantequilla",
+        "quantity": 30,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "aceite de oliva",
+        "quantity": 20,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "parmesano",
+        "quantity": 40,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "espárrago verde",
+        "quantity": 150,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "sal",
+        "quantity": 2,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "pimienta",
+        "quantity": 0.5,
+        "unit": "g",
+        "scalingMode": "linear"
+      }
+    ],
+    "miseEnPlace": [
+      "Limpia las setas, ralla el queso y mantén caliente el caldo."
+    ],
+    "steps": [
+      {
+        "number": 1,
+        "instruction": "Pica chalota y ajo; rehógalos con aceite y la mitad de la mantequilla.",
+        "minutes": 7
+      },
+      {
+        "number": 2,
+        "instruction": "Añade las setas troceadas y dóralas. Incorpora el arroz y remueve.",
+        "minutes": 5
+      },
+      {
+        "number": 3,
+        "instruction": "Vierte caldo caliente progresivamente y cuece removiendo ocasionalmente; comprueba el grano desde el minuto 16.",
+        "minutes": 18
+      },
+      {
+        "number": 4,
+        "instruction": "Mientras, cuece los espárragos 3 minutos. Fuera del fuego, liga el arroz con mantequilla restante y parmesano; ajusta sal y pimienta. Sirve con espárragos."
+      }
+    ],
+    "criticalPoints": [
+      "El arroz debe fluir al servir; añade caldo si se seca."
+    ],
+    "substitutions": [],
+    "storage": "Sirve recién hecho; enfría pronto cualquier sobrante y refrigera.",
+    "source": {
+      "kind": "web",
+      "label": "Jordi Cruz · adaptación doméstica",
+      "publisher": "20minutos; receta divulgada por Jordi Cruz",
+      "url": "https://www.20minutos.es/noticia/4445291/0/como-hacer-arroz-setas-jordi-cruz-pasos/",
+      "retrievedAt": "2026-09-26",
+      "adapted": true
+    },
+    "nutritionPerServing": {
+      "kcal": 486.9,
+      "proteinG": 17.9,
+      "carbsG": 72.2,
+      "fatG": 16
+    },
+    "nutritionStatus": "estimated",
+    "nutritionNotes": [
+      "Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.",
+      "Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados."
+    ]
+  },
+  {
+    "id": "lib-173",
+    "title": "Espárragos blancos con mayonesa cítrica",
+    "description": "Versión doméstica inspirada en Joan Roca, con espárragos en conserva y mayonesa comercial para prescindir del equipo de vacío.",
+    "emoji": "🍽️",
+    "baseServings": 4,
+    "prepMinutes": 15,
+    "cookMinutes": 5,
+    "difficulty": "Fácil",
+    "mealType": "Comida",
+    "style": "Alta cocina",
+    "cuisine": "Española",
+    "libraryCategory": "Alta cocina",
+    "recipeKind": "dish",
+    "ingredients": [
+      {
+        "name": "espárrago blanco en conserva escurrido",
+        "quantity": 600,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "mayonesa comercial",
+        "quantity": 100,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "zumo de naranja",
+        "quantity": 100,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "naranja",
+        "quantity": 1,
+        "unit": "unidad",
+        "scalingMode": "discrete"
+      },
+      {
+        "name": "zumo de lima",
+        "quantity": 10,
+        "unit": "ml",
+        "scalingMode": "linear"
+      }
+    ],
+    "miseEnPlace": [
+      "Prepara un colador y un cazo pequeño."
+    ],
+    "steps": [
+      {
+        "number": 1,
+        "instruction": "Escurre los espárragos y sécalos cuidadosamente."
+      },
+      {
+        "number": 2,
+        "instruction": "Reduce el zumo de naranja a unas dos cucharadas a fuego suave y deja enfriar.",
+        "minutes": 5
+      },
+      {
+        "number": 3,
+        "instruction": "Mezcla la mayonesa con la reducción fría y el zumo de lima, poco a poco."
+      },
+      {
+        "number": 4,
+        "instruction": "Pela la naranja retirando membranas. Reparte espárragos, puntos de salsa y gajos en cuatro platos."
+      }
+    ],
+    "criticalPoints": [
+      "No mezcles la reducción caliente con la mayonesa."
+    ],
+    "substitutions": [],
+    "storage": "Mantén refrigerado y sirve el mismo día.",
+    "source": {
+      "kind": "web",
+      "label": "Joan Roca · adaptación doméstica",
+      "publisher": "La cocina de aficionado; referencia a Cocina con Joan Roca a baja temperatura",
+      "url": "https://www.lacocinadeaficionado.com/2016/04/esparragos-con-mayonesa-citrica.html",
+      "retrievedAt": "2026-09-26",
+      "adapted": true
+    },
+    "nutritionPerServing": {
+      "kcal": 229.2,
+      "proteinG": 5,
+      "carbsG": 8.3,
+      "fatG": 19.7
+    },
+    "nutritionStatus": "estimated",
+    "nutritionNotes": [
+      "Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.",
+      "Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados.",
+      "Espárrago en conserva aproximado con espárrago crudo; puede diferir según la marca."
+    ]
+  },
+  {
+    "id": "lib-174",
+    "title": "Puré de patata sedoso",
+    "description": "Adaptación del puré de Joël Robuchon. Guarnición de seis raciones: la textura depende del pasapurés y la mantequilla fría.",
+    "emoji": "🍽️",
+    "baseServings": 6,
+    "prepMinutes": 15,
+    "cookMinutes": 25,
+    "difficulty": "Fácil",
+    "mealType": "Comida",
+    "style": "Alta cocina",
+    "cuisine": "Francesa",
+    "libraryCategory": "Alta cocina",
+    "recipeKind": "dish",
+    "ingredients": [
+      {
+        "name": "patata",
+        "quantity": 1000,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "mantequilla",
+        "quantity": 250,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "leche",
+        "quantity": 200,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "sal",
+        "quantity": 3,
+        "unit": "g",
+        "scalingMode": "linear"
+      }
+    ],
+    "miseEnPlace": [
+      "Elige patatas de tamaño similar; corta la mantequilla y mantenla fría."
+    ],
+    "steps": [
+      {
+        "number": 1,
+        "instruction": "Cubre las patatas enteras con agua fría. Cuece hasta que un cuchillo entre fácilmente, unos 25 minutos.",
+        "minutes": 25
+      },
+      {
+        "number": 2,
+        "instruction": "Escurre, pela en caliente con cuidado y pasa por un pasapurés fino."
+      },
+      {
+        "number": 3,
+        "instruction": "Remueve el puré a fuego bajo para evaporar humedad. Incorpora la mantequilla fría en dados."
+      },
+      {
+        "number": 4,
+        "instruction": "Añade la leche caliente progresivamente, mezcla con espátula y ajusta la sal. Sirve inmediatamente."
+      }
+    ],
+    "criticalPoints": [
+      "Evita la batidora: puede volver el puré pegajoso."
+    ],
+    "substitutions": [],
+    "storage": "Refrigera los sobrantes; recalienta suavemente con un poco de leche.",
+    "source": {
+      "kind": "web",
+      "label": "Joël Robuchon · adaptación doméstica",
+      "publisher": "Tables & Auberges",
+      "url": "https://www.tables-auberges.com/recettes/la-puree-de-joel-robuchon",
+      "retrievedAt": "2026-09-26",
+      "adapted": true
+    },
+    "nutritionPerServing": {
+      "kcal": 468.3,
+      "proteinG": 4.6,
+      "carbsG": 34.5,
+      "fatG": 35.7
+    },
+    "nutritionStatus": "estimated",
+    "nutritionNotes": [
+      "Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.",
+      "Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados."
+    ]
+  },
+  {
+    "id": "lib-175",
+    "title": "Crema de coliflor y mascarpone",
+    "description": "Adaptación doméstica de Martín Berasategui, con menos aceite y acabado de jamón serrano. Seis raciones de entrante.",
+    "emoji": "🍽️",
+    "baseServings": 6,
+    "prepMinutes": 10,
+    "cookMinutes": 25,
+    "difficulty": "Fácil",
+    "mealType": "Comida",
+    "style": "Alta cocina",
+    "cuisine": "Española",
+    "libraryCategory": "Alta cocina",
+    "recipeKind": "dish",
+    "ingredients": [
+      {
+        "name": "coliflor",
+        "quantity": 600,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "caldo de pollo",
+        "quantity": 1000,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "mascarpone",
+        "quantity": 25,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "nata",
+        "quantity": 200,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "leche",
+        "quantity": 50,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "aceite de oliva",
+        "quantity": 30,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "diente de ajo",
+        "quantity": 2,
+        "unit": "unidad",
+        "scalingMode": "discrete"
+      },
+      {
+        "name": "jamón serrano",
+        "quantity": 30,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "sal",
+        "quantity": 2,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "pimienta negra",
+        "quantity": 0.5,
+        "unit": "g",
+        "scalingMode": "linear"
+      }
+    ],
+    "miseEnPlace": [
+      "Prepara batidora y colador fino."
+    ],
+    "steps": [
+      {
+        "number": 1,
+        "instruction": "Divide la coliflor y hiérvela en agua 7 minutos; escurre.",
+        "minutes": 7
+      },
+      {
+        "number": 2,
+        "instruction": "Dora suavemente el ajo laminado con aceite; añade caldo y coliflor.",
+        "minutes": 3
+      },
+      {
+        "number": 3,
+        "instruction": "Cuece hasta ablandar. Incorpora mascarpone, nata y leche y calienta sin hervor fuerte.",
+        "minutes": 12
+      },
+      {
+        "number": 4,
+        "instruction": "Tritura, cuela y ajusta sal y pimienta. Sirve con jamón cortado fino."
+      }
+    ],
+    "criticalPoints": [
+      "Tritura el líquido caliente en tandas, evitando un recipiente hermético."
+    ],
+    "substitutions": [],
+    "storage": "Enfría y refrigera; consume en 2 días.",
+    "source": {
+      "kind": "web",
+      "label": "Martín Berasategui · adaptación doméstica",
+      "publisher": "XL Semanal; receta de Martín Berasategui",
+      "url": "https://www.lavozdegalicia.es/xlsemanal/gastronomia/recetas/crema-coliflor-martin-berasategui.html",
+      "retrievedAt": "2026-09-26",
+      "adapted": true
+    },
+    "nutritionPerServing": {
+      "kcal": 189.4,
+      "proteinG": 8.9,
+      "carbsG": 6.3,
+      "fatG": 14.4
+    },
+    "nutritionStatus": "estimated",
+    "nutritionNotes": [
+      "Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.",
+      "Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados."
+    ]
+  },
+  {
+    "id": "lib-176",
+    "title": "Merluza con crema de espárragos",
+    "description": "Adaptación del pilpil de espárragos de los hermanos Torres: usamos caldo preparado y una crema sencilla, sin elaborar el pilpil original.",
+    "emoji": "🍽️",
+    "baseServings": 4,
+    "prepMinutes": 15,
+    "cookMinutes": 25,
+    "difficulty": "Media",
+    "mealType": "Comida",
+    "style": "Alta cocina",
+    "cuisine": "Española",
+    "libraryCategory": "Alta cocina",
+    "recipeKind": "dish",
+    "ingredients": [
+      {
+        "name": "merluza sin espinas",
+        "quantity": 600,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "espárrago blanco en conserva escurrido",
+        "quantity": 300,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "espárrago verde",
+        "quantity": 250,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "hinojo",
+        "quantity": 100,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "caldo de pescado",
+        "quantity": 200,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "vino blanco",
+        "quantity": 50,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "nata",
+        "quantity": 30,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "aceite de oliva",
+        "quantity": 30,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "sal",
+        "quantity": 2,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "pimienta",
+        "quantity": 0.5,
+        "unit": "g",
+        "scalingMode": "linear"
+      }
+    ],
+    "miseEnPlace": [
+      "Seca el pescado y retira las bases fibrosas de los espárragos verdes."
+    ],
+    "steps": [
+      {
+        "number": 1,
+        "instruction": "Pica el hinojo y rehógalo con la mitad del aceite.",
+        "minutes": 5
+      },
+      {
+        "number": 2,
+        "instruction": "Añade espárragos blancos y vino; reduce 2 minutos. Agrega caldo, cuece 8 minutos y tritura con nata.",
+        "minutes": 10
+      },
+      {
+        "number": 3,
+        "instruction": "Saltea los espárragos verdes con el aceite restante hasta tiernos; reserva.",
+        "minutes": 5
+      },
+      {
+        "number": 4,
+        "instruction": "Salpimienta la merluza y cocínala por ambos lados hasta que el centro esté opaco y se separe en lascas. Sirve sobre la crema con los espárragos verdes.",
+        "minutes": 8
+      }
+    ],
+    "criticalPoints": [
+      "El tiempo depende del grosor del pescado; comprueba el centro."
+    ],
+    "substitutions": [],
+    "storage": "Sirve recién hecho; refrigera los sobrantes y consume al día siguiente.",
+    "source": {
+      "kind": "web",
+      "label": "Sergio y Javier Torres · adaptación doméstica",
+      "publisher": "RTVE · Torres en la cocina",
+      "url": "https://www.rtve.es/television/20160511/receta-merluza-con-pil-pil-esparragos/1349526.shtml",
+      "retrievedAt": "2026-09-26",
+      "adapted": true
+    },
+    "nutritionPerServing": {
+      "kcal": 273,
+      "proteinG": 32.6,
+      "carbsG": 3.6,
+      "fatG": 13.2
+    },
+    "nutritionStatus": "estimated",
+    "nutritionNotes": [
+      "Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.",
+      "Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados.",
+      "Espárrago en conserva aproximado con espárrago crudo; puede diferir según la marca.",
+      "Se incluye toda la energía del alcohol añadido; la cocción puede reducirla."
+    ]
+  },
+  {
+    "id": "lib-177",
+    "title": "Muffins de doble chocolate",
+    "description": "Doce muffins de cacao y chocolate negro. Adaptación con chocolate troceado; cantidades y nutrición por unidad.",
+    "emoji": "🧁",
+    "baseServings": 12,
+    "prepMinutes": 15,
+    "cookMinutes": 25,
+    "difficulty": "Fácil",
+    "mealType": "Merienda",
+    "style": "Casera",
+    "cuisine": "Estadounidense",
+    "libraryCategory": "Bizcochos, muffins y donuts",
+    "recipeKind": "dessert",
+    "ingredients": [
+      {
+        "name": "harina",
+        "quantity": 240,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "cacao puro",
+        "quantity": 57,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "azúcar moreno",
+        "quantity": 266,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "levadura química",
+        "quantity": 4,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "bicarbonato",
+        "quantity": 5,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "sal",
+        "quantity": 3,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "chocolate negro",
+        "quantity": 170,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "huevo",
+        "quantity": 100,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "leche",
+        "quantity": 170,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "extracto de vainilla",
+        "quantity": 10,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "vinagre",
+        "quantity": 10,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "mantequilla",
+        "quantity": 113,
+        "unit": "g",
+        "scalingMode": "linear"
+      }
+    ],
+    "miseEnPlace": [
+      "Pesa todo y trocea el chocolate.",
+      "Pesa el huevo batido sin cáscara para ajustar las unidades con precisión."
+    ],
+    "steps": [
+      {
+        "number": 1,
+        "instruction": "Precalienta a 175 °C y coloca las cápsulas necesarias en un molde. Mezcla harina, cacao, azúcar, levadura, bicarbonato, sal y chocolate.",
+        "temperatureC": 175
+      },
+      {
+        "number": 2,
+        "instruction": "Bate huevos, leche, vainilla y vinagre; incorpora la mantequilla fundida y templada."
+      },
+      {
+        "number": 3,
+        "instruction": "Une líquidos y secos con espátula, solo hasta desaparecer la harina. Reparte entre las cápsulas."
+      },
+      {
+        "number": 4,
+        "instruction": "Hornea 20–25 minutos, hasta que un palillo no tenga masa cruda. Reposa 5 minutos antes de pasar a rejilla.",
+        "minutes": 25,
+        "temperatureC": 175
+      }
+    ],
+    "criticalPoints": [
+      "No batas en exceso después de añadir la harina."
+    ],
+    "substitutions": [],
+    "storage": "Guarda fríos en recipiente cerrado 2 días o congela.",
+    "source": {
+      "kind": "web",
+      "label": "King Arthur Baking · adaptación doméstica",
+      "publisher": "King Arthur Baking",
+      "url": "https://www.kingarthurbaking.com/recipes/chocolate-breakfast-muffins-recipe",
+      "retrievedAt": "2026-09-26",
+      "adapted": true
+    },
+    "nutritionPerServing": {
+      "kcal": 334.7,
+      "proteinG": 5,
+      "carbsG": 49.1,
+      "fatG": 14.3
+    },
+    "nutritionStatus": "estimated",
+    "nutritionNotes": [
+      "Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.",
+      "Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados."
+    ]
+  },
+  {
+    "id": "lib-178",
+    "title": "Muffins de arándanos",
+    "description": "Adaptación de los muffins Jordan Marsh, con arándanos frescos. Doce unidades; nutrición por muffin.",
+    "emoji": "🧁",
+    "baseServings": 12,
+    "prepMinutes": 15,
+    "cookMinutes": 30,
+    "difficulty": "Fácil",
+    "mealType": "Merienda",
+    "style": "Casera",
+    "cuisine": "Estadounidense",
+    "libraryCategory": "Bizcochos, muffins y donuts",
+    "recipeKind": "dessert",
+    "ingredients": [
+      {
+        "name": "mantequilla",
+        "quantity": 113,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "azúcar",
+        "quantity": 248,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "huevo",
+        "quantity": 100,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "levadura química",
+        "quantity": 8,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "sal",
+        "quantity": 2,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "extracto de vainilla",
+        "quantity": 5,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "harina",
+        "quantity": 240,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "leche",
+        "quantity": 113,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "arándanos",
+        "quantity": 354,
+        "unit": "g",
+        "scalingMode": "linear"
+      }
+    ],
+    "miseEnPlace": [
+      "Lava y seca los arándanos; templa la mantequilla.",
+      "Pesa el huevo batido sin cáscara para ajustar las unidades con precisión."
+    ],
+    "steps": [
+      {
+        "number": 1,
+        "instruction": "Precalienta a 190 °C y prepara las cápsulas necesarias. Bate mantequilla blanda con cuatro quintas partes del azúcar.",
+        "temperatureC": 190
+      },
+      {
+        "number": 2,
+        "instruction": "Añade huevos de uno en uno, vainilla, sal y levadura. Alterna harina y leche, mezclando suavemente."
+      },
+      {
+        "number": 3,
+        "instruction": "Machaca una quinta parte de los arándanos e incorpora todos. Reparte la masa y espolvorea el azúcar reservado."
+      },
+      {
+        "number": 4,
+        "instruction": "Hornea 25–30 minutos. Comprueba con un palillo y deja 5 minutos en el molde antes de enfriar en rejilla.",
+        "minutes": 30,
+        "temperatureC": 190
+      }
+    ],
+    "criticalPoints": [
+      "Evita sobremezclar para conservar una miga tierna."
+    ],
+    "substitutions": [],
+    "storage": "Conserva fríos y tapados 2 días o congela.",
+    "source": {
+      "kind": "web",
+      "label": "King Arthur Baking · PJ Hamel · adaptación doméstica",
+      "publisher": "King Arthur Baking",
+      "url": "https://www.kingarthurbaking.com/recipes/famous-jordan-marsh-blueberry-muffins-recipe",
+      "retrievedAt": "2026-09-26",
+      "adapted": true
+    },
+    "nutritionPerServing": {
+      "kcal": 252.8,
+      "proteinG": 3.5,
+      "carbsG": 41.4,
+      "fatG": 9.2
+    },
+    "nutritionStatus": "estimated",
+    "nutritionNotes": [
+      "Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.",
+      "Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados."
+    ]
+  },
+  {
+    "id": "lib-179",
+    "title": "Donuts al horno con azúcar y canela",
+    "description": "Doce donuts de masa tipo bizcocho, sin fritura ni fermentación. Adaptación para molde de rosquillas; nutrición por unidad.",
+    "emoji": "🧁",
+    "baseServings": 12,
+    "prepMinutes": 15,
+    "cookMinutes": 12,
+    "difficulty": "Fácil",
+    "mealType": "Merienda",
+    "style": "Casera",
+    "cuisine": "Estadounidense",
+    "libraryCategory": "Bizcochos, muffins y donuts",
+    "recipeKind": "dessert",
+    "ingredients": [
+      {
+        "name": "mantequilla",
+        "quantity": 57,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "aceite de girasol",
+        "quantity": 50,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "azúcar",
+        "quantity": 149,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "azúcar moreno",
+        "quantity": 71,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "huevo",
+        "quantity": 100,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "levadura química",
+        "quantity": 6,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "bicarbonato",
+        "quantity": 1,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "nuez moscada",
+        "quantity": 1,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "sal",
+        "quantity": 3,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "extracto de vainilla",
+        "quantity": 5,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "harina",
+        "quantity": 320,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "leche",
+        "quantity": 227,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "canela molida",
+        "quantity": 2,
+        "unit": "g",
+        "scalingMode": "linear"
+      }
+    ],
+    "miseEnPlace": [
+      "Necesitas molde de donuts; prepara una rejilla.",
+      "Pesa el huevo batido sin cáscara para ajustar las unidades con precisión."
+    ],
+    "steps": [
+      {
+        "number": 1,
+        "instruction": "Precalienta a 190 °C. Engrasa ligeramente un molde de las rosquillas necesarias con parte del aceite.",
+        "temperatureC": 190
+      },
+      {
+        "number": 2,
+        "instruction": "Bate mantequilla, aceite restante, dos tercios del azúcar blanco y azúcar moreno. Incorpora huevos, levadura, bicarbonato, nuez moscada, sal y vainilla."
+      },
+      {
+        "number": 3,
+        "instruction": "Agrega harina alternando con leche. Reparte en el molde dejando espacio para crecer."
+      },
+      {
+        "number": 4,
+        "instruction": "Hornea 10–12 minutos. Reposa 5 minutos y desmolda; pasa aún tibios por el azúcar reservado mezclados con canela.",
+        "minutes": 12,
+        "temperatureC": 190
+      }
+    ],
+    "criticalPoints": [
+      "La textura es de bizcocho, diferente a un donut fermentado."
+    ],
+    "substitutions": [],
+    "storage": "Guarda fríos en recipiente cerrado 2 días.",
+    "source": {
+      "kind": "web",
+      "label": "King Arthur Baking · PJ Hamel · adaptación doméstica",
+      "publisher": "King Arthur Baking",
+      "url": "https://www.kingarthurbaking.com/recipes/baked-doughnuts-three-ways-recipe",
+      "retrievedAt": "2026-09-26",
+      "adapted": true
+    },
+    "nutritionPerServing": {
+      "kcal": 263.8,
+      "proteinG": 4.2,
+      "carbsG": 41.9,
+      "fatG": 9.9
+    },
+    "nutritionStatus": "estimated",
+    "nutritionNotes": [
+      "Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.",
+      "Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados."
+    ]
+  },
+  {
+    "id": "lib-180",
+    "title": "Donuts clásicos glaseados",
+    "description": "Adaptación de donuts fermentados con glaseado sencillo. Dieciséis unidades; hasta 3 horas y 40 minutos incluyendo reposos. Nutrición por unidad.",
+    "emoji": "🧁",
+    "baseServings": 16,
+    "prepMinutes": 200,
+    "cookMinutes": 20,
+    "difficulty": "Media",
+    "mealType": "Merienda",
+    "style": "Casera",
+    "cuisine": "Estadounidense",
+    "libraryCategory": "Bizcochos, muffins y donuts",
+    "recipeKind": "dessert",
+    "ingredients": [
+      {
+        "name": "harina",
+        "quantity": 360,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "azúcar",
+        "quantity": 50,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "sal",
+        "quantity": 2,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "levadura seca de panadería",
+        "quantity": 6,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "nuez moscada",
+        "quantity": 0.5,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "huevo",
+        "quantity": 50,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "leche",
+        "quantity": 227,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "mantequilla",
+        "quantity": 28,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "extracto de vainilla",
+        "quantity": 2.5,
+        "unit": "ml",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "aceite para freír",
+        "quantity": 900,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "azúcar glas",
+        "quantity": 150,
+        "unit": "g",
+        "scalingMode": "linear"
+      },
+      {
+        "name": "agua",
+        "quantity": 25,
+        "unit": "ml",
+        "scalingMode": "linear"
+      }
+    ],
+    "miseEnPlace": [
+      "Prepara cortadores, termómetro y papel absorbente.",
+      "Pesa el huevo batido sin cáscara para ajustar las unidades con precisión."
+    ],
+    "steps": [
+      {
+        "number": 1,
+        "instruction": "Mezcla harina, azúcar, sal, levadura y nuez moscada. Añade huevo, leche, mantequilla fundida templada y vainilla. Reposa 5 minutos y amasa 8."
+      },
+      {
+        "number": 2,
+        "instruction": "Tapa y deja crecer 90–120 minutos hasta duplicar volumen.",
+        "minutes": 120
+      },
+      {
+        "number": 3,
+        "instruction": "Extiende a 6 mm, corta los aros correspondientes a las unidades elegidas y deja fermentar tapados 30–60 minutos.",
+        "minutes": 45
+      },
+      {
+        "number": 4,
+        "instruction": "Fríe pocas piezas cada vez a 175 °C, aproximadamente un minuto por cara. Escurre y enfría; mezcla azúcar glas y agua y baña la superficie.",
+        "minutes": 20,
+        "temperatureC": 175
+      }
+    ],
+    "criticalPoints": [
+      "La fermentación depende de la temperatura; guíate por el volumen. No llenes la olla más de la mitad."
+    ],
+    "substitutions": [],
+    "storage": "Mejor el mismo día; conserva tapados o congela sin glasear.",
+    "source": {
+      "kind": "web",
+      "label": "King Arthur Baking · Susan Reid · adaptación doméstica",
+      "publisher": "King Arthur Baking",
+      "url": "https://www.kingarthurbaking.com/recipes/yeast-raised-doughnuts-recipe",
+      "retrievedAt": "2026-09-26",
+      "adapted": true
+    },
+    "nutritionPerServing": {
+      "kcal": 245.6,
+      "proteinG": 3.1,
+      "carbsG": 32,
+      "fatG": 12.6
+    },
+    "nutritionStatus": "estimated",
+    "nutritionNotes": [
+      "Estimación por ingredientes basada en CoFID 2021 y USDA SR Legacy 2018. Se usan alimentos representativos; las marcas y la preparación pueden cambiar los valores.",
+      "Se excluyen ingredientes opcionales. Los pesos por unidad, densidades y partes comestibles son estimados.",
+      "Fritura: se estiman 10 g de aceite absorbido por ración; puede variar considerablemente."
+    ]
   }
 ]

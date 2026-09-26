@@ -1,6 +1,6 @@
 # Estimaciones nutricionales de la biblioteca
 
-Las 170 recetas se calculan por ingredientes, sin consultas de IA en ejecución. No son resultados de laboratorio ni planes nutricionales personalizados.
+Las 180 recetas se calculan por ingredientes, sin consultas de IA en ejecución. No son resultados de laboratorio ni planes nutricionales personalizados.
 
 ## Fuentes
 
@@ -13,7 +13,7 @@ Las 170 recetas se calculan por ingredientes, sin consultas de IA en ejecución.
 
 ## Método reproducible
 
-Por ingrediente: cantidad comestible / 100 × nutrientes de su alimento de referencia. Se suman los ingredientes y se divide entre las raciones base de la receta. `node scripts/calculate-library-nutrition.mjs --check` reproduce y verifica los 170 resultados; sin `--check` actualiza recetas y auditoría.
+Por ingrediente: cantidad comestible / 100 × nutrientes de su alimento de referencia. Se suman los ingredientes y se divide entre las raciones base de la receta. `node scripts/calculate-library-nutrition.mjs --check` reproduce y verifica los 180 resultados; sin `--check` actualiza recetas y auditoría.
 
 Las cantidades en gramos se toman de la formulación. Para unidades se usan pesos comestibles estimados expresos (huevo 50 g, yema 17 g, ajo 3 g, etc.). Para mililitros se usa densidad estimada 1 g/ml salvo aceite 0,92, leche 1,03 y sirope simple 1,23. Las bebidas alcohólicas CoFID se expresan por 100 ml, no por 100 g.
 

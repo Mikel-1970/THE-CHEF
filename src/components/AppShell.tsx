@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, Camera, CookingPot, Heart, Home, PackageOpen, Search, Settings, ShoppingBasket, Sparkles, X } from 'lucide-react';
+import { ArrowLeft, BookOpen, Camera, CookingPot, Home, PackageOpen, Search, Settings, ShoppingBasket, Sparkles, X } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ export function AppShell({children,hideProfile=false,hideBack=false,onBack}: {ch
  const back=()=>{setOpen(false);if(onBack)onBack();else navigate(location.pathname.startsWith('/receta/')?'/mis-recetas':location.pathname.startsWith('/cocinar/')?location.pathname.replace('/cocinar/','/receta/'):'/')};
  useEffect(()=>{setOpen(false)},[location.pathname]);
  useEffect(()=>{if(!open)return;const escape=(e:KeyboardEvent)=>{if(e.key==='Escape'){setOpen(false);button.current?.focus()}};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape)},[open]);
- const items=[['/','Inicio',Home],['/mis-recetas','Mis recetas',BookOpen],['/mis-recetas?tab=favorites','Favoritos',Heart],['/tecnicas','Técnicas y tips',CookingPot],['/antojo','Qué cocinar',Sparkles],['/cocina-despensa','Abre la despensa',PackageOpen],['/foto','Foto Receta',Camera],['/lista-compra','Lista de la compra',ShoppingBasket],['/nevera','Despensa',PackageOpen],['/buscar','Buscar',Search],['/ajustes','Perfil y ajustes',Settings]] as const;
+ const items=[['/','Inicio',Home],['/mis-recetas','Mis recetas',BookOpen],['/antojo','Qué cocinar',Sparkles],['/cocina-despensa','Abre la despensa',PackageOpen],['/foto','Foto Receta',Camera],['/tecnicas','Técnicas y tips',CookingPot],['/lista-compra','Lista de la compra',ShoppingBasket],['/nevera','Despensa',PackageOpen],['/buscar','Buscar',Search],['/ajustes','Perfil y ajustes',Settings]] as const;
  return <div className="app-bg chef-app-shell">
   <div className="ambient ambient-one"/><div className="ambient ambient-two"/><div className="grain"/>
   <main className="phone-shell without-bottom-nav">{children}</main>
