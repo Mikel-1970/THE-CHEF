@@ -1,6 +1,9 @@
+import { AvatarPicker } from '../components/AvatarPicker';
+import { WelcomeSplash } from '../components/WelcomeSplash';
 import { Eye, EyeOff, KeyRound, LockKeyhole, Mic, UserRound } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
 import { useApp } from '../AppContext';
+import { hasLocalCredential, saveLocalCredential, verifyLocalCredential } from '../services/localAuth';
 import { loadMicrophonePreference, requestMicrophoneAccess, saveMicrophonePreference } from '../utils/microphonePreference';
 import '../entry-flow.css';
 
@@ -11,6 +14,7 @@ type Props = { onAuthenticated: () => void };
 export function AccessPage({ onAuthenticated }: Props) {
   const { settings, updateSettings } = useApp();
   const [mode, setMode] = useState<AccessMode>('login');
+  const [avatar, setAvatar] = useState(settings.avatarEmoji);
   const [name, setName] = useState(settings.displayName);
   const [user, setUser] = useState(settings.loginUser);
   const [password, setPassword] = useState('');
@@ -19,7 +23,7 @@ export function AccessPage({ onAuthenticated }: Props) {
   const [error, setError] = useState('');
   const [micStep, setMicStep] = useState(false);
   const [micBusy, setMicBusy] = useState(false);
-  const hasRegisteredUser = useMemo(() => Boolean(settings.loginUser && settings.loginPassword), [settings.loginPassword, settings.loginUser]);
+  const hasRegisteredUser = useMemo(() => Boolean(settings.loginUser && (hasLocalCredential(settings.loginUser) || settings.loginPassword)), [settings.loginPassword, settings.loginUser]);
 
   const finishAuthentication = () => {
     try { sessionStorage.setItem('chef:auth:session:v1', '1'); } catch { /* sin persistencia */ }
@@ -31,17 +35,28 @@ export function AccessPage({ onAuthenticated }: Props) {
     else finishAuthentication();
   };
 
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
     setError('');
-    const cleanUser = user.trim();
+    const cleanUser = user.includes('@') ? user.trim().toLowerCase() : user.trim();
 
     if (mode === 'login') {
       if (!hasRegisteredUser) {
         setError('Todavía no hay ningún usuario registrado en este dispositivo. Pulsa Registro.');
         return;
       }
-      if (cleanUser !== settings.loginUser || password !== settings.loginPassword) {
+      if (cleanUser !== settings.loginUser) {
+        setError('Usuario o contraseña incorrectos.');
+        return;
+      }
+      let valid=false;
+      if (hasLocalCredential(cleanUser)) valid=await verifyLocalCredential(cleanUser,password);
+      else if (settings.loginPassword && password===settings.loginPassword) {
+        await saveLocalCredential(cleanUser,password);
+        updateSettings({ loginPassword: undefined });
+        valid=true;
+      }
+      if (!valid) {
         setError('Usuario o contraseña incorrectos.');
         return;
       }
@@ -50,15 +65,16 @@ export function AccessPage({ onAuthenticated }: Props) {
     }
 
     if (mode === 'register') {
-      if (!name.trim() || !cleanUser || password.length < 4) {
-        setError('Completa nombre, usuario y una contraseña de al menos 4 caracteres.');
+      if (!name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanUser) || password.length < 4) {
+        setError('Completa nombre, correo válido y una contraseña de al menos 4 caracteres.');
         return;
       }
       if (password !== confirmPassword) {
         setError('Las contraseñas no coinciden.');
         return;
       }
-      updateSettings({ displayName: name.trim(), loginUser: cleanUser, loginPassword: password });
+      await saveLocalCredential(cleanUser,password);
+      updateSettings({ displayName: name.trim(), avatarEmoji: avatar, profileImage: undefined, loginUser: cleanUser, loginPassword: undefined });
       continueAfterCredentials();
       return;
     }
@@ -75,12 +91,15 @@ export function AccessPage({ onAuthenticated }: Props) {
       setError('Introduce dos veces la nueva contraseña.');
       return;
     }
-    updateSettings({ loginPassword: password });
+    await saveLocalCredential(cleanUser,password);
+    updateSettings({ loginPassword: undefined });
     setPassword('');
     setConfirmPassword('');
     setMode('login');
     setError('Contraseña actualizada. Ya puedes iniciar sesión.');
   };
+
+  const safeSubmit = async (event: FormEvent) => { try { await submit(event); } catch (err) { setError(err instanceof Error ? err.message : 'No se ha podido proteger la credencial local.'); } };
 
   const allowMicrophone = async () => {
     if (micBusy) return;
@@ -103,7 +122,7 @@ export function AccessPage({ onAuthenticated }: Props) {
           <div className="entry-round-icon"><Mic size={34} /></div>
           <span className="entry-eyebrow">CONFIGURACIÓN INICIAL</span>
           <h1>¿Permitir el micrófono?</h1>
-          <p>Si lo permites ahora, El Chef podrá activar el dictado cuando entres en una petición sin pedirte este permiso cada vez.</p>
+          <p>Podrás dictar pulsando el botón del micrófono y volver a pulsarlo para parar.</p>
           <div className="entry-actions stacked">
             <button className="entry-primary" type="button" onClick={() => void allowMicrophone()} disabled={micBusy}>{micBusy ? 'Solicitando permiso…' : 'Permitir micrófono'}</button>
             <button className="entry-secondary" type="button" onClick={skipMicrophone}>Ahora no</button>
@@ -115,34 +134,34 @@ export function AccessPage({ onAuthenticated }: Props) {
   }
 
   return (
-    <div className="entry-page">
-      <section className="entry-card access-card">
-        <div className="entry-logo"><span>THE</span><strong>CHEF</strong></div>
+    <WelcomeSplash onChoose={chosen=>{setMode(chosen);setError('');setPassword('');setConfirmPassword('')}} avatar={mode === 'register' ? avatar : settings.avatarEmoji} greeting={mode === 'login' && hasRegisteredUser ? `Bienvenido${settings.displayName ? `, ${settings.displayName}` : ''}` : undefined}>
+      <section key={mode} className="access-card">
         <span className="entry-eyebrow">ACCESO</span>
-        <h1>{mode === 'login' ? 'Bienvenido' : mode === 'register' ? 'Crear usuario' : 'Recuperar contraseña'}</h1>
-        <p>{mode === 'login' ? 'Identifícate para entrar en tu cocina.' : mode === 'register' ? 'Crea el usuario de acceso para esta versión de The Chef.' : 'Define una nueva contraseña para el usuario registrado.'}</p>
+        {mode !== 'login' && <h2>{mode === 'register' ? 'Crear usuario' : 'Recuperar contraseña'}</h2>}
+        <p>{mode === 'login' ? 'Identifícate para entrar en tu cocina.' : mode === 'register' ? 'Crea el usuario de acceso para esta versión de Chef Voldi.' : 'Define una nueva contraseña para el usuario registrado.'}</p>
 
-        <form className="entry-form" onSubmit={submit}>
+        <form className="entry-form" onSubmit={safeSubmit}>
           {mode === 'register' && (
             <label><span>Nombre</span><div className="entry-input"><UserRound size={18} /><input value={name} onChange={event => setName(event.target.value)} autoComplete="name" placeholder="Tu nombre" /></div></label>
           )}
-          <label><span>Usuario</span><div className="entry-input"><UserRound size={18} /><input value={user} onChange={event => setUser(event.target.value)} autoComplete="username" placeholder="Usuario" /></div></label>
+          {mode === 'register' && <AvatarPicker value={avatar} onChange={setAvatar} />}
+          <label><span>{mode === 'register' ? 'Correo electrónico' : 'Usuario o correo'}</span><div className="entry-input"><UserRound size={18} /><input value={user} onChange={event => setUser(event.target.value)} type={mode === 'register' ? 'email' : 'text'} autoComplete={mode === 'register' ? 'email' : 'username'} placeholder={mode === 'register' ? 'tu@correo.com' : 'Usuario o correo'} required /></div></label>
           <label><span>{mode === 'recover' ? 'Nueva contraseña' : 'Contraseña'}</span><div className="entry-input"><KeyRound size={18} /><input type={showPassword ? 'text' : 'password'} value={password} onChange={event => setPassword(event.target.value)} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} placeholder="Contraseña" /><button type="button" onClick={() => setShowPassword(value => !value)} aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}>{showPassword ? <EyeOff size={19} /> : <Eye size={19} />}</button></div></label>
           {(mode === 'register' || mode === 'recover') && (
             <label><span>Repetir contraseña</span><div className="entry-input"><LockKeyhole size={18} /><input type={showPassword ? 'text' : 'password'} value={confirmPassword} onChange={event => setConfirmPassword(event.target.value)} autoComplete="new-password" placeholder="Repite la contraseña" /></div></label>
           )}
 
           {error && <div className={`entry-message ${error.startsWith('Contraseña actualizada') ? 'success' : ''}`}>{error}</div>}
-          <button className="entry-primary" type="submit">{mode === 'login' ? 'Login' : mode === 'register' ? 'Registro' : 'Guardar nueva contraseña'}</button>
+          <button className="entry-primary" type="submit">{mode === 'login' ? 'Entrar' : mode === 'register' ? 'Registro' : 'Guardar nueva contraseña'}</button>
         </form>
 
         <div className="entry-links">
-          {mode !== 'login' && <button type="button" onClick={() => { setMode('login'); setError(''); setPassword(''); setConfirmPassword(''); }}>Volver a Login</button>}
+          {mode !== 'login' && <button type="button" onClick={() => { setMode('login'); setError(''); setPassword(''); setConfirmPassword(''); }}>Volver al acceso</button>}
           {mode === 'login' && <><button type="button" onClick={() => { setMode('register'); setError(''); setPassword(''); }}>Registro</button><button type="button" onClick={() => { setMode('recover'); setError(''); setPassword(''); setConfirmPassword(''); }}>¿Has olvidado la contraseña?</button></>}
         </div>
 
-        <small className="entry-local-note">Acceso provisional de esta versión: los datos se guardan localmente en el dispositivo hasta conectar el sistema definitivo de usuarios.</small>
+        <small className="entry-local-note">Acceso provisional de beta: la contraseña se guarda localmente mediante un derivado criptográfico, no en texto legible. El sistema definitivo de usuarios se conectará antes de producción.</small>
       </section>
-    </div>
+    </WelcomeSplash>
   );
 }

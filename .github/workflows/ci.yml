@@ -1,17 +1,14 @@
-name: Validar El Chef
-
+name: Validar The Chef
 on:
   push:
     branches-ignore: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar repositorio
@@ -21,6 +18,28 @@ jobs:
         with:
           node-version: 24
       - name: Instalar dependencias
-        run: npm install
+        run: npm ci
+      - name: Auditoría de vulnerabilidades críticas de producción
+        run: npm audit --omit=dev --audit-level=critical
+      - name: Auditoría estática Fase 1
+        run: npm run audit:phase1
+
+      - name: Verificar cálculos nutricionales de la biblioteca
+        run: npm run check:nutrition
+
+      - name: Validar Pages Functions
+        run: npm run check:functions
       - name: Compilar y validar TypeScript
+        run: npm run build
+
+      - name: Preparar navegador de pruebas
+        run: npx playwright install --with-deps chromium
+      - name: Verificar preview en móvil y escritorio
+        run: npm run test:preview
+
+      - name: Simular build de Cloudflare Pages
+        env:
+          CF_PAGES: "1"
+          CF_PAGES_COMMIT_SHA: ${{ github.sha }}
+          CF_PAGES_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: npm run build

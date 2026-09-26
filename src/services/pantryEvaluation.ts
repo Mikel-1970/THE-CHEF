@@ -87,3 +87,22 @@ function fromBaseQuantity(quantity: number, unit: string): number {
 function normalize(value: string): string {
   return value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 }
+
+/** Require the requested main products, rather than accepting the best of poor scores. */
+export function recipeMatchesSelectedPantry(recipe:Recipe,request:CookingRequest):boolean {
+ const selected=(request.pantryIngredients??[]).filter(i=>i.priority);
+ const wanted=selected.length?selected:(request.pantryIngredients??[]);
+ if(!wanted.length)return false;
+ const required=recipe.ingredients.filter(i=>!i.optional);
+ const matches=wanted.filter(p=>required.some(i=>ingredientMatch(i.name,p.name)));
+ if(matches.length/wanted.length<2/3)return false;
+ // A single omitted secondary dairy/seasoning is acceptable, never a main product.
+ const secondary=(name:string)=>/^(yogur|leche|nata|queso|sal|pimienta|aceite|ajo|diente de ajo|perejil|limon|agua|caldo|tomate|cebolla|azafran)\b/.test(normalize(name));
+ const seafood=(name:string)=>/calamar|sepia|gamba|langostino|mejillon|almeja/.test(normalize(name));
+ if(wanted.some(p=>!secondary(p.name)&&!matches.includes(p)&&!(seafood(p.name)&&matches.some(m=>seafood(m.name)))))return false;
+ const missing=evaluateRecipePantry(recipe,request).filter(e=>!e.ingredient.optional&&e.status==='missing'&&!secondary(e.ingredient.name));
+ // Do not suggest a mushroom/meat/fish dish if that defining ingredient is absent.
+ if(missing.some(e=>ingredientMatch(recipe.title,e.ingredient.name)))return false;
+ const substantive=required.filter(i=>!secondary(i.name));
+ return missing.length<=2 && (substantive.length-missing.length)/Math.max(1,substantive.length)>=.6;
+}

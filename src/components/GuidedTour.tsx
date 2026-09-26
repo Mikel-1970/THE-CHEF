@@ -17,12 +17,7 @@ const HOME_TIPS: TutorialTip[] = [
   {
     selector: '[data-tour="desire"]',
     title: 'Pídele al Chef lo que quieras',
-    body: 'Entra aquí cuando ya sabes qué te apetece. Puedes escribir o dictar tu petición y después ajustar comensales, tiempo, estilo o tipo de cocina.'
-  },
-  {
-    selector: '[data-tour="pantry-cook"]',
-    title: 'Cocina con lo que hay',
-    body: 'Selecciona lo que tienes disponible y El Chef buscará la mejor forma de aprovecharlo, priorizando calidad y pocas compras adicionales.'
+    body: 'Escribe o dicta un plato o los ingredientes que tienes. Primero buscamos en la biblioteca; si no encaja ninguna receta, puedes pedir una con IA.'
   },
   {
     selector: '[data-tour="photo"]',
@@ -33,11 +28,6 @@ const HOME_TIPS: TutorialTip[] = [
     selector: '[data-tour="quick"]',
     title: 'Tus accesos rápidos',
     body: 'Desde aquí puedes entrar directamente en Mis recetas, Favoritas, Historial y Cesta de compra.'
-  },
-  {
-    selector: '[data-tour="bottom-nav"]',
-    title: 'Menú principal en Inicio',
-    body: 'En la pantalla de Inicio tienes el menú completo. El botón central muestra el avatar que hayas elegido como usuario.'
   },
   {
     selector: '[data-tour="profile"]',
@@ -53,22 +43,13 @@ function tipsForPath(pathname: string): TutorialTip[] {
     { selector: '.photo-recipe-actions', title: 'Foto o galería', body: 'Elige la entrada que prefieras. Después El Chef analizará el plato antes de generar ninguna receta.' },
     { selector: '.photo-identification-card', title: 'Confirma antes de continuar', body: 'Revisa la identificación, corrígela por texto o voz si hace falta y confirma los ingredientes, personalización y comensales antes de generar la receta.' }
   ];
-  if (pathname.startsWith('/cocina-despensa')) return [
-    { selector: '.pantry-choice-grid', title: 'Elige lo que quieres aprovechar', body: 'Marca los productos que quieres utilizar. Puedes añadir otros escribiendo o dictando.' },
-    { selector: '.advanced-toggle', title: 'Ajusta solo si lo necesitas', body: 'En Más opciones puedes limitar estilo, tipo de cocina o dificultad sin complicar la búsqueda básica.' },
-    { selector: '.sticky-action', title: 'Pide propuestas', body: 'Cuando esté todo listo, El Chef utilizará esos productos como prioridad y propondrá platos coherentes.' }
-  ];
-  if (pathname.startsWith('/nevera')) return [
-    { selector: '.pantry-add-first', title: 'Despensa y nevera', body: 'Añade aquí lo que tienes en casa, con cantidad si la conoces. Este apartado guarda existencias; para cocinar usa Cocina con lo que hay.' },
-    { selector: '.editable-stock-list', title: 'Actualiza lo que tienes', body: 'Puedes cambiar cantidades y unidades o eliminar productos. Si quitas uno, podrás pasarlo a la lista de compra.' }
-  ];
   if (pathname.startsWith('/propuestas')) return [
     { selector: '.proposal-stack', title: 'Compara las propuestas', body: 'Elige la opción que más te encaje. La receta completa se genera solo cuando seleccionas una propuesta.' },
     { selector: '.proposal-footer-actions', title: 'Cambia sin empezar de cero', body: 'Puedes pedir otras ideas o volver a cambiar opciones conservando el contexto de la búsqueda.' }
   ];
   if (pathname.startsWith('/receta/')) return [
     { selector: '.recipe-action-grid', title: 'Consulta lo importante', body: 'Ingredientes, Mise en place, Puntos críticos y Recomendaciones están separados para que puedas consultarlos sin duplicar la elaboración.' },
-    { selector: '.cook-cta', title: 'Pasa al modo cocina', body: 'Cuando quieras empezar, entra en Empezar a cocinar para avanzar paso a paso con tiempos, temperaturas y temporizadores.' }
+    { selector: '.cook-cta', title: 'Pasa al modo cocina', body: 'Cuando quieras empezar, entra en Elaboración para avanzar paso a paso con tiempos, temperaturas y temporizador.' }
   ];
   if (pathname.startsWith('/cocinar/')) return [
     { selector: '.cook-main', title: 'Sigue un paso cada vez', body: 'Cada pantalla muestra únicamente lo necesario para ese paso: instrucción, tiempo, temperatura y señales visuales.' },
@@ -84,14 +65,14 @@ function tipsForPath(pathname: string): TutorialTip[] {
   ];
   if (pathname.startsWith('/tecnicas')) return [
     { selector: '.technique-input-box', title: 'Pregunta por una técnica', body: 'Escribe o dicta la preparación que quieres aprender. El Chef generará una ficha reutilizable.' },
-    { selector: '.recipe-action-grid', title: 'Consulta antes de empezar', body: 'Revisa Ingredientes, Mise en place, Recomendaciones y Puntos críticos, y después entra en Empezar técnica.' }
+    { selector: '.recipe-action-grid', title: 'Consulta antes de empezar', body: 'Revisa Ingredientes, Mise en place, Recomendaciones y Puntos críticos, y después entra en la elaboración de la técnica.' }
   ];
   if (pathname.startsWith('/buscar')) return [
     { selector: '.search-box', title: 'Busca una receta', body: 'Utiliza este apartado cuando quieras localizar una receta concreta por nombre, ingrediente o idea.' }
   ];
   if (pathname.startsWith('/antojo')) return [
-    { selector: '.desire-box', title: 'Dile al Chef qué te apetece', body: 'Describe el plato o la idea con tus palabras. Puedes hacerlo por texto o voz y completar únicamente las opciones que te interesen.' },
-    { selector: '.advanced-toggle', title: 'Afina solo cuando quieras', body: 'Comensales y tiempo están siempre disponibles. En Más opciones puedes añadir estilo, cocina y dificultad.' }
+    { selector: '.desire-box', title: 'Dile al Chef qué te apetece', body: 'Describe un plato o los ingredientes disponibles, confirma el texto y pulsa Buscar receta.' },
+    { selector: '.visual-generate', title: 'Biblioteca primero', body: 'Si no encontramos una receta adecuada, te preguntaremos si quieres generarla con IA. La personalización está en la ficha de la receta.' }
   ];
   if (pathname.startsWith('/ajustes')) return [
     { selector: '.settings-user-fields', title: 'Tus datos de acceso', body: 'Aquí puedes revisar nombre, usuario y contraseña. La contraseña permanece oculta hasta que pulses el icono del ojo.' },

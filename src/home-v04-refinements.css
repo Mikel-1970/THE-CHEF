@@ -27,7 +27,7 @@
 .reference-card-cta,.reference-secondary-copy b { display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 13px;border-radius:999px;font-size:.7rem;font-weight:850;letter-spacing:.01em; }
 .reference-card-cta { margin-top:12px;background:#405626;color:white;box-shadow:0 6px 14px rgba(51,69,35,.16); }
 
-/* El icono de “¿Qué quieres que te prepare?” queda abajo: nunca tapa título ni CTA. */
+/* Estilos base del icono; la posición final se define al final de esta hoja. */
 .reference-card-icon { left:18px;right:auto;top:auto;bottom:16px;width:56px;height:56px; }
 .reference-card-icon svg { width:30px;height:30px; }
 
@@ -96,3 +96,24 @@
   .reference-secondary-copy { top:38%; }
   .reference-quick-grid button { min-height:58px; }
 }
+
+/* Iconos superiores y dos tarjetas amplias con CTA alineados. */
+.reference-home { height:auto; min-height:100dvh; overflow:visible; }
+.reference-main-actions { flex:0 0 auto; }
+.reference-action-card { height:260px; }
+.reference-home .reference-action-card .reference-card-icon { top:12px; right:12px; bottom:auto; left:auto; width:40px; height:40px; }
+.reference-home .reference-action-card .reference-card-icon svg { width:25px; height:25px; }
+.reference-secondary-actions { flex:0 0 auto; }
+.reference-secondary-card { height:250px; min-height:250px; max-height:none; }
+.reference-secondary-copy { top:72px; bottom:18px; gap:8px; }
+.reference-secondary-copy strong { font-size:1.2rem; }
+.reference-secondary-copy small { display:block; font-size:.75rem; }
+.reference-secondary-copy b { flex-shrink:0; min-height:40px; font-size:.75rem; }
+.reference-quick-section { flex:0 0 auto; }
+.reference-quick-grid button { min-height:76px; }
+@media (max-width:390px) { .reference-secondary-card { height:240px; min-height:240px; } }
+
+
+
+.reference-home .reference-secondary-actions { grid-template-columns: minmax(0,1fr)!important; }
+.reference-home .reference-quick-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }

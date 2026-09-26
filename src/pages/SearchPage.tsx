@@ -1,12 +1,15 @@
+import {foodTextMatches,foodTitleScore} from '../utils/recipeSearch';
 import { Check, ChevronDown, ChevronUp, Clock3, Globe2, Mic, MicOff, Search, SlidersHorizontal, Sparkles, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import {useApp} from '../AppContext';
+import {CookingOptions,cookingRequestOptions,type CookingOptionsValue} from '../components/CookingOptions';
+import {RecipeThumbnail} from '../components/RecipeThumbnail';
+import {recipeViolatesRestrictions} from '../services/restrictionGuard';
+import {generateDirectRecipe} from '../services/directRecipeGateway';
+import '../my-recipes.css';
 import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
-import { Chip } from '../components/Chip';
-import { CuisineSelect } from '../components/CuisineSelect';
-import { NumberStepper } from '../components/NumberStepper';
-import { RECIPE_STYLES } from '../data/cookingOptions';
 import type { Difficulty } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { fetchExternalSearch, isExternalRecipeApiConfigured } from '../services/externalRecipeGateway';
@@ -14,16 +17,17 @@ import { getAllRecipes, registerExternalRecipes } from '../services/recipeCatalo
 import { formatDuration } from '../utils/time';
 import '../voice-input.css';
 
-const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
 const difficultyRank: Record<Difficulty, number> = { Fácil: 1, Media: 2, Avanzada: 3 };
 
 export function SearchPage() {
   const [query, setQuery] = useState('');
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [cuisine, setCuisine] = useState<string>();
-  const [style, setStyle] = useState<string>();
-  const [difficulty, setDifficulty] = useState<Difficulty>();
-  const [maxMinutes, setMaxMinutes] = useState(180);
+  const {settings,setSearch}=useApp();const navigate=useNavigate();
+  const emptyOptions:CookingOptionsValue={servings:settings.defaultServings,restrictions:[],customRestriction:''};
+  const [options,setOptions]=useState<CookingOptionsValue>(emptyOptions);
+  const {cuisine,style,difficulty,maxMinutes,spiceLevel}=options;
+  const restrictions=cookingRequestOptions(options).restrictions;
+  const [generating,setGenerating]=useState(false);
   const [catalogVersion, setCatalogVersion] = useState(0);
   const [isSearchingExternal, setIsSearchingExternal] = useState(false);
   const [externalMessage, setExternalMessage] = useState<string>();
@@ -36,24 +40,26 @@ export function SearchPage() {
     return catalog
       .filter(recipe => {
         const haystack = normalize([recipe.title, recipe.description, recipe.cuisine, recipe.style, ...recipe.ingredients.map(ingredient => ingredient.name)].join(' '));
-        const textMatches = !words.length || words.every(word => haystack.includes(word));
+        const textMatches = !words.length || foodTextMatches(haystack,query);
         const cuisineMatches = !cuisine || normalize(recipe.cuisine) === normalize(cuisine);
         const styleMatches = !style || normalize(recipe.style) === normalize(style);
         const difficultyMatches = !difficulty || difficultyRank[recipe.difficulty] <= difficultyRank[difficulty];
-        const timeMatches = recipe.prepMinutes + recipe.cookMinutes <= maxMinutes;
-        return textMatches && cuisineMatches && styleMatches && difficultyMatches && timeMatches;
+        const timeMatches = maxMinutes===undefined||recipe.prepMinutes + recipe.cookMinutes <= maxMinutes;
+        const restrictionMatches=!recipeViolatesRestrictions(recipe,restrictions);
+        const spicy=/guindilla|chile|cayena|sriracha|tabasco|picante/i.test(recipe.ingredients.filter(i=>!i.optional).map(i=>i.name).join(' '));
+        const spiceMatches=!spiceLevel||(spiceLevel==='Nada'?!spicy:spicy);
+        return Boolean(query.trim()) && textMatches && cuisineMatches && styleMatches && difficultyMatches && timeMatches && restrictionMatches && spiceMatches;
       })
-      .sort((a, b) => (a.prepMinutes + a.cookMinutes) - (b.prepMinutes + b.cookMinutes));
-  }, [catalog, query, cuisine, style, difficulty, maxMinutes]);
+      .sort((a, b) => foodTitleScore(b.title,query)-foodTitleScore(a.title,query)||(a.prepMinutes + a.cookMinutes) - (b.prepMinutes + b.cookMinutes));
+  }, [catalog, query, options]);
 
-  const activeFilters = [cuisine, style, difficulty, maxMinutes < 180 ? String(maxMinutes) : undefined].filter(Boolean).length;
-  const externalConfigured = isExternalRecipeApiConfigured();
-
-  const clearFilters = () => {
-    setCuisine(undefined);
-    setStyle(undefined);
-    setDifficulty(undefined);
-    setMaxMinutes(180);
+  const activeFilters=[cuisine,style,difficulty,maxMinutes,spiceLevel,...restrictions].filter(v=>v!==undefined&&v!=='').length;
+  const externalConfigured=isExternalRecipeApiConfigured();
+  const clearFilters=()=>setOptions(emptyOptions);
+  const generate=async()=>{
+    if(!query.trim()||generating)return;setGenerating(true);setExternalMessage(undefined);
+    const request={mode:'desire' as const,generationMode:'ai' as const,desireText:query.trim(),...cookingRequestOptions(options)};
+    try{const result=await generateDirectRecipe(request);setSearch(request,[result.proposal]);navigate(`/receta/${result.recipe.id}?servings=${request.servings}`)}catch(e){setExternalMessage(e instanceof Error?e.message:'No se ha podido generar la receta.')}finally{setGenerating(false)}
   };
 
   const confirmQuery = () => {
@@ -79,7 +85,7 @@ export function SearchPage() {
 
   return (
     <AppShell>
-      <ChefLoadingOverlay active={isSearchingExternal} title="Buscando recetas" messages={['¡Oído cocina!', 'Buscando nuevas recetas…', 'Revisando opciones…', 'Comprobando resultados…']} />
+      <ChefLoadingOverlay active={isSearchingExternal||generating} title={generating?"Creando tu receta":"Buscando recetas"} messages={['¡Oído cocina!', 'Buscando nuevas recetas…', 'Revisando opciones…', 'Comprobando resultados…']} />
       <div className="simple-page-header light-header"><span className="eyebrow">BUSCAR RECETAS</span><h1>Encuentra un plato</h1><p>Busca por nombre, ingrediente, estilo o tipo de cocina.</p></div>
       <div className="page-content nav-safe">
         <div className="search-box">
@@ -97,33 +103,18 @@ export function SearchPage() {
 
         <button className="advanced-toggle" onClick={() => setFiltersOpen(value => !value)}><span><SlidersHorizontal size={17} /> Filtros{activeFilters ? ` · ${activeFilters}` : ''}</span>{filtersOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
 
-        {filtersOpen && (
-          <section className="advanced-panel">
-            <div className="advanced-group"><strong>Tiempo máximo</strong><div className="control-row"><div className="control-title"><Clock3 size={18} /><div><small>Saltos de 5 min · también puedes escribirlo</small></div></div><NumberStepper value={maxMinutes} min={15} max={180} step={5} suffix="min" editable onChange={setMaxMinutes} /></div></div>
-            <div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div>
-            <div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(value => <Chip key={value} selected={style === value} onClick={() => setStyle(style === value ? undefined : value)}>{value}</Chip>)}</div></div>
-            <div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(value => <Chip key={value} selected={difficulty === value} onClick={() => setDifficulty(difficulty === value ? undefined : value)}>{value}</Chip>)}</div></div>
-            {activeFilters > 0 && <button className="secondary-button" onClick={clearFilters}>Limpiar filtros</button>}
-          </section>
-        )}
+        {filtersOpen && <><CookingOptions value={options} onChange={patch=>setOptions(v=>({...v,...patch}))} expanded hideServings/>{activeFilters>0&&<button className="secondary-button" onClick={clearFilters}>Limpiar filtros</button>}</>}
 
-        {externalConfigured && <button className="secondary-button" style={{ marginTop: 14 }} onClick={searchExternal} disabled={isSearchingExternal}><Globe2 size={17} /> {isSearchingExternal ? 'Consultando fuentes online…' : 'Buscar también en fuentes online'}</button>}
+        {externalConfigured && <button className="secondary-button" style={{ marginTop: 14 }} onClick={searchExternal} disabled={isSearchingExternal||!query.trim()}><Globe2 size={17} /> {isSearchingExternal ? 'Consultando fuentes online…' : 'Buscar también en fuentes online'}</button>}
         {externalMessage && <div className="pantry-basics-note">{externalMessage}</div>}
 
-        <section className="library-section">
-          <div className="section-heading-row"><div><span className="eyebrow">RECETAS</span><h2>{recipes.length ? `${recipes.length} disponibles` : 'No hay coincidencias'}</h2></div></div>
-          <div className="library-list">
-            {recipes.map(recipe => (
-              <Link className="library-card" key={recipe.id} to={`/receta/${recipe.id}`} aria-label={`Abrir receta ${recipe.title}`}>
-                <span className="library-emoji">{recipe.emoji}</span>
-                <div><strong>{recipe.title}</strong><small><Clock3 size={13} /> {formatDuration(recipe.prepMinutes + recipe.cookMinutes)} · {recipe.cuisine} · {recipe.style}{recipe.source?.kind === 'web' ? ' · Web' : recipe.source?.kind === 'ai' ? ' · IA validada' : ''}</small></div>
-              </Link>
-            ))}
-            {!recipes.length && <div className="empty-card">Prueba con otros términos o amplía los filtros.</div>}
-          </div>
-        </section>
-
-        <section className="editorial-card small-info"><div><strong>{externalConfigured ? 'Búsqueda híbrida activa' : 'Búsqueda híbrida preparada'}</strong><p>{externalConfigured ? 'El catálogo local se combina con recetas externas que pasan los controles de coherencia antes de mostrarse.' : 'La app ya está preparada para consultar web e IA mediante un backend seguro. Hasta conectarlo, utiliza el catálogo validado de El Chef.'}</p></div></section>
+        {query.trim()?<section className="library-section">
+          <div className="section-heading-row"><div><span className="eyebrow">RECETAS</span><h2>{recipes.length?`${recipes.length} disponibles`:'No hay coincidencias'}</h2></div></div>
+          {spiceLevel&&spiceLevel!=='Nada'&&<p>Recetas con ingredientes picantes. La intensidad se ajusta al personalizar o generar la receta.</p>}
+          <div className="library-photo-grid">{recipes.map(recipe=><article className="library-photo-card" key={recipe.id}><Link className="library-photo-open" to={`/receta/${recipe.id}`} aria-label={`Abrir receta ${recipe.title}`}><RecipeThumbnail recipe={recipe}/><div className="library-photo-caption"><strong>{recipe.title}</strong><small><Clock3 size={13}/> {formatDuration(recipe.prepMinutes+recipe.cookMinutes)} · {recipe.cuisine}</small></div></Link></article>)}</div>
+          {!recipes.length&&<p className="empty-card">Prueba otros términos o genera una receta con tus preferencias.</p>}
+          <button className="secondary-button" style={{marginTop:16}} disabled={generating||isSearchingExternal} onClick={()=>void generate()}><Sparkles size={18}/> Generar una receta con IA</button>
+        </section>:<p className="empty-card">Escribe un plato o ingrediente para encontrar recetas.</p>}
       </div>
     </AppShell>
   );

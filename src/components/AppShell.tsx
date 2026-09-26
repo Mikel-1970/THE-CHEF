@@ -1,62 +1,26 @@
-import { BookOpen, CookingPot, Home, PackageOpen, Search, Settings, ShoppingBasket, Sparkles, X } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
+import { ArrowLeft, BookOpen, Camera, CookingPot, Home, Search, Settings, ShoppingBasket, Sparkles, X } from 'lucide-react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
-import { BottomNav } from './BottomNav';
 import { ChefAvatar } from './ChefAvatar';
-
-export function AppShell({ children, hideProfile = false }: {
-  children: ReactNode;
-  hideNav?: boolean;
-  hideBack?: boolean;
-  hideProfile?: boolean;
-  onBack?: () => void;
-}) {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { settings } = useApp();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const isHome = location.pathname === '/';
-
-  const go = (path: string) => {
-    setMenuOpen(false);
-    navigate(path);
-  };
-
-  return (
-    <div className="app-bg">
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
-      <div className="grain" />
-      <main className={`phone-shell ${isHome ? '' : 'without-bottom-nav'}`}>{children}</main>
-
-      {isHome && !hideProfile && (
-        <button data-tour="profile" className="floating-profile-button" onClick={() => navigate('/ajustes')} aria-label="Abrir Perfil">
-          <ChefAvatar avatar={settings.avatarEmoji} size={42} showHat={false} className="chef-avatar-compact" />
-        </button>
-      )}
-
-      {isHome && <BottomNav />}
-
-      {!isHome && !hideProfile && (
-        <div className={`floating-avatar-menu ${menuOpen ? 'open' : ''}`}>
-          {menuOpen && (
-            <div className="floating-avatar-popover" role="menu" aria-label="Menú de navegación">
-              <button type="button" onClick={() => go('/')}><Home size={19} /><span>Inicio</span></button>
-              <button type="button" onClick={() => go('/antojo')}><Sparkles size={19} /><span>¿Qué quieres cocinar?</span></button>
-              <button type="button" onClick={() => go('/buscar')}><Search size={19} /><span>Buscar</span></button>
-              <button type="button" onClick={() => go('/nevera')}><PackageOpen size={19} /><span>Despensa y nevera</span></button>
-              <button type="button" onClick={() => go('/lista-compra')}><ShoppingBasket size={19} /><span>Lista de compra</span></button>
-              <button type="button" onClick={() => go('/mis-recetas')}><BookOpen size={19} /><span>Mis recetas</span></button>
-              <button type="button" onClick={() => go('/tecnicas')}><CookingPot size={19} /><span>Técnicas</span></button>
-              <button type="button" onClick={() => go('/ajustes')}><Settings size={19} /><span>Ajustes</span></button>
-            </div>
-          )}
-          <button type="button" className="floating-avatar-button" onClick={() => setMenuOpen(value => !value)} aria-expanded={menuOpen} aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}>
-            {menuOpen ? <X size={26} /> : <ChefAvatar avatar={settings.avatarEmoji} size={58} showHat={false} />}
-          </button>
-        </div>
-      )}
-    </div>
-  );
+import './AppNavigation.css';
+export function AppShell({children,hideProfile=false,hideBack=false,onBack}: {children:ReactNode;hideNav?:boolean;hideBack?:boolean;hideProfile?:boolean;onBack?:()=>void}) {
+ const location=useLocation(),navigate=useNavigate();const{settings}=useApp();
+ const [open,setOpen]=useState(false);
+ const button=useRef<HTMLButtonElement>(null);
+ const go=(path:string)=>{setOpen(false);navigate(path)};
+ const back=()=>{setOpen(false);if(onBack)onBack();else navigate(location.pathname.startsWith('/receta/')?'/mis-recetas':location.pathname.startsWith('/cocinar/')?location.pathname.replace('/cocinar/','/receta/'):'/')};
+ useEffect(()=>{setOpen(false)},[location.pathname]);
+ useEffect(()=>{if(!open)return;const escape=(e:KeyboardEvent)=>{if(e.key==='Escape'){setOpen(false);button.current?.focus()}};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape)},[open]);
+ const items=[['/','Inicio',Home],['/mis-recetas','Mis recetas',BookOpen],['/antojo','Qué cocinar',Sparkles],['/foto','Foto Receta',Camera],['/tecnicas','Técnicas y tips',CookingPot],['/lista-compra','Lista de la compra',ShoppingBasket],['/buscar','Buscar',Search],['/ajustes','Perfil y ajustes',Settings]] as const;
+ return <div className="app-bg chef-app-shell">
+  <div className="ambient ambient-one"/><div className="ambient ambient-two"/><div className="grain"/>
+  <main className="phone-shell without-bottom-nav">{children}</main>
+  {createPortal(<div className="chef-navigation">
+   {!hideBack&&location.pathname!=='/'&&<button className="chef-nav-control chef-back" aria-label="Volver" onClick={back}><ArrowLeft size={23}/></button>}
+   {!hideProfile&&<button ref={button} className="chef-draggable-avatar" aria-label={open?'Cerrar menú':'Abrir menú'} aria-expanded={open} aria-controls="chef-navigation-panel" title="Tu menú" onClick={()=>setOpen(v=>!v)}><ChefAvatar avatar={settings.avatarEmoji} size={54} showHat={false}/></button>}
+   {open&&<><button className="chef-menu-backdrop" aria-label="Cerrar navegación" onClick={()=>setOpen(false)}/><nav id="chef-navigation-panel" className="chef-navigation-panel" aria-label="Menú de navegación"><div className="chef-menu-heading"><strong>Tu cocina</strong><button aria-label="Cerrar menú de navegación" onClick={()=>{setOpen(false);button.current?.focus()}}><X size={20}/></button></div><div className="chef-menu-grid">{items.map(([path,label,Icon])=><button key={path} aria-label={label} onClick={()=>go(path)}><Icon size={23}/><span>{label}</span></button>)}</div></nav></>}
+  </div>,document.body)}
+ </div>
 }

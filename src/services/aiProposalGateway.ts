@@ -1,133 +1,18 @@
-import type { CookingRequest, Difficulty, DishClassification, Proposal, Recipe } from '../domain/types';
-
-const API_URL = (import.meta.env.VITE_RECIPE_API_URL || 'https://nrtmmepynzczfdddvohh.supabase.co/functions/v1').trim().replace(/\/+$/, '');
-const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'sb_publishable_b08-tfZCh2pEBGK0lBH-1g_oB3RwvV8').trim();
-
-const SUGGEST_TIMEOUT_MS = 65_000;
-const GENERATE_TIMEOUT_MS = 120_000;
-const REVISE_TIMEOUT_MS = 120_000;
-const PROPOSAL_COUNT = 2;
-
-export function isAiProposalApiConfigured() {
-  return Boolean(API_URL && API_KEY);
-}
-
-export async function fetchAiProposals(request: CookingRequest): Promise<Proposal[]> {
-  const payload = await postJson('/recipes/suggest', { request }, SUGGEST_TIMEOUT_MS);
-  const items = isRecord(payload) && Array.isArray(payload.proposals) ? payload.proposals : [];
-  return items.map(toProposal).filter((item): item is Proposal => Boolean(item)).slice(0, PROPOSAL_COUNT);
-}
-
-export async function generateAiRecipe(request: CookingRequest, proposal: Proposal): Promise<Recipe> {
-  const payload = await postJson('/recipes/generate', { request, proposal }, GENERATE_TIMEOUT_MS);
-  return extractAiRecipe(payload, 'La IA no ha devuelto una receta completa utilizable.');
-}
-
-export async function reviseAiRecipe(recipe: Recipe, instruction: string, servings?: number): Promise<Recipe> {
-  const cleanInstruction = instruction.trim();
-  if (!cleanInstruction) throw new Error('Indica qué quieres cambiar en la receta.');
-  const payload = await postJson('/recipes/revise', {
-    recipe,
-    instruction: cleanInstruction,
-    servings
-  }, REVISE_TIMEOUT_MS);
-  return extractAiRecipe(payload, 'La IA no ha devuelto una versión revisada utilizable.');
-}
-
-function extractAiRecipe(payload: unknown, fallbackMessage: string): Recipe {
-  const candidates = isRecord(payload) && Array.isArray(payload.recipes) ? payload.recipes : [];
-  const candidate = candidates.find(item => isRecord(item) && isRecord(item.source) && item.source.kind === 'ai');
-  if (!candidate) throw new Error(fallbackMessage);
-  // La normalización y validación definitiva se hacen al registrarla en recipeCatalog.
-  return candidate as Recipe;
-}
-
-async function postJson(path: string, body: unknown, timeoutMs: number): Promise<unknown> {
-  const controller = new AbortController();
-  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetch(`${API_URL}${path}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: API_KEY,
-        Authorization: `Bearer ${API_KEY}`
-      },
-      body: JSON.stringify(body),
-      signal: controller.signal
-    });
-    const payload = await response.json().catch(() => undefined);
-    if (!response.ok) throw new Error(describeError(response.status, payload));
-    return payload;
-  } catch (error) {
-    if (error instanceof DOMException && error.name === 'AbortError') {
-      if (path.endsWith('/suggest')) throw new Error('La IA ha superado el tiempo máximo de respuesta. Puedes repetir la búsqueda.');
-      if (path.endsWith('/revise')) throw new Error('La IA ha tardado demasiado en revisar la receta. Puedes volver a intentarlo sin perder la versión original.');
-      throw new Error('La IA ha tardado demasiado en completar la receta. Puedes volver a intentarlo sin repetir la búsqueda.');
-    }
-    throw error;
-  } finally {
-    window.clearTimeout(timer);
-  }
-}
-
-function toProposal(value: unknown): Proposal | undefined {
-  if (!isRecord(value)) return undefined;
-  const difficulty = asDifficulty(value.difficulty);
-  const classification = asClassification(value.classification);
-  if (!text(value.id) || !text(value.title) || !text(value.subtitle) || !text(value.emoji) || !number(value.minutes) || !difficulty || !text(value.reason)) return undefined;
-  return {
-    id: value.id.trim(),
-    title: value.title.trim(),
-    subtitle: value.subtitle.trim(),
-    emoji: value.emoji.trim(),
-    minutes: value.minutes,
-    difficulty,
-    classification,
-    usedIngredients: strings(value.usedIngredients),
-    missingIngredients: strings(value.missingIngredients),
-    insufficientIngredients: strings(value.insufficientIngredients),
-    substitutionNotes: strings(value.substitutionNotes),
-    reason: value.reason.trim(),
-    recipeId: text(value.recipeId) ? value.recipeId.trim() : value.id.trim()
-  };
-}
-
-function describeError(status: number, payload: unknown) {
-  const data = isRecord(payload) ? payload : {};
-  const code = typeof data.errorCode === 'string' ? data.errorCode : undefined;
-  const message = typeof data.errorMessage === 'string' ? data.errorMessage : undefined;
-  if (status === 429) return 'La API de OpenAI no tiene cuota disponible ahora mismo.';
-  if (status === 401 || status === 403) return `La IA ha rechazado la autenticación${code ? ` (${code})` : ''}.`;
-  if (status >= 500) return `La IA ha tenido un fallo temporal${code ? ` (${code})` : ''}. Puedes repetir la búsqueda.`;
-  if (message) return `La generación con IA ha fallado${code ? ` (${code})` : ''}: ${sanitize(message)}`;
-  return `La generación con IA ha fallado (error ${status}).`;
-}
-
-function sanitize(message: string) {
-  return message.replace(/sk-[A-Za-z0-9_-]+/g, 'sk-…').slice(0, 180);
-}
-
-function asDifficulty(value: unknown): Difficulty | undefined {
-  return value === 'Fácil' || value === 'Media' || value === 'Avanzada' ? value : undefined;
-}
-
-function asClassification(value: unknown): DishClassification | undefined {
-  return value === 'Con lo que tienes' || value === 'Te falta muy poco' || value === 'Buena opción si compras algunas cosas' ? value : undefined;
-}
-
-function strings(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter(text).map(item => item.trim()).filter(Boolean) : [];
-}
-
-function text(value: unknown): value is string {
-  return typeof value === 'string' && Boolean(value.trim());
-}
-
-function number(value: unknown): value is number {
-  return typeof value === 'number' && Number.isFinite(value) && value > 0;
-}
-
-function isRecord(value: unknown): value is Record<string, any> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
+import {cleanRecipeAdvice} from '../utils/recipeAdvice';
+import type { CookingRequest, Difficulty, DishClassification, NutritionSummary, Proposal, Recipe } from '../domain/types'; import { recordAiUsage } from './aiUsage'; import { assertRecipeRestrictions } from './restrictionGuard';
+const API_URL=(import.meta.env.VITE_RECIPE_API_URL||'https://nrtmmepynzczfdddvohh.supabase.co/functions/v1').trim().replace(/\/+$/,'');const API_KEY=(import.meta.env.VITE_RECIPE_API_KEY||'sb_publishable_b08-tfZCh2pEBGK0lBH-1g_oB3RwvV8').trim();const SUGGEST_TIMEOUT_MS=65000,GENERATE_TIMEOUT_MS=120000,REVISE_TIMEOUT_MS=120000,PROPOSAL_COUNT=1;
+const LANGUAGE_NAMES:Record<string,string>={es:'español',en:'English',fr:'français',de:'Deutsch',it:'italiano',pt:'português',zh:'中文'};
+export function isAiProposalApiConfigured(){return Boolean(API_URL&&API_KEY)}
+export async function fetchAiProposals(request:CookingRequest){const payload=await postJson('/recipes/suggest',{count:1,request:withLanguage({...request,desireText:[request.desireText,'Propón un único plato: devuelve exactamente una propuesta.'].filter(Boolean).join('\n')})},SUGGEST_TIMEOUT_MS),items=isRecord(payload)&&Array.isArray(payload.proposals)?payload.proposals:[];return items.map(toProposal).filter((i):i is Proposal=>Boolean(i)).slice(0,PROPOSAL_COUNT)}
+export async function generateAiRecipe(request:CookingRequest,proposal:Proposal):Promise<Recipe>{const recipe=extractAiRecipe(await postJson('/recipes/generate',{request:withLanguage(request),proposal},GENERATE_TIMEOUT_MS),'La IA no ha devuelto una receta completa utilizable.');assertRecipeRestrictions(recipe,request.restrictions);return recipe}
+export async function reviseAiRecipe(recipe:Recipe,instruction:string,servings?:number):Promise<Recipe>{const clean=instruction.trim();if(!clean)throw new Error('Indica qué quieres cambiar en la receta.');const directive=languageDirective();return extractAiRecipe(await postJson('/recipes/revise',{recipe,instruction:`${clean}${directive?`\n${directive}`:''}`,servings},REVISE_TIMEOUT_MS),'La IA no ha devuelto una versión revisada utilizable.')}
+function withLanguage(request:CookingRequest):CookingRequest{const language=request.language||readLanguage();const directive=languageDirective(language);return{...request,language,desireText:[request.desireText?.trim(),directive].filter(Boolean).join('\n')}}
+function readLanguage(){try{const raw=localStorage.getItem('chef:settings');if(!raw)return'es';const parsed=JSON.parse(raw) as {language?:string};return parsed.language||'es'}catch{return'es'}}
+function languageDirective(language=readLanguage()){const name=LANGUAGE_NAMES[language]||LANGUAGE_NAMES.es;return`Idioma de salida obligatorio: ${name}. Devuelve títulos, descripciones, ingredientes, recomendaciones, puntos críticos y pasos de elaboración en ${name}. Mantén nombres propios y términos culinarios que no deban traducirse. Revisa antes de devolver: no repitas consejos dentro de una sección ni entre miseEnPlace, substitutions y criticalPoints. Mise en place contiene preparación previa, substitutions alternativas útiles y criticalPoints solo riesgos o puntos decisivos; elimina duplicados y paráfrasis redundantes, conservando todos los avisos de seguridad.`}
+function extractAiRecipe(payload:unknown,fallback:string):Recipe{const c=isRecord(payload)&&Array.isArray(payload.recipes)?payload.recipes:[],v=c.find(i=>isRecord(i)&&isRecord(i.source)&&i.source.kind==='ai');if(!v)throw new Error(fallback);return cleanRecipeAdvice(v as Recipe)}
+async function postJson(path:string,body:unknown,timeoutMs:number){const controller=new AbortController(),timer=window.setTimeout(()=>controller.abort(),timeoutMs),started=performance.now();try{const response=await fetch(`${API_URL}${path}`,{method:'POST',headers:{'Content-Type':'application/json',apikey:API_KEY,Authorization:`Bearer ${API_KEY}`},body:JSON.stringify(body),signal:controller.signal});const payload=await response.json().catch(()=>undefined);if(!response.ok)throw new Error(describeError(response.status,payload));recordUsage(path,payload,started,true);return payload}catch(e){recordAiUsage({operation:path,durationMs:Math.round(performance.now()-started),success:false});if(e instanceof DOMException&&e.name==='AbortError'){if(path.endsWith('/suggest'))throw new Error('La IA ha superado el tiempo máximo. Puedes repetir la búsqueda.');if(path.endsWith('/revise'))throw new Error('La IA ha tardado demasiado en revisar la receta. El original sigue intacto.');throw new Error('La IA ha tardado demasiado en completar la receta. Puedes reintentar sin repetir la búsqueda.')}throw e}finally{window.clearTimeout(timer)}}
+function recordUsage(path:string,payload:unknown,started:number,success:boolean){const p=isRecord(payload)?payload:{},usage=isRecord(p.usage)?p.usage:{};recordAiUsage({operation:path,durationMs:Math.round(performance.now()-started),success,inputTokens:finite(usage.input_tokens)??finite(usage.prompt_tokens),outputTokens:finite(usage.output_tokens)??finite(usage.completion_tokens)})}
+function toProposal(v:unknown):Proposal|undefined{if(!isRecord(v))return;const difficulty=asDifficulty(v.difficulty),classification=asClassification(v.classification);if(!text(v.id)||!text(v.title)||!text(v.subtitle)||!text(v.emoji)||!number(v.minutes)||!difficulty||!text(v.reason))return;return{id:v.id.trim(),title:v.title.trim(),subtitle:v.subtitle.trim(),emoji:v.emoji.trim(),minutes:v.minutes,difficulty,style:text(v.style)?v.style.trim():undefined,classification,usedIngredients:strings(v.usedIngredients),missingIngredients:strings(v.missingIngredients),insufficientIngredients:strings(v.insufficientIngredients),substitutionNotes:strings(v.substitutionNotes),reason:v.reason.trim(),recipeId:text(v.recipeId)?v.recipeId.trim():v.id.trim(),nutritionPerServing:asNutrition(v.nutritionPerServing)}}
+function asNutrition(v:unknown):NutritionSummary|undefined{if(!isRecord(v))return;const kcal=finite(v.kcal),proteinG=finite(v.proteinG),carbsG=finite(v.carbsG),fatG=finite(v.fatG);if(kcal===undefined||proteinG===undefined||carbsG===undefined||fatG===undefined)return;const fiberG=finite(v.fiberG);return{kcal,proteinG,carbsG,fatG,...(fiberG!==undefined?{fiberG}:{})}}
+function describeError(status:number,payload:unknown){const d=isRecord(payload)?payload:{},code=typeof d.errorCode==='string'?d.errorCode:undefined,message=typeof d.errorMessage==='string'?d.errorMessage:undefined;if(status===429)return'La IA no tiene cuota disponible ahora mismo.';if(status===401||status===403)return`La IA ha rechazado la autenticación${code?` (${code})`:''}.`;if(status>=500)return`La IA ha tenido un fallo temporal${code?` (${code})`:''}. Puedes repetir la búsqueda.`;if(message)return`La generación con IA ha fallado${code?` (${code})`:''}: ${sanitize(message)}`;return`La generación con IA ha fallado (error ${status}).`}
+function sanitize(m:string){return m.replace(/sk-[A-Za-z0-9_-]+/g,'sk-…').slice(0,180)}function asDifficulty(v:unknown):Difficulty|undefined{return v==='Fácil'||v==='Media'||v==='Avanzada'?v:undefined}function asClassification(v:unknown):DishClassification|undefined{return v==='Con lo que tienes'||v==='Te falta muy poco'||v==='Buena opción si compras algunas cosas'?v:undefined}function strings(v:unknown){return Array.isArray(v)?v.filter(text).map(i=>i.trim()).filter(Boolean):[]}function text(v:unknown):v is string{return typeof v==='string'&&Boolean(v.trim())}function number(v:unknown):v is number{return typeof v==='number'&&Number.isFinite(v)&&v>0}function finite(v:unknown){return typeof v==='number'&&Number.isFinite(v)?v:undefined}function isRecord(v:unknown):v is Record<string,any>{return typeof v==='object'&&v!==null&&!Array.isArray(v)}

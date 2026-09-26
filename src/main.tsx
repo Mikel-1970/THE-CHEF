@@ -1,16 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { registerSW } from 'virtual:pwa-register';
-import App from './App';
-import './styles.css';
-import './v05-fixes.css';
-import './final-v1.css';
-import './revision-validated.css';
+import React from 'react'; import ReactDOM from 'react-dom/client'; import { registerSW } from 'virtual:pwa-register'; import App from './App'; import './styles.css'; import './v05-fixes.css'; import './final-v1.css'; import './revision-validated.css'; import './phase1-final.css'; registerSW({immediate:true}); ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
 
-registerSW({ immediate: true });
+import './appearance.css';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+import './brand-theme.css';

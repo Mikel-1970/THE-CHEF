@@ -135,3 +135,157 @@
   .technique-card { padding: 17px; border-radius: 20px; }
   .technique-input-box { gap: 7px; }
 }
+.temperature-guide{margin:16px 0;font-size:.85rem}.temperature-guide table{width:100%;border-collapse:collapse}.temperature-guide td,.temperature-guide th{padding:8px 4px;text-align:left;border-bottom:1px solid #dadbce}.temperature-guide p{line-height:1.5}
+.techniques-library>input,.techniques-library>select{display:block;width:100%;box-sizing:border-box;padding:12px;margin:8px 0;border:1px solid #d8dacb;border-radius:12px;background:var(--surface,#fffaf1);color:inherit;font:inherit}.tip-review-card{margin:12px 0}.tip-review-card .chip-row{margin-top:12px}.techniques-page .olive-intro>.secondary-button{margin-bottom:14px}
+
+
+/* Biblioteca visual V1 · 180 técnicas */
+.technique-photo-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-top:14px;
+}
+.technique-photo-card{
+  position:relative;
+  min-width:0;
+  aspect-ratio:3/4;
+  border-radius:24px;
+  overflow:hidden;
+  background:#4d5a3c;
+  box-shadow:0 8px 24px rgba(37,48,28,.12);
+}
+.technique-photo-open{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  padding:0;
+  border:0;
+  background:transparent;
+  text-align:left;
+  color:white;
+  cursor:pointer;
+}
+.technique-photo-media{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(145deg,#89976d,#35422b);
+}
+.technique-photo-media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.technique-photo-placeholder{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-content:center;
+  justify-items:center;
+  gap:8px;
+  background:
+    radial-gradient(circle at 30% 24%,rgba(255,255,255,.18),transparent 24%),
+    linear-gradient(145deg,#879567,#39462c);
+  color:rgba(255,255,255,.9);
+  font-size:.7rem;
+  font-weight:800;
+}
+.technique-photo-caption{
+  position:absolute;
+  inset:auto 0 0;
+  z-index:2;
+  padding:56px 12px 15px;
+  background:linear-gradient(transparent,rgba(0,0,0,.88));
+  color:white;
+  display:grid;
+  gap:5px;
+}
+.technique-photo-caption span{
+  font-size:.54rem;
+  line-height:1.2;
+  font-weight:850;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  opacity:.82;
+}
+.technique-photo-caption strong{
+  color:white;
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:clamp(1rem,3.8vw,1.42rem);
+  line-height:1.12;
+  overflow-wrap:anywhere;
+}
+.technique-photo-caption small{
+  color:rgba(255,255,255,.84);
+  font-size:.65rem;
+  line-height:1.25;
+}
+.technique-photo-delete{
+  position:absolute;
+  z-index:3;
+  right:8px;
+  top:8px;
+  width:34px;
+  height:34px;
+  border:1px solid rgba(255,255,255,.42);
+  border-radius:50%;
+  background:rgba(0,0,0,.42);
+  color:#fff;
+  display:grid;
+  place-items:center;
+}
+.technique-photo-open:focus-visible{
+  outline:3px solid #e8b957;
+  outline-offset:-4px;
+}
+.technique-empty{grid-column:1/-1}
+.technique-detail-photo{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  overflow:hidden;
+  border-radius:18px;
+  background:#4d5a3c;
+}
+.technique-detail-photo .technique-photo-media{position:absolute;inset:0}
+.technique-filter-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(120px,.55fr);
+  gap:8px;
+}
+.technique-filter-row select{
+  width:100%;
+  box-sizing:border-box;
+  padding:12px;
+  border:1px solid #d8dacb;
+  border-radius:12px;
+  background:var(--surface,#fffaf1);
+  color:inherit;
+  font:inherit;
+}
+.technique-chef-tip{
+  display:grid;
+  gap:4px;
+  padding:12px 13px;
+  border-radius:15px;
+  background:#eef0df;
+  color:#526336;
+  font-size:.76rem;
+  line-height:1.45;
+}
+.technique-chef-tip strong{color:#405526}
+@media(max-width:390px){
+  .technique-photo-grid{gap:10px}
+  .technique-photo-card{border-radius:20px}
+  .technique-filter-row{grid-template-columns:1fr}
+  .technique-photo-caption{padding:48px 10px 12px}
+}
+
+.technique-return-actions{display:flex;flex-wrap:wrap;gap:8px}.technique-return-actions button{flex:1;min-height:44px}
+
+.technique-critical-groups{display:grid;gap:20px}
+.technique-critical-groups section{display:grid;gap:10px}
+.technique-critical-groups h3{margin:0;color:#334525;font-family:'Playfair Display',Georgia,serif;font-size:1.05rem}
+.technique-critical-groups .expanded-list{margin:0}

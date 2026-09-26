@@ -76,3 +76,16 @@
   .recipe-revision-sheet { height: min(84dvh, 760px); max-height: min(84dvh, 760px); }
   .recipe-panel-header { padding: 18px 18px 14px; }
 }
+
+/* Technique library integration */
+.recipe-techniques-inline{margin:14px 0;padding:15px;border:1px solid rgba(64,85,38,.12);border-radius:18px;background:#f7f4e9}
+.recipe-techniques-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:10px}
+.recipe-techniques-heading small{color:#7a806d;font-size:.7rem}
+.recipe-technique-chips{display:flex;flex-wrap:wrap;gap:8px}
+.recipe-technique-chips button{border:1px solid rgba(64,85,38,.16);border-radius:999px;background:#fffdf7;color:#405526;min-height:36px;padding:7px 11px;display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:.76rem;font-weight:800}
+.recipe-technique-chips button:active{transform:translateY(1px)}
+
+.recipe-technique-chips{justify-content:center;gap:10px}
+.recipe-techniques-heading{text-align:center}
+.nutrition-grid{display:flex;flex-wrap:wrap;justify-content:center}
+.nutrition-grid>div{flex:1 1 65px}

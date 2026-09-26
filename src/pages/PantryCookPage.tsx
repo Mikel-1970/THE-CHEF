@@ -1,89 +1,88 @@
-import { Check, ChevronDown, ChevronUp, Clock3, Mic, MicOff, Sparkles, Star, UsersRound, X } from 'lucide-react';
-import { FormEvent, useMemo, useState } from 'react';
+import {CATALOG_EMPTY} from '../services/hybridRecommendationEngine';
+import { Camera, Check, ImagePlus, Mic, MicOff, PackageOpen, Refrigerator, Star, X } from 'lucide-react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
-import { Chip } from '../components/Chip';
-import { CuisineSelect } from '../components/CuisineSelect';
-import { NumberStepper } from '../components/NumberStepper';
+import { cookingRequestOptions, useCookingOptions } from '../components/CookingOptions';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { TopBar } from '../components/TopBar';
-import { RECIPE_STYLES } from '../data/cookingOptions';
-import type { CookingRequest, Difficulty, IngredientInput } from '../domain/types';
+import type { CookingRequest, IngredientInput, StockLocation } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
-import { getHybridProposals } from '../services/hybridRecommendationEngine';
+import { generateDirectRecipe } from '../services/directRecipeGateway';
+import { identifyPantryPhoto } from '../services/pantryPhotoGateway';
 import { parseIngredientInput } from '../utils/ingredientInput';
-import { groupPantry } from '../utils/pantryCategories';
+import { inferStockLocation } from '../utils/stockLocation';
 import '../voice-input.css';
-
-const difficulties: Difficulty[] = ['Fácil', 'Media', 'Avanzada'];
+import '../pantry-cook.css';
+const normalize=(s:string)=>s.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+const locationOf=(item:IngredientInput)=>item.location==='fridge'?'fridge':'pantry';
 
 export function PantryCookPage() {
-  const navigate = useNavigate();
-  const { settings, currentRequest, updateSettings, setSearch } = useApp();
-  const previous = currentRequest?.mode === 'pantry' && !currentRequest.desireText ? currentRequest : undefined;
-  const pantry = settings.pantryStock ?? [];
-  const [selected, setSelected] = useState<Set<string>>(() => new Set((previous?.pantryIngredients ?? []).map(item => normalize(item.name))));
-  const [draft, setDraft] = useState('');
-  const [servings, setServings] = useState(previous?.servings ?? settings.defaultServings);
-  const [maxMinutes, setMaxMinutes] = useState(previous?.maxMinutes ?? 60);
-  const [advanced, setAdvanced] = useState(Boolean(previous?.style || previous?.cuisine || previous?.difficulty));
-  const [style, setStyle] = useState<string | undefined>(previous?.style);
-  const [cuisine, setCuisine] = useState<string | undefined>(previous?.cuisine);
-  const [difficulty, setDifficulty] = useState<Difficulty | undefined>(previous?.difficulty ?? settings.defaultDifficulty);
-  const [isSearching, setIsSearching] = useState(false);
-  const voice = useAiDictation(transcript => setDraft(current => appendDictation(current, transcript)));
-  const groupedPantry = useMemo(() => groupPantry(pantry), [pantry]);
+ const navigate=useNavigate();const {settings,currentRequest,updateSettings,setSearch}=useApp();
+ const previous=currentRequest?.mode==='pantry'?currentRequest:undefined;
+ const options=useCookingOptions(settings,previous);
+ const pantry=settings.pantryStock??[];
+ const [selected,setSelected]=useState<Set<string>>(()=>new Set((previous?.pantryIngredients??[]).filter(i=>i.priority).map(i=>normalize(i.name))));
+ const [source,setSource]=useState<'all'|StockLocation>('all');
+ const [draft,setDraft]=useState('');const [photo,setPhoto]=useState<string>();
+ const [candidates,setCandidates]=useState<{name:string;checked:boolean}[]>([]);
+ const [photoLocation,setPhotoLocation]=useState<StockLocation|'auto'>('auto');
+ const [analysing,setAnalysing]=useState(false),[searching,setSearching]=useState(false),[error,setError]=useState('');
+ const photoRun=useRef(0),ignoreVoice=useRef(false);
+ useEffect(()=>()=>{photoRun.current++},[]);
+ const voice=useAiDictation(t=>{if(ignoreVoice.current){ignoreVoice.current=false;return}setDraft(c=>c.trim()?`${c}, ${t}`:t)});
+ const selectedItems=pantry.filter(i=>selected.has(normalize(i.name)));
+ const visible=pantry.filter(i=>source==='all'||locationOf(i)===source);
+ const toggle=(name:string)=>{const key=normalize(name);setSelected(current=>{const next=new Set(current);if(next.has(key))next.delete(key);else next.add(key);return next})};
+ const addItems=(items:IngredientInput[])=>{
+  const stock=[...pantry];for(const item of items){if(!item.name.trim())continue;const index=stock.findIndex(i=>normalize(i.name)===normalize(item.name));if(index<0)stock.push(item);else if(item.quantity!==undefined)stock[index]={...stock[index],quantity:item.quantity,unit:item.unit??stock[index].unit};}
+  updateSettings({pantryStock:stock});
+  setSelected(current=>new Set([...current,...items.map(i=>normalize(i.name))]));
+ };
+ const addManual=(e:FormEvent)=>{e.preventDefault();if(voice.isListening||voice.isTranscribing)return;const items=draft.split(/[,;\n]+|\s+y\s+/i).map(s=>parseIngredientInput(s.trim())).filter(i=>i.name);addItems(items.map(i=>({...i,location:source==='all'?inferStockLocation(i.name):source})));setDraft('')};
+ const analyse=async(file?:File)=>{
+  if(!file||analysing)return;const run=++photoRun.current;setAnalysing(true);setError('');setCandidates([]);setPhoto(undefined);
+  try{const result=await identifyPantryPhoto(file);if(run!==photoRun.current)return;setPhoto(result.previewUrl);setCandidates(result.ingredients.map(name=>({name,checked:true})));if(!result.ingredients.length)setError('No veo alimentos con suficiente claridad. Prueba otra foto o añádelos a mano.')}
+  catch(e){if(run===photoRun.current)setError(e instanceof Error?e.message:'No se ha podido analizar la foto.')}
+  finally{if(run===photoRun.current)setAnalysing(false)}
+ };
+ const confirmPhoto=()=>{
+  const items=candidates.filter(i=>i.checked&&i.name.trim()).map(i=>({name:i.name.trim(),location:photoLocation==='auto'?inferStockLocation(i.name):photoLocation}));
+  if(!items.length)return;
+  addItems(items);setSelected(new Set(items.map(i=>normalize(i.name))));setCandidates([]);setPhoto(undefined);setSource('all');
+ };
+ const search=async(forceAi=false)=>{
+  if(!selectedItems.length||searching||analysing)return;setSearching(true);setError('');
+  const available=selectedItems.map(i=>({...i,priority:selected.has(normalize(i.name))}));
+  const request:CookingRequest={mode:'pantry',generationMode:forceAi?'ai':'catalog',...cookingRequestOptions(options.value),pantryIngredients:available,pantryBasics:settings.pantryBasics,pantryPolicy:'prioritize',aiPreference:settings.aiPreference};
+  try{let result;try{result=await generateDirectRecipe(request)}catch(e){if(!forceAi&&settings.autoAiFallback!==false&&e instanceof Error&&e.message===CATALOG_EMPTY){request.generationMode='ai';result=await generateDirectRecipe(request)}else throw e;}setSearch(request,[result.proposal]);navigate(`/receta/${result.recipe.id}?servings=${request.servings}`)}
+  catch(e){setError(e instanceof Error?e.message:'No se ha podido preparar la receta.')}
+  finally{setSearching(false)}
+ };
+ return <AppShell><ChefLoadingOverlay active={searching} title="Preparando tu receta" messages={['Cocinando con lo que tienes…','Preparando la receta completa…','Revisando cantidades y elaboración…','Preparando la imagen…']}/><TopBar title="Abre la despensa"/>
+  <div className="page-content pantry-cook-visual">
+   <p className="visual-hint">Elige los ingredientes con los que quieres cocinar.</p>
+   <div className="pantry-source-tabs" aria-label="Ver inventario">
+    <button aria-pressed={source==='all'} onClick={()=>setSource('all')}><PackageOpen/>Todo<span>{pantry.length}</span></button>
+    <button aria-pressed={source==='fridge'} onClick={()=>setSource('fridge')}><Refrigerator/>Nevera<span>{pantry.filter(i=>locationOf(i)==='fridge').length}</span></button>
+    <button aria-pressed={source==='pantry'} onClick={()=>setSource('pantry')}><PackageOpen/>Despensa<span>{pantry.filter(i=>locationOf(i)==='pantry').length}</span></button>
+   </div>
+   <div className="pantry-ingredient-grid" aria-label="Ingredientes disponibles">{visible.map(item=>{const active=selected.has(normalize(item.name));return <button key={normalize(item.name)} aria-pressed={active} onClick={()=>toggle(item.name)}><span className="pantry-food-icon">{locationOf(item)==='fridge'?<Refrigerator/>:<PackageOpen/>}</span><strong>{item.name}</strong>{item.quantity!==undefined&&<small>{item.quantity} {item.unit}</small>}<span className="pantry-choice-mark">{active?<Check size={18}/>:<Star size={18}/>}</span></button>})}</div>
+   {!visible.length&&<p className="pantry-empty">No hay productos guardados aquí. Añádelos o usa una foto.</p>}
+   <div className="pantry-photo-actions">
+    <label><Camera/><strong>Hacer foto</strong><input aria-label="Fotografiar nevera o despensa" type="file" accept="image/*" capture="environment" disabled={analysing} onChange={e=>{void analyse(e.target.files?.[0]);e.target.value=''}}/></label>
+    <label><ImagePlus/><strong>Subir foto</strong><input aria-label="Subir foto de nevera o despensa" type="file" accept="image/*" disabled={analysing} onChange={e=>{void analyse(e.target.files?.[0]);e.target.value=''}}/></label>
+   </div>
+   {analysing&&<p role="status">Identificando ingredientes…</p>}
+   {photo&&candidates.length>0&&<section className="pantry-photo-review" aria-label="Revisar ingredientes de la foto"><img src={photo} alt="Nevera o despensa fotografiada"/><h2>Confirma lo que ves</h2>{candidates.map((item,index)=><div className="pantry-review-row" key={index}><input type="checkbox" aria-label={`Usar ingrediente ${index+1}`} checked={item.checked} onChange={e=>setCandidates(v=>v.map((x,i)=>i===index?{...x,checked:e.target.checked}:x))}/><input aria-label={`Ingrediente detectado ${index+1}`} value={item.name} onChange={e=>setCandidates(v=>v.map((x,i)=>i===index?{...x,name:e.target.value}:x))}/></div>)}<label>Guardar en<select aria-label="Guardar ingredientes en" value={photoLocation} onChange={e=>setPhotoLocation(e.target.value as StockLocation|'auto')}><option value="auto">Automática según producto</option><option value="fridge">Nevera</option><option value="pantry">Despensa</option></select></label><div className="pantry-review-actions"><button className="secondary-button" onClick={()=>{setCandidates([]);setPhoto(undefined)}}>Descartar</button><button className="secondary-button" disabled={!candidates.some(i=>i.checked&&i.name.trim())} onClick={confirmPhoto}><Check size={18}/>Guardar y usar</button></div></section>}
+   <form className="ingredient-input pantry-add-input" onSubmit={addManual}><input aria-label="Añadir ingredientes" placeholder="Ej. arroz, pollo, calabacín…" value={draft} onChange={e=>setDraft(e.target.value)}/><button type="button" aria-label="Borrar ingredientes" className="clear-input-button" onClick={()=>{if(voice.isListening){ignoreVoice.current=true;voice.stop()}setDraft('')}} disabled={voice.isTranscribing}><X size={18}/></button><button type="button" className="voice-button" aria-label={voice.isListening?'Parar micrófono':'Iniciar micrófono'} disabled={!voice.isSupported||voice.isTranscribing} onClick={()=>{ignoreVoice.current=false;voice.toggle()}}>{voice.isListening?<MicOff size={19}/>:<Mic size={19}/>}</button><button type="submit" className="voice-confirm-button" aria-label="Confirmar ingredientes" disabled={!draft.trim()||voice.isListening||voice.isTranscribing}><Check size={19}/></button></form>
+   {(voice.isListening||voice.isTranscribing)&&<p role="status">{voice.isListening?'Escuchando… pulsa el micrófono para parar.':'Transcribiendo…'}</p>}
+   <div className="pantry-selection-summary" role="status"><strong>{selectedItems.length} elegidos</strong><span>{selectedItems.map(i=>i.name).join(' · ')}</span></div>
 
-  const toggle = (name: string) => setSelected(current => { const next = new Set(current); const key = normalize(name); if (next.has(key)) next.delete(key); else next.add(key); return next; });
-
-  const addIngredient = (event?: FormEvent) => {
-    event?.preventDefault();
-    if (voice.isListening) voice.stop();
-    const entries = splitIngredientEntries(draft);
-    if (!entries.length) return;
-    updateSettings({ pantryStock: mergeIngredientEntries(pantry, entries) });
-    setSelected(current => new Set([...current, ...entries.map(entry => normalize(parseIngredientInput(entry).name)).filter(Boolean)]));
-    setDraft('');
-  };
-
-  const search = async () => {
-    const chosen = pantry.filter(item => selected.has(normalize(item.name))).map(item => ({ ...item, priority: true }));
-    if (!chosen.length || isSearching) return;
-    const request: CookingRequest = { mode: 'pantry', servings, maxMinutes, style, cuisine, difficulty, pantryIngredients: chosen, pantryBasics: settings.pantryBasics, pantryPolicy: 'prioritize' };
-    setIsSearching(true);
-    try { const result = await getHybridProposals(request); setSearch(request, result.proposals.slice(0, 3)); navigate('/propuestas'); }
-    finally { setIsSearching(false); }
-  };
-
-  return (
-    <AppShell>
-      <ChefLoadingOverlay active={isSearching} title="Cocinando con lo que hay" messages={['Buscando la mejor combinación…', 'Ajustando ingredientes…', 'Dando forma a las propuestas…']} />
-      <TopBar eyebrow="COCINA CON LO QUE HAY" title="Elige tus productos" />
-      <div className="page-content nav-safe">
-        <section className="editorial-card olive-intro"><span className="eyebrow">TU DESPENSA</span><h2>¿Qué quieres utilizar?</h2><p>Selecciona los productos prioritarios. Puedes añadir otros sobre la marcha y El Chef tendrá en cuenta tus básicos de despensa.</p></section>
-        <section className="form-section">
-          <div className="section-label"><span>Productos disponibles</span><small>{selected.size} seleccionados</small></div>
-          <div className="pantry-category-list pantry-choice-categories">
-            {groupedPantry.map(([category, items]) => <details className="pantry-category" key={category} open><summary><strong>{category}</strong><span>{items.length}</span></summary><div className="pantry-choice-grid">{items.map(item => { const active = selected.has(normalize(item.name)); return <button type="button" className={active ? 'selected' : ''} aria-pressed={active} onClick={() => toggle(item.name)} key={item.name}><Star size={16} fill={active ? 'currentColor' : 'none'} /><span>{item.name}{item.quantity !== undefined ? ` · ${formatIngredientQuantity(item)}` : ''}</span></button>; })}</div></details>)}
-          </div>
-          {!pantry.length && <div className="pantry-basics-note">Tu despensa está vacía. Añade productos escribiendo o usando el micrófono.</div>}
-          {!!settings.pantryBasics.length && <div className="pantry-basics-note"><strong>Básicos disponibles:</strong> {settings.pantryBasics.join(', ')}.</div>}
-          <form className="ingredient-input pantry-add-input" onSubmit={addIngredient}><input value={draft} onChange={event => setDraft(event.target.value)} placeholder="Añadir otro producto…" /><button type="button" className="clear-input-button" onClick={() => { voice.stop(); setDraft(''); }} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={18} /></button><button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar productos'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button><button type="submit" className="voice-confirm-button" disabled={!draft.trim() || voice.isListening || voice.isTranscribing} aria-label="Añadir productos"><Check size={19} /></button></form>
-          {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando productos…</div>}{voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}{voice.error && <div className="voice-status error">{voice.error}</div>}
-        </section>
-        <section className="control-card"><div className="control-row"><div className="control-title"><UsersRound size={19} /><div><strong>Somos</strong><small>Comensales</small></div></div><NumberStepper value={servings} onChange={setServings} /></div><div className="divider" /><div className="control-row"><div className="control-title"><Clock3 size={19} /><div><strong>Tiempo máximo</strong><small>Tiempo total</small></div></div><NumberStepper value={maxMinutes} min={15} max={180} step={5} suffix="min" editable onChange={setMaxMinutes} /></div></section>
-        <button className="advanced-toggle" onClick={() => setAdvanced(value => !value)}><span>Más opciones</span>{advanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
-        {advanced && <section className="advanced-panel"><div className="advanced-group"><strong>Estilo</strong><div className="chip-row">{RECIPE_STYLES.map(value => <Chip key={value} selected={style === value} onClick={() => setStyle(style === value ? undefined : value)}>{value}</Chip>)}</div></div><div className="advanced-group"><strong>Tipo de cocina</strong><CuisineSelect value={cuisine} onChange={setCuisine} /></div><div className="advanced-group"><strong>Dificultad máxima</strong><div className="chip-row">{difficulties.map(value => <Chip key={value} selected={difficulty === value} onClick={() => setDifficulty(difficulty === value ? undefined : value)}>{value}</Chip>)}</div></div></section>}
-        <div className="sticky-action"><PrimaryButton onClick={() => void search()} disabled={!selected.size || isSearching}>{isSearching ? 'Buscando propuestas…' : 'Cocinar con estos productos'}</PrimaryButton></div>
-      </div>
-    </AppShell>
-  );
+   {error===CATALOG_EMPTY&&<button className="secondary-button" disabled={searching} onClick={()=>void search(true)}>Crear receta con IA</button>}{(error||voice.error)&&<p className="voice-status error" role="alert">{error||voice.error}</p>}
+   <div className="visual-generate"><PrimaryButton onClick={()=>void search()} disabled={!selectedItems.length||searching||analysing||candidates.length>0}>{searching?'Preparando…':'Generar receta'}</PrimaryButton></div>
+  </div>
+ </AppShell>
 }
-
-function mergeIngredientEntries(current: IngredientInput[], entries: string[]) { const next = [...current]; entries.forEach(entry => { const parsed = parseIngredientInput(entry); if (!parsed.name) return; const index = next.findIndex(item => normalize(item.name) === normalize(parsed.name)); if (index >= 0) next[index] = { ...next[index], ...parsed }; else next.push(parsed); }); return next; }
-function splitIngredientEntries(value: string) { return value.replace(/\bademás\b/gi, ',').split(/[,;\n]+|\s+(?:y|e)\s+/i).map(item => item.replace(/^[.\-–—\s]+|[.\s]+$/g, '').trim()).filter(Boolean); }
-function appendDictation(current: string, transcript: string) { const base = current.trimEnd(); const clean = transcript.trim(); return base ? `${base}, ${clean}` : clean; }
-function formatIngredientQuantity(item: IngredientInput) { if (item.quantity === undefined) return ''; const value = Number.isInteger(item.quantity) ? String(item.quantity) : item.quantity.toLocaleString('es-ES', { maximumFractionDigits: 1 }); return `${value}${item.unit ? ` ${item.unit}` : ''}`; }
-function normalize(value: string) { return value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }

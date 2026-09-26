@@ -1,0 +1,5100 @@
+{
+  "aceite de oliva": {
+    "source": "CoFID 2021",
+    "code": "17-038",
+    "food": "Oil, olive",
+    "basis": "100g",
+    "per100": {
+      "kcal": 899.0,
+      "proteinG": 0,
+      "carbsG": 0.0,
+      "fatG": 99.9,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 0.92,
+    "edibleFractionEstimate": 1
+  },
+  "aceite de oliva suave": {
+    "source": "CoFID 2021",
+    "code": "17-038",
+    "food": "Oil, olive",
+    "basis": "100g",
+    "per100": {
+      "kcal": 899.0,
+      "proteinG": 0,
+      "carbsG": 0.0,
+      "fatG": 99.9,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 0.92,
+    "edibleFractionEstimate": 1
+  },
+  "aceite de oliva para freír": {
+    "source": "CoFID 2021",
+    "code": "17-038",
+    "food": "Oil, olive",
+    "basis": "100g",
+    "per100": {
+      "kcal": 899.0,
+      "proteinG": 0,
+      "carbsG": 0.0,
+      "fatG": 99.9,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 0.92,
+    "edibleFractionEstimate": 1
+  },
+  "aceite de girasol": {
+    "source": "CoFID 2021",
+    "code": "17-045",
+    "food": "Oil, sunflower",
+    "basis": "100g",
+    "per100": {
+      "kcal": 899.0,
+      "proteinG": 0,
+      "carbsG": 0.0,
+      "fatG": 99.9,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 0.92,
+    "edibleFractionEstimate": 1
+  },
+  "aceite para freír": {
+    "source": "CoFID 2021",
+    "code": "17-045",
+    "food": "Oil, sunflower",
+    "basis": "100g",
+    "per100": {
+      "kcal": 899.0,
+      "proteinG": 0,
+      "carbsG": 0.0,
+      "fatG": 99.9,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 0.92,
+    "edibleFractionEstimate": 1
+  },
+  "aceite de sésamo": {
+    "source": "CoFID 2021",
+    "code": "17-043",
+    "food": "Oil, sesame",
+    "basis": "100g",
+    "per100": {
+      "kcal": 898.0,
+      "proteinG": 0.2,
+      "carbsG": 0.0,
+      "fatG": 99.7,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 0.92,
+    "edibleFractionEstimate": 1
+  },
+  "aceituna": {
+    "source": "CoFID 2021",
+    "code": "14-340",
+    "food": "Olives, green, in brine, drained, flesh and skin",
+    "basis": "100g",
+    "per100": {
+      "kcal": 103.0,
+      "proteinG": 0.9,
+      "carbsG": 0,
+      "fatG": 11.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 4,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "aceituna negra": {
+    "source": "CoFID 2021",
+    "code": "14-340",
+    "food": "Olives, green, in brine, drained, flesh and skin",
+    "basis": "100g",
+    "per100": {
+      "kcal": 103.0,
+      "proteinG": 0.9,
+      "carbsG": 0,
+      "fatG": 11.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "acelga": {
+    "source": "CoFID 2021",
+    "code": "13-223",
+    "food": "Chard, Swiss, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 19.0,
+      "proteinG": 1.8,
+      "carbsG": 2.9,
+      "fatG": 0.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "aguacate": {
+    "source": "CoFID 2021",
+    "code": "14-386",
+    "food": "Avocado, Hass, flesh only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 171.0,
+      "proteinG": 1.8,
+      "carbsG": 1.7999999999999998,
+      "fatG": 17.4,
+      "fiberG": 3.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 150,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "agua": {
+    "source": "CoFID 2021",
+    "code": "17-377",
+    "food": "Water, distilled",
+    "basis": "100g",
+    "per100": {
+      "kcal": 0.0,
+      "proteinG": 0.0,
+      "carbsG": 0.0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "hielo": {
+    "source": "CoFID 2021",
+    "code": "17-377",
+    "food": "Water, distilled",
+    "basis": "100g",
+    "per100": {
+      "kcal": 0.0,
+      "proteinG": 0.0,
+      "carbsG": 0.0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "soda": {
+    "source": "CoFID 2021",
+    "code": "17-377",
+    "food": "Water, distilled",
+    "basis": "100g",
+    "per100": {
+      "kcal": 0.0,
+      "proteinG": 0.0,
+      "carbsG": 0.0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "ajo en polvo": {
+    "source": "CoFID 2021",
+    "code": "13-830",
+    "food": "Garlic powder",
+    "basis": "100g",
+    "per100": {
+      "kcal": 246.0,
+      "proteinG": 18.7,
+      "carbsG": 42.7,
+      "fatG": 1.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "albahaca": {
+    "source": "CoFID 2021",
+    "code": "13-804",
+    "food": "Basil, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 40.0,
+      "proteinG": 3.1,
+      "carbsG": 5.1,
+      "fatG": 0.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "alcachofa": {
+    "source": "CoFID 2021",
+    "code": "13-153",
+    "food": "Artichoke, globe, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 18.0,
+      "proteinG": 2.8,
+      "carbsG": 2.7,
+      "fatG": 0.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "alcachofa limpia": {
+    "source": "CoFID 2021",
+    "code": "13-153",
+    "food": "Artichoke, globe, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 18.0,
+      "proteinG": 2.8,
+      "carbsG": 2.7,
+      "fatG": 0.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "almendra molida": {
+    "source": "CoFID 2021",
+    "code": "14-870",
+    "food": "Almonds, flaked and ground",
+    "basis": "100g",
+    "per100": {
+      "kcal": 612.0,
+      "proteinG": 21.1,
+      "carbsG": 6.9,
+      "fatG": 55.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "almendra cruda pelada": {
+    "source": "CoFID 2021",
+    "code": "14-896",
+    "food": "Almonds, whole kernels",
+    "basis": "100g",
+    "per100": {
+      "kcal": 554.0,
+      "proteinG": 21.2,
+      "carbsG": 5.3,
+      "fatG": 49.9,
+      "fiberG": 12.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "alga nori": {
+    "source": "CoFID 2021",
+    "code": "13-340",
+    "food": "Seaweed, nori, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 136.0,
+      "proteinG": 30.7,
+      "carbsG": 0,
+      "fatG": 1.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 3,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "alga wakame seca": {
+    "source": "CoFID 2021",
+    "code": "13-341",
+    "food": "Seaweed, wakame, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 71.0,
+      "proteinG": 12.4,
+      "carbsG": 0,
+      "fatG": 2.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "almejas": {
+    "source": "USDA SR Legacy 2018",
+    "code": "174214",
+    "food": "Mollusks, clam, mixed species, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 86.0,
+      "proteinG": 14.67,
+      "carbsG": 3.57,
+      "fatG": 0.96,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 0.2
+  },
+  "mejillones": {
+    "source": "CoFID 2021",
+    "code": "16-497",
+    "food": "Mussels, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 74.0,
+      "proteinG": 12.1,
+      "carbsG": 2.5,
+      "fatG": 1.8,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 0.25
+  },
+  "mejillón": {
+    "source": "CoFID 2021",
+    "code": "16-497",
+    "food": "Mussels, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 74.0,
+      "proteinG": 12.1,
+      "carbsG": 2.5,
+      "fatG": 1.8,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 0.25
+  },
+  "alubia blanca cocida": {
+    "source": "CoFID 2021",
+    "code": "13-087",
+    "food": "Beans, haricot, whole, dried, boiled in unsalted water",
+    "basis": "100g",
+    "per100": {
+      "kcal": 95.0,
+      "proteinG": 6.6,
+      "carbsG": 17.2,
+      "fatG": 0.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "fabes cocidas": {
+    "source": "CoFID 2021",
+    "code": "13-087",
+    "food": "Beans, haricot, whole, dried, boiled in unsalted water",
+    "basis": "100g",
+    "per100": {
+      "kcal": 95.0,
+      "proteinG": 6.6,
+      "carbsG": 17.2,
+      "fatG": 0.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "judías blancas cocidas": {
+    "source": "CoFID 2021",
+    "code": "13-087",
+    "food": "Beans, haricot, whole, dried, boiled in unsalted water",
+    "basis": "100g",
+    "per100": {
+      "kcal": 95.0,
+      "proteinG": 6.6,
+      "carbsG": 17.2,
+      "fatG": 0.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "alubias pintas cocidas": {
+    "source": "CoFID 2021",
+    "code": "13-659",
+    "food": "Beans, red kidney, dried, boiled in unsalted water",
+    "basis": "100g",
+    "per100": {
+      "kcal": 100.0,
+      "proteinG": 8.6,
+      "carbsG": 15.1,
+      "fatG": 1.0,
+      "fiberG": 11.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "fabes secas": {
+    "source": "CoFID 2021",
+    "code": "13-086",
+    "food": "Beans, haricot, whole, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 286.0,
+      "proteinG": 21.4,
+      "carbsG": 49.7,
+      "fatG": 1.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "anacardo": {
+    "source": "CoFID 2021",
+    "code": "14-811",
+    "food": "Cashew nuts, kernel only, plain",
+    "basis": "100g",
+    "per100": {
+      "kcal": 573.0,
+      "proteinG": 17.7,
+      "carbsG": 18.1,
+      "fatG": 48.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "anchoa en conserva": {
+    "source": "CoFID 2021",
+    "code": "16-448",
+    "food": "Anchovies, canned in oil, drained",
+    "basis": "100g",
+    "per100": {
+      "kcal": 191.0,
+      "proteinG": 25.2,
+      "carbsG": 0.0,
+      "fatG": 10.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "anillas de calamar": {
+    "source": "CoFID 2021",
+    "code": "16-263",
+    "food": "Squid, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 81.0,
+      "proteinG": 15.4,
+      "carbsG": 1.2,
+      "fatG": 1.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "calamar limpio": {
+    "source": "CoFID 2021",
+    "code": "16-263",
+    "food": "Squid, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 81.0,
+      "proteinG": 15.4,
+      "carbsG": 1.2,
+      "fatG": 1.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "sepia limpia": {
+    "source": "USDA SR Legacy 2018",
+    "code": "174215",
+    "food": "Mollusks, cuttlefish, mixed species, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 79.0,
+      "proteinG": 16.24,
+      "carbsG": 0.82,
+      "fatG": 0.7,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tinta de calamar": {
+    "source": "CoFID 2021",
+    "code": "16-263",
+    "food": "Squid, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 81.0,
+      "proteinG": 15.4,
+      "carbsG": 1.2,
+      "fatG": 1.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "apio": {
+    "source": "CoFID 2021",
+    "code": "13-636",
+    "food": "Celery, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 9.0,
+      "proteinG": 0.5,
+      "carbsG": 1.4,
+      "fatG": 0.1,
+      "fiberG": 1.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "arroz arborio": {
+    "source": "CoFID 2021",
+    "code": "11-878",
+    "food": "Rice, white, Italian Arborio risotto, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 354.0,
+      "proteinG": 6.4,
+      "carbsG": 85.2,
+      "fatG": 1.0,
+      "fiberG": 1.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "arroz basmati": {
+    "source": "CoFID 2021",
+    "code": "11-857",
+    "food": "Rice, white, basmati, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 351.0,
+      "proteinG": 8.1,
+      "carbsG": 83.7,
+      "fatG": 0.5,
+      "fiberG": 1.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "arroz glutinoso": {
+    "source": "CoFID 2021",
+    "code": "11-865",
+    "food": "Rice, white, pudding, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 352.0,
+      "proteinG": 5.6,
+      "carbsG": 85.6,
+      "fatG": 0.9,
+      "fiberG": 1.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "arroz para sushi": {
+    "source": "CoFID 2021",
+    "code": "11-865",
+    "food": "Rice, white, pudding, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 352.0,
+      "proteinG": 5.6,
+      "carbsG": 85.6,
+      "fatG": 0.9,
+      "fiberG": 1.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "arroz redondo": {
+    "source": "CoFID 2021",
+    "code": "11-865",
+    "food": "Rice, white, pudding, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 352.0,
+      "proteinG": 5.6,
+      "carbsG": 85.6,
+      "fatG": 0.9,
+      "fiberG": 1.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "arroz": {
+    "source": "CoFID 2021",
+    "code": "11-861",
+    "food": "Rice, white, long grain, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 355.0,
+      "proteinG": 6.7,
+      "carbsG": 85.1,
+      "fatG": 1.0,
+      "fiberG": 1.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "azafrán": {
+    "source": "CoFID 2021",
+    "code": "13-852",
+    "food": "Saffron",
+    "basis": "100g",
+    "per100": {
+      "kcal": 310.0,
+      "proteinG": 11.4,
+      "carbsG": 61.5,
+      "fatG": 5.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "azúcar glas": {
+    "source": "CoFID 2021",
+    "code": "17-062",
+    "food": "Sugar, icing",
+    "basis": "100g",
+    "per100": {
+      "kcal": 393.0,
+      "proteinG": 0,
+      "carbsG": 104.9,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "azúcar moreno": {
+    "source": "CoFID 2021",
+    "code": "17-060",
+    "food": "Sugar, brown",
+    "basis": "100g",
+    "per100": {
+      "kcal": 380.0,
+      "proteinG": 0.1,
+      "carbsG": 101.3,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "azúcar": {
+    "source": "CoFID 2021",
+    "code": "17-063",
+    "food": "Sugar, white",
+    "basis": "100g",
+    "per100": {
+      "kcal": 394.0,
+      "proteinG": 0,
+      "carbsG": 105.0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "bacalao desalado": {
+    "source": "CoFID 2021",
+    "code": "16-372",
+    "food": "Cod, flesh only, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 75.0,
+      "proteinG": 17.5,
+      "carbsG": 0.0,
+      "fatG": 0.6,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "bacalao desalado con piel": {
+    "source": "CoFID 2021",
+    "code": "16-372",
+    "food": "Cod, flesh only, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 75.0,
+      "proteinG": 17.5,
+      "carbsG": 0.0,
+      "fatG": 0.6,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "beicon": {
+    "source": "CoFID 2021",
+    "code": "19-016",
+    "food": "Bacon rashers, streaky, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 276.0,
+      "proteinG": 15.8,
+      "carbsG": 0.0,
+      "fatG": 23.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "guanciale": {
+    "source": "CoFID 2021",
+    "code": "19-016",
+    "food": "Bacon rashers, streaky, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 276.0,
+      "proteinG": 15.8,
+      "carbsG": 0.0,
+      "fatG": 23.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "berenjena": {
+    "source": "CoFID 2021",
+    "code": "13-161",
+    "food": "Aubergine, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 15.0,
+      "proteinG": 0.9,
+      "carbsG": 2.2,
+      "fatG": 0.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "berza": {
+    "source": "CoFID 2021",
+    "code": "13-510",
+    "food": "Cabbage, green, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 27.0,
+      "proteinG": 2.4,
+      "carbsG": 4.1,
+      "fatG": 0.2,
+      "fiberG": 4.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "col rizada": {
+    "source": "CoFID 2021",
+    "code": "13-510",
+    "food": "Cabbage, green, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 27.0,
+      "proteinG": 2.4,
+      "carbsG": 4.1,
+      "fatG": 0.2,
+      "fiberG": 4.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "brote de soja": {
+    "source": "CoFID 2021",
+    "code": "13-426",
+    "food": "Beansprouts, mung, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 31.0,
+      "proteinG": 2.9,
+      "carbsG": 4.0,
+      "fatG": 0.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "brotes de soja": {
+    "source": "CoFID 2021",
+    "code": "13-426",
+    "food": "Beansprouts, mung, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 31.0,
+      "proteinG": 2.9,
+      "carbsG": 4.0,
+      "fatG": 0.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "bulgur": {
+    "source": "CoFID 2021",
+    "code": "11-904",
+    "food": "Wheat, bulgur, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 352.0,
+      "proteinG": 10.6,
+      "carbsG": 77.8,
+      "fatG": 2.0,
+      "fiberG": 6.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "cabeza de ajo": {
+    "source": "CoFID 2021",
+    "code": "13-244",
+    "food": "Garlic, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 98.0,
+      "proteinG": 7.9,
+      "carbsG": 16.3,
+      "fatG": 0.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 40,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "diente de ajo": {
+    "source": "CoFID 2021",
+    "code": "13-244",
+    "food": "Garlic, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 98.0,
+      "proteinG": 7.9,
+      "carbsG": 16.3,
+      "fatG": 0.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 3,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "cacahuete": {
+    "source": "CoFID 2021",
+    "code": "14-877",
+    "food": "Peanuts, kernel only, plain, unsalted",
+    "basis": "100g",
+    "per100": {
+      "kcal": 564.0,
+      "proteinG": 25.8,
+      "carbsG": 12.5,
+      "fatG": 46.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "cacao puro": {
+    "source": "CoFID 2021",
+    "code": "12-545",
+    "food": "Cocoa powder",
+    "basis": "100g",
+    "per100": {
+      "kcal": 312.0,
+      "proteinG": 18.5,
+      "carbsG": 11.5,
+      "fatG": 21.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "café espresso frío": {
+    "source": "CoFID 2021",
+    "code": "17-153",
+    "food": "Coffee, infusion, strong",
+    "basis": "100g",
+    "per100": {
+      "kcal": 2.0,
+      "proteinG": 0.2,
+      "carbsG": 0.3,
+      "fatG": 0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "café frío": {
+    "source": "CoFID 2021",
+    "code": "17-153",
+    "food": "Coffee, infusion, strong",
+    "basis": "100g",
+    "per100": {
+      "kcal": 2.0,
+      "proteinG": 0.2,
+      "carbsG": 0.3,
+      "fatG": 0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "grano de café": {
+    "source": "CoFID 2021",
+    "code": "17-153",
+    "food": "Coffee, infusion, strong",
+    "basis": "100g",
+    "per100": {
+      "kcal": 2.0,
+      "proteinG": 0.2,
+      "carbsG": 0.3,
+      "fatG": 0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 0.15,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "calabacín": {
+    "source": "CoFID 2021",
+    "code": "13-627",
+    "food": "Courgette, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 16.0,
+      "proteinG": 1.3,
+      "carbsG": 2.3,
+      "fatG": 0.2,
+      "fiberG": 0.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "caldo": {
+    "source": "CoFID 2021",
+    "code": "17-681",
+    "food": "Stock, chicken, ready made, retail",
+    "basis": "100g",
+    "per100": {
+      "kcal": 12.0,
+      "proteinG": 2.3,
+      "carbsG": 0.2,
+      "fatG": 0.2,
+      "fiberG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "caldo de pollo": {
+    "source": "CoFID 2021",
+    "code": "17-681",
+    "food": "Stock, chicken, ready made, retail",
+    "basis": "100g",
+    "per100": {
+      "kcal": 12.0,
+      "proteinG": 2.3,
+      "carbsG": 0.2,
+      "fatG": 0.2,
+      "fiberG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "caldo de pescado": {
+    "source": "CoFID 2021",
+    "code": "17-681",
+    "food": "Stock, chicken, ready made, retail",
+    "basis": "100g",
+    "per100": {
+      "kcal": 12.0,
+      "proteinG": 2.3,
+      "carbsG": 0.2,
+      "fatG": 0.2,
+      "fiberG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "caldo de verduras": {
+    "source": "CoFID 2021",
+    "code": "17-681",
+    "food": "Stock, chicken, ready made, retail",
+    "basis": "100g",
+    "per100": {
+      "kcal": 12.0,
+      "proteinG": 2.3,
+      "carbsG": 0.2,
+      "fatG": 0.2,
+      "fiberG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "caldo vegetal": {
+    "source": "CoFID 2021",
+    "code": "17-681",
+    "food": "Stock, chicken, ready made, retail",
+    "basis": "100g",
+    "per100": {
+      "kcal": 12.0,
+      "proteinG": 2.3,
+      "carbsG": 0.2,
+      "fatG": 0.2,
+      "fiberG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "caldo dashi": {
+    "source": "CoFID 2021",
+    "code": "17-681",
+    "food": "Stock, chicken, ready made, retail",
+    "basis": "100g",
+    "per100": {
+      "kcal": 12.0,
+      "proteinG": 2.3,
+      "carbsG": 0.2,
+      "fatG": 0.2,
+      "fiberG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "canela": {
+    "source": "USDA SR Legacy 2018",
+    "code": "171320",
+    "food": "Spices, cinnamon, ground",
+    "basis": "100g",
+    "per100": {
+      "kcal": 247.0,
+      "proteinG": 3.99,
+      "carbsG": 80.59,
+      "fatG": 1.24,
+      "fiberG": 53.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "canela molida": {
+    "source": "USDA SR Legacy 2018",
+    "code": "171320",
+    "food": "Spices, cinnamon, ground",
+    "basis": "100g",
+    "per100": {
+      "kcal": 247.0,
+      "proteinG": 3.99,
+      "carbsG": 80.59,
+      "fatG": 1.24,
+      "fiberG": 53.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "canela en rama": {
+    "source": "USDA SR Legacy 2018",
+    "code": "171320",
+    "food": "Spices, cinnamon, ground",
+    "basis": "100g",
+    "per100": {
+      "kcal": 247.0,
+      "proteinG": 3.99,
+      "carbsG": 80.59,
+      "fatG": 1.24,
+      "fiberG": 53.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 3,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "carne picada de cerdo": {
+    "source": "CoFID 2021",
+    "code": "18-606",
+    "food": "Pork, mince, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 164.0,
+      "proteinG": 19.2,
+      "carbsG": 0.0,
+      "fatG": 9.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "carne picada de cordero": {
+    "source": "CoFID 2021",
+    "code": "18-481",
+    "food": "Lamb, mince, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 196.0,
+      "proteinG": 19.1,
+      "carbsG": 0.0,
+      "fatG": 13.3,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "carne picada": {
+    "source": "CoFID 2021",
+    "code": "18-469",
+    "food": "Beef, mince, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 225.0,
+      "proteinG": 19.7,
+      "carbsG": 0.0,
+      "fatG": 16.2,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "carne picada de ternera": {
+    "source": "CoFID 2021",
+    "code": "18-469",
+    "food": "Beef, mince, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 225.0,
+      "proteinG": 19.7,
+      "carbsG": 0.0,
+      "fatG": 16.2,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "carne picada mixta": {
+    "source": "CoFID 2021",
+    "code": "18-469",
+    "food": "Beef, mince, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 225.0,
+      "proteinG": 19.7,
+      "carbsG": 0.0,
+      "fatG": 16.2,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "carrillera de cerdo limpia": {
+    "source": "CoFID 2021",
+    "code": "18-530",
+    "food": "Pork, diced, raw, lean and fat",
+    "basis": "100g",
+    "per100": {
+      "kcal": 132.0,
+      "proteinG": 22.8,
+      "carbsG": 0.0,
+      "fatG": 4.5,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "cebolla": {
+    "source": "CoFID 2021",
+    "code": "13-499",
+    "food": "Onions, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 35.0,
+      "proteinG": 1.0,
+      "carbsG": 8.0,
+      "fatG": 0.1,
+      "fiberG": 2.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "cebolla morada": {
+    "source": "CoFID 2021",
+    "code": "13-499",
+    "food": "Onions, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 35.0,
+      "proteinG": 1.0,
+      "carbsG": 8.0,
+      "fatG": 0.1,
+      "fiberG": 2.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "cebolleta": {
+    "source": "CoFID 2021",
+    "code": "13-352",
+    "food": "Spring onions, bulbs and tops, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 23.0,
+      "proteinG": 2.0,
+      "carbsG": 3.0,
+      "fatG": 0.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "champiñón": {
+    "source": "CoFID 2021",
+    "code": "13-505",
+    "food": "Mushrooms, white, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 7.0,
+      "proteinG": 1.0,
+      "carbsG": 0.3,
+      "fatG": 0.2,
+      "fiberG": 0.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "setas": {
+    "source": "CoFID 2021",
+    "code": "13-505",
+    "food": "Mushrooms, white, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 7.0,
+      "proteinG": 1.0,
+      "carbsG": 0.3,
+      "fatG": 0.2,
+      "fiberG": 0.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "setas de cultivo": {
+    "source": "CoFID 2021",
+    "code": "13-505",
+    "food": "Mushrooms, white, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 7.0,
+      "proteinG": 1.0,
+      "carbsG": 0.3,
+      "fatG": 0.2,
+      "fiberG": 0.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "chile": {
+    "source": "CoFID 2021",
+    "code": "13-317",
+    "food": "Peppers, capsicum, chilli, red, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 26.0,
+      "proteinG": 1.8,
+      "carbsG": 4.2,
+      "fatG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 10,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "guindilla": {
+    "source": "CoFID 2021",
+    "code": "13-317",
+    "food": "Peppers, capsicum, chilli, red, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 26.0,
+      "proteinG": 1.8,
+      "carbsG": 4.2,
+      "fatG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 5,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pasta de ají amarillo": {
+    "source": "CoFID 2021",
+    "code": "13-317",
+    "food": "Peppers, capsicum, chilli, red, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 26.0,
+      "proteinG": 1.8,
+      "carbsG": 4.2,
+      "fatG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "guindilla seca": {
+    "source": "CoFID 2021",
+    "code": "13-847",
+    "food": "Pepper, cayenne, ground",
+    "basis": "100g",
+    "per100": {
+      "kcal": 318.0,
+      "proteinG": 12.0,
+      "carbsG": 31.7,
+      "fatG": 17.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "chocolate negro": {
+    "source": "CoFID 2021",
+    "code": "17-491",
+    "food": "Chocolate, plain",
+    "basis": "100g",
+    "per100": {
+      "kcal": 510.0,
+      "proteinG": 5.0,
+      "carbsG": 63.5,
+      "fatG": 28.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "chorizo": {
+    "source": "CoFID 2021",
+    "code": "19-516",
+    "food": "Chorizo",
+    "basis": "100g",
+    "per100": {
+      "kcal": 395.0,
+      "proteinG": 24.0,
+      "carbsG": 2.4,
+      "fatG": 32.2,
+      "fiberG": 1.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "cilantro": {
+    "source": "CoFID 2021",
+    "code": "13-888",
+    "food": "Coriander leaves, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 18.0,
+      "proteinG": 2.1,
+      "carbsG": 1.2,
+      "fatG": 0.5,
+      "fiberG": 2.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "clara pasteurizada": {
+    "source": "CoFID 2021",
+    "code": "12-938",
+    "food": "Eggs, chicken, white, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 43.0,
+      "proteinG": 10.8,
+      "carbsG": 0,
+      "fatG": 0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "coliflor": {
+    "source": "CoFID 2021",
+    "code": "13-512",
+    "food": "Cauliflower, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 30.0,
+      "proteinG": 2.5,
+      "carbsG": 4.4,
+      "fatG": 0.4,
+      "fiberG": 1.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "col": {
+    "source": "CoFID 2021",
+    "code": "13-509",
+    "food": "Cabbage, white, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 24.0,
+      "proteinG": 1.2,
+      "carbsG": 4.8,
+      "fatG": 0.1,
+      "fiberG": 3.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "repollo": {
+    "source": "CoFID 2021",
+    "code": "13-509",
+    "food": "Cabbage, white, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 24.0,
+      "proteinG": 1.2,
+      "carbsG": 4.8,
+      "fatG": 0.1,
+      "fiberG": 3.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "comino": {
+    "source": "USDA SR Legacy 2018",
+    "code": "170923",
+    "food": "Spices, cumin seed",
+    "basis": "100g",
+    "per100": {
+      "kcal": 375.0,
+      "proteinG": 17.81,
+      "carbsG": 44.24,
+      "fatG": 22.27,
+      "fiberG": 10.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "conejo troceado": {
+    "source": "CoFID 2021",
+    "code": "18-387",
+    "food": "Rabbit, raw, meat only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 137.0,
+      "proteinG": 21.9,
+      "carbsG": 0.0,
+      "fatG": 5.5,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 0.7
+  },
+  "contramuslo de pollo deshuesado": {
+    "source": "CoFID 2021",
+    "code": "18-289",
+    "food": "Chicken, dark meat, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 109.0,
+      "proteinG": 20.9,
+      "carbsG": 0.0,
+      "fatG": 2.8,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "costilla de cerdo": {
+    "source": "CoFID 2021",
+    "code": "18-609",
+    "food": "Pork, spare ribs, raw, lean and fat",
+    "basis": "100g",
+    "per100": {
+      "kcal": 195.0,
+      "proteinG": 18.7,
+      "carbsG": 0.0,
+      "fatG": 13.4,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 0.65
+  },
+  "crema de coco": {
+    "source": "USDA SR Legacy 2018",
+    "code": "170171",
+    "food": "Nuts, coconut cream, canned, sweetened",
+    "basis": "100g",
+    "per100": {
+      "kcal": 357.0,
+      "proteinG": 1.17,
+      "carbsG": 53.21,
+      "fatG": 16.31,
+      "fiberG": 0.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "crema de coco sin alcohol": {
+    "source": "USDA SR Legacy 2018",
+    "code": "170171",
+    "food": "Nuts, coconut cream, canned, sweetened",
+    "basis": "100g",
+    "per100": {
+      "kcal": 357.0,
+      "proteinG": 1.17,
+      "carbsG": 53.21,
+      "fatG": 16.31,
+      "fiberG": 0.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "curry en polvo": {
+    "source": "CoFID 2021",
+    "code": "13-876",
+    "food": "Curry powder",
+    "basis": "100g",
+    "per100": {
+      "kcal": 233.0,
+      "proteinG": 9.5,
+      "carbsG": 26.1,
+      "fatG": 10.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "garam masala": {
+    "source": "CoFID 2021",
+    "code": "13-876",
+    "food": "Curry powder",
+    "basis": "100g",
+    "per100": {
+      "kcal": 233.0,
+      "proteinG": 9.5,
+      "carbsG": 26.1,
+      "fatG": 10.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "cúrcuma": {
+    "source": "USDA SR Legacy 2018",
+    "code": "172231",
+    "food": "Spices, turmeric, ground",
+    "basis": "100g",
+    "per100": {
+      "kcal": 312.0,
+      "proteinG": 9.68,
+      "carbsG": 67.14,
+      "fatG": 3.25,
+      "fiberG": 22.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "dorada eviscerada": {
+    "source": "CoFID 2021",
+    "code": "16-006",
+    "food": "Bream, Sea, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 96.0,
+      "proteinG": 17.5,
+      "carbsG": 0.0,
+      "fatG": 2.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 0.5
+  },
+  "eneldo": {
+    "source": "CoFID 2021",
+    "code": "13-824",
+    "food": "Dill, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 25.0,
+      "proteinG": 3.7,
+      "carbsG": 0.9,
+      "fatG": 0.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "espaguetis": {
+    "source": "CoFID 2021",
+    "code": "11-716",
+    "food": "Pasta, white, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 343.0,
+      "proteinG": 11.3,
+      "carbsG": 75.6,
+      "fatG": 1.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "macarrón": {
+    "source": "CoFID 2021",
+    "code": "11-716",
+    "food": "Pasta, white, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 343.0,
+      "proteinG": 11.3,
+      "carbsG": 75.6,
+      "fatG": 1.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pasta corta": {
+    "source": "CoFID 2021",
+    "code": "11-716",
+    "food": "Pasta, white, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 343.0,
+      "proteinG": 11.3,
+      "carbsG": 75.6,
+      "fatG": 1.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "penne": {
+    "source": "CoFID 2021",
+    "code": "11-716",
+    "food": "Pasta, white, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 343.0,
+      "proteinG": 11.3,
+      "carbsG": 75.6,
+      "fatG": 1.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "placas de lasaña": {
+    "source": "CoFID 2021",
+    "code": "11-716",
+    "food": "Pasta, white, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 343.0,
+      "proteinG": 11.3,
+      "carbsG": 75.6,
+      "fatG": 1.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "trofie": {
+    "source": "CoFID 2021",
+    "code": "11-716",
+    "food": "Pasta, white, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 343.0,
+      "proteinG": 11.3,
+      "carbsG": 75.6,
+      "fatG": 1.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tagliatelle": {
+    "source": "CoFID 2021",
+    "code": "11-715",
+    "food": "Pasta, egg, white, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 365.0,
+      "proteinG": 12.9,
+      "carbsG": 74.8,
+      "fatG": 3.6,
+      "fiberG": 3.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "espinaca": {
+    "source": "CoFID 2021",
+    "code": "13-572",
+    "food": "Spinach, mature, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 25.0,
+      "proteinG": 2.8,
+      "carbsG": 1.6,
+      "fatG": 0.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "espinacas": {
+    "source": "CoFID 2021",
+    "code": "13-572",
+    "food": "Spinach, mature, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 25.0,
+      "proteinG": 2.8,
+      "carbsG": 1.6,
+      "fatG": 0.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "espárrago verde": {
+    "source": "CoFID 2021",
+    "code": "13-157",
+    "food": "Asparagus, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 25.0,
+      "proteinG": 2.9,
+      "carbsG": 2.0,
+      "fatG": 0.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "fideos": {
+    "source": "CoFID 2021",
+    "code": "11-719",
+    "food": "Noodles, egg, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 338.0,
+      "proteinG": 12.0,
+      "carbsG": 72.6,
+      "fatG": 2.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "fideos chinos": {
+    "source": "CoFID 2021",
+    "code": "11-719",
+    "food": "Noodles, egg, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 338.0,
+      "proteinG": 12.0,
+      "carbsG": 72.6,
+      "fatG": 2.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "filetes finos de ternera": {
+    "source": "CoFID 2021",
+    "code": "18-471",
+    "food": "Beef, rump steak, raw, lean and fat",
+    "basis": "100g",
+    "per100": {
+      "kcal": 174.0,
+      "proteinG": 20.7,
+      "carbsG": 0.0,
+      "fatG": 10.1,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "ternera": {
+    "source": "CoFID 2021",
+    "code": "18-471",
+    "food": "Beef, rump steak, raw, lean and fat",
+    "basis": "100g",
+    "per100": {
+      "kcal": 174.0,
+      "proteinG": 20.7,
+      "carbsG": 0.0,
+      "fatG": 10.1,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "frutos rojos": {
+    "source": "CoFID 2021",
+    "code": "14-375",
+    "food": "Raspberries, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 25.0,
+      "proteinG": 0.8,
+      "carbsG": 5.1,
+      "fatG": 0.3,
+      "fiberG": 3.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "galanga": {
+    "source": "CoFID 2021",
+    "code": "13-890",
+    "food": "Ginger, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 44.0,
+      "proteinG": 1.8,
+      "carbsG": 8.1,
+      "fatG": 0.8,
+      "fiberG": 2.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "jengibre": {
+    "source": "CoFID 2021",
+    "code": "13-890",
+    "food": "Ginger, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 44.0,
+      "proteinG": 1.8,
+      "carbsG": 8.1,
+      "fatG": 0.8,
+      "fiberG": 2.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "galleta salada": {
+    "source": "CoFID 2021",
+    "code": "11-820",
+    "food": "Cream crackers",
+    "basis": "100g",
+    "per100": {
+      "kcal": 445.0,
+      "proteinG": 8.9,
+      "carbsG": 69.7,
+      "fatG": 16.4,
+      "fiberG": 3.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "galleta": {
+    "source": "CoFID 2021",
+    "code": "11-797",
+    "food": "Biscuits, semi-sweet",
+    "basis": "100g",
+    "per100": {
+      "kcal": 444.0,
+      "proteinG": 6.4,
+      "carbsG": 75.4,
+      "fatG": 15.1,
+      "fiberG": 2.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 7,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "bizcocho de soletilla": {
+    "source": "CoFID 2021",
+    "code": "11-797",
+    "food": "Biscuits, semi-sweet",
+    "basis": "100g",
+    "per100": {
+      "kcal": 444.0,
+      "proteinG": 6.4,
+      "carbsG": 75.4,
+      "fatG": 15.1,
+      "fiberG": 2.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "gambas peladas": {
+    "source": "CoFID 2021",
+    "code": "16-387",
+    "food": "Prawns, king, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 77.0,
+      "proteinG": 17.6,
+      "carbsG": 0.0,
+      "fatG": 0.7,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "langostino pelado": {
+    "source": "CoFID 2021",
+    "code": "16-387",
+    "food": "Prawns, king, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 77.0,
+      "proteinG": 17.6,
+      "carbsG": 0.0,
+      "fatG": 0.7,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "garbanzo cocido": {
+    "source": "CoFID 2021",
+    "code": "13-662",
+    "food": "Beans, chick peas, Kabuli, whole, dried, boiled in unsalted water",
+    "basis": "100g",
+    "per100": {
+      "kcal": 129.0,
+      "proteinG": 8.4,
+      "carbsG": 18.3,
+      "fatG": 3.0,
+      "fiberG": 10.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "garbanzos cocidos": {
+    "source": "CoFID 2021",
+    "code": "13-662",
+    "food": "Beans, chick peas, Kabuli, whole, dried, boiled in unsalted water",
+    "basis": "100g",
+    "per100": {
+      "kcal": 129.0,
+      "proteinG": 8.4,
+      "carbsG": 18.3,
+      "fatG": 3.0,
+      "fiberG": 10.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "garbanzo seco": {
+    "source": "CoFID 2021",
+    "code": "13-074",
+    "food": "Beans, chick peas, Kabuli, whole, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 320.0,
+      "proteinG": 21.3,
+      "carbsG": 49.6,
+      "fatG": 5.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "garbanzos secos": {
+    "source": "CoFID 2021",
+    "code": "13-074",
+    "food": "Beans, chick peas, Kabuli, whole, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 320.0,
+      "proteinG": 21.3,
+      "carbsG": 49.6,
+      "fatG": 5.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "garrofón cocido": {
+    "source": "CoFID 2021",
+    "code": "13-663",
+    "food": "Beans, butter, dried, boiled in unsalted water",
+    "basis": "100g",
+    "per100": {
+      "kcal": 105.0,
+      "proteinG": 8.1,
+      "carbsG": 16.8,
+      "fatG": 1.1,
+      "fiberG": 11.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "gelatina en hojas": {
+    "source": "CoFID 2021",
+    "code": "17-360",
+    "food": "Gelatine",
+    "basis": "100g",
+    "per100": {
+      "kcal": 338.0,
+      "proteinG": 84.4,
+      "carbsG": 0.0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "guisante": {
+    "source": "CoFID 2021",
+    "code": "13-438",
+    "food": "Peas, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 83.0,
+      "proteinG": 6.9,
+      "carbsG": 11.3,
+      "fatG": 1.5,
+      "fiberG": 5.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "guisantes": {
+    "source": "CoFID 2021",
+    "code": "13-438",
+    "food": "Peas, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 83.0,
+      "proteinG": 6.9,
+      "carbsG": 11.3,
+      "fatG": 1.5,
+      "fiberG": 5.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "harina": {
+    "source": "CoFID 2021",
+    "code": "11-886",
+    "food": "Flour, wheat, white, plain, soft",
+    "basis": "100g",
+    "per100": {
+      "kcal": 352.0,
+      "proteinG": 9.1,
+      "carbsG": 80.9,
+      "fatG": 1.4,
+      "fiberG": 4.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "hierbabuena": {
+    "source": "CoFID 2021",
+    "code": "13-836",
+    "food": "Mint, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 43.0,
+      "proteinG": 3.8,
+      "carbsG": 5.3,
+      "fatG": 0.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "hojaldre": {
+    "source": "CoFID 2021",
+    "code": "11-852",
+    "food": "Pastry, flaky/puff, retail, uncooked",
+    "basis": "100g",
+    "per100": {
+      "kcal": 384.0,
+      "proteinG": 5.3,
+      "carbsG": 33.7,
+      "fatG": 26.2,
+      "fiberG": 2.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "huevo": {
+    "source": "CoFID 2021",
+    "code": "12-937",
+    "food": "Eggs, chicken, whole, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 131.0,
+      "proteinG": 12.6,
+      "carbsG": 0,
+      "fatG": 9.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 50,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "huevo pasteurizado": {
+    "source": "CoFID 2021",
+    "code": "12-937",
+    "food": "Eggs, chicken, whole, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 131.0,
+      "proteinG": 12.6,
+      "carbsG": 0,
+      "fatG": 9.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 50,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "jamón": {
+    "source": "CoFID 2021",
+    "code": "19-496",
+    "food": "Ham",
+    "basis": "100g",
+    "per100": {
+      "kcal": 107.0,
+      "proteinG": 18.4,
+      "carbsG": 1.0,
+      "fatG": 3.3,
+      "fiberG": 0.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "jamón cocido": {
+    "source": "CoFID 2021",
+    "code": "19-496",
+    "food": "Ham",
+    "basis": "100g",
+    "per100": {
+      "kcal": 107.0,
+      "proteinG": 18.4,
+      "carbsG": 1.0,
+      "fatG": 3.3,
+      "fiberG": 0.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "jamón serrano": {
+    "source": "CoFID 2021",
+    "code": "19-496",
+    "food": "Ham",
+    "basis": "100g",
+    "per100": {
+      "kcal": 107.0,
+      "proteinG": 18.4,
+      "carbsG": 1.0,
+      "fatG": 3.3,
+      "fiberG": 0.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "judía verde": {
+    "source": "CoFID 2021",
+    "code": "13-514",
+    "food": "Beans, green, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 24.0,
+      "proteinG": 2.1,
+      "carbsG": 3.1,
+      "fatG": 0.4,
+      "fiberG": 3.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "kétchup": {
+    "source": "CoFID 2021",
+    "code": "17-709",
+    "food": "Tomato ketchup",
+    "basis": "100g",
+    "per100": {
+      "kcal": 115.0,
+      "proteinG": 1.6,
+      "carbsG": 28.6,
+      "fatG": 0.1,
+      "fiberG": 0.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "langostino cocido pelado": {
+    "source": "CoFID 2021",
+    "code": "16-389",
+    "food": "Prawns, king, purchased cooked",
+    "basis": "100g",
+    "per100": {
+      "kcal": 68.0,
+      "proteinG": 16.2,
+      "carbsG": 0.0,
+      "fatG": 0.4,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 15,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "laurel": {
+    "source": "CoFID 2021",
+    "code": "13-806",
+    "food": "Bay leaf, dried",
+    "basis": "100g",
+    "per100": {
+      "kcal": 313.0,
+      "proteinG": 7.6,
+      "carbsG": 48.6,
+      "fatG": 8.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 0.2,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "leche de coco": {
+    "source": "CoFID 2021",
+    "code": "14-889",
+    "food": "Coconut milk, retail",
+    "basis": "100g",
+    "per100": {
+      "kcal": 169.0,
+      "proteinG": 1.1,
+      "carbsG": 3.3,
+      "fatG": 16.9,
+      "fiberG": 0.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "leche evaporada": {
+    "source": "CoFID 2021",
+    "code": "12-522",
+    "food": "Milk, evaporated, whole",
+    "basis": "100g",
+    "per100": {
+      "kcal": 166.0,
+      "proteinG": 8.4,
+      "carbsG": 12.7,
+      "fatG": 9.4,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1.03,
+    "edibleFractionEstimate": 1
+  },
+  "leche": {
+    "source": "CoFID 2021",
+    "code": "12-596",
+    "food": "Milk, whole, pasteurised, average",
+    "basis": "100g",
+    "per100": {
+      "kcal": 63.0,
+      "proteinG": 3.4,
+      "carbsG": 4.6,
+      "fatG": 3.6,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1.03,
+    "edibleFractionEstimate": 1
+  },
+  "lechuga": {
+    "source": "CoFID 2021",
+    "code": "13-520",
+    "food": "Lettuce, average, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 11.0,
+      "proteinG": 1.2,
+      "carbsG": 1.4,
+      "fatG": 0.1,
+      "fiberG": 1.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "lenteja pardina": {
+    "source": "CoFID 2021",
+    "code": "13-089",
+    "food": "Lentils, green and brown, whole, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 297.0,
+      "proteinG": 24.3,
+      "carbsG": 48.8,
+      "fatG": 1.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "lenteja roja": {
+    "source": "CoFID 2021",
+    "code": "13-657",
+    "food": "Lentils, red, split, dried, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 311.0,
+      "proteinG": 25.6,
+      "carbsG": 51.2,
+      "fatG": 1.8,
+      "fiberG": 17.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "levadura química": {
+    "source": "CoFID 2021",
+    "code": "17-355",
+    "food": "Baking powder",
+    "basis": "100g",
+    "per100": {
+      "kcal": 163.0,
+      "proteinG": 5.2,
+      "carbsG": 37.8,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "lima": {
+    "source": "CoFID 2021",
+    "code": "14-131",
+    "food": "Limes, flesh only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 9.0,
+      "proteinG": 0.7,
+      "carbsG": 0.8,
+      "fatG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 45,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "rodaja de lima": {
+    "source": "CoFID 2021",
+    "code": "14-131",
+    "food": "Limes, flesh only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 9.0,
+      "proteinG": 0.7,
+      "carbsG": 0.8,
+      "fatG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 10,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "limón": {
+    "source": "CoFID 2021",
+    "code": "14-129",
+    "food": "Lemons, peeled, flesh only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 14.0,
+      "proteinG": 0.8,
+      "carbsG": 2.2,
+      "fatG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 60,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "rodaja de limón": {
+    "source": "CoFID 2021",
+    "code": "14-129",
+    "food": "Lemons, peeled, flesh only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 14.0,
+      "proteinG": 0.8,
+      "carbsG": 2.2,
+      "fatG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 10,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "lomo de cerdo": {
+    "source": "CoFID 2021",
+    "code": "18-536",
+    "food": "Pork, loin chops, raw, lean and fat",
+    "basis": "100g",
+    "per100": {
+      "kcal": 191.0,
+      "proteinG": 21.3,
+      "carbsG": 0.0,
+      "fatG": 11.7,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "lomo de cerdo en filetes": {
+    "source": "CoFID 2021",
+    "code": "18-536",
+    "food": "Pork, loin chops, raw, lean and fat",
+    "basis": "100g",
+    "per100": {
+      "kcal": 191.0,
+      "proteinG": 21.3,
+      "carbsG": 0.0,
+      "fatG": 11.7,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "lubina abierta sin espina central": {
+    "source": "CoFID 2021",
+    "code": "16-385",
+    "food": "Bass, sea, flesh only, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 168.0,
+      "proteinG": 20.0,
+      "carbsG": 0.0,
+      "fatG": 9.8,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 0.8
+  },
+  "mango": {
+    "source": "CoFID 2021",
+    "code": "14-378",
+    "food": "Mangoes, ripe, flesh only, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 48.0,
+      "proteinG": 0.7,
+      "carbsG": 10.7,
+      "fatG": 0.6,
+      "fiberG": 1.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 200,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "mantequilla": {
+    "source": "CoFID 2021",
+    "code": "17-685",
+    "food": "Butter, salted",
+    "basis": "100g",
+    "per100": {
+      "kcal": 744.0,
+      "proteinG": 0.6,
+      "carbsG": 0.6,
+      "fatG": 82.2,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "manzana": {
+    "source": "CoFID 2021",
+    "code": "14-319",
+    "food": "Apples, eating, raw, flesh and skin",
+    "basis": "100g",
+    "per100": {
+      "kcal": 51.0,
+      "proteinG": 0.6,
+      "carbsG": 11.6,
+      "fatG": 0.5,
+      "fiberG": 1.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 150,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "masa filo": {
+    "source": "CoFID 2021",
+    "code": "11-855",
+    "food": "Pastry, filo, retail, uncooked",
+    "basis": "100g",
+    "per100": {
+      "kcal": 278.0,
+      "proteinG": 7.6,
+      "carbsG": 58.9,
+      "fatG": 2.9,
+      "fiberG": 3.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "mascarpone": {
+    "source": "CoFID 2021",
+    "code": "12-490",
+    "food": "Cheese, Mascarpone",
+    "basis": "100g",
+    "per100": {
+      "kcal": 435.0,
+      "proteinG": 4.6,
+      "carbsG": 4.3,
+      "fatG": 44.5,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "mayonesa comercial": {
+    "source": "CoFID 2021",
+    "code": "17-654",
+    "food": "Mayonnaise, standard, retail",
+    "basis": "100g",
+    "per100": {
+      "kcal": 686.0,
+      "proteinG": 1.1,
+      "carbsG": 2.4,
+      "fatG": 74.8,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "merluza sin espinas": {
+    "source": "CoFID 2021",
+    "code": "16-070",
+    "food": "Hake, flesh only, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 92.0,
+      "proteinG": 18.0,
+      "carbsG": 0.0,
+      "fatG": 2.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "morcilla": {
+    "source": "CoFID 2021",
+    "code": "19-113",
+    "food": "Black pudding, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 277.0,
+      "proteinG": 9.1,
+      "carbsG": 14.8,
+      "fatG": 20.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "morcilla asturiana": {
+    "source": "CoFID 2021",
+    "code": "19-113",
+    "food": "Black pudding, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 277.0,
+      "proteinG": 9.1,
+      "carbsG": 14.8,
+      "fatG": 20.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "morcillo": {
+    "source": "CoFID 2021",
+    "code": "18-077",
+    "food": "Beef, stewing steak, raw, lean and fat",
+    "basis": "100g",
+    "per100": {
+      "kcal": 146.0,
+      "proteinG": 22.1,
+      "carbsG": 0.0,
+      "fatG": 6.4,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "ternera para guisar": {
+    "source": "CoFID 2021",
+    "code": "18-077",
+    "food": "Beef, stewing steak, raw, lean and fat",
+    "basis": "100g",
+    "per100": {
+      "kcal": 146.0,
+      "proteinG": 22.1,
+      "carbsG": 0.0,
+      "fatG": 6.4,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "mozzarella": {
+    "source": "CoFID 2021",
+    "code": "12-360",
+    "food": "Cheese, Mozzarella, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 257.0,
+      "proteinG": 18.6,
+      "carbsG": 0,
+      "fatG": 20.3,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "muslo de pato": {
+    "source": "CoFID 2021",
+    "code": "18-371",
+    "food": "Duck, raw, meat, fat and skin",
+    "basis": "100g",
+    "per100": {
+      "kcal": 388.0,
+      "proteinG": 13.1,
+      "carbsG": 0.0,
+      "fatG": 37.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 0.7
+  },
+  "muslos de pollo": {
+    "source": "CoFID 2021",
+    "code": "18-294",
+    "food": "Chicken, leg quarter, raw, meat and skin, weighed with bone",
+    "basis": "100g",
+    "per100": {
+      "kcal": 133.0,
+      "proteinG": 12.6,
+      "carbsG": 0.0,
+      "fatG": 9.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "naranja": {
+    "source": "CoFID 2021",
+    "code": "14-327",
+    "food": "Oranges, flesh only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 36.0,
+      "proteinG": 0.8,
+      "carbsG": 8.2,
+      "fatG": 0.2,
+      "fiberG": 1.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 130,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "rodaja de naranja": {
+    "source": "CoFID 2021",
+    "code": "14-327",
+    "food": "Oranges, flesh only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 36.0,
+      "proteinG": 0.8,
+      "carbsG": 8.2,
+      "fatG": 0.2,
+      "fiberG": 1.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 15,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "nata": {
+    "source": "CoFID 2021",
+    "code": "12-332",
+    "food": "Cream, fresh, single",
+    "basis": "100g",
+    "per100": {
+      "kcal": 193.0,
+      "proteinG": 3.3,
+      "carbsG": 2.2,
+      "fatG": 19.1,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "nata para montar": {
+    "source": "CoFID 2021",
+    "code": "12-333",
+    "food": "Cream, fresh, whipping",
+    "basis": "100g",
+    "per100": {
+      "kcal": 381.0,
+      "proteinG": 2.0,
+      "carbsG": 2.7,
+      "fatG": 40.3,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "nata agria": {
+    "source": "CoFID 2021",
+    "code": "12-337",
+    "food": "Cream, dairy, extra thick (24% fat)",
+    "basis": "100g",
+    "per100": {
+      "kcal": 236.0,
+      "proteinG": 2.9,
+      "carbsG": 3.4,
+      "fatG": 23.5,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "nuez moscada": {
+    "source": "USDA SR Legacy 2018",
+    "code": "171326",
+    "food": "Spices, nutmeg, ground",
+    "basis": "100g",
+    "per100": {
+      "kcal": 525.0,
+      "proteinG": 5.84,
+      "carbsG": 49.29,
+      "fatG": 36.31,
+      "fiberG": 20.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "nuez": {
+    "source": "CoFID 2021",
+    "code": "14-879",
+    "food": "Walnuts, kernel only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 688.0,
+      "proteinG": 14.7,
+      "carbsG": 3.3,
+      "fatG": 68.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "orégano": {
+    "source": "USDA SR Legacy 2018",
+    "code": "171328",
+    "food": "Spices, oregano, dried",
+    "basis": "100g",
+    "per100": {
+      "kcal": 265.0,
+      "proteinG": 9.0,
+      "carbsG": 68.92,
+      "fatG": 4.28,
+      "fiberG": 42.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "paletilla de cordero": {
+    "source": "CoFID 2021",
+    "code": "18-171",
+    "food": "Lamb, shoulder, raw, lean and fat, weighed with bone",
+    "basis": "100g",
+    "per100": {
+      "kcal": 188.0,
+      "proteinG": 14.1,
+      "carbsG": 0.0,
+      "fatG": 14.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pan de hamburguesa": {
+    "source": "CoFID 2021",
+    "code": "11-1006",
+    "food": "Bread rolls, white, soft",
+    "basis": "100g",
+    "per100": {
+      "kcal": 254.0,
+      "proteinG": 9.3,
+      "carbsG": 51.5,
+      "fatG": 2.6,
+      "fiberG": 2.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 60,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pan de pita": {
+    "source": "CoFID 2021",
+    "code": "11-974",
+    "food": "Bread, pitta, white",
+    "basis": "100g",
+    "per100": {
+      "kcal": 255.0,
+      "proteinG": 9.1,
+      "carbsG": 55.1,
+      "fatG": 1.3,
+      "fiberG": 2.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 60,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pan": {
+    "source": "CoFID 2021",
+    "code": "11-1145",
+    "food": "Bread, white, average",
+    "basis": "100g",
+    "per100": {
+      "kcal": 236.0,
+      "proteinG": 8.7,
+      "carbsG": 48.7,
+      "fatG": 2.1,
+      "fiberG": 2.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pan del día anterior": {
+    "source": "CoFID 2021",
+    "code": "11-1145",
+    "food": "Bread, white, average",
+    "basis": "100g",
+    "per100": {
+      "kcal": 236.0,
+      "proteinG": 8.7,
+      "carbsG": 48.7,
+      "fatG": 2.1,
+      "fiberG": 2.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pan para torrijas": {
+    "source": "CoFID 2021",
+    "code": "11-1145",
+    "food": "Bread, white, average",
+    "basis": "100g",
+    "per100": {
+      "kcal": 236.0,
+      "proteinG": 8.7,
+      "carbsG": 48.7,
+      "fatG": 2.1,
+      "fiberG": 2.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pan rústico": {
+    "source": "CoFID 2021",
+    "code": "11-1145",
+    "food": "Bread, white, average",
+    "basis": "100g",
+    "per100": {
+      "kcal": 236.0,
+      "proteinG": 8.7,
+      "carbsG": 48.7,
+      "fatG": 2.1,
+      "fiberG": 2.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "panceta": {
+    "source": "CoFID 2021",
+    "code": "18-557",
+    "food": "Pork, belly joint/slices, raw, lean and fat",
+    "basis": "100g",
+    "per100": {
+      "kcal": 258.0,
+      "proteinG": 19.1,
+      "carbsG": 0.0,
+      "fatG": 20.2,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "paneer": {
+    "source": "CoFID 2021",
+    "code": "12-495",
+    "food": "Cheese, Paneer",
+    "basis": "100g",
+    "per100": {
+      "kcal": 328.0,
+      "proteinG": 26.0,
+      "carbsG": 0.9,
+      "fatG": 24.5,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "parmesano": {
+    "source": "CoFID 2021",
+    "code": "12-526",
+    "food": "Cheese, Parmesan, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 415.0,
+      "proteinG": 36.2,
+      "carbsG": 0.9,
+      "fatG": 29.7,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pecorino": {
+    "source": "CoFID 2021",
+    "code": "12-526",
+    "food": "Cheese, Parmesan, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 415.0,
+      "proteinG": 36.2,
+      "carbsG": 0.9,
+      "fatG": 29.7,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pasta de curry verde": {
+    "source": "CoFID 2021",
+    "code": "17-720",
+    "food": "Curry paste",
+    "basis": "100g",
+    "per100": {
+      "kcal": 253.0,
+      "proteinG": 4.7,
+      "carbsG": 11.3,
+      "fatG": 21.3,
+      "fiberG": 6.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pastilla de curry japonés": {
+    "source": "CoFID 2021",
+    "code": "17-720",
+    "food": "Curry paste",
+    "basis": "100g",
+    "per100": {
+      "kcal": 253.0,
+      "proteinG": 4.7,
+      "carbsG": 11.3,
+      "fatG": 21.3,
+      "fiberG": 6.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pasta de tamarindo": {
+    "source": "CoFID 2021",
+    "code": "13-856",
+    "food": "Tamarind pulp, flesh only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 273.0,
+      "proteinG": 3.2,
+      "carbsG": 64.5,
+      "fatG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "patata": {
+    "source": "CoFID 2021",
+    "code": "13-489",
+    "food": "Potatoes, old, raw, flesh only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 82.0,
+      "proteinG": 1.9,
+      "carbsG": 19.6,
+      "fatG": 0.1,
+      "fiberG": 2.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pepino": {
+    "source": "CoFID 2021",
+    "code": "13-523",
+    "food": "Cucumber, raw, flesh and skin",
+    "basis": "100g",
+    "per100": {
+      "kcal": 14.0,
+      "proteinG": 1.0,
+      "carbsG": 1.2,
+      "fatG": 0.6,
+      "fiberG": 0.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pera firme": {
+    "source": "CoFID 2021",
+    "code": "14-321",
+    "food": "Pears, raw, flesh and skin",
+    "basis": "100g",
+    "per100": {
+      "kcal": 43.0,
+      "proteinG": 0.3,
+      "carbsG": 10.9,
+      "fatG": 0.1,
+      "fiberG": 2.7
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 150,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "perejil": {
+    "source": "CoFID 2021",
+    "code": "13-844",
+    "food": "Parsley, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 34.0,
+      "proteinG": 3.0,
+      "carbsG": 2.7,
+      "fatG": 1.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pimentón": {
+    "source": "USDA SR Legacy 2018",
+    "code": "171329",
+    "food": "Spices, paprika",
+    "basis": "100g",
+    "per100": {
+      "kcal": 282.0,
+      "proteinG": 14.14,
+      "carbsG": 53.99,
+      "fatG": 12.89,
+      "fiberG": 34.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pimentón dulce": {
+    "source": "USDA SR Legacy 2018",
+    "code": "171329",
+    "food": "Spices, paprika",
+    "basis": "100g",
+    "per100": {
+      "kcal": 282.0,
+      "proteinG": 14.14,
+      "carbsG": 53.99,
+      "fatG": 12.89,
+      "fiberG": 34.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pimentón picante": {
+    "source": "USDA SR Legacy 2018",
+    "code": "171329",
+    "food": "Spices, paprika",
+    "basis": "100g",
+    "per100": {
+      "kcal": 282.0,
+      "proteinG": 14.14,
+      "carbsG": 53.99,
+      "fatG": 12.89,
+      "fiberG": 34.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pimienta": {
+    "source": "USDA SR Legacy 2018",
+    "code": "170931",
+    "food": "Spices, pepper, black",
+    "basis": "100g",
+    "per100": {
+      "kcal": 251.0,
+      "proteinG": 10.39,
+      "carbsG": 63.95,
+      "fatG": 3.26,
+      "fiberG": 25.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pimienta negra": {
+    "source": "USDA SR Legacy 2018",
+    "code": "170931",
+    "food": "Spices, pepper, black",
+    "basis": "100g",
+    "per100": {
+      "kcal": 251.0,
+      "proteinG": 10.39,
+      "carbsG": 63.95,
+      "fatG": 3.26,
+      "fiberG": 25.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pimienta verde en conserva": {
+    "source": "USDA SR Legacy 2018",
+    "code": "170931",
+    "food": "Spices, pepper, black",
+    "basis": "100g",
+    "per100": {
+      "kcal": 251.0,
+      "proteinG": 10.39,
+      "carbsG": 63.95,
+      "fatG": 3.26,
+      "fiberG": 25.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pimiento": {
+    "source": "CoFID 2021",
+    "code": "13-524",
+    "food": "Pepper, capsicum, red, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 21.0,
+      "proteinG": 0.8,
+      "carbsG": 4.3,
+      "fatG": 0.2,
+      "fiberG": 2.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pimiento rojo": {
+    "source": "CoFID 2021",
+    "code": "13-524",
+    "food": "Pepper, capsicum, red, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 21.0,
+      "proteinG": 0.8,
+      "carbsG": 4.3,
+      "fatG": 0.2,
+      "fiberG": 2.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pimiento del piquillo": {
+    "source": "CoFID 2021",
+    "code": "13-524",
+    "food": "Pepper, capsicum, red, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 21.0,
+      "proteinG": 0.8,
+      "carbsG": 4.3,
+      "fatG": 0.2,
+      "fiberG": 2.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pulpa de pimiento choricero": {
+    "source": "CoFID 2021",
+    "code": "13-524",
+    "food": "Pepper, capsicum, red, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 21.0,
+      "proteinG": 0.8,
+      "carbsG": 4.3,
+      "fatG": 0.2,
+      "fiberG": 2.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pimiento verde": {
+    "source": "CoFID 2021",
+    "code": "13-318",
+    "food": "Peppers, capsicum, green, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 15.0,
+      "proteinG": 0.8,
+      "carbsG": 2.6,
+      "fatG": 0.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "piña": {
+    "source": "CoFID 2021",
+    "code": "14-376",
+    "food": "Pineapple, flesh only, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 45.0,
+      "proteinG": 0.5,
+      "carbsG": 11.4,
+      "fatG": 0.1,
+      "fiberG": 1.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "trozo de piña": {
+    "source": "CoFID 2021",
+    "code": "14-376",
+    "food": "Pineapple, flesh only, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 45.0,
+      "proteinG": 0.5,
+      "carbsG": 11.4,
+      "fatG": 0.1,
+      "fiberG": 1.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 25,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "piñones": {
+    "source": "CoFID 2021",
+    "code": "14-839",
+    "food": "Pine nuts, kernel only",
+    "basis": "100g",
+    "per100": {
+      "kcal": 688.0,
+      "proteinG": 14.0,
+      "carbsG": 4.0,
+      "fatG": 68.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pollo cocido": {
+    "source": "CoFID 2021",
+    "code": "18-330",
+    "food": "Chicken, light meat, roasted",
+    "basis": "100g",
+    "per100": {
+      "kcal": 153.0,
+      "proteinG": 30.2,
+      "carbsG": 0.0,
+      "fatG": 3.6,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pollo cocido desmenuzado": {
+    "source": "CoFID 2021",
+    "code": "18-330",
+    "food": "Chicken, light meat, roasted",
+    "basis": "100g",
+    "per100": {
+      "kcal": 153.0,
+      "proteinG": 30.2,
+      "carbsG": 0.0,
+      "fatG": 3.6,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pollo": {
+    "source": "CoFID 2021",
+    "code": "18-488",
+    "food": "Chicken, meat, average, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 108.0,
+      "proteinG": 22.3,
+      "carbsG": 0.0,
+      "fatG": 2.1,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pollo deshuesado": {
+    "source": "CoFID 2021",
+    "code": "18-488",
+    "food": "Chicken, meat, average, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 108.0,
+      "proteinG": 22.3,
+      "carbsG": 0.0,
+      "fatG": 2.1,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pollo troceado": {
+    "source": "CoFID 2021",
+    "code": "18-298",
+    "food": "Chicken, whole, raw, meat and skin, weighed with bone",
+    "basis": "100g",
+    "per100": {
+      "kcal": 131.0,
+      "proteinG": 12.4,
+      "carbsG": 0.0,
+      "fatG": 9.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "puerro": {
+    "source": "CoFID 2021",
+    "code": "13-624",
+    "food": "Leeks, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 23.0,
+      "proteinG": 1.5,
+      "carbsG": 4.1,
+      "fatG": 0.2,
+      "fiberG": 2.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pulpo cocido": {
+    "source": "USDA SR Legacy 2018",
+    "code": "174249",
+    "food": "Mollusks, octopus, common, cooked, moist heat",
+    "basis": "100g",
+    "per100": {
+      "kcal": 164.0,
+      "proteinG": 29.82,
+      "carbsG": 4.4,
+      "fatG": 2.08,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "puré de melocotón blanco": {
+    "source": "CoFID 2021",
+    "code": "14-299",
+    "food": "Peaches, raw, flesh and skin",
+    "basis": "100g",
+    "per100": {
+      "kcal": 33.0,
+      "proteinG": 1.0,
+      "carbsG": 7.6,
+      "fatG": 0.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "queso cheddar": {
+    "source": "CoFID 2021",
+    "code": "12-346",
+    "food": "Cheese, Cheddar, English",
+    "basis": "100g",
+    "per100": {
+      "kcal": 416.0,
+      "proteinG": 25.4,
+      "carbsG": 0.1,
+      "fatG": 34.9,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "queso fundente": {
+    "source": "CoFID 2021",
+    "code": "12-346",
+    "food": "Cheese, Cheddar, English",
+    "basis": "100g",
+    "per100": {
+      "kcal": 416.0,
+      "proteinG": 25.4,
+      "carbsG": 0.1,
+      "fatG": 34.9,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "queso rallado": {
+    "source": "CoFID 2021",
+    "code": "12-346",
+    "food": "Cheese, Cheddar, English",
+    "basis": "100g",
+    "per100": {
+      "kcal": 416.0,
+      "proteinG": 25.4,
+      "carbsG": 0.1,
+      "fatG": 34.9,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "queso": {
+    "source": "CoFID 2021",
+    "code": "12-346",
+    "food": "Cheese, Cheddar, English",
+    "basis": "100g",
+    "per100": {
+      "kcal": 416.0,
+      "proteinG": 25.4,
+      "carbsG": 0.1,
+      "fatG": 34.9,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "queso crema": {
+    "source": "CoFID 2021",
+    "code": "12-551",
+    "food": "Cheese, spreadable, full fat, soft, white",
+    "basis": "100g",
+    "per100": {
+      "kcal": 252.0,
+      "proteinG": 5.3,
+      "carbsG": 3.0,
+      "fatG": 24.4,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "queso en loncha": {
+    "source": "CoFID 2021",
+    "code": "12-527",
+    "food": "Cheese, processed, plain",
+    "basis": "100g",
+    "per100": {
+      "kcal": 297.0,
+      "proteinG": 17.8,
+      "carbsG": 5.0,
+      "fatG": 23.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 20,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "queso feta": {
+    "source": "CoFID 2021",
+    "code": "12-525",
+    "food": "Cheese, Feta",
+    "basis": "100g",
+    "per100": {
+      "kcal": 250.0,
+      "proteinG": 15.6,
+      "carbsG": 1.5,
+      "fatG": 20.2,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "queso fresco": {
+    "source": "CoFID 2021",
+    "code": "12-176",
+    "food": "Cheese, Ricotta",
+    "basis": "100g",
+    "per100": {
+      "kcal": 144.0,
+      "proteinG": 9.4,
+      "carbsG": 2.0,
+      "fatG": 11.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "queso gruyer": {
+    "source": "CoFID 2021",
+    "code": "12-164",
+    "food": "Cheese, Gruyere",
+    "basis": "100g",
+    "per100": {
+      "kcal": 409.0,
+      "proteinG": 27.2,
+      "carbsG": 0,
+      "fatG": 33.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "sal": {
+    "source": "CoFID 2021",
+    "code": "17-367",
+    "food": "Salt",
+    "basis": "100g",
+    "per100": {
+      "kcal": 0.0,
+      "proteinG": 0.0,
+      "carbsG": 0.0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "sal gruesa": {
+    "source": "CoFID 2021",
+    "code": "17-367",
+    "food": "Salt",
+    "basis": "100g",
+    "per100": {
+      "kcal": 0.0,
+      "proteinG": 0.0,
+      "carbsG": 0.0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "salmón": {
+    "source": "CoFID 2021",
+    "code": "16-356",
+    "food": "Salmon, farmed, flesh only, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 217.0,
+      "proteinG": 20.4,
+      "carbsG": 0.0,
+      "fatG": 15.0,
+      "fiberG": 0.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "salsa Worcestershire": {
+    "source": "CoFID 2021",
+    "code": "17-723",
+    "food": "Worcestershire sauce",
+    "basis": "100g",
+    "per100": {
+      "kcal": 113.0,
+      "proteinG": 1.4,
+      "carbsG": 28.3,
+      "fatG": 0.1,
+      "fiberG": 0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "salsa barbacoa": {
+    "source": "CoFID 2021",
+    "code": "17-705",
+    "food": "Barbecue sauce",
+    "basis": "100g",
+    "per100": {
+      "kcal": 140.0,
+      "proteinG": 1.0,
+      "carbsG": 36.1,
+      "fatG": 0.1,
+      "fiberG": 1.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "salsa de soja": {
+    "source": "CoFID 2021",
+    "code": "17-721",
+    "food": "Soy sauce, light and dark varieties",
+    "basis": "100g",
+    "per100": {
+      "kcal": 79.0,
+      "proteinG": 3.0,
+      "carbsG": 17.9,
+      "fatG": 0,
+      "fiberG": 0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "salsa de pescado": {
+    "source": "CoFID 2021",
+    "code": "17-721",
+    "food": "Soy sauce, light and dark varieties",
+    "basis": "100g",
+    "per100": {
+      "kcal": 79.0,
+      "proteinG": 3.0,
+      "carbsG": 17.9,
+      "fatG": 0,
+      "fiberG": 0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "sardinas limpias": {
+    "source": "CoFID 2021",
+    "code": "16-401",
+    "food": "Sardines, flesh only, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 134.0,
+      "proteinG": 19.8,
+      "carbsG": 0.0,
+      "fatG": 6.1,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "sidra": {
+    "source": "CoFID 2021",
+    "code": "17-222",
+    "food": "Cider, dry",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 36.0,
+      "proteinG": 0,
+      "carbsG": 2.6,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "sésamo": {
+    "source": "CoFID 2021",
+    "code": "14-844",
+    "food": "Sesame seeds",
+    "basis": "100g",
+    "per100": {
+      "kcal": 598.0,
+      "proteinG": 18.2,
+      "carbsG": 0.9,
+      "fatG": 58.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "solomillo de cerdo": {
+    "source": "CoFID 2021",
+    "code": "18-511",
+    "food": "Pork, fillet medallions, raw, lean and fat",
+    "basis": "100g",
+    "per100": {
+      "kcal": 106.0,
+      "proteinG": 22.6,
+      "carbsG": 0.0,
+      "fatG": 1.8,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tahini": {
+    "source": "CoFID 2021",
+    "code": "14-847",
+    "food": "Tahini paste",
+    "basis": "100g",
+    "per100": {
+      "kcal": 607.0,
+      "proteinG": 18.5,
+      "carbsG": 0.9,
+      "fatG": 58.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tofu": {
+    "source": "CoFID 2021",
+    "code": "13-570",
+    "food": "Tofu, soya bean, steamed",
+    "basis": "100g",
+    "per100": {
+      "kcal": 73.0,
+      "proteinG": 8.1,
+      "carbsG": 0.7,
+      "fatG": 4.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tomate": {
+    "source": "CoFID 2021",
+    "code": "13-517",
+    "food": "Tomatoes, standard, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 14.0,
+      "proteinG": 0.5,
+      "carbsG": 3.0,
+      "fatG": 0.1,
+      "fiberG": 1.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tomate maduro": {
+    "source": "CoFID 2021",
+    "code": "13-517",
+    "food": "Tomatoes, standard, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 14.0,
+      "proteinG": 0.5,
+      "carbsG": 3.0,
+      "fatG": 0.1,
+      "fiberG": 1.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tomate rallado": {
+    "source": "CoFID 2021",
+    "code": "13-517",
+    "food": "Tomatoes, standard, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 14.0,
+      "proteinG": 0.5,
+      "carbsG": 3.0,
+      "fatG": 0.1,
+      "fiberG": 1.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tomate triturado": {
+    "source": "CoFID 2021",
+    "code": "13-517",
+    "food": "Tomatoes, standard, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 14.0,
+      "proteinG": 0.5,
+      "carbsG": 3.0,
+      "fatG": 0.1,
+      "fiberG": 1.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tomillo": {
+    "source": "CoFID 2021",
+    "code": "13-893",
+    "food": "Thyme, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 95.0,
+      "proteinG": 3.0,
+      "carbsG": 15.1,
+      "fatG": 2.5,
+      "fiberG": 12.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tortilla de trigo": {
+    "source": "CoFID 2021",
+    "code": "11-925",
+    "food": "Tortilla, wheat, soft",
+    "basis": "100g",
+    "per100": {
+      "kcal": 285.0,
+      "proteinG": 7.8,
+      "carbsG": 53.9,
+      "fatG": 5.7,
+      "fiberG": 3.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 40,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tortilla de maíz": {
+    "source": "USDA SR Legacy 2018",
+    "code": "175036",
+    "food": "Tortillas, ready-to-bake or -fry, corn",
+    "basis": "100g",
+    "per100": {
+      "kcal": 218.0,
+      "proteinG": 5.7,
+      "carbsG": 44.64,
+      "fatG": 2.85,
+      "fiberG": 6.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 25,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "totopos": {
+    "source": "CoFID 2021",
+    "code": "17-644",
+    "food": "Tortilla chips fried in sunflower oil",
+    "basis": "100g",
+    "per100": {
+      "kcal": 504.0,
+      "proteinG": 7.2,
+      "carbsG": 60.8,
+      "fatG": 27.4,
+      "fiberG": 5.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "uva": {
+    "source": "CoFID 2021",
+    "code": "14-350",
+    "food": "Grapes, average",
+    "basis": "100g",
+    "per100": {
+      "kcal": 65.0,
+      "proteinG": 0.7,
+      "carbsG": 16.1,
+      "fatG": 0.2,
+      "fiberG": 1.3
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "vermut seco": {
+    "source": "CoFID 2021",
+    "code": "17-239",
+    "food": "Vermouth, dry",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 109.0,
+      "proteinG": 0.1,
+      "carbsG": 3.0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "vermut rojo": {
+    "source": "CoFID 2021",
+    "code": "17-239",
+    "food": "Vermouth, dry",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 109.0,
+      "proteinG": 0.1,
+      "carbsG": 3.0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "vinagre": {
+    "source": "CoFID 2021",
+    "code": "17-339",
+    "food": "Vinegar",
+    "basis": "100g",
+    "per100": {
+      "kcal": 22.0,
+      "proteinG": 0.4,
+      "carbsG": 0.6,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "vinagre de arroz": {
+    "source": "CoFID 2021",
+    "code": "17-339",
+    "food": "Vinegar",
+    "basis": "100g",
+    "per100": {
+      "kcal": 22.0,
+      "proteinG": 0.4,
+      "carbsG": 0.6,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "vinagre de Jerez": {
+    "source": "CoFID 2021",
+    "code": "17-339",
+    "food": "Vinegar",
+    "basis": "100g",
+    "per100": {
+      "kcal": 22.0,
+      "proteinG": 0.4,
+      "carbsG": 0.6,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "vino blanco": {
+    "source": "CoFID 2021",
+    "code": "17-755",
+    "food": "Wine, white, dry",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 75.0,
+      "proteinG": 0.1,
+      "carbsG": 0.6,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "mirin": {
+    "source": "CoFID 2021",
+    "code": "17-755",
+    "food": "Wine, white, dry",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 75.0,
+      "proteinG": 0.1,
+      "carbsG": 0.6,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "vino tinto": {
+    "source": "CoFID 2021",
+    "code": "17-752",
+    "food": "Wine, red",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 76.0,
+      "proteinG": 0.1,
+      "carbsG": 0.2,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "prosecco": {
+    "source": "CoFID 2021",
+    "code": "17-757",
+    "food": "Wine, white, sparkling",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 84.0,
+      "proteinG": 0.3,
+      "carbsG": 5.1,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "bourbon": {
+    "source": "CoFID 2021",
+    "code": "17-247",
+    "food": "Spirits, 40% volume",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 222.0,
+      "proteinG": 0,
+      "carbsG": 0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "cachaça": {
+    "source": "CoFID 2021",
+    "code": "17-247",
+    "food": "Spirits, 40% volume",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 222.0,
+      "proteinG": 0,
+      "carbsG": 0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "ginebra": {
+    "source": "CoFID 2021",
+    "code": "17-247",
+    "food": "Spirits, 40% volume",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 222.0,
+      "proteinG": 0,
+      "carbsG": 0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pisco": {
+    "source": "CoFID 2021",
+    "code": "17-247",
+    "food": "Spirits, 40% volume",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 222.0,
+      "proteinG": 0,
+      "carbsG": 0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "ron blanco": {
+    "source": "CoFID 2021",
+    "code": "17-247",
+    "food": "Spirits, 40% volume",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 222.0,
+      "proteinG": 0,
+      "carbsG": 0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tequila": {
+    "source": "CoFID 2021",
+    "code": "17-247",
+    "food": "Spirits, 40% volume",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 222.0,
+      "proteinG": 0,
+      "carbsG": 0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "vodka": {
+    "source": "CoFID 2021",
+    "code": "17-247",
+    "food": "Spirits, 40% volume",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 222.0,
+      "proteinG": 0,
+      "carbsG": 0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "vodka cítrico": {
+    "source": "CoFID 2021",
+    "code": "17-247",
+    "food": "Spirits, 40% volume",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 222.0,
+      "proteinG": 0,
+      "carbsG": 0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "whisky": {
+    "source": "CoFID 2021",
+    "code": "17-247",
+    "food": "Spirits, 40% volume",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 222.0,
+      "proteinG": 0,
+      "carbsG": 0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "amargo de Angostura": {
+    "source": "CoFID 2021",
+    "code": "17-247",
+    "food": "Spirits, 40% volume",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 222.0,
+      "proteinG": 0,
+      "carbsG": 0,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "licor de naranja": {
+    "source": "CoFID 2021",
+    "code": "17-244",
+    "food": "Liqueurs, high strength",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 314.0,
+      "proteinG": 0,
+      "carbsG": 24.4,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "Aperol": {
+    "source": "CoFID 2021",
+    "code": "17-245",
+    "food": "Liqueurs, low-medium strength",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 262.0,
+      "proteinG": 0,
+      "carbsG": 32.8,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "Campari": {
+    "source": "CoFID 2021",
+    "code": "17-245",
+    "food": "Liqueurs, low-medium strength",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 262.0,
+      "proteinG": 0,
+      "carbsG": 32.8,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "licor de café": {
+    "source": "CoFID 2021",
+    "code": "17-245",
+    "food": "Liqueurs, low-medium strength",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 262.0,
+      "proteinG": 0,
+      "carbsG": 32.8,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "licor de flor de saúco": {
+    "source": "CoFID 2021",
+    "code": "17-245",
+    "food": "Liqueurs, low-medium strength",
+    "basis": "100ml",
+    "per100": {
+      "kcal": 262.0,
+      "proteinG": 0,
+      "carbsG": 32.8,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "yema": {
+    "source": "CoFID 2021",
+    "code": "12-939",
+    "food": "Eggs, chicken, yolk, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 347.0,
+      "proteinG": 16.4,
+      "carbsG": 0,
+      "fatG": 31.3,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 17,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "yema de huevo": {
+    "source": "CoFID 2021",
+    "code": "12-939",
+    "food": "Eggs, chicken, yolk, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 347.0,
+      "proteinG": 16.4,
+      "carbsG": 0,
+      "fatG": 31.3,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 17,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "yema pasteurizada": {
+    "source": "CoFID 2021",
+    "code": "12-939",
+    "food": "Eggs, chicken, yolk, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 347.0,
+      "proteinG": 16.4,
+      "carbsG": 0,
+      "fatG": 31.3,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 17,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "yogur griego": {
+    "source": "CoFID 2021",
+    "code": "12-555",
+    "food": "Yogurt, Greek style, plain",
+    "basis": "100g",
+    "per100": {
+      "kcal": 133.0,
+      "proteinG": 5.7,
+      "carbsG": 4.8,
+      "fatG": 10.2,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "yogur": {
+    "source": "CoFID 2021",
+    "code": "12-184",
+    "food": "Yogurt, whole milk, plain",
+    "basis": "100g",
+    "per100": {
+      "kcal": 79.0,
+      "proteinG": 5.7,
+      "carbsG": 7.8,
+      "fatG": 3.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "yogur natural": {
+    "source": "CoFID 2021",
+    "code": "12-184",
+    "food": "Yogurt, whole milk, plain",
+    "basis": "100g",
+    "per100": {
+      "kcal": 79.0,
+      "proteinG": 5.7,
+      "carbsG": 7.8,
+      "fatG": 3.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "zanahoria": {
+    "source": "CoFID 2021",
+    "code": "13-496",
+    "food": "Carrots, old, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 34.0,
+      "proteinG": 0.5,
+      "carbsG": 7.7,
+      "fatG": 0.4,
+      "fiberG": 3.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "zumo de arándano rojo": {
+    "source": "CoFID 2021",
+    "code": "17-744",
+    "food": "Cranberry fruit juice drink",
+    "basis": "100g",
+    "per100": {
+      "kcal": 45.0,
+      "proteinG": 0,
+      "carbsG": 12.1,
+      "fatG": 0.0,
+      "fiberG": 0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "zumo de lima": {
+    "source": "CoFID 2021",
+    "code": "14-279",
+    "food": "Lime juice, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 9.0,
+      "proteinG": 0.4,
+      "carbsG": 1.6,
+      "fatG": 0.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "zumo de limón": {
+    "source": "CoFID 2021",
+    "code": "14-277",
+    "food": "Lemon juice, fresh",
+    "basis": "100g",
+    "per100": {
+      "kcal": 7.0,
+      "proteinG": 0.3,
+      "carbsG": 1.6,
+      "fatG": 0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "zumo de naranja": {
+    "source": "CoFID 2021",
+    "code": "14-369",
+    "food": "Orange juice, freshly squeezed",
+    "basis": "100g",
+    "per100": {
+      "kcal": 33.0,
+      "proteinG": 0.6,
+      "carbsG": 8.1,
+      "fatG": 0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "zumo de piña": {
+    "source": "CoFID 2021",
+    "code": "14-286",
+    "food": "Pineapple juice, unsweetened",
+    "basis": "100g",
+    "per100": {
+      "kcal": 41.0,
+      "proteinG": 0.3,
+      "carbsG": 10.5,
+      "fatG": 0.1,
+      "fiberG": 0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "zumo de melocotón": {
+    "source": "CoFID 2021",
+    "code": "14-188",
+    "food": "Peaches, canned in juice, whole contents",
+    "basis": "100g",
+    "per100": {
+      "kcal": 39.0,
+      "proteinG": 0.6,
+      "carbsG": 9.7,
+      "fatG": 0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "tira de piel de naranja": {
+    "source": "USDA SR Legacy 2018",
+    "code": "169103",
+    "food": "Orange peel, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 97.0,
+      "proteinG": 1.5,
+      "carbsG": 25.0,
+      "fatG": 0.2,
+      "fiberG": 10.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 2,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "atún en conserva": {
+    "source": "CoFID 2021",
+    "code": "16-417",
+    "food": "Tuna, canned in sunflower oil, drained",
+    "basis": "100g",
+    "per100": {
+      "kcal": 159.0,
+      "proteinG": 25.4,
+      "carbsG": 0.0,
+      "fatG": 6.4,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "ventresca en conserva": {
+    "source": "CoFID 2021",
+    "code": "16-417",
+    "food": "Tuna, canned in sunflower oil, drained",
+    "basis": "100g",
+    "per100": {
+      "kcal": 159.0,
+      "proteinG": 25.4,
+      "carbsG": 0.0,
+      "fatG": 6.4,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "bonito limpio": {
+    "source": "CoFID 2021",
+    "code": "16-399",
+    "food": "Tuna, flesh only, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 107.0,
+      "proteinG": 25.2,
+      "carbsG": 0.0,
+      "fatG": 0.7,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "fideos yakisoba": {
+    "source": "CoFID 2021",
+    "code": "11-724",
+    "food": "Noodles, egg, medium, dried, boiled in unsalted water",
+    "basis": "100g",
+    "per100": {
+      "kcal": 166.0,
+      "proteinG": 5.8,
+      "carbsG": 35.7,
+      "fatG": 1.0,
+      "fiberG": 3.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "masa de empanada": {
+    "source": "CoFID 2021",
+    "code": "11-851",
+    "food": "Pastry, shortcrust, retail, uncooked",
+    "basis": "100g",
+    "per100": {
+      "kcal": 453.0,
+      "proteinG": 5.7,
+      "carbsG": 39.4,
+      "fatG": 31.4,
+      "fiberG": 3.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "masa quebrada": {
+    "source": "CoFID 2021",
+    "code": "11-851",
+    "food": "Pastry, shortcrust, retail, uncooked",
+    "basis": "100g",
+    "per100": {
+      "kcal": 453.0,
+      "proteinG": 5.7,
+      "carbsG": 39.4,
+      "fatG": 31.4,
+      "fiberG": 3.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "masa de pizza": {
+    "source": "CoFID 2021",
+    "code": "11-1016",
+    "food": "Pizza base, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 290.0,
+      "proteinG": 7.8,
+      "carbsG": 57.5,
+      "fatG": 4.8,
+      "fiberG": 2.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "miel de caña": {
+    "source": "CoFID 2021",
+    "code": "17-059",
+    "food": "Molasses",
+    "basis": "100g",
+    "per100": {
+      "kcal": 266.0,
+      "proteinG": 0.0,
+      "carbsG": 68.8,
+      "fatG": 0.1
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "sirope de azúcar": {
+    "source": "Modelo de ingredientes",
+    "code": "composite",
+    "food": "Sirope simple estimado 1:1 azúcar/agua por peso; densidad estimada 1,23 g/ml.",
+    "basis": "100g",
+    "per100": {
+      "kcal": 197.0,
+      "proteinG": 0.0,
+      "carbsG": 52.5,
+      "fatG": 0.0
+    },
+    "parts": [
+      {
+        "ingredient": "azúcar",
+        "fraction": 0.5
+      },
+      {
+        "ingredient": "agua",
+        "fraction": 0.5
+      }
+    ],
+    "match": "Sirope simple estimado 1:1 azúcar/agua por peso; densidad estimada 1,23 g/ml.",
+    "densityEstimate": 1.23,
+    "edibleFractionEstimate": 1
+  },
+  "alcaparra": {
+    "source": "USDA SR Legacy 2018",
+    "code": "172238",
+    "food": "Capers, canned",
+    "basis": "100g",
+    "per100": {
+      "kcal": 23.0,
+      "proteinG": 2.36,
+      "carbsG": 4.89,
+      "fatG": 0.86,
+      "fiberG": 3.2
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "extracto de vainilla": {
+    "source": "USDA SR Legacy 2018",
+    "code": "173471",
+    "food": "Vanilla extract",
+    "basis": "100g",
+    "per100": {
+      "kcal": 288.0,
+      "proteinG": 0.06,
+      "carbsG": 12.65,
+      "fatG": 0.06,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "fideo de arroz": {
+    "source": "USDA SR Legacy 2018",
+    "code": "169742",
+    "food": "Rice noodles, dry",
+    "basis": "100g",
+    "per100": {
+      "kcal": 364.0,
+      "proteinG": 5.95,
+      "carbsG": 80.18,
+      "fatG": 0.56,
+      "fiberG": 1.6
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "ginger beer": {
+    "source": "USDA SR Legacy 2018",
+    "code": "174846",
+    "food": "Beverages, carbonated, ginger ale",
+    "basis": "100g",
+    "per100": {
+      "kcal": 34.0,
+      "proteinG": 0.0,
+      "carbsG": 8.76,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "granadina sin alcohol": {
+    "source": "USDA SR Legacy 2018",
+    "code": "168088",
+    "food": "Syrups, grenadine",
+    "basis": "100g",
+    "per100": {
+      "kcal": 268.0,
+      "proteinG": 0.0,
+      "carbsG": 66.91,
+      "fatG": 0.0,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "hierba limón": {
+    "source": "USDA SR Legacy 2018",
+    "code": "168573",
+    "food": "Lemon grass (citronella), raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 99.0,
+      "proteinG": 1.82,
+      "carbsG": 25.31,
+      "fatG": 0.49
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 15,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "maicena": {
+    "source": "USDA SR Legacy 2018",
+    "code": "169698",
+    "food": "Cornstarch",
+    "basis": "100g",
+    "per100": {
+      "kcal": 381.0,
+      "proteinG": 0.26,
+      "carbsG": 91.27,
+      "fatG": 0.05,
+      "fiberG": 0.9
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "oblea para dumpling": {
+    "source": "USDA SR Legacy 2018",
+    "code": "172802",
+    "food": "Wonton wrappers (includes egg roll wrappers)",
+    "basis": "100g",
+    "per100": {
+      "kcal": 291.0,
+      "proteinG": 9.8,
+      "carbsG": 57.9,
+      "fatG": 1.5,
+      "fiberG": 1.8
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "gramsPerUnitEstimate": 10,
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pasta de miso": {
+    "source": "USDA SR Legacy 2018",
+    "code": "172442",
+    "food": "Miso",
+    "basis": "100g",
+    "per100": {
+      "kcal": 198.0,
+      "proteinG": 12.79,
+      "carbsG": 25.37,
+      "fatG": 6.01,
+      "fiberG": 5.4
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "sirope de arce": {
+    "source": "USDA SR Legacy 2018",
+    "code": "169661",
+    "food": "Syrups, maple",
+    "basis": "100g",
+    "per100": {
+      "kcal": 260.0,
+      "proteinG": 0.04,
+      "carbsG": 67.04,
+      "fatG": 0.06,
+      "fiberG": 0.0
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "pan rallado": {
+    "source": "USDA SR Legacy 2018",
+    "code": "174928",
+    "food": "Bread, crumbs, dry, grated, plain",
+    "basis": "100g",
+    "per100": {
+      "kcal": 395.0,
+      "proteinG": 13.35,
+      "carbsG": 71.98,
+      "fatG": 5.3,
+      "fiberG": 4.5
+    },
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "ñoquis de patata": {
+    "source": "Modelo de ingredientes",
+    "code": "composite",
+    "food": "Aproximación: 70% patata cruda y 30% harina por peso; usar etiqueta del producto para mayor precisión.",
+    "basis": "100g",
+    "per100": {
+      "kcal": 163.0,
+      "proteinG": 4.06,
+      "carbsG": 37.99,
+      "fatG": 0.49
+    },
+    "parts": [
+      {
+        "ingredient": "patata",
+        "fraction": 0.7
+      },
+      {
+        "ingredient": "harina",
+        "fraction": 0.3
+      }
+    ],
+    "match": "Aproximación: 70% patata cruda y 30% harina por peso; usar etiqueta del producto para mayor precisión.",
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1
+  },
+  "chalota": {
+    "source": "CoFID 2021",
+    "code": "13-342",
+    "food": "Shallots, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 20.0,
+      "proteinG": 1.5,
+      "carbsG": 3.3,
+      "fatG": 0.2
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación."
+  },
+  "hinojo": {
+    "source": "CoFID 2021",
+    "code": "13-241",
+    "food": "Fennel, Florence, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 12.0,
+      "proteinG": 0.9,
+      "carbsG": 1.8,
+      "fatG": 0.2
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación."
+  },
+  "arándanos": {
+    "source": "CoFID 2021",
+    "code": "14-325",
+    "food": "Blueberries",
+    "basis": "100g",
+    "per100": {
+      "kcal": 40.0,
+      "proteinG": 0.9,
+      "carbsG": 9.1,
+      "fatG": 0.2,
+      "fiberG": 1.5
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación."
+  },
+  "bicarbonato": {
+    "source": "CoFID 2021",
+    "code": "17-356",
+    "food": "Bicarbonate of soda",
+    "basis": "100g",
+    "per100": {
+      "kcal": 0.0,
+      "proteinG": 0.0,
+      "carbsG": 0.0,
+      "fatG": 0.0
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación."
+  },
+  "levadura seca de panadería": {
+    "source": "CoFID 2021",
+    "code": "17-379",
+    "food": "Yeast, dried",
+    "basis": "100g",
+    "per100": {
+      "kcal": 169.0,
+      "proteinG": 35.6,
+      "carbsG": 3.5,
+      "fatG": 1.5
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Alimento representativo; puede diferir por variedad, marca o preparación."
+  },
+  "espárrago blanco en conserva escurrido": {
+    "source": "CoFID 2021",
+    "code": "13-157",
+    "food": "Asparagus, raw",
+    "basis": "100g",
+    "per100": {
+      "kcal": 25.0,
+      "proteinG": 2.9,
+      "carbsG": 2.0,
+      "fatG": 0.6
+    },
+    "densityEstimate": 1,
+    "edibleFractionEstimate": 1,
+    "match": "Aproximación con espárrago crudo: la conserva escurrida puede diferir; no se estima sodio."
+  }
+}
