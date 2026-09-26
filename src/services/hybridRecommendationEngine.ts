@@ -37,7 +37,7 @@ export async function getHybridProposals(request:CookingRequest,excludeRecipeIds
  persistEngineNotice(undefined);
  return {proposals,mode:'hybrid',externalRecipesAdded:0};
 }
-export const CATALOG_EMPTY='No hay una receta de la biblioteca que cumpla tu petición. Puedes ajustar las opciones o crear una con IA.';
+export const CATALOG_EMPTY='No hay una receta de la biblioteca que cumpla tu petición. Puedes cambiar la petición o crear una con IA.';
 
 function persistEngineNotice(message?:string){
  if(typeof sessionStorage==='undefined')return;

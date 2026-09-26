@@ -1,3 +1,4 @@
+import {foodTextMatches} from '../utils/recipeSearch';
 import {DISH_CATEGORIES,matchesDishCategory} from '../utils/dishCategories';
 import {chefLibrary} from '../data/library';
 import {CATALOG_EMPTY} from '../services/hybridRecommendationEngine';
@@ -49,7 +50,7 @@ export function MyRecipesPage() {
     return ids
       .map(id => catalog.find(recipe => recipe.id === id))
       .filter((recipe): recipe is Recipe => Boolean(recipe))
-      .filter(recipe => !normalizedQuery || [recipe.title,recipe.source?.label??''].join(' ').toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(normalizedQuery))
+      .filter(recipe => !normalizedQuery || foodTextMatches([recipe.title,recipe.source?.label??'',...recipe.ingredients.map(i=>i.name)].join(' '),query))
       .filter(recipe => matchesDishCategory(recipe,dishCategory))
       .filter(recipe=>kind==='all'||recipe.recipeKind===kind)
       .filter(recipe=>!cuisine||recipe.cuisine===cuisine)

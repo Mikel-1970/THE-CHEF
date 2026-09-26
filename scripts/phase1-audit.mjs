@@ -6,7 +6,7 @@ ok('Ruta Tutorial',app.includes('/tutorial'));
 ok('Avatar flotante en todas las pantallas',shell.includes('createPortal')&&shell.includes('chef-draggable-avatar')&&!shell.includes('!isHome && !hideProfile'));
 ok('Sin BottomNav en AppShell',!shell.includes('BottomNav'));
 ok('Avatar disponible en Lista de compra',!shopping.includes('hideProfile'));
-ok('Nombre Abre la despensa',home.includes('Abre la despensa')&&pantry.includes('Abre la despensa'));
+ok('Despensa retirada de portada y menú',!home.includes('Abre la despensa')&&!shell.includes("'/nevera'")&&app.includes('<Navigate to="/antojo" replace/>'));
 ok('Foto Receta',home.includes('Foto Receta'));
 ok('Sin boton Crear tu receta',!home.includes('Crear tu receta'));
 ok('Receta directa sin pantalla de propuesta',pantry.includes('generateDirectRecipe')&&read('src/pages/DesirePage.tsx').includes('generateDirectRecipe')&&hybrid.includes('PROPOSAL_COUNT=1')&&!results.includes('ProposalCard'));
@@ -40,7 +40,7 @@ ok('Temporizador editable por paso',cook.includes("timerId={'recipe:'")&&read('s
 ok('Otra cocina editable',cuisine.includes('Otra cocina…')&&cuisine.includes('Escribe el tipo de cocina'));
 ok('Tiempo y dificultad son límites locales',mock.includes('r.prepMinutes+r.cookMinutes<=request.maxMinutes')&&mock.includes('difficultyRank[r.difficulty]<=difficultyRank[request.difficulty]'));
 ok('Sustitución aceptada mediante variante',recipe.includes('Usar sustituto')&&recipe.includes('Ajusta cantidades, pasos, tiempos y valores nutricionales'));
-ok('Inventario ayuda sin marcar Tengo automáticamente',recipe.includes('availableNames')&&recipe.includes('findAvailableSubstitute')&&recipe.includes('saveHaveIngredients')&&!recipe.includes('ingredientNamesMatch'));
+ok('Ingredientes marcados por el usuario sin inventario automático',recipe.includes('availableNames')&&recipe.includes('findAvailableSubstitute')&&recipe.includes('saveHaveIngredients')&&!recipe.includes('ingredientNamesMatch'));
 ok('Cantidades de pasos escalan en cocina y PDF',cook.includes('scaleStepInstruction(recipe,step.instruction,servings)')&&pdf.includes('scaleStepInstruction(recipe,step.instruction,servings)')&&stepScaling.includes('scaleQuantity'));
 ok('PDF disponible sin carga tardía de jsPDF',pdf.includes("import {jsPDF} from 'jspdf'")&&!pdf.includes("await import('jspdf')"));
 ok('Home sin URLs CSS obsoletas',!homeCss.includes("./home-pantry.jpg")&&!homeCss.includes("./home-desire.jpg"));
@@ -48,7 +48,7 @@ ok('Propuestas IA respetan límites duros',hybrid.includes('proposalWithinLimits
 ok('Nutrición escalada evita falsa precisión',recipe.includes('El escalado culinario puede variar ligeramente los valores'));
 ok('Personalización sin límite temporal por defecto',options.includes('maxMinutes:previous?.maxMinutes')&&options.includes('Sin límite')&&!options.includes('previous?.maxMinutes??60'));
 ok('Picante sin aplicar por defecto',options.includes('spiceLevel:previous?.spiceLevel')&&options.includes('Sin aplicar')&&!options.includes('settings.spiceLevel'));
-ok('Fallback conserva intención culinaria',hybrid.includes('proposalMatchesDesireIntent')&&mock.includes('recipeMatchesDesireIntent')&&intent.includes('No se mostrará otra receta')===false&&intent.includes('required.length===1?matched===1:matched>=2'));
+ok('Fallback conserva intención culinaria',hybrid.includes('proposalMatchesDesireIntent')&&mock.includes('recipeMatchesDesireIntent')&&intent.includes('No se mostrará otra receta')===false&&intent.includes('foodTextMatches(candidateText,query)'));
 ok('Ingredientes empiezan en estado neutro',recipe.includes('Ningún ingrediente se marca automáticamente')&&!recipe.includes('isDefaultWater')&&!recipe.includes('ingredientNamesMatch')&&recipe.includes("status:'have'|'missing'|'neutral'"));
 
 const failed=checks.filter(c=>!c.condition);for(const c of checks)console.log(`${c.condition?'✓':'✗'} ${c.name}`);if(failed.length){console.error(`\n${failed.length} comprobaciones fallidas.`);process.exit(1)}console.log(`\n${checks.length} comprobaciones de Fase 1 superadas.`);

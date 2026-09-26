@@ -13,9 +13,9 @@ test.beforeEach(async({page})=>{
   for(const k of ['chef:auth:session:v1','chef:entry-tutorial:seen-session:v1','chef:tutorial:invite-dismissed-session:v2','chef:home-greeted:v2'])sessionStorage.setItem(k,'1');
  });
 });
-test('five primary shortcuts and one culinary module in the menu',async({page},info)=>{
+test('four primary shortcuts and one culinary module in the menu',async({page},info)=>{
  await page.goto('./');
- await expect(page.locator('.reference-quick-grid strong')).toHaveText(['Favoritos','Mis recetas','Técnicas','Despensa','Lista de la compra']);
+ await expect(page.locator('.reference-quick-grid strong')).toHaveText(['Favoritos','Mis recetas','Técnicas','Lista de la compra']);
  await page.screenshot({path:info.outputPath('home.png'),fullPage:true});
  await page.getByRole('button',{name:'Abrir menú',exact:true}).click();
  await expect(page.locator('.chef-menu-grid').getByRole('button',{name:'Técnicas y tips',exact:true})).toHaveCount(1);
@@ -96,11 +96,11 @@ test('every technique step exposes an editable timer',async({page})=>{
  await expect(page.getByLabel('Segundos del temporizador')).toBeVisible();
 });
 
-test('proposal route is retired and entry points say Generar receta',async({page})=>{
+test('proposal route is retired and entry points search the library',async({page})=>{
  await page.goto('./#/antojo');
- await expect(page.getByRole('button',{name:'Generar receta',exact:true})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Buscar receta',exact:true})).toBeVisible();
  await page.goto('./#/cocina-despensa');
- await expect(page.getByRole('button',{name:'Generar receta',exact:true})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Buscar receta',exact:true})).toBeVisible();
  await page.goto('./#/propuestas');
  await expect(page).toHaveURL(/#\/$/);
 });

@@ -1,3 +1,4 @@
+import {foodTextMatches,foodTitleScore} from '../utils/recipeSearch';
 import { Check, ChevronDown, ChevronUp, Clock3, Globe2, Mic, MicOff, Search, SlidersHorizontal, Sparkles, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -39,7 +40,7 @@ export function SearchPage() {
     return catalog
       .filter(recipe => {
         const haystack = normalize([recipe.title, recipe.description, recipe.cuisine, recipe.style, ...recipe.ingredients.map(ingredient => ingredient.name)].join(' '));
-        const textMatches = !words.length || words.every(word => haystack.includes(word));
+        const textMatches = !words.length || foodTextMatches(haystack,query);
         const cuisineMatches = !cuisine || normalize(recipe.cuisine) === normalize(cuisine);
         const styleMatches = !style || normalize(recipe.style) === normalize(style);
         const difficultyMatches = !difficulty || difficultyRank[recipe.difficulty] <= difficultyRank[difficulty];
@@ -49,7 +50,7 @@ export function SearchPage() {
         const spiceMatches=!spiceLevel||(spiceLevel==='Nada'?!spicy:spicy);
         return Boolean(query.trim()) && textMatches && cuisineMatches && styleMatches && difficultyMatches && timeMatches && restrictionMatches && spiceMatches;
       })
-      .sort((a, b) => (a.prepMinutes + a.cookMinutes) - (b.prepMinutes + b.cookMinutes));
+      .sort((a, b) => foodTitleScore(b.title,query)-foodTitleScore(a.title,query)||(a.prepMinutes + a.cookMinutes) - (b.prepMinutes + b.cookMinutes));
   }, [catalog, query, options]);
 
   const activeFilters=[cuisine,style,difficulty,maxMinutes,spiceLevel,...restrictions].filter(v=>v!==undefined&&v!=='').length;

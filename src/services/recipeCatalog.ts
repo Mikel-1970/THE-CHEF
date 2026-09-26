@@ -1,3 +1,4 @@
+import {cleanRecipeAdvice} from '../utils/recipeAdvice';
 import {chefLibrary} from '../data/library';
 import { mockRecipes } from '../data/mockRecipes';
 import type { Difficulty, MealType, Recipe, RecipeIngredient, RecipeSource, RecipeStep } from '../domain/types';
@@ -23,7 +24,7 @@ export function getAllRecipes(): Recipe[] {
   localRecipes.forEach(recipe => merged.set(recipe.id, recipe));
   loadExternalRecipes().forEach(recipe => merged.set(recipe.id, recipe));
   loadLibraryRecipes().forEach(recipe => merged.set(recipe.id, recipe));
-  return [...merged.values()];
+  return [...merged.values()].map(cleanRecipeAdvice);
 }
 
 export function getRecipeById(id?: string): Recipe | undefined {
@@ -171,7 +172,7 @@ function normalizeStoredRecipe(value: unknown): Recipe | undefined {
   const difficulty = asDifficulty(value.difficulty);
   if (baseServings === undefined || prepMinutes === undefined || cookMinutes === undefined || !difficulty) return undefined;
 
-  return {
+  return cleanRecipeAdvice({
     id,
     title,
     description: text(value.description) ?? '',
@@ -195,7 +196,7 @@ function normalizeStoredRecipe(value: unknown): Recipe | undefined {
     recipeKind: value.recipeKind==='dish'||value.recipeKind==='dessert'||value.recipeKind==='cocktail'?value.recipeKind:undefined,
     libraryCategory: text(value.libraryCategory),
     source: normalizeStoredSource(value.source), techniqueIds: strings(value.techniqueIds)
-  };
+  });
 }
 
 function normalizeIngredients(value: unknown): RecipeIngredient[] {

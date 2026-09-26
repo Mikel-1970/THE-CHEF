@@ -129,7 +129,7 @@ test('invalid stored avatar safely defaults to El Chef', async ({ page }) => {
 });
 
 
-test('home has two larger cards, aligned actions and upper-right hat', async ({ page }, info) => {
+test('home has dish search and photo recipe with an upper-right hat', async ({ page }, info) => {
   await page.addInitScript(() => {
     sessionStorage.setItem('chef:home-greeted:v2','1');
     sessionStorage.setItem('chef:auth:session:v1', '1');
@@ -137,12 +137,9 @@ test('home has two larger cards, aligned actions and upper-right hat', async ({ 
     sessionStorage.setItem('chef:tutorial:invite-dismissed-session:v2', '1');
   });
   await page.goto('./');
-  await expect(page.locator('.reference-secondary-card')).toHaveCount(2);
+  await expect(page.locator('.reference-secondary-card')).toHaveCount(1);
   await expect(page.getByText('Crear tu receta', { exact:true })).toHaveCount(0);
-  await expect(page.getByText('Abre la despensa', { exact:true })).toBeVisible();
-  const actions = await page.locator('.reference-secondary-copy b').all();
-  const a = await actions[0].boundingBox(); const b = await actions[1].boundingBox();
-  expect(Math.abs(a!.y - b!.y)).toBeLessThan(1);
+  await expect(page.getByText('Abre la despensa', {exact:true})).toHaveCount(0);
   const hero = await page.locator('.reference-action-card').boundingBox();
   const hat = await page.locator('.reference-card-icon').boundingBox();
   expect(hat!.x).toBeGreaterThan(hero!.x + hero!.width/2);
@@ -152,6 +149,6 @@ test('home has two larger cards, aligned actions and upper-right hat', async ({ 
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({path:info.outputPath('home.png'),fullPage:true});
-  await page.getByRole('button', { name:/Abre la despensa/ }).click();
-  await expect(page.getByRole('heading',{name:'Abre la despensa',exact:true})).toBeVisible();
+  await page.getByRole('button', { name:/Foto Receta/ }).click();
+  await expect(page.getByRole('heading',{name:'Foto Receta',exact:true})).toBeVisible();
 });

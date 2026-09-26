@@ -98,7 +98,7 @@ test('history without a catalog match offers explicit generation and settings ex
 });
 test('no match requires an explicit AI action',async({page})=>{
  let calls=0;await page.route('**/*',r=>{const u=new URL(r.request().url());if(u.hostname==='127.0.0.1')return r.continue();if(u.pathname.endsWith('/recipes/suggest')){calls++;return r.fulfill({status:500,body:'{}',contentType:'application/json'})}return r.abort()});
- await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill('Un guiso de unicornio');await page.getByRole('button',{name:'Confirmar petición'}).click();await page.getByRole('button',{name:'Generar receta',exact:true}).click();await expect(page.getByRole('button',{name:'Crear receta con IA',exact:true})).toBeVisible();expect(calls).toBe(0);
+ await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill('Un guiso de unicornio');await page.getByRole('button',{name:'Confirmar petición'}).click();await page.getByRole('button',{name:'Buscar receta',exact:true}).click();await expect(page.getByRole('button',{name:'Crear receta con IA',exact:true})).toBeVisible();expect(calls).toBe(0);
  await page.getByRole('button',{name:'Crear receta con IA',exact:true}).click();await expect.poll(()=>calls).toBe(1);await expect(page.getByRole('alert')).toContainText('fallo temporal');
 });
 
@@ -116,7 +116,7 @@ test('reviewed library layout and menu keep every group accessible',async({page}
  expect(positions[0].y).toBe(positions[1].y);expect(positions[2].y).toBe(positions[3].y);expect(positions[2].y).toBeGreaterThan(positions[0].y);expect(positions[0].font).toBeGreaterThanOrEqual(15);
  expect(await page.locator('.dish-category-row').evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);
  await page.getByRole('button',{name:'Cócteles',exact:true}).click();await expect(page.locator('.library-photo-card')).toHaveCount(20);
- await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await expect(page.locator('.chef-menu-grid button')).toHaveText(['Inicio','Mis recetas','Qué cocinar','Abre la despensa','Foto Receta','Técnicas y tips','Lista de la compra','Despensa','Buscar','Perfil y ajustes']);
+ await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await expect(page.locator('.chef-menu-grid button')).toHaveText(['Inicio','Mis recetas','Qué cocinar','Foto Receta','Técnicas y tips','Lista de la compra','Buscar','Perfil y ajustes']);
  await expect(page.getByRole('button',{name:'Mi plan de comidas',exact:true})).toHaveCount(0);await page.screenshot({path:info.outputPath('review-menu.png')});
 });
 
