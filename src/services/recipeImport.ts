@@ -11,7 +11,7 @@ export type ImportDraft={
 };
 
 export function parseImportText(text:string):ImportDraft {
- const lines=text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);let section='',ingredients:ImportIngredient[]=[],steps:string[]=[];
+ const lines=text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);let section='',ingredients:ImportIngredient[]=[],steps:string[]=[],descriptionLines:string[]=[];
  for(const line of lines.slice(1)){
   if(/^(ingredientes|ingredients)\b/i.test(line)){section='ingredients';continue;}
   if(/^(elaboraci[oó]n|preparaci[oó]n|instrucciones|pasos|instructions|method)\s*:?$/i.test(line)){section='steps';continue;}
@@ -20,6 +20,7 @@ export function parseImportText(text:string):ImportDraft {
    const m=clean.match(/^((?:\d+(?:[.,]\d+)?)|(?:\d+\/\d+))\s*(fl\s*oz|fluid ounces?|kg|g|gr|gramos?|ml|l|litros?|unidades?|uds?|cucharadas?|cucharaditas?|cups?|tbsp|tsp|tablespoons?|teaspoons?|oz|ounces?|lb|lbs|pounds?)\b\s*(?:de\s+)?(.+)$/i);
    ingredients.push(m?{quantity:normalizeImportNumber(m[1]),unit:m[2],name:m[3]}:{name:clean,quantity:'',unit:''});
   }else if(section==='steps')steps.push(line.replace(/^\d+[.)]\s*/,''));
+  else if(!/^(?:comensales|raciones|porciones|servings|preparaci[oó]n|prep(?:aration)?(?: time)?|cocci[oó]n|cocinado|cook(?:ing)?(?: time)?)\s*:/i.test(line))descriptionLines.push(line);
  }
  const diners=text.match(/(?:comensales|raciones|porciones|servings)\s*:?\s*(\d+)|(?:para)\s+(\d+)\s+(?:personas|comensales)/i);
  const prep=text.match(/(?:preparaci[oó]n|prep(?:aration)?(?: time)?)\s*:?\s*(\d+)\s*(?:min|minutes|minutos?)?/i);
@@ -27,7 +28,7 @@ export function parseImportText(text:string):ImportDraft {
  const evidence:Record<string,RecipeFieldEvidence>={title:{state:'source',confidence:1}};
  if(diners)evidence.servings={state:'source',confidence:1};if(prep)evidence.prep={state:'source',confidence:1};if(cook)evidence.cook={state:'source',confidence:1};
  if(ingredients.length)evidence.ingredients={state:'source',confidence:1};if(steps.length)evidence.steps={state:'source',confidence:1};
- return {title:lines[0]??'',description:'',servings:diners?.[1]??diners?.[2]??'',prep:prep?.[1]??'',cook:cook?.[1]??'',ingredients:ingredients.length?ingredients:[{name:'',quantity:'',unit:''}],steps:steps.join('\n'),author:'',sourceUrl:'',sourceLabel:'Texto aportado',fieldEvidence:evidence};
+ return {title:lines[0]??'',description:descriptionLines.join(' ').trim(),servings:diners?.[1]??diners?.[2]??'',prep:prep?.[1]??'',cook:cook?.[1]??'',ingredients:ingredients.length?ingredients:[{name:'',quantity:'',unit:''}],steps:steps.join('\n'),author:'',sourceUrl:'',sourceLabel:'Texto aportado',fieldEvidence:evidence};
 }
 
 export async function organizeImportWithAi(text:string):Promise<ImportDraft>{
