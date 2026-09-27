@@ -55,7 +55,7 @@ export function HomePage() {
           <button onClick={()=>navigate('/mis-recetas?tab=favorites')}><span><Heart fill="currentColor" size={24}/></span><b>Favoritos</b>{favorites.length>0&&<em>{favorites.length}</em>}</button>
           <button onClick={()=>navigate('/mis-recetas')}><span><BookOpen size={24}/></span><b>Mis recetas</b></button>
           <button onClick={()=>navigate('/tecnicas')}><span><CookingPot size={25}/></span><b>Técnicas</b></button>
-          <button onClick={()=>navigate('/despensa')}><span><PackageOpen size={25}/></span><b>Despensa</b></button>
+          <button onClick={()=>navigate('/inventario')}><span><PackageOpen size={25}/></span><b>Despensa</b></button>
           <button onClick={()=>navigate('/lista-compra')}><span><ShoppingBasket size={25}/></span><b>Lista de compra</b></button>
         </div>
       </section>
