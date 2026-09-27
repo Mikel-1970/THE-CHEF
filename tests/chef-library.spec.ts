@@ -99,7 +99,7 @@ test('history without a catalog match offers explicit generation and settings ex
 test('no match requires an explicit AI action',async({page})=>{
  let calls=0;await page.route('**/*',r=>{const u=new URL(r.request().url());if(u.hostname==='127.0.0.1')return r.continue();if(u.pathname.endsWith('/recipes/suggest')){calls++;return r.fulfill({status:500,body:'{}',contentType:'application/json'})}return r.abort()});
  await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill('Un guiso de unicornio');await page.getByRole('button',{name:'Confirmar petición'}).click();await page.getByRole('button',{name:'Buscar receta',exact:true}).click();await expect(page.getByRole('button',{name:'Crear receta con IA',exact:true})).toBeVisible();expect(calls).toBe(0);
- await page.getByRole('button',{name:'Crear receta con IA',exact:true}).click();await expect.poll(()=>calls).toBe(1);await expect(page.getByRole('alert')).toContainText('fallo temporal');
+ await page.getByRole('button',{name:'Crear receta con IA',exact:true}).click();await expect.poll(()=>calls).toBe(2);await expect(page.getByRole('alert')).toContainText('fallo temporal');
 });
 
 test('another recipe uses AI only after clicking and keeps diners and cuisine',async({page})=>{
@@ -166,3 +166,4 @@ test('diners belong to ingredients and changing them does not request AI',async(
  await expect(page.locator('.library-photo-card')).toHaveCount(1);
  await page.screenshot({path:info.outputPath('library-reordered.png'),fullPage:true});
  });
+

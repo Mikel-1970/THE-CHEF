@@ -12,14 +12,20 @@ export function recipeMatchesDesireIntent(recipe:Recipe,request:CookingRequest){
 
 export function proposalMatchesDesireIntent(proposal:Proposal,request:CookingRequest){
  return textMatchesDesireIntent([
-  proposal.title,proposal.subtitle,proposal.style??'',
+  proposal.reason,proposal.title,proposal.subtitle,proposal.style??'',
   ...proposal.usedIngredients,...proposal.missingIngredients
  ].join(' '),request);
 }
 
 export function textMatchesDesireIntent(candidateText:string,request:CookingRequest){
  if(request.mode!=='desire'||isChefChoice(request))return true;
- const query=desireFoodText(request);
+ let query=desireFoodText(request);
+ if(request.generationMode==='ai'){
+  const soften=(text:string)=>text.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/sous[ -]?vide|al vacio/g,'baja temperatura').replace(/guarnicion/g,'acompanamiento');
+  query=soften(query).replace(/\b(alguna?s?|algun|especial|especiales|tecnicas?|alta cocina|alta|aderezo|acompanamiento|creativo|creativa|original|sofisticado|sofisticada|toque|diferente)\b/g,' ');
+  candidateText=soften(candidateText);
+ }
  if(!query)return true;
  return foodTextMatches(candidateText,query);
 }
+

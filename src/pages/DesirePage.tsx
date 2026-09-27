@@ -18,6 +18,7 @@ import '../visual-controls.css';
 
 
 export function DesirePage() {
+ const [generationPhase,setGenerationPhase]=useState('Preparando…');
  const navigate=useNavigate(); const {settings,setSearch}=useApp();
  const [text,setText]=useState(''), [confirmed,setConfirmed]=useState(false);
  const [cuisine,setCuisine]=useState<string>();
@@ -32,11 +33,11 @@ export function DesirePage() {
   const request:CookingRequest={mode:'desire',generationMode:forceAi?'ai':'catalog',desireText:text.trim(),servings:parsed.servings??settings.defaultServings,maxMinutes:parsed.maxMinutes,style:parsed.style,cuisine:parsed.cuisine??cuisine,difficulty:parsed.difficulty,pantryPolicy:'ignore'};
   try{prepareDesireRequest(request)}catch(e){setError(e instanceof Error?e.message:CUISINE_REQUIRED);setNeedsCuisine(true);return;}
   setUsingAi(forceAi);setBusy(true);setError('');
-  try{const result=await generateDirectRecipe(request);setSearch(request,[result.proposal]);navigate(`/receta/${result.recipe.id}?servings=${request.servings}`)}
+  try{const result=await generateDirectRecipe(request,setGenerationPhase);setSearch(request,[result.proposal]);navigate(`/receta/${result.recipe.id}?servings=${request.servings}`)}
   catch(e){setError(e instanceof Error?e.message:'No se ha podido preparar la receta.')}
   finally{setBusy(false)}
  };
- return <AppShell><ChefLoadingOverlay active={busy} title={usingAi?"Creando tu receta con IA":"Buscando en la biblioteca"} messages={['Eligiendo el plato que mejor encaja…','Preparando la receta completa…','Revisando cantidades y elaboración…','Preparando la imagen…']}/>
+ return <AppShell><ChefLoadingOverlay progress={generationPhase} active={busy} title={usingAi?"Creando tu receta con IA":"Buscando en la biblioteca"} messages={['Eligiendo el plato que mejor encaja…','Preparando la receta completa…','Revisando cantidades y elaboración…','Preparando la imagen…']}/>
   <TopBar title="¿Qué quieres cocinar?"/>
   <div className="page-content desire-visual">
    <p className="visual-hint">Dile al chef qué quieres cocinar o qué ingredientes tienes para preparar un plato especial. Primero buscamos en la biblioteca; tú decides si quieres usar IA.</p>

@@ -92,7 +92,7 @@ const ACTION_ALIASES:Array<[string,string[]]>=[
  ['gratin',['gratinar']],['frit',['freir']],['saltea',['saltear']],['reduce',['reducir']],
  ['desglas',['desglasar']],['tritura',['triturar']],['emulsion',['emulsionar']],['mezcla',['mezclar']],
  ['bate',['batir']],['monta',['montar']],['escalf',['escalfar']],['vapor',['cocer al vapor']],
- ['ajusta de sal',['sazonar']],['sazona',['sazonar']]
+ ['envas',['envasar','envasar al vacio']],['embols',['envasar']],['ajusta de sal',['sazonar']],['sazona',['sazonar']]
 ];
 
 function normalize(value:string){
@@ -175,7 +175,13 @@ function scoreTip(tip:CookingTip,recipe:Recipe,step:RecipeStep,stepIndex:number,
  const directOverlap=lexicalOverlap(tip.title+' '+tip.shortTip,rawStep);
  const stepApplicability=applicableValues.filter(x=>ingredientLikeMatch(stepIngredientContext,x)).length;
  const recipeApplicability=applicableValues.filter(x=>ingredientLikeMatch(recipeIngredientContext,x)).length;
+ // A shared ingredient is insufficient: actionable tips must match this step.
+ if(actionValues.length&&actionMatches===0)return -1000;
  if(actionMatches===0&&directOverlap<2)return -1000;
+ const packaging=/envas|embols|bolsa|vacio/.test(normalize(step.instruction));
+ const heatNow=/dora|marca|sarten|plancha|costra/.test(normalize(step.instruction));
+ const searingTip=/costra|pieza marcada|sarten|maillard/.test(normalize(tip.title+' '+tip.shortTip));
+ if(packaging&&!heatNow&&searingTip)return -1000;
  let score=PRIORITY_SCORE[tip.priority];
  if(reviews[tip.id]==='keep')score+=2;
  score+=actionMatches*8;

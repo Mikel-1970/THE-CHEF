@@ -49,3 +49,58 @@ test('chef choice opens a Peruvian library recipe for five without AI',async({pa
  await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill('Cocina peruana para 5 personas');await page.getByRole('button',{name:'Confirmar petición'}).click();await expect(page.getByRole('button',{name:'Personalizar',exact:true})).toHaveCount(0);
  await page.getByRole('button',{name:'Buscar receta',exact:true}).click();await expect(page).toHaveURL(/receta\/lib-\d+\?servings=5/);await expect(page.locator('.hero-meta')).toContainText('5 comensales');await expect(page.locator('.hero-meta')).toContainText('Peruana');expect(external.filter(path=>path.includes('/recipes/')||path.includes('/chef-media/'))).toEqual([]);
 });
+test('creative requests tolerate descriptive wording but preserve pork and technique',()=>{
+ const request={mode:'desire' as const,generationMode:'ai' as const,servings:4,desireText:'Me apetece un solomillo de cerdo a baja temperatura con alguna salsa especial y alguna tecnica de alta cocina para el aderezo y el acompañamiento'};
+ expect(textMatchesDesireIntent('Solomillo de cerdo sous vide con salsa de setas y puré',request)).toBe(true);
+ expect(textMatchesDesireIntent('Solomillo de ternera sous vide con salsa',request)).toBe(false);
+ expect(textMatchesDesireIntent('Solomillo de cerdo a la plancha con salsa',request)).toBe(false);
+});
+
+test('AI retries malformed output and corrects an unrelated creative proposal',async({page})=>{
+ let suggestions=0,generated=0;
+ const desire='Me apetece un solomillo de cerdo a baja temperatura con alguna salsa especial y alguna tecnica de alta cocina para el aderezo y el acompañamiento';
+ const recipe={...mockRecipes[0],id:'ai-creative-pork',title:'Solomillo de cerdo a baja temperatura con salsa',source:{kind:'ai',label:'Prueba controlada'}};
+ await page.route('**/*',route=>{
+  const url=new URL(route.request().url());if(url.hostname==='127.0.0.1')return route.continue();
+  if(url.pathname.endsWith('/recipes/suggest')){
+   suggestions++;
+   if(suggestions===1)return route.fulfill({status:502,contentType:'application/json',body:JSON.stringify({errorCode:'generation_failed'})});
+   const title=suggestions===2?'Tarta de chocolate':recipe.title;
+   if(suggestions===3)expect(route.request().postDataJSON().request.desireText).toContain('Corrige la propuesta anterior');
+   return route.fulfill({contentType:'application/json',body:JSON.stringify({proposals:[{id:'p',recipeId:'p',title,subtitle:title,emoji:'🍽️',minutes:90,difficulty:'Media',usedIngredients:[],missingIngredients:[],reason:title}]})});
+  }
+  if(url.pathname.endsWith('/recipes/generate')){generated++;expect(route.request().postDataJSON().request.desireText).toContain(desire);expect(route.request().postDataJSON().request.desireText).toContain('Integra estas elaboraciones');return route.fulfill({contentType:'application/json',body:JSON.stringify({recipes:[recipe]})})}
+  if(url.pathname.endsWith('/chef-media/image'))return route.fulfill({contentType:'application/json',body:JSON.stringify({imageUrl:'/THE-CHEF/library/lib-001.webp'})});
+  return route.abort();
+ });
+ await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill(desire);
+ await page.getByRole('button',{name:'Confirmar petición'}).click();await page.getByRole('button',{name:'Buscar receta',exact:true}).click();
+ await page.getByRole('button',{name:'Crear receta con IA',exact:true}).click();
+ await expect(page).toHaveURL(/receta\/ai-creative-pork/);expect(suggestions).toBe(5);expect(generated).toBe(1);
+});
+import {cookingTips,selectContextualCookingTip} from '../src/data/cookingTips';
+import fs from 'node:fs';
+test('packing meat never selects a searing tip',()=>{
+ const tips=JSON.parse(fs.readFileSync('public/cooking-tips-v2.json','utf8'));
+ const searing=tips.find((t:any)=>t.title==='No gires demasiado pronto');
+ expect(searing).toBeTruthy();
+ const original=[...cookingTips];cookingTips.splice(0,cookingTips.length,searing);
+ try{
+ const recipe={...mockRecipes[0],ingredients:[{name:'solomillo de cerdo',quantity:1,unit:'ud',scalingMode:'linear' as const}],criticalPoints:[],substitutions:[],miseEnPlace:[]};
+ expect(selectContextualCookingTip(recipe,{number:1,instruction:'Envasa el solomillo de cerdo en una bolsa y ciérrala al vacío.',cue:'La bolsa debe quedar bien cerrada y la carne en una sola capa.'},0)).toBeUndefined();
+ expect(selectContextualCookingTip(recipe,{number:2,instruction:'Dora el solomillo de cerdo en la sartén hasta formar costra.'},1)?.id).toBe(searing.id);
+ }finally{cookingTips.splice(0,cookingTips.length,...original);}
+});
+
+test('generation shows ongoing motion and elapsed time',async({page})=>{
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ let release!:()=>void;const gate=new Promise<void>(resolve=>release=resolve);
+ await page.route('**/recipes/suggest',async r=>{await gate;await r.fulfill({status:502,body:'{}',contentType:'application/json'});});
+ await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill('Solomillo de cerdo a baja temperatura');
+ await page.getByRole('button',{name:'Confirmar petición'}).click();await page.getByRole('button',{name:'Buscar receta',exact:true}).click();await page.getByRole('button',{name:'Crear receta con IA',exact:true}).click();
+ const avatar=page.locator('.personalized-chef-spinner');await expect(avatar).toBeVisible();
+ const first=await avatar.evaluate(el=>getComputedStyle(el).transform);
+ await expect.poll(()=>avatar.evaluate(el=>getComputedStyle(el).transform)).not.toBe(first);
+ await expect(page.getByText('Tiempo transcurrido: 1 s',{exact:true})).toBeVisible();
+ release();
+});
