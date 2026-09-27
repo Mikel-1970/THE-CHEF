@@ -15,7 +15,7 @@ export function HomePage() {
   const [greet,setGreet]=useState(()=>sessionStorage.getItem('chef:home-greeted:v2')!=='1');
   const [notice,setNotice]=useState('');
   if(greet)return <WelcomeSplash greeting={`¡Hola${settings.displayName?', '+settings.displayName:''}!`} notice={notice} onComplete={mode=>{if(mode==='register'){setNotice('Tu cuenta ya está registrada. Pulsa Login para entrar.');return}sessionStorage.setItem('chef:home-greeted:v2','1');setGreet(false)}}>{null}</WelcomeSplash>;
-  const desireImage = `${import.meta.env.BASE_URL}library/lib-002.webp`;
+  const desireImage = `${import.meta.env.BASE_URL}home-magret.png`;
   const photoRecipeImage = `${import.meta.env.BASE_URL}home-photo-recipe.png`;
   return <AppShell>
     <section className="reference-home"><FoodCollage/>
