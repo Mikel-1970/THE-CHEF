@@ -3,6 +3,7 @@ import {publicImportUrl} from '../server/importSource';
 import {parseImportText,buildImportedRecipe} from '../src/services/recipeImport';
 import {sourcePlatformFromUrl} from '../src/utils/importSourceUrl';
 import {detectRecipeAllergens} from '../src/data/allergens';
+import {foodPreferenceRestrictions} from '../src/services/foodPreferences';
 import {reviewPhotoProposal} from '../src/utils/photoIngredients';
 import {jsPDF} from 'jspdf';
 
@@ -26,9 +27,10 @@ test('metric import converts safe units and keeps originals',()=>{
  expect(recipe.ingredients[0].originalUnit).toBe('lb');expect(recipe.steps[0].instruction).toContain('177 °C');
 });
 
-test('allergen detection warns conservatively from ingredients',()=>{
+test('allergen detection and global restrictions remain conservative',()=>{
  const recipe=buildImportedRecipe(parseImportText('Tostada\nComensales: 1\nPreparación: 5 min\nCocción: 0 min\nIngredientes\n50 g pan de trigo\n20 g queso\nElaboración\n1. Servir.'),'metric');
  expect(detectRecipeAllergens(recipe)).toEqual(expect.arrayContaining(['Gluten','Leche']));
+ expect(foodPreferenceRestrictions({allergies:['Gluten','Leche'],intolerances:['lactosa'],avoidIngredients:['cilantro'],unitPreference:'metric',nutritionDisplay:'per-serving'})).toEqual(expect.arrayContaining(['Sin gluten','Sin lácteos','Intolerancia a lactosa','Evitar cilantro']));
 });
 
 test('photo dessert rejects unexplained pantry seasonings but respects explicit user ingredients',()=>{
