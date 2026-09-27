@@ -6,12 +6,11 @@ import { NumberStepper } from './NumberStepper';
 import { RECIPE_STYLES } from '../data/cookingOptions';
 import type { CookingRequest, Difficulty } from '../domain/types';
 import type { AppSettings, SpiceLevel } from '../services/storage';
-import {loadFoodPreferences} from '../services/foodPreferences';
+import {foodPreferenceRestrictions} from '../services/foodPreferences';
 import '../visual-controls.css';
 export type CookingOptionsValue = { servings:number; maxMinutes?:number; style?:string; cuisine?:string; difficulty?:Difficulty; spiceLevel?:SpiceLevel; restrictions:string[]; customRestriction:string };
 export function useCookingOptions(settings:AppSettings, previous?:CookingRequest) {
- const food=loadFoodPreferences();
- const globalRestrictions=[...food.allergies.map(a=>`Alergia: ${a}`),...food.intolerances.map(v=>`Intolerancia: ${v}`),...food.avoidIngredients.map(v=>`Evitar: ${v}`)];
+ const globalRestrictions=foodPreferenceRestrictions();
  const [value,setValue]=useState<CookingOptionsValue>({servings:previous?.servings??settings.defaultServings,maxMinutes:previous?.maxMinutes,style:previous?.style,cuisine:previous?.cuisine,difficulty:previous?.difficulty??settings.defaultDifficulty,spiceLevel:previous?.spiceLevel,restrictions:Array.from(new Set([...(previous?.restrictions??[]),...globalRestrictions])),customRestriction:''});
  const [touched,setTouched]=useState<Set<string>>(new Set());
  const change=(patch:Partial<CookingOptionsValue>)=>{setValue(v=>({...v,...patch}));setTouched(v=>new Set([...v,...Object.keys(patch)]))};
