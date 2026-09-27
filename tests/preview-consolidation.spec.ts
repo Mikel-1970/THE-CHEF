@@ -13,14 +13,14 @@ test.beforeEach(async({page})=>{
   for(const k of ['chef:auth:session:v1','chef:entry-tutorial:seen-session:v1','chef:tutorial:invite-dismissed-session:v2','chef:home-greeted:v2'])sessionStorage.setItem(k,'1');
  });
 });
-test('four primary shortcuts and one culinary module in the menu',async({page},info)=>{
+test('five quick shortcuts and one culinary techniques module in the avatar menu',async({page},info)=>{
  await page.goto('./');
- await expect(page.locator('.reference-quick-grid strong')).toHaveText(['Favoritos','Mis recetas','Técnicas','Lista de la compra']);
+ await expect(page.locator('.alm-quick-grid b')).toHaveText(['Favoritos','Mis recetas','Técnicas','Despensa','Lista de compra']);
  await page.screenshot({path:info.outputPath('home.png'),fullPage:true});
  await page.getByRole('button',{name:'Abrir menú',exact:true}).click();
- await expect(page.locator('.chef-menu-grid').getByRole('button',{name:'Técnicas y tips',exact:true})).toHaveCount(1);
+ await expect(page.locator('.chef-menu-grid').getByRole('button',{name:'Técnicas',exact:true})).toHaveCount(1);
  await expect(page.locator('.chef-menu-grid').getByRole('button',{name:'Tips',exact:true})).toHaveCount(0);
- await page.locator('.chef-menu-grid').getByRole('button',{name:'Técnicas y tips',exact:true}).click();
+ await page.locator('.chef-menu-grid').getByRole('button',{name:'Técnicas',exact:true}).click();
  await expect(page.locator('.technique-photo-card')).toHaveCount(180);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await page.screenshot({path:info.outputPath('techniques.png'),fullPage:true});
@@ -54,7 +54,7 @@ test('techniques and tips switch without a back-button loop',async({page},info)=
  await page.getByRole('button',{name:'Volver',exact:true}).click();
  await expect(page).toHaveURL(/#\/tecnicas$/);
  await page.getByRole('button',{name:'Volver',exact:true}).click();
- await expect(page.locator('.reference-quick-grid')).toBeVisible();
+ await expect(page.locator('.alm-quick-grid')).toBeVisible();
 });
 test('recipe uses real technique cards and returns to the same recipe',async({page})=>{
  await page.goto('./#/receta/arroz-pollo-calabacin');
@@ -100,7 +100,8 @@ test('proposal route is retired and entry points search the library',async({page
  await page.goto('./#/antojo');
  await expect(page.getByRole('button',{name:'Buscar receta',exact:true})).toBeVisible();
  await page.goto('./#/cocina-despensa');
- await expect(page.getByRole('button',{name:'Buscar receta',exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Abre la despensa',exact:true})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Generar receta',exact:true})).toBeVisible();
  await page.goto('./#/propuestas');
  await expect(page).toHaveURL(/#\/$/);
 });
