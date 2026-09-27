@@ -6,7 +6,7 @@ import { nextCookingTip } from '../data/cookingTips';
 import { ChefAvatar } from './ChefAvatar';
 import './ChefLoadingOverlay.css';
 type Props={active:boolean;title?:string;messages?:string[];showTips?:boolean;progress?:string};
-export function ChefLoadingOverlay({active,title='Chef Voldi está trabajando',messages=[],showTips=true,progress}:Props){
+export function ChefLoadingOverlay({active,title='¡A la mesa! está trabajando',messages=[],showTips=true,progress}:Props){
  const {settings}=useApp();
  const [elapsed,setElapsed]=useState(0);
  useEffect(()=>{if(!active)return;setElapsed(0);const timer=window.setInterval(()=>setElapsed(s=>s+1),1000);return()=>window.clearInterval(timer);},[active]);
