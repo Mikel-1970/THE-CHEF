@@ -2,7 +2,7 @@ import {loadBrandImage,drawBrand} from './brand';
 import type {Recipe} from '../domain/types';
 export type SocialFormat='post'|'story';
 export function socialAppUrl(){return new URL(import.meta.env.BASE_URL,location.origin).href;}
-export function socialCaption(recipe:Recipe,servings:number){return `${recipe.title}\n${recipe.prepMinutes+recipe.cookMinutes} min · ${servings} ${recipe.recipeKind==='cocktail'?'copas':'comensales'}\nPreparado con Chef Voldi. Descubre la app:\n${socialAppUrl()}\n#ChefVoldi #VollDium #Cocina` ;}
+export function socialCaption(recipe:Recipe,servings:number){return `${recipe.title}\n${recipe.prepMinutes+recipe.cookMinutes} min · ${servings} ${recipe.recipeKind==='cocktail'?'copas':'comensales'}\nPreparado con ¡A la mesa! Descubre la app:\n${socialAppUrl()}\n#ALaMesa #VollDium #Cocina` ;}
 
 /** Local composition of the existing photo. No generation, uploads or new AI calls. */
 export async function createSocialCard(recipe:Recipe,servings:number,format:SocialFormat,imageUrl:string):Promise<File>{
@@ -24,9 +24,9 @@ export async function createSocialCard(recipe:Recipe,servings:number,format:Soci
  if(lines.length>4){lines=lines.slice(0,4);lines[3]=lines[3].slice(0,-3)+'…';}
  let y=photoY+photoH+76;for(const line of lines){text(line,64,y,size,'#3a2a1f',true);y+=size*1.22;}
  text(`${recipe.prepMinutes+recipe.cookMinutes} min  ·  ${servings} ${recipe.recipeKind==='cocktail'?'copas':'comensales'}`,64,y+26,28);
- const footerY=h-(format==='story'?190:95);ctx.fillStyle='#713817';ctx.beginPath();ctx.roundRect(48,footerY,984,64,22);ctx.fill();text('Descubre Chef Voldi · Enlace en el texto',80,footerY+42,26,'#fffaf1');
+ const footerY=h-(format==='story'?190:95);ctx.fillStyle='#713817';ctx.beginPath();ctx.roundRect(48,footerY,984,64,22);ctx.fill();text('Descubre ¡A la mesa! · Enlace en el texto',80,footerY+42,26,'#fffaf1');
  const blob=await new Promise<Blob>((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('No se ha podido crear la imagen.')),'image/png'));
  const name=recipe.title.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'-').slice(0,70).replace(/^-|-$/g,'').toLowerCase()||'receta';
- return new File([blob],`${name}-${format==='story'?'historia':'publicacion'}-chef-voldi.png`,{type:'image/png'});
+ return new File([blob],`${name}-${format==='story'?'historia':'publicacion'}-a-la-mesa.png`,{type:'image/png'});
 }
 export function downloadSocialCard(file:File){const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download=file.name;a.click();window.setTimeout(()=>URL.revokeObjectURL(url),60000);}
