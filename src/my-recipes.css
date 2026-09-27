@@ -92,3 +92,7 @@
 .recipe-library-content .section-heading-row{gap:16px;flex-wrap:wrap;margin-bottom:16px}
 .recipe-library-content .library-import{margin:0;width:auto;min-height:44px;font-size:.9rem;padding:12px 16px}
 .recipe-library-content .history-filter-row{margin-bottom:16px}
+.recipe-library-content .library-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.recipe-library-content .library-filters label{min-width:0}
+.recipe-library-content .library-filters select{width:100%;min-width:0}
+.recipe-library-content .add-recipe-type{grid-column:1/-1;justify-self:start}
