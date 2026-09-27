@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap');
+
+:root{
+  --alm-green:#123f2e;
+  --alm-green-2:#1d5b42;
+  --alm-orange:#d94820;
+  --alm-orange-2:#ef6a3a;
+  --alm-olive:#7d8f55;
+  --alm-cream:#fbf7ee;
+  --alm-paper:#fffdf8;
+  --alm-sand:#ece2d1;
+  --alm-rose:#f4d9cf;
+  --forest:var(--alm-green);
+  --olive:var(--alm-olive);
+  --terracotta:var(--alm-orange);
+  --paper:var(--alm-paper);
+  --ivory:var(--alm-cream);
+  --ink:#20342c;
+  --muted:#6f756e;
+  --line:rgba(18,63,46,.12);
+  --shadow:0 16px 36px rgba(42,54,43,.10);
+}
+body{background:var(--alm-cream);color:var(--ink)}
+h1,h2,h3,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-section h2{font-family:'Fraunces','Playfair Display',Georgia,serif}
+.phone-shell.without-bottom-nav{padding-bottom:0}
+.app-bg{background:radial-gradient(circle at 6% 4%,rgba(125,143,85,.13),transparent 25%),radial-gradient(circle at 96% 13%,rgba(217,72,32,.08),transparent 22%),linear-gradient(180deg,#fffaf2,#f7efe4)}
+.primary-button{background:linear-gradient(135deg,var(--alm-green-2),var(--alm-green));box-shadow:0 14px 28px rgba(18,63,46,.19)}
+.secondary-button,.advanced-toggle{border-color:rgba(18,63,46,.14)}
+.chip.selected{background:var(--alm-green);border-color:var(--alm-green)}
+
+.alm-home{position:relative;min-height:100dvh;padding:8px 15px calc(28px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(255,253,248,.96),rgba(251,247,238,.98));overflow:hidden}
+.alm-home::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.25;background-image:radial-gradient(rgba(60,78,64,.12) .5px,transparent .6px);background-size:6px 6px}
+.alm-home>*{position:relative;z-index:1}
+.alm-home-brand{text-align:left;padding:4px 0 12px}
+.alm-home-brand .brand-mark{width:min(64vw,300px);margin:0}
+.alm-kicker{margin:8px 0 5px;color:var(--alm-orange);font-size:.72rem;font-weight:800;letter-spacing:.04em}
+.alm-home-brand h1{margin:0;color:var(--alm-green);font-size:clamp(2rem,8.5vw,3rem);line-height:1.02;letter-spacing:-.035em}
+.alm-subtitle{margin:7px 0 0;color:#667068;font-size:.78rem;line-height:1.42;max-width:34rem}
+.alm-search{width:100%;min-height:50px;border:1px solid rgba(18,63,46,.10);border-radius:18px;background:rgba(255,255,255,.88);display:flex;align-items:center;gap:10px;padding:0 15px;color:#879087;box-shadow:0 8px 22px rgba(33,50,39,.08);text-align:left}
+.alm-search svg{color:var(--alm-green)}
+.alm-primary-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+.alm-action-card{position:relative;min-height:242px;padding:0;overflow:hidden;border:0;border-radius:24px;background:var(--alm-paper);box-shadow:var(--shadow);text-align:left}
+.alm-action-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.alm-action-card.pantry img{object-position:center}
+.alm-action-card.photo img{object-position:65% center}
+.alm-action-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02) 30%,rgba(8,30,22,.84) 100%)}
+.alm-action-card.photo .alm-action-overlay{background:linear-gradient(180deg,rgba(217,72,32,.04) 28%,rgba(132,44,20,.88) 100%)}
+.alm-action-copy{position:absolute;left:14px;right:12px;bottom:14px;color:#fff;display:grid;gap:4px}
+.alm-action-copy strong{font-family:'Fraunces','Playfair Display',Georgia,serif;font-size:1.25rem;line-height:1}
+.alm-action-copy small{font-size:.64rem;line-height:1.35;color:rgba(255,255,255,.88)}
+.alm-media-badge{position:absolute;right:11px;top:11px;width:46px;height:40px;border-radius:13px;background:rgba(255,250,242,.94);color:var(--alm-orange);display:flex;align-items:center;justify-content:center;gap:2px;box-shadow:0 6px 18px rgba(55,31,23,.14)}
+.alm-section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:19px 1px 9px}
+.alm-section-title h2{margin:0;color:var(--alm-green);font-size:1.38rem;line-height:1}
+.alm-section-title>span{font-size:.62rem;color:#777f77;white-space:nowrap}
+.alm-quick-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.alm-quick-grid button{position:relative;min-width:0;border:0;background:transparent;color:var(--alm-green);padding:0;display:flex;flex-direction:column;align-items:center;gap:7px}
+.alm-quick-grid button>span{width:49px;height:49px;border-radius:17px;background:#f2eadc;display:grid;place-items:center;border:1px solid rgba(18,63,46,.08)}
+.alm-quick-grid button:nth-child(1)>span{background:#f7ddd3;color:var(--alm-orange)}
+.alm-quick-grid button:nth-child(3)>span{background:#e8eedc}
+.alm-quick-grid b{font-size:.55rem;line-height:1.05;font-weight:700;color:#2e463b;text-align:center}
+.alm-quick-grid em{position:absolute;right:4px;top:-4px;width:19px;height:19px;border-radius:999px;background:var(--alm-orange);color:white;font-size:.52rem;font-style:normal;display:grid;place-items:center}
+.alm-daily-strip{display:flex;gap:10px;overflow-x:auto;padding:1px 1px 9px;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.alm-daily-strip::-webkit-scrollbar{display:none}
+.alm-daily-card{flex:0 0 43%;min-width:148px;border:1px solid rgba(18,63,46,.09);border-radius:18px;overflow:hidden;background:#fffdf8;box-shadow:0 8px 22px rgba(34,50,40,.08);scroll-snap-align:start;cursor:pointer}
+.alm-daily-image{position:relative;height:108px;overflow:hidden;background:#ede7dc}
+.alm-daily-image img,.alm-daily-image>div{width:100%;height:100%;object-fit:cover}
+.alm-daily-image button{position:absolute;right:8px;top:8px;width:33px;height:33px;border:0;border-radius:50%;background:rgba(255,253,248,.94);color:var(--alm-green);display:grid;place-items:center}
+.alm-daily-image button.active{color:var(--alm-orange)}
+.alm-daily-copy{padding:9px 10px 10px;display:grid;gap:5px}
+.alm-daily-copy strong{font-family:'Fraunces','Playfair Display',Georgia,serif;font-size:.84rem;line-height:1.08;color:#263d33}
+.alm-daily-copy small{font-size:.58rem;color:#788078}
+
+.chef-draggable-avatar{border:3px solid rgba(255,255,255,.96);background:#fff8ee;box-shadow:0 8px 22px rgba(26,48,36,.18)}
+.chef-navigation-panel{width:min(294px,calc(100vw - 24px));padding:11px;border-radius:21px;background:rgba(255,252,246,.985);border:1px solid rgba(18,63,46,.11);box-shadow:0 22px 52px rgba(30,43,35,.22)}
+.chef-menu-heading{padding:3px 4px 7px}.chef-menu-heading strong{font-family:'Fraunces','Playfair Display',Georgia,serif;font-size:1.1rem;color:var(--alm-green)}
+.chef-menu-grid{grid-template-columns:1fr;gap:4px}
+.chef-menu-grid button{min-height:48px;padding:8px 10px;display:flex;flex-direction:row;justify-content:flex-start;border:0;background:transparent;border-radius:13px;color:var(--alm-green);font-size:.76rem}
+.chef-menu-grid button:hover{background:#eef2e7}
+.chef-menu-grid button:first-child{background:#f2eee4}
+.chef-nav-control{border-color:rgba(18,63,46,.12);background:#fffaf2;color:var(--alm-green)}
+
+.alm-top-bar{background:rgba(255,252,246,.93);border-bottom-color:rgba(18,63,46,.09);min-height:112px}
+.alm-top-bar .top-bar-copy{display:flex;flex-direction:column;align-items:center}
+.alm-top-bar h1{color:var(--alm-green);font-size:1.3rem;margin-top:3px}
+.alm-top-bar .eyebrow{color:var(--alm-orange);margin-top:3px}
+
+.pantry-cook-visual{padding-bottom:40px}
+.pantry-source-tabs button[aria-pressed=true]{background:var(--alm-green)!important;color:white!important}
+.pantry-ingredient-grid button[aria-pressed=true]{border-color:var(--alm-green)!important;box-shadow:inset 0 0 0 1px var(--alm-green)}
+.pantry-photo-actions label{border-color:rgba(18,63,46,.13)!important}
+.pantry-photo-review{border-color:rgba(18,63,46,.12)!important;background:#fffaf2!important}
+.pantry-selection-summary{background:#eef2e8!important;color:var(--alm-green)!important}
+
+.photo-recipe-layout .editorial-card,.photo-recipe-upload,.recipe-card,.settings-card{border-color:rgba(18,63,46,.11)}
+.photo-recipe-upload{background:#f3eadc;border-color:rgba(217,72,32,.28)}
+.photo-recipe-button{background:var(--alm-green)}
+.photo-recipe-button.secondary{color:var(--alm-green)}
+.simple-page-header.light-header{background:linear-gradient(180deg,#fffaf2,#f7f1e7)}
+.simple-page-header h1{color:var(--alm-green)}
+.recipe-hero h1,.recipe-title,.cook-screen h1{color:var(--alm-green)}
+.recipe-primary-action,.finish-return-button,.cook-nav.primary{background:var(--alm-green)!important}
+.step-timer button{background:var(--alm-orange)!important}
+.cook-progress span{background:var(--alm-orange)!important}
+
+@media (max-width:390px){
+  .alm-home{padding-left:11px;padding-right:11px}
+  .alm-action-card{min-height:220px;border-radius:20px}
+  .alm-action-copy strong{font-size:1.08rem}
+  .alm-action-copy small{font-size:.58rem}
+  .alm-quick-grid button>span{width:44px;height:44px;border-radius:15px}
+  .alm-quick-grid b{font-size:.5rem}
+  .alm-daily-card{flex-basis:46%}
+}
+@media (min-width:560px){
+  .alm-home{padding-left:26px;padding-right:26px}
+  .alm-action-card{min-height:280px}
+  .alm-daily-card{flex-basis:30%}
+}
+[data-theme=dark] .alm-home,[data-theme=dark] .app-bg{background:#18231d}
+[data-theme=dark] .alm-search,[data-theme=dark] .alm-daily-card,[data-theme=dark] .chef-navigation-panel{background:#243129;color:#f6efe3}
+[data-theme=dark] .alm-home-brand h1,[data-theme=dark] .alm-section-title h2,[data-theme=dark] .alm-daily-copy strong{color:#f4eee3}
