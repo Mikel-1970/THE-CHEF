@@ -3,7 +3,7 @@ import {foodTextMatches} from '../utils/recipeSearch';
 import {DISH_CATEGORIES,matchesDishCategory} from '../utils/dishCategories';
 import {CATALOG_EMPTY} from '../services/hybridRecommendationEngine';
 import { Check, Clock3, Heart, Mic, MicOff, Search, Sparkles, Trash2, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
@@ -34,12 +34,19 @@ export function MyRecipesPage() {
   const [customTypes,setCustomTypes]=useState<{name:string;recipeIds:string[]}[]>(()=>{
     try { const value=JSON.parse(localStorage.getItem('chef:custom-dish-types:v1')??'[]');return Array.isArray(value)?value.filter(t=>typeof t?.name==='string'&&Array.isArray(t.recipeIds)):[]; } catch { return []; }
   });
+  const typeDialog=useRef<HTMLDialogElement>(null);
+  const [typeOverrides,setTypeOverrides]=useState<Record<string,string>>(()=>{try{const v=JSON.parse(localStorage.getItem('chef:recipe-type-overrides:v1')??'{}');return v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.entries(v).filter((entry):entry is [string,string]=>typeof entry[1]==='string')):{};}catch{return {};}});
+  const changeRecipeType=(id:string,type:string)=>{
+    const next={...typeOverrides};if(type)next[id]=type;else delete next[id];
+    try{localStorage.setItem('chef:recipe-type-overrides:v1',JSON.stringify(next));setTypeOverrides(next);setRemoveError('');}catch{setRemoveError('No se ha podido guardar el tipo de la receta.');}
+  };
   const [addingType,setAddingType]=useState(false);
   const [typeName,setTypeName]=useState('');
   const [typeRecipeIds,setTypeRecipeIds]=useState<string[]>([]);
   const [typeError,setTypeError]=useState('');
+  useEffect(()=>{if(addingType)typeDialog.current?.showModal();else typeDialog.current?.close();},[addingType]);
   const categories=[...DISH_CATEGORIES,...customTypes.map(t=>t.name)];
-  const matchesType=(recipe:Recipe,category:string)=>customTypes.find(t=>t.name===category)?.recipeIds.includes(recipe.id)??matchesDishCategory(recipe,category);
+  const matchesType=(recipe:Recipe,category:string)=>category==='Todos'||(typeOverrides[recipe.id]?typeOverrides[recipe.id]===category:customTypes.find(t=>t.name===category)?.recipeIds.includes(recipe.id)??matchesDishCategory(recipe,category));
   const saveType=()=>{
     const name=typeName.trim();
     if(!name||categories.some(c=>c.localeCompare(name,'es',{sensitivity:'base'})===0)){setTypeError('Escribe un nombre nuevo para el tipo.');return;}
@@ -72,7 +79,7 @@ export function MyRecipesPage() {
       .filter(recipe => matchesType(recipe,dishCategory))
       .filter(recipe=>!cuisine||recipe.cuisine===cuisine)
       .filter(recipe=>alcohol==='all'||recipe.recipeKind==='cocktail'&&recipe.alcohol===(alcohol==='yes'));
-  }, [libraryRecipes, favorites, savedRecipes, query, tab, dishCategory,cuisine,alcohol,customTypes,removedIds]);
+  }, [libraryRecipes, favorites, savedRecipes, query, tab, dishCategory,cuisine,alcohol,customTypes,removedIds,typeOverrides]);
 
   const historyYears = useMemo(() => Array.from(new Set(history.map(entry => String(new Date(entry.createdAt).getFullYear())))).sort((a, b) => Number(b) - Number(a)), [history]);
   const filteredHistory = useMemo(() => history.filter(entry => {
@@ -86,7 +93,7 @@ export function MyRecipesPage() {
     if (historyYear !== 'Todos' && String(date.getFullYear()) !== historyYear) return false;
     if (historyMonth !== 'Todos' && String(date.getMonth() + 1) !== historyMonth) return false;
     return true;
-  }), [history, historyYear, historyMonth,dishCategory,query,cuisine,alcohol,customTypes,historyPeriod]);
+  }), [history, historyYear, historyMonth,dishCategory,query,cuisine,alcohol,customTypes,historyPeriod,typeOverrides]);
 
   const repeatSearch = async (entry: HistoryEntry,forceAi=false) => {
     if (isRepeating) return;
@@ -126,28 +133,39 @@ export function MyRecipesPage() {
             {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
             {voice.error && <div className="voice-status error">{voice.error}</div>}
             <div className="library-filters">
-              <label>Tipo<select aria-label="Tipo de receta" value={dishCategory} onChange={e=>{setDishCategory(e.target.value);setAlcohol('all')}}>{categories.map(c=><option key={c}>{c}</option>)}</select></label>
+              <label>Tipo<select aria-label="Tipo de receta" value={dishCategory} onChange={e=>{if(e.target.value==='__add_type__'){setTypeError('');setAddingType(true);}else{setDishCategory(e.target.value);setAlcohol('all')}}}>{categories.map(c=><option key={c}>{c}</option>)}<option value="__add_type__">Añadir tipo…</option></select></label>
               <label>Cocina<select aria-label="Filtrar por cocina" value={cuisine} onChange={e=>setCuisine(e.target.value)}><option value="">Todas las cocinas</option>{Array.from(new Set(libraryRecipes.map(r=>r.cuisine))).sort().map(c=><option key={c}>{c}</option>)}</select></label>
               {dishCategory==='Cócteles'&&<label>Alcohol<select aria-label="Filtrar por alcohol" value={alcohol} onChange={e=>setAlcohol(e.target.value)}><option value="all">Todos</option><option value="yes">Con alcohol</option><option value="no">Sin alcohol</option></select></label>}
-              <button className="secondary-button add-recipe-type" onClick={()=>setAddingType(!addingType)} aria-expanded={addingType}>Añadir tipo</button>
+
             </div>
-            {addingType&&<section className="custom-type-editor"><h2>Nuevo tipo de comida</h2><label>Nombre del tipo<input value={typeName} maxLength={60} onChange={e=>setTypeName(e.target.value)}/></label><p>Selecciona las recetas que quieres incluir. Se guardará en este dispositivo.</p><div className="custom-type-recipes">{libraryRecipes.map(r=><label key={r.id}><input type="checkbox" checked={typeRecipeIds.includes(r.id)} onChange={e=>setTypeRecipeIds(ids=>e.target.checked?[...ids,r.id]:ids.filter(id=>id!==r.id))}/>{r.title}</label>)}</div>{typeError&&<p role="alert">{typeError}</p>}<button className="secondary-button" onClick={saveType}>Guardar tipo</button><button className="secondary-button" onClick={()=>setAddingType(false)}>Cancelar</button></section>}
+            <dialog ref={typeDialog} className="recipe-type-dialog" aria-labelledby="new-type-title" onCancel={()=>setAddingType(false)} onClose={()=>setAddingType(false)}>
+              <form className="custom-type-editor" onSubmit={e=>{e.preventDefault();saveType();}}>
+                <h2 id="new-type-title">Nuevo tipo de comida</h2>
+                <label>Nombre del tipo<input autoFocus value={typeName} maxLength={60} onChange={e=>setTypeName(e.target.value)}/></label>
+                <details><summary>Incluir recetas (opcional)</summary><div className="custom-type-recipes">{libraryRecipes.map(r=><label key={r.id}><input type="checkbox" checked={typeRecipeIds.includes(r.id)} onChange={e=>setTypeRecipeIds(ids=>e.target.checked?[...ids,r.id]:ids.filter(id=>id!==r.id))}/>{r.title}</label>)}</div></details>
+                <p>Se guardará en este dispositivo. Puedes cambiar el tipo desde cada receta.</p>
+                {typeError&&<p role="alert">{typeError}</p>}
+                <div className="recipe-type-actions"><button className="secondary-button" type="submit">Guardar tipo</button><button className="secondary-button" type="button" onClick={()=>setAddingType(false)}>Cancelar</button></div>
+              </form>
+            </dialog>
             <div className="library-tabs">
               <button aria-pressed={tab==='favorites'} className={tab==='favorites'?'active':''} onClick={()=>setDishTab(tab==='favorites'?'library':'favorites')}>Favoritos</button>
               <button aria-pressed={tab==='history'} className={tab==='history'?'active':''} onClick={()=>setDishTab(tab==='history'?'library':'history')}>Historial</button>
             </div>
+            <button className="secondary-button library-import" onClick={()=>navigate('/importar-receta')}>Importar receta</button>
             {tab!=='library'&&<button className="library-back-all" onClick={()=>setDishTab('library')}>Ver todas las recetas</button>}
             {removeError&&<p role="alert">{removeError}</p>}
             {lastRemoved&&<div role="status">Se ha quitado «{lastRemoved.title}». <button onClick={()=>{if(updateRemoved(removedIds.filter(id=>id!==lastRemoved.id)))setLastRemoved(undefined)}}>Deshacer</button></div>}
             {removedIds.length>0&&<button className="library-back-all" onClick={()=>{if(updateRemoved([]))setLastRemoved(undefined)}}>Recuperar recetas quitadas ({removedIds.length})</button>}
             {tab !== 'history' && <>
             <section className="library-section">
-              <div className="section-heading-row"><div><span className="eyebrow">{tab === 'library' ? 'BIBLIOTECA' : tab === 'favorites' ? 'FAVORITOS' : 'MIS RECETAS'}</span><h2>{tab==='library'? recipes.length+' recetas disponibles' : recipes.length ? (tab === 'favorites' ? 'Tus imprescindibles' : 'Recetas guardadas') : (tab === 'favorites' ? 'Todavía no hay favoritas' : 'Todavía no has guardado ninguna receta')}</h2></div><button className="secondary-button library-import" onClick={()=>navigate('/importar-receta')}>Importar receta</button></div>
+              <div className="section-heading-row"><div><span className="eyebrow">{tab === 'library' ? 'BIBLIOTECA' : tab === 'favorites' ? 'FAVORITOS' : 'MIS RECETAS'}</span><h2>{tab==='library'? recipes.length+' recetas disponibles' : recipes.length ? (tab === 'favorites' ? 'Tus imprescindibles' : 'Recetas guardadas') : (tab === 'favorites' ? 'Todavía no hay favoritas' : 'Todavía no has guardado ninguna receta')}</h2></div></div>
               <div className="library-photo-grid">
                 {recipes.map(recipe => (
                   <article className="library-photo-card" key={recipe.id}>
                     <button className="library-photo-open" aria-label={`Abrir ${recipe.title}`} onClick={() => navigate(`/receta/${recipe.id}`)}><RecipeThumbnail recipe={recipe} /><div className="library-photo-caption"><strong>{recipe.title}</strong><small><Clock3 size={13} /> {recipe.prepMinutes + recipe.cookMinutes} min</small></div></button><button type="button" className="library-photo-heart" aria-label={`${favorites.includes(recipe.id)?'Quitar':'Marcar'} ${recipe.title} ${favorites.includes(recipe.id)?'de favoritos':'como favorita'}`} aria-pressed={favorites.includes(recipe.id)} onClick={()=>toggleFavorite(recipe.id)}><Heart size={20} fill={favorites.includes(recipe.id)?'currentColor':'none'}/></button>
                     <button type="button" className="library-delete" aria-label={`Quitar ${recipe.title} de Mis recetas`} onClick={event=>{event.stopPropagation();deleteRecipe(recipe)}}><Trash2 size={17}/></button>
+                    <label className="recipe-card-type">Tipo<select aria-label={'Cambiar tipo de '+recipe.title} value={typeOverrides[recipe.id]??''} onChange={e=>changeRecipeType(recipe.id,e.target.value)}><option value="">Asignado por la app</option>{categories.filter(c=>c!=='Todos').map(c=><option key={c}>{c}</option>)}</select></label>
                   </article>
                 ))}
                 {!recipes.length && <div className="empty-card">{tab === 'library' ? 'No hay recetas con estos filtros. Prueba otra categoría o cocina.' : tab === 'favorites' ? 'Marca una receta con ♥ y aparecerá aquí.' : 'Abre una receta y pulsa “Guardar receta” para conservarla aquí.'}</div>}
@@ -187,3 +205,4 @@ function buildLegacyRequest(entry: HistoryEntry, servings: number, pantryBasics:
   if (entry.mode === 'pantry') return { mode: 'pantry', servings, maxMinutes: 60, pantryIngredients: entry.label.split(',').map(name => ({ name: name.trim() })).filter(item => item.name), pantryBasics };
   return { mode: 'desire', servings, maxMinutes: 60, desireText: entry.label };
 }
+

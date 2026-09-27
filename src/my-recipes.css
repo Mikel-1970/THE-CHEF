@@ -100,3 +100,17 @@
 .recipe-library-content .library-tabs{background:transparent;padding:0;gap:16px;border-radius:0}
 .recipe-library-content .library-tabs button{border:1px solid var(--line);border-radius:16px;background:var(--paper);color:var(--forest);min-height:52px;box-shadow:0 3px 10px #3a2a1f08}
 .recipe-library-content .library-tabs button.active{background:var(--forest);color:#fffaf3;border-color:var(--forest)}
+
+.recipe-type-dialog{padding:0;border:0;border-radius:20px;width:min(480px,calc(100% - 32px));max-height:85dvh;background:var(--paper);color:var(--forest)}
+.recipe-type-dialog::backdrop{background:#241b1466}
+.recipe-type-dialog .custom-type-editor{margin:0}
+.recipe-type-actions{display:flex;gap:16px}
+.recipe-type-actions>*{flex:1}
+.recipe-library-content>.library-import{align-self:center;margin:0;min-width:220px}
+.recipe-card-type{display:grid;gap:6px;padding:12px;background:var(--paper);color:var(--forest);font-size:.8rem}
+.recipe-card-type select{width:100%;min-width:0;font:inherit;padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:inherit}
+.library-photo-card:has(.recipe-card-type) .library-delete{bottom:100px}
+
+.library-photo-card:has(.recipe-card-type){aspect-ratio:auto}
+.library-photo-card:has(.recipe-card-type) .library-photo-open{position:relative;display:block;aspect-ratio:3/4;height:auto}
+

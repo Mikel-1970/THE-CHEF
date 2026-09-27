@@ -141,8 +141,10 @@ test('diners belong to ingredients and changing them does not request AI',async(
 
  test('custom types persist and recipes can be removed and restored',async({page},info)=>{
  await page.goto('./#/mis-recetas');
- await page.getByRole('button',{name:'Añadir tipo',exact:true}).click();
+ await page.getByLabel('Tipo de receta',{exact:true}).selectOption('__add_type__');
+ await expect(page.getByRole('dialog',{name:'Nuevo tipo de comida'})).toBeVisible();
  await page.getByLabel('Nombre del tipo').fill('Celebraciones');
+ await page.getByText('Incluir recetas (opcional)',{exact:true}).click();
  await page.getByRole('checkbox',{name:'Paella valenciana',exact:true}).check();
  await page.getByRole('button',{name:'Guardar tipo',exact:true}).click();
  await expect(page.locator('.library-photo-card')).toHaveCount(1);
@@ -155,6 +157,10 @@ test('diners belong to ingredients and changing them does not request AI',async(
  await expect(page.locator('.library-photo-card')).toHaveCount(0);
  await page.getByRole('button',{name:/Recuperar recetas quitadas/}).click();
  await expect(page.locator('.library-photo-card')).toHaveCount(1);
+ await page.getByLabel('Cambiar tipo de Paella valenciana',{exact:true}).selectOption('Pastas');
+ await expect(page.locator('.library-photo-card')).toHaveCount(0);
+ await page.reload();await page.getByLabel('Tipo de receta').selectOption('Pastas');
+ await expect(page.getByLabel('Cambiar tipo de Paella valenciana',{exact:true})).toHaveValue('Pastas');
  await page.getByLabel('Tipo de receta').selectOption('Todos');
  await page.getByPlaceholder('Buscar recetas y cócteles…').fill('bacalao al pil pil');
  await expect(page.locator('.library-photo-card')).toHaveCount(1);
