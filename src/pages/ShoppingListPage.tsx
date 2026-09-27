@@ -39,7 +39,7 @@ export function ShoppingListPage() {
     upsertShoppingItem({ ...item, quantity: Number.isFinite(parsed) ? parsed : undefined });
   };
   const updateUnit = (id: string, unit: string) => { const item = shoppingList.find(entry => entry.id === id); if (item) upsertShoppingItem({ ...item, unit: unit || undefined }); };
-  const shareList = async () => { const text = buildShoppingShareText(shoppingList, settings.avatarEmoji); if (!shoppingList.some(item => !item.checked)) return; if (navigator.share) { try { await navigator.share({ title: 'Lista de compra · Chef Voldi', text }); return; } catch (error) { if (error instanceof DOMException && error.name === 'AbortError') return; } } await navigator.clipboard?.writeText(text); window.alert('Lista copiada. Ya puedes pegarla donde quieras.'); };
+  const shareList = async () => { const text = buildShoppingShareText(shoppingList, settings.avatarEmoji); if (!shoppingList.some(item => !item.checked)) return; if (navigator.share) { try { await navigator.share({ title: 'Lista de compra · ¡A la mesa!', text }); return; } catch (error) { if (error instanceof DOMException && error.name === 'AbortError') return; } } await navigator.clipboard?.writeText(text); window.alert('Lista copiada. Ya puedes pegarla donde quieras.'); };
 
   return <AppShell>
     <div className="simple-page-header light-header"><span className="eyebrow">TU CESTA</span><h1>Lista de compra</h1><p>Organiza tus compras y añade lo que necesites para tus recetas.</p></div>
