@@ -18,7 +18,7 @@ test('chef additions are attributed domestic adaptations with separate baking ca
 test('haute cuisine can be found by chef and opens its published source without AI',async({page})=>{
  await page.route('**/*',r=>new URL(r.request().url()).hostname==='127.0.0.1'?r.continue():r.abort());
  await page.goto('./#/mis-recetas');
- await page.getByRole('button',{name:'Alta cocina',exact:true}).click();
+ await page.getByLabel('Tipo de receta').selectOption('Alta cocina');
  await expect(page.locator('.library-photo-card')).toHaveCount(6);
  await page.getByPlaceholder('Buscar recetas y cócteles…').fill('berASategui');
  await expect(page.locator('.library-photo-card')).toHaveCount(1);
@@ -61,12 +61,12 @@ test('general library includes personal recipes once and keeps saved and favorit
   localStorage.setItem('chef:favorites',JSON.stringify([r.id,'lib-002']));
  },own);
  await page.goto('./#/mis-recetas');
- await expect(page.locator('.library-tabs button')).toHaveText(['Biblioteca','Mis recetas','Favoritos','Historial']);
+ await expect(page.locator('.library-tabs button')).toHaveText(['Favoritos','Historial']);
  await expect(page.locator('.library-photo-card')).toHaveCount(181);
  await page.getByLabel('Filtrar por cocina').selectOption('Familiar');
  await expect(page.locator('.library-photo-card')).toHaveCount(1);
  await page.getByLabel('Filtrar por cocina').selectOption('');
- await page.locator('.library-tabs').getByRole('button',{name:'Mis recetas',exact:true}).click();
+ await page.goto('./#/mis-recetas?tab=all');
  await expect(page.locator('.library-photo-card')).toHaveCount(2);
  await expect(page.getByRole('button',{name:'Abrir Arroz del senyoret',exact:true})).toHaveCount(0);
  await page.locator('.library-tabs').getByRole('button',{name:'Favoritos',exact:true}).click();
@@ -79,9 +79,9 @@ test('library filters, photo, servings and saved recipes work without AI',async(
  await page.goto('./#/mis-recetas');await expect(page.locator('.library-photo-card')).toHaveCount(180);
  await page.screenshot({path:info.outputPath('library-home.png')});
  await page.getByLabel('Filtrar por cocina').selectOption('Peruana');await expect(page.locator('.library-photo-card')).toHaveCount(5);
- await page.getByLabel('Filtrar por cocina').selectOption('');await page.getByLabel('Tipo de receta').selectOption('cocktail');await expect(page.locator('.library-photo-card')).toHaveCount(20);
+ await page.getByLabel('Filtrar por cocina').selectOption('');await page.getByLabel('Tipo de receta').selectOption('Cócteles');await expect(page.locator('.library-photo-card')).toHaveCount(20);
  await page.getByLabel('Filtrar por alcohol').selectOption('no');await expect(page.locator('.library-photo-card')).toHaveCount(3);
- await page.getByLabel('Tipo de receta').selectOption('all');await page.getByPlaceholder('Buscar recetas y cócteles…').fill('Paella valenciana');await page.getByRole('button',{name:'Abrir Paella valenciana',exact:true}).click();
+ await page.getByLabel('Tipo de receta').selectOption('Todos');await page.getByPlaceholder('Buscar recetas y cócteles…').fill('Paella valenciana');await page.getByRole('button',{name:'Abrir Paella valenciana',exact:true}).click();
  await expect(page.locator('.recipe-complete-photo img')).toHaveAttribute('src',/lib-001\.webp\?v=plated-20260926$/);
  await expect.poll(()=>page.locator('.recipe-complete-photo img').evaluate((e:HTMLImageElement)=>e.naturalWidth)).toBe(960);
  await page.getByRole('button',{name:'Ingredientes Lo que necesitas',exact:true}).click();await page.getByLabel('Comensales',{exact:true}).selectOption('5');await page.reload();
@@ -112,10 +112,8 @@ test('another recipe uses AI only after clicking and keeps diners and cuisine',a
 
 test('reviewed library layout and menu keep every group accessible',async({page},info)=>{
  await page.goto('./#/mis-recetas');await expect(page.getByText('Revisar tips de cocina',{exact:true})).toHaveCount(0);
- await expect(page.locator('.library-tabs button')).toHaveCount(4);const positions=await page.locator('.library-tabs button').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,font:parseFloat(getComputedStyle(e).fontSize)}}));
- expect(positions[0].y).toBe(positions[1].y);expect(positions[2].y).toBe(positions[3].y);expect(positions[2].y).toBeGreaterThan(positions[0].y);expect(positions[0].font).toBeGreaterThanOrEqual(15);
- expect(await page.locator('.dish-category-row').evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);
- await page.getByRole('button',{name:'Cócteles',exact:true}).click();await expect(page.locator('.library-photo-card')).toHaveCount(20);
+ await expect(page.locator('.library-tabs button')).toHaveCount(2);
+ await page.getByLabel('Tipo de receta').selectOption('Cócteles');await expect(page.locator('.library-photo-card')).toHaveCount(20);
  await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await expect(page.locator('.chef-menu-grid button')).toHaveText(['Inicio','Mis recetas','Qué cocinar','Foto Receta','Técnicas y tips','Lista de la compra','Buscar','Perfil y ajustes']);
  await expect(page.getByRole('button',{name:'Mi plan de comidas',exact:true})).toHaveCount(0);await page.screenshot({path:info.outputPath('review-menu.png')});
 });
@@ -127,10 +125,10 @@ test('history combines food filters, text and approximate dates',async({page})=>
  {id:'drink',kind:'recipe',recipeId:'lib-151',label:'Negroni',createdAt:new Date().toISOString()}
  ])));
  await page.goto('./#/mis-recetas?tab=history');await expect(page.locator('.history-card')).toHaveCount(3);
- await page.getByLabel('Comida del historial').selectOption('Arroces');await expect(page.locator('.history-card')).toHaveCount(2);
+ await page.getByLabel('Tipo de receta').selectOption('Arroces');await expect(page.locator('.history-card')).toHaveCount(2);
  await page.getByLabel('Periodo del historial').selectOption('7');await expect(page.locator('.history-card')).toHaveCount(1);await expect(page.locator('.history-card')).toContainText('Paella');
- await page.getByLabel('Buscar en el historial').fill('negroni');await expect(page.locator('.history-card')).toHaveCount(0);
- await page.getByLabel('Comida del historial').selectOption('Cócteles');await expect(page.locator('.history-card')).toHaveCount(1);
+ await page.getByPlaceholder('Buscar recetas y cócteles…').fill('negroni');await expect(page.locator('.history-card')).toHaveCount(0);
+ await page.getByLabel('Tipo de receta').selectOption('Cócteles');await expect(page.locator('.history-card')).toHaveCount(1);
 });
 
 test('diners belong to ingredients and changing them does not request AI',async({page},info)=>{
@@ -140,3 +138,25 @@ test('diners belong to ingredients and changing them does not request AI',async(
  const dialog=page.getByRole('dialog',{name:'Personalizar receta'});await expect(dialog.getByText('Comensales',{exact:true})).toHaveCount(0);await expect(dialog.getByText('Tiempo máximo',{exact:true})).toHaveCount(0);await expect(dialog.getByRole('button',{name:'Crear versión',exact:true})).toBeDisabled();
  await page.getByLabel('Cerrar personalización').click();await expect(page.locator('.nutrition-card')).toBeVisible();await page.getByText('Cómo se estima la nutrición',{exact:true}).click();await expect(page.locator('.library-nutrition-note')).toContainText('CoFID');await page.screenshot({path:info.outputPath('review-recipe.png'),fullPage:true});
 });
+
+ test('custom types persist and recipes can be removed and restored',async({page},info)=>{
+ await page.goto('./#/mis-recetas');
+ await page.getByRole('button',{name:'Añadir tipo',exact:true}).click();
+ await page.getByLabel('Nombre del tipo').fill('Celebraciones');
+ await page.getByRole('checkbox',{name:'Paella valenciana',exact:true}).check();
+ await page.getByRole('button',{name:'Guardar tipo',exact:true}).click();
+ await expect(page.locator('.library-photo-card')).toHaveCount(1);
+ await page.reload();await page.getByLabel('Tipo de receta').selectOption('Celebraciones');
+ await expect(page.locator('.library-photo-card')).toHaveCount(1);
+ page.once('dialog',d=>d.accept());
+ await page.getByRole('button',{name:'Quitar Paella valenciana de Mis recetas',exact:true}).click();
+ await expect(page.locator('.library-photo-card')).toHaveCount(0);
+ await page.reload();await page.getByLabel('Tipo de receta').selectOption('Celebraciones');
+ await expect(page.locator('.library-photo-card')).toHaveCount(0);
+ await page.getByRole('button',{name:/Recuperar recetas quitadas/}).click();
+ await expect(page.locator('.library-photo-card')).toHaveCount(1);
+ await page.getByLabel('Tipo de receta').selectOption('Todos');
+ await page.getByPlaceholder('Buscar recetas y cócteles…').fill('bacalao al pil pil');
+ await expect(page.locator('.library-photo-card')).toHaveCount(1);
+ await page.screenshot({path:info.outputPath('library-reordered.png'),fullPage:true});
+ });
