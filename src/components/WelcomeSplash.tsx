@@ -11,7 +11,7 @@ export function WelcomeSplash({ children, avatar, greeting, onComplete, onChoose
   const [ready, setReady] = useState(false);
   const choose=(mode:'login'|'register')=>{if(onComplete){onComplete(mode);return}onChoose?.(mode);setReady(true)};
   return (
-    <main className={`entry-page welcome-entry ${ready ? 'welcome-ready' : ''}`} aria-label="Acceso a Chef Voldi">
+    <main className={`entry-page welcome-entry ${ready ? 'welcome-ready' : ''}`} aria-label="Acceso a ¡A la mesa!">
       <FoodCollage/><div className="welcome-content">
         <div className="welcome-brand"><BrandMark/></div>
         <div className="welcome-character"><ChefAvatar avatar={avatar ?? settings.avatarEmoji} size={220} showHat={false} /></div>
