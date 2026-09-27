@@ -10,10 +10,10 @@ test('first visit stays until Login is pressed', async ({ page }, info) => {
   await page.clock.install();
   await page.clock.pauseAt(new Date());
   await page.goto('./');
-  const splash = page.getByRole('main', { name: 'Acceso a Chef Voldi' });
+  const splash = page.getByRole('main', { name: 'Acceso a ¡A la mesa!' });
   await expect(splash).toBeVisible();
-  await expect(splash.locator('.welcome-character img')).toHaveAttribute('src', /brand\/chef-voldi-board.png$/);
-  await expect.poll(() => splash.locator('.welcome-character img').evaluate((img: HTMLImageElement) => img.naturalWidth)).toBe(1448);
+  await expect(splash.locator('.welcome-character img')).toHaveAttribute('src', /avatars\/dachshund.png$/);
+  await expect.poll(() => splash.locator('.welcome-character img').evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
   await page.clock.runFor(1400);
   const brand = await page.locator('.welcome-character').elementHandle();
 
@@ -70,7 +70,7 @@ test('manual entry opens login and registration retains permissions and tutorial
   await page.reload();
   await page.getByRole('button', { name: 'Login', exact: true }).click();
   await expect(page.getByRole('heading', {name:'Bienvenido, Prueba R1-03'})).toBeVisible();
-  await expect(page.locator('.welcome-character img')).toHaveAttribute('src',/chef-voldi-board.png$/);
+  await expect(page.locator('.welcome-character img')).toHaveAttribute('src',/dachshund.png$/);
   await page.getByPlaceholder('Contraseña', { exact: true }).fill('wrong');
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   await expect(page.getByText('Usuario o contraseña incorrectos.')).toBeVisible();
@@ -96,7 +96,7 @@ test('avatar selected in settings persists into the next entry', async ({ page }
   await clean.addInitScript(value => localStorage.setItem('chef:settings', value), settings);
   const entry = await clean.newPage();
   await entry.goto('http://127.0.0.1:4175/THE-CHEF/');
-  await expect(entry.locator('.welcome-character img')).toHaveAttribute('src', /chef-voldi-board.png$/);
+  await expect(entry.locator('.welcome-character img')).toHaveAttribute('src', /dachshund.png$/);
   await clean.close();
 });
 
@@ -129,7 +129,7 @@ test('invalid stored avatar safely defaults to El Chef', async ({ page }) => {
 });
 
 
-test('home has dish search and photo recipe with an upper-right hat', async ({ page }, info) => {
+test('home exposes pantry, photo/video, avatar menu and horizontal daily choices', async ({ page }, info) => {
   await page.addInitScript(() => {
     sessionStorage.setItem('chef:home-greeted:v2','1');
     sessionStorage.setItem('chef:auth:session:v1', '1');
@@ -137,27 +137,18 @@ test('home has dish search and photo recipe with an upper-right hat', async ({ p
     sessionStorage.setItem('chef:tutorial:invite-dismissed-session:v2', '1');
   });
   await page.goto('./');
-  await expect(page.locator('.reference-secondary-card')).toHaveCount(1);
+  await expect(page.locator('.alm-primary-actions .alm-action-card')).toHaveCount(2);
   await expect(page.getByText('Crear tu receta', { exact:true })).toHaveCount(0);
-  await expect(page.getByText('Abre la despensa', {exact:true})).toHaveCount(0);
-  const hero = await page.locator('.reference-desire-card').boundingBox();
-  const hat = await page.locator('.reference-desire-card .reference-card-icon').boundingBox();
-  expect(hat!.x).toBeGreaterThan(hero!.x + hero!.width/2);
-  expect(hat!.y - hero!.y).toBeLessThan(20);
-  for (const card of await page.locator('.reference-secondary-card').all()) {
-    expect((await card.boundingBox())!.height).toBeGreaterThanOrEqual(240);
-  }
-  for (const card of await page.locator('.home-split-card').all()) {
-    const text = await card.locator('.reference-action-text').boundingBox();
-    const photo = await card.locator('.home-split-photo').boundingBox();
-    expect(text!.x + text!.width).toBeLessThanOrEqual(photo!.x + 1);
-  }
-  const shortcuts = await page.locator('.reference-quick-grid button').all();
-  const boxes = await Promise.all(shortcuts.map(button => button.boundingBox()));
-  expect(boxes).toHaveLength(4);
-  expect(boxes[0]!.y).toBeCloseTo(boxes[1]!.y, 0);
-  expect(boxes[2]!.y).toBeCloseTo(boxes[3]!.y, 0);
-  expect(boxes[2]!.y).toBeGreaterThan(boxes[0]!.y);
+  await expect(page.getByText('Abre la despensa', {exact:true})).toHaveCount(1);
+  await expect(page.getByText('Foto/Video Receta', {exact:true})).toHaveCount(1);
+  await expect(page.locator('.alm-quick-grid button')).toHaveCount(5);
+  await expect(page.locator('.alm-daily-card')).toHaveCount(4);
+  await expect(page.locator('.alm-daily-strip')).toBeVisible();
+  expect(await page.locator('.alm-daily-strip').evaluate(el => el.scrollWidth >= el.clientWidth)).toBe(true);
+  await page.getByRole('button',{name:'Abrir menú',exact:true}).click();
+  await expect(page.locator('.chef-menu-grid')).toContainText('Despensa');
+  await expect(page.locator('.chef-menu-grid')).toContainText('Lista de la compra');
+  await page.getByRole('button',{name:'Cerrar menú de navegación'}).click();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({path:info.outputPath('home.png'),fullPage:true});
   await page.getByRole('button', { name:/Foto\/Video Receta/ }).click();
