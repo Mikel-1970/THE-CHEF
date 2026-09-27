@@ -160,6 +160,6 @@ test('home has dish search and photo recipe with an upper-right hat', async ({ p
   expect(boxes[2]!.y).toBeGreaterThan(boxes[0]!.y);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({path:info.outputPath('home.png'),fullPage:true});
-  await page.getByRole('button', { name:/Foto Receta/ }).click();
-  await expect(page.getByRole('heading',{name:'Foto Receta',exact:true})).toBeVisible();
+  await page.getByRole('button', { name:/Foto\/Video Receta/ }).click();
+  await expect(page.getByRole('heading',{name:'Foto/Video Receta',exact:true})).toBeVisible();
 });

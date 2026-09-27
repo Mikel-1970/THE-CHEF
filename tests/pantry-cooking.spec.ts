@@ -49,5 +49,5 @@ test('photo correction remains authoritative despite a conflicting AI title',asy
  await page.getByRole('button',{name:'Analizar el plato',exact:true}).click();await page.getByRole('button',{name:'No, corregir'}).click();
  await page.locator('.photo-correction-box textarea').fill('Helado de nata con frutos rojos y crema de café');await page.locator('.revision-confirm-button').click();
  await expect(page.getByRole('heading',{name:'Plato corregido: Helado de nata con frutos rojos y crema de café'})).toBeVisible();
- await page.getByRole('button',{name:'Sí, adelante'}).click();await page.getByRole('button',{name:'Generar receta',exact:true}).click();await expect.poll(()=>final).toBeTruthy();expect(final.desireText).toContain('Helado de nata con frutos rojos y crema de café');expect(final.desireText).not.toContain('Tartaleta');
+ await page.getByRole('button',{name:'Sí, adelante'}).click();await page.getByRole('button',{name:'Preparar borrador',exact:true}).click();await expect.poll(()=>final).toBeTruthy();expect(final.desireText).toContain('Helado de nata con frutos rojos y crema de café');expect(final.desireText).not.toContain('Tartaleta');
 });

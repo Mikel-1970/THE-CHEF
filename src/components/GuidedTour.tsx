@@ -21,7 +21,7 @@ const HOME_TIPS: TutorialTip[] = [
   },
   {
     selector: '[data-tour="photo"]',
-    title: 'Foto receta',
+    title: 'Foto/Video Receta',
     body: 'Haz una foto o elige una imagen. Primero confirmarás qué plato es y sus ingredientes; después se generará la receta completa.'
   },
   {

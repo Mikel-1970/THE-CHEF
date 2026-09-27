@@ -30,7 +30,7 @@ export function HomePage() {
       </section>
       <section className="reference-secondary-actions" aria-label="Otras formas de cocinar">
         <button data-tour="photo" className="reference-secondary-card reference-action-card reference-photo-card home-split-card" onClick={() => navigate('/foto')}>
-          <div className="reference-action-text"><h3>Foto Receta</h3><span className="reference-action-line reference-action-line-gold" /><p>Enséñame un plato y descubre cómo prepararlo.</p><span className="reference-card-cta">Empezar</span></div>
+          <div className="reference-action-text"><h3>Foto/Video Receta</h3><span className="reference-action-line reference-action-line-gold" /><p>Enséñame un plato y descubre cómo prepararlo.</p><span className="reference-card-cta">Empezar</span></div>
           <img className="home-split-photo" src={photoRecipeImage} alt="" />
           <span className="reference-card-icon reference-card-icon-gold"><Camera size={25} /></span>
         </button>

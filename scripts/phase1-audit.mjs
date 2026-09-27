@@ -7,7 +7,7 @@ ok('Avatar flotante en todas las pantallas',shell.includes('createPortal')&&shel
 ok('Sin BottomNav en AppShell',!shell.includes('BottomNav'));
 ok('Avatar disponible en Lista de compra',!shopping.includes('hideProfile'));
 ok('Despensa retirada de portada y menú',!home.includes('Abre la despensa')&&!shell.includes("'/nevera'")&&app.includes('<Navigate to="/antojo" replace/>'));
-ok('Foto Receta',home.includes('Foto Receta'));
+ok('Foto/Video Receta',home.includes('Foto/Video Receta'));
 ok('Sin boton Crear tu receta',!home.includes('Crear tu receta'));
 ok('Receta directa sin pantalla de propuesta',pantry.includes('generateDirectRecipe')&&read('src/pages/DesirePage.tsx').includes('generateDirectRecipe')&&hybrid.includes('PROPOSAL_COUNT=1')&&!results.includes('ProposalCard'));
 ok('Tiempo máximo 120',read('src/components/CookingOptions.tsx').includes('max={120}')&&directRecipe.includes('recipe.prepMinutes+recipe.cookMinutes>request.maxMinutes'));

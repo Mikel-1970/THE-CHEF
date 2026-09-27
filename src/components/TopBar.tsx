@@ -2,7 +2,7 @@ import { ChefHat } from 'lucide-react';
 
 function normalizeLabel(value?: string) {
   if (!value) return value;
-  if (value === 'Receta desde una foto') return 'Foto receta';
+  if (value === 'Receta desde una foto') return 'Foto/Video Receta';
   if (value === 'COCINA CON LO QUE TIENES') return 'COCINA CON LO QUE HAY';
   if (value === 'Cocina con lo que tienes') return 'Cocina con lo que hay';
   return value;

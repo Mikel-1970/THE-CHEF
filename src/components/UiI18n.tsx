@@ -82,7 +82,7 @@ const COMMON:Record<string,Partial<Record<AppLanguage,string>>>={
  'Inicio':{es:'Inicio',en:'Home',fr:'Accueil',de:'Start',it:'Home',pt:'Início',zh:'首页'},
  '¿Qué quieres cocinar?':{es:'¿Qué quieres cocinar?',en:'What do you want to cook?',fr:'Que voulez-vous cuisiner ?',de:'Was möchtest du kochen?',it:'Cosa vuoi cucinare?',pt:'O que quer cozinhar?',zh:'你想做什么？'},
  'Abre la despensa':{es:'Abre la despensa',en:'Open the pantry',fr:'Ouvre le garde-manger',de:'Öffne die Vorratskammer',it:'Apri la dispensa',pt:'Abra a despensa',zh:'打开储藏室'},
- 'Foto Receta':{es:'Foto Receta',en:'Photo Recipe',fr:'Recette photo',de:'Foto-Rezept',it:'Foto Ricetta',pt:'Foto Receita',zh:'照片食谱'},
+ 'Foto/Video Receta':{es:'Foto/Video Receta',en:'Photo Recipe',fr:'Recette photo',de:'Foto-Rezept',it:'Foto Ricetta',pt:'Foto Receita',zh:'照片食谱'},
  'Crear tu receta':{es:'Crear tu receta',en:'Create your recipe',fr:'Créer votre recette',de:'Dein Rezept erstellen',it:'Crea la tua ricetta',pt:'Criar a sua receita',zh:'创建你的食谱'},
  'Buscar':{es:'Buscar',en:'Search',fr:'Rechercher',de:'Suchen',it:'Cerca',pt:'Pesquisar',zh:'搜索'},
  'Despensa y nevera':{es:'Despensa y nevera',en:'Pantry & fridge',fr:'Garde-manger et frigo',de:'Vorrat & Kühlschrank',it:'Dispensa e frigo',pt:'Despensa e frigorífico',zh:'储藏室和冰箱'},
