@@ -7,8 +7,12 @@ import '../recipe-source.css';
 export function RecipeSourceNote({ recipe, showImage = true }: { recipe: Recipe; showImage?: boolean }) {
   const source: RecipeSource = recipe.source ?? { kind: 'local', label: 'Catálogo El Chef' };
   const isWeb = source.kind === 'web';
+  const isSocial = source.kind === 'social';
   const isAi = source.kind === 'ai';
-  const Icon = isWeb ? Globe2 : isAi ? Sparkles : ShieldCheck;
+  const Icon = isWeb || isSocial ? Globe2 : isAi ? Sparkles : ShieldCheck;
+  const evidence=Object.values(source.fieldEvidence??{});
+  const interpreted=evidence.filter(item=>item.state==='interpreted'||item.state==='estimated').length;
+  const platform=source.platform&&source.platform!=='web'?source.platform[0].toUpperCase()+source.platform.slice(1):undefined;
   const [imageUrl, setImageUrl] = useState<string>();
   const [imageLoading, setImageLoading] = useState(false);
   const [imageError, setImageError] = useState<string>();
@@ -52,10 +56,10 @@ export function RecipeSourceNote({ recipe, showImage = true }: { recipe: Recipe;
 <section className="trust-strip recipe-source-note">
         <Icon size={18} />
         <div>
-          <strong>{isWeb ? 'Fuente web adaptada' : isAi ? 'Receta generada por IA' : source.kind === 'user' ? 'Receta de tu biblioteca' : 'Receta del repositorio El Chef'}</strong>
+          <strong>{isSocial ? 'Fuente social importada' : isWeb ? 'Fuente web adaptada' : isAi ? 'Receta generada por IA' : source.kind === 'user' ? 'Receta de tu biblioteca' : 'Receta del repositorio El Chef'}</strong>
           <span>
-            {source.label}{source.publisher && source.publisher !== source.label ? ` · ${source.publisher}` : ''}
-            {source.adapted ? ' · Adaptación de Chef Voldi' : ''}
+            {platform ? `${platform} · ` : ''}{source.label}{source.publisher && source.publisher !== source.label ? ` · ${source.publisher}` : ''}
+            {source.adapted ? ' · Adaptación de Chef Voldi' : ''}{interpreted ? ` · ${interpreted} datos interpretados/estimados` : ''}
             {source.url && (
               <> · <a href={source.url} target="_blank" rel="noreferrer">Ver fuente <ExternalLink size={12} /></a></>
             )}

@@ -4,6 +4,7 @@ import { fetchAiProposals, generateAiRecipe } from './aiProposalGateway';
 import { getHybridProposals, type HybridRecommendationResult } from './hybridRecommendationEngine';
 import { getRecipeImage } from './mediaGateway';
 import { getRecipeById, registerExternalRecipes, rememberActiveRecipe, rememberLibraryRecipe } from './recipeCatalog';
+import {foodPreferenceRestrictions} from './foodPreferences';
 
 const DIFFICULTY_RANK:Record<Recipe['difficulty'],number>={'Fácil':1,'Media':2,'Avanzada':3};
 
@@ -14,6 +15,7 @@ export type DirectRecipeResult={
 };
 
 export async function generateDirectRecipe(request:CookingRequest,onProgress?:(message:string)=>void):Promise<DirectRecipeResult>{
+  request={...request,restrictions:Array.from(new Set([...(request.restrictions??[]),...foodPreferenceRestrictions()]))};
   request=prepareDesireRequest(request);
   onProgress?.('Buscando una propuesta para el plato principal…');
   const recommendation=await getHybridProposals(request);

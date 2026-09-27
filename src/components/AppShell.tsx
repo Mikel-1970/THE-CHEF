@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, Camera, CookingPot, Home, Search, Settings, ShoppingBasket, Sparkles, X } from 'lucide-react';
+import { ArrowLeft, BookOpen, Camera, CookingPot, FileInput, Home, Search, Settings, ShoppingBasket, Sparkles, UtensilsCrossed, X } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -10,10 +10,10 @@ export function AppShell({children,hideProfile=false,hideBack=false,onBack}: {ch
  const [open,setOpen]=useState(false);
  const button=useRef<HTMLButtonElement>(null);
  const go=(path:string)=>{setOpen(false);navigate(path)};
- const back=()=>{setOpen(false);if(onBack)onBack();else navigate(location.pathname.startsWith('/receta/')?'/mis-recetas':location.pathname.startsWith('/cocinar/')?location.pathname.replace('/cocinar/','/receta/'):'/')};
+ const back=()=>{setOpen(false);const hashPath=typeof window!=='undefined'&&window.location.hash.startsWith('#/')?window.location.hash.slice(1).split('?')[0]:location.pathname;if(onBack&&hashPath===location.pathname)onBack();else navigate(hashPath.startsWith('/receta/')?'/mis-recetas':hashPath.startsWith('/cocinar/')?hashPath.replace('/cocinar/','/receta/'):'/')};
  useEffect(()=>{setOpen(false)},[location.pathname]);
  useEffect(()=>{if(!open)return;const escape=(e:KeyboardEvent)=>{if(e.key==='Escape'){setOpen(false);button.current?.focus()}};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape)},[open]);
- const items=[['/','Inicio',Home],['/mis-recetas','Mis recetas',BookOpen],['/antojo','Qué cocinar',Sparkles],['/foto','Foto Receta',Camera],['/tecnicas','Técnicas y tips',CookingPot],['/lista-compra','Lista de la compra',ShoppingBasket],['/buscar','Buscar',Search],['/ajustes','Perfil y ajustes',Settings]] as const;
+ const items=[['/','Inicio',Home],['/mis-recetas','Mis recetas',BookOpen],['/antojo','Qué cocinar',Sparkles],['/foto','Foto Receta',Camera],['/importar-receta','Importar receta',FileInput],['/tecnicas','Técnicas y tips',CookingPot],['/lista-compra','Lista de la compra',ShoppingBasket],['/buscar','Buscar',Search],['/alimentacion','Alimentación',UtensilsCrossed],['/ajustes','Perfil y ajustes',Settings]] as const;
  return <div className="app-bg chef-app-shell">
   <div className="ambient ambient-one"/><div className="ambient ambient-two"/><div className="grain"/>
   <main className="phone-shell without-bottom-nav">{children}</main>
