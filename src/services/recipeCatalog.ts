@@ -79,7 +79,7 @@ export function registerExternalRecipes(recipes: Recipe[]): Recipe[] {
     .filter((recipe): recipe is Recipe => Boolean(recipe));
 
   const accepted = validRecipes(normalized)
-    .filter(recipe => recipe.source?.kind === 'web' || recipe.source?.kind === 'ai')
+    .filter(recipe => recipe.source?.kind === 'web' || recipe.source?.kind === 'social' || recipe.source?.kind === 'ai')
     .map(recipe => ({
       ...recipe,
       source: normalizeExternalSource(recipe.source)
@@ -192,6 +192,7 @@ function normalizeStoredRecipe(value: unknown): Recipe | undefined {
     storage: text(value.storage) ?? '',
     imageOrigin: value.imageOrigin === 'user-photo' ? 'user-photo' : undefined,
     nutritionPerServing: nutrition,
+    nutritionPer100g: normalizeNutrition(value.nutritionPer100g),
     nutritionStatus: value.nutritionStatus === 'unavailable' ? 'unavailable' : value.nutritionStatus === 'estimated' ? 'estimated' : undefined,
     recipeKind: value.recipeKind==='dish'||value.recipeKind==='dessert'||value.recipeKind==='cocktail'?value.recipeKind:undefined,
     libraryCategory: text(value.libraryCategory),
@@ -216,7 +217,9 @@ function normalizeIngredients(value: unknown): RecipeIngredient[] {
       unit,
       section: text(item.section),
       scalingMode,
-      optional: typeof item.optional === 'boolean' ? item.optional : undefined
+      optional: typeof item.optional === 'boolean' ? item.optional : undefined,
+      originalQuantity: positiveNumber(item.originalQuantity),
+      originalUnit: text(item.originalUnit)
     }];
   });
 }
@@ -248,24 +251,28 @@ function normalizeNutrition(value: unknown): Recipe['nutritionPerServing'] | und
   const carbsG = nonNegativeNumber(value.carbsG);
   const fatG = nonNegativeNumber(value.fatG);
   if (kcal === undefined || proteinG === undefined || carbsG === undefined || fatG === undefined) return undefined;
-  return { kcal, proteinG, carbsG, fatG };
+  const fiberG = nonNegativeNumber(value.fiberG);
+  return { kcal, proteinG, carbsG, fatG, ...(fiberG!==undefined?{fiberG}:{}) };
 }
 
 function normalizeStoredSource(value: unknown): RecipeSource {
   if (!isRecord(value)) return { kind: 'ai', label: 'Receta recuperada de El Chef', adapted: true };
-  const kind = value.kind === 'local' || value.kind === 'web' || value.kind === 'ai' || value.kind === 'user' ? value.kind : 'ai';
+  const kind = value.kind === 'local' || value.kind === 'web' || value.kind === 'social' || value.kind === 'ai' || value.kind === 'user' ? value.kind : 'ai';
   return {
     kind,
     label: text(value.label) ?? (kind === 'local' ? 'Catálogo El Chef' : 'Receta recuperada de El Chef'),
     url: text(value.url),
     publisher: text(value.publisher),
     retrievedAt: text(value.retrievedAt),
-    adapted: typeof value.adapted === 'boolean' ? value.adapted : undefined
+    adapted: typeof value.adapted === 'boolean' ? value.adapted : undefined,
+    platform: asSourcePlatform(value.platform),
+    originalTitle: text(value.originalTitle),
+    fieldEvidence: normalizeFieldEvidence(value.fieldEvidence)
   };
 }
 
 function normalizeExternalSource(source: RecipeSource | undefined): RecipeSource {
-  if (!source || (source.kind !== 'web' && source.kind !== 'ai')) {
+  if (!source || (source.kind !== 'web' && source.kind !== 'social' && source.kind !== 'ai')) {
     return {
       kind: 'ai',
       label: 'Motor externo The Chef',
@@ -276,7 +283,7 @@ function normalizeExternalSource(source: RecipeSource | undefined): RecipeSource
 
   return {
     ...source,
-    label: source.label.trim() || (source.kind === 'web' ? 'Fuente web' : 'Motor externo The Chef'),
+    label: source.label.trim() || (source.kind === 'web' ? 'Fuente web' : source.kind === 'social' ? 'Fuente social' : 'Motor externo The Chef'),
     retrievedAt: source.retrievedAt ?? new Date().toISOString()
   };
 }
@@ -307,4 +314,20 @@ function nonNegativeNumber(value: unknown): number | undefined {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function asSourcePlatform(value:unknown):RecipeSource['platform']{
+ return value==='instagram'||value==='tiktok'||value==='youtube'||value==='facebook'||value==='web'||value==='text'||value==='file'||value==='photo'||value==='manual'?value:undefined;
+}
+function normalizeFieldEvidence(value:unknown):RecipeSource['fieldEvidence']{
+ if(!isRecord(value))return undefined;
+ const result:NonNullable<RecipeSource['fieldEvidence']>={};
+ for(const [key,item] of Object.entries(value)){
+  if(!isRecord(item))continue;
+  const state=item.state;
+  if(state!=='source'&&state!=='interpreted'&&state!=='estimated'&&state!=='user-confirmed')continue;
+  const confidence=typeof item.confidence==='number'&&Number.isFinite(item.confidence)?Math.max(0,Math.min(1,item.confidence)):undefined;
+  result[key]={state,confidence,note:text(item.note)};
+ }
+ return Object.keys(result).length?result:undefined;
 }
