@@ -24,7 +24,7 @@ test('import parser preserves missing fields and public social URLs',()=>{
 test('metric import converts safe units and keeps originals',()=>{
  const d=parseImportText('Pollo\nComensales: 2\nPreparación: 5 min\nCocción: 20 min\nIngredientes\n1 lb pollo\nElaboración\n1. Hornear a 350 F.');
  const recipe=buildImportedRecipe(d,'metric');
- expect(recipe.ingredients[0].unit).toBe('g');expect(recipe.ingredients[0].quantity).toBeCloseTo(453.6,1);
+ expect(recipe.ingredients[0].unit).toBe('g');expect(recipe.ingredients[0].quantity).toBe(454);
  expect(recipe.ingredients[0].originalUnit).toBe('lb');expect(recipe.steps[0].instruction).toContain('177 °C');
 });
 
