@@ -72,7 +72,7 @@ test('general library includes personal recipes once and keeps saved and favorit
  await page.locator('.library-tabs').getByRole('button',{name:'Favoritos',exact:true}).click();
  await expect(page.locator('.library-photo-card')).toHaveCount(2);
  await page.getByRole('button',{name:'Abrir menú',exact:true}).click();
- await expect(page.locator('.chef-menu-grid').getByRole('button',{name:'Favoritos',exact:true})).toHaveCount(0);
+ await expect(page.locator('.chef-menu-grid').getByRole('button',{name:'Favoritos',exact:true})).toHaveCount(1);
 });
 test('library filters, photo, servings and saved recipes work without AI',async({page},info)=>{
  let ai=0;await page.route('**/*',r=>{const url=new URL(r.request().url());if(url.hostname==='127.0.0.1')return r.continue();if(url.pathname.includes('/recipes/')||url.pathname.includes('/chef-media/'))ai++;return r.abort()});
@@ -114,7 +114,7 @@ test('reviewed library layout and menu keep every group accessible',async({page}
  await page.goto('./#/mis-recetas');await expect(page.getByText('Revisar tips de cocina',{exact:true})).toHaveCount(0);
  await expect(page.locator('.library-tabs button')).toHaveCount(2);
  await page.getByLabel('Tipo de receta').selectOption('Cócteles');await expect(page.locator('.library-photo-card')).toHaveCount(20);
- await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await expect(page.locator('.chef-menu-grid button')).toHaveText(['Inicio','Mis recetas','Qué cocinar','Foto/Video Receta','Técnicas y tips','Lista de la compra','Buscar','Perfil y ajustes']);
+ await page.getByRole('button',{name:'Abrir menú',exact:true}).click();await expect(page.locator('.chef-menu-grid button')).toHaveText(['Inicio','Favoritos','Mis recetas','Técnicas','Despensa','Lista de la compra','Ajustes','Tutorial']);
  await expect(page.getByRole('button',{name:'Mi plan de comidas',exact:true})).toHaveCount(0);await page.screenshot({path:info.outputPath('review-menu.png')});
 });
 
