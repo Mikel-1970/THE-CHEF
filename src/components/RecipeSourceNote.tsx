@@ -55,7 +55,7 @@ export function RecipeSourceNote({ recipe, showImage = true }: { recipe: Recipe;
           <strong>{isWeb ? 'Fuente web adaptada' : isAi ? 'Receta generada por IA' : source.kind === 'user' ? 'Receta de tu biblioteca' : 'Receta del repositorio El Chef'}</strong>
           <span>
             {source.label}{source.publisher && source.publisher !== source.label ? ` · ${source.publisher}` : ''}
-            {source.adapted ? ' · Adaptación de Chef Voldi' : ''}
+            {source.adapted ? ' · Adaptación de ¡A la mesa!' : ''}
             {source.url && (
               <> · <a href={source.url} target="_blank" rel="noreferrer">Ver fuente <ExternalLink size={12} /></a></>
             )}
