@@ -96,3 +96,7 @@
 .recipe-library-content .library-filters label{min-width:0}
 .recipe-library-content .library-filters select{width:100%;min-width:0}
 .recipe-library-content .add-recipe-type{grid-column:1/-1;justify-self:start}
+/* Favoritos e Historial son acciones independientes, no una barra compartida. */
+.recipe-library-content .library-tabs{background:transparent;padding:0;gap:16px;border-radius:0}
+.recipe-library-content .library-tabs button{border:1px solid var(--line);border-radius:16px;background:var(--paper);color:var(--forest);min-height:52px;box-shadow:0 3px 10px #3a2a1f08}
+.recipe-library-content .library-tabs button.active{background:var(--forest);color:#fffaf3;border-color:var(--forest)}
