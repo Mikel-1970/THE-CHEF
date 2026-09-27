@@ -1,3 +1,5 @@
+import {CUISINES} from '../data/cookingOptions';
+import {matchesCuisineFilter} from '../utils/cuisineFilter';
 import {chefLibrary} from '../data/library';
 import {foodTextMatches} from '../utils/recipeSearch';
 import {DISH_CATEGORIES,matchesDishCategory} from '../utils/dishCategories';
@@ -77,7 +79,7 @@ export function MyRecipesPage() {
       .filter(recipe=>!removedIds.includes(recipe.id))
       .filter(recipe => !normalizedQuery || foodTextMatches([recipe.title,recipe.source?.label??'',...recipe.ingredients.map(i=>i.name)].join(' '),query))
       .filter(recipe => matchesType(recipe,dishCategory))
-      .filter(recipe=>!cuisine||recipe.cuisine===cuisine)
+      .filter(recipe=>matchesCuisineFilter(recipe.cuisine,cuisine))
       .filter(recipe=>alcohol==='all'||recipe.recipeKind==='cocktail'&&recipe.alcohol===(alcohol==='yes'));
   }, [libraryRecipes, favorites, savedRecipes, query, tab, dishCategory,cuisine,alcohol,customTypes,removedIds,typeOverrides]);
 
@@ -86,7 +88,7 @@ export function MyRecipesPage() {
     const date = new Date(entry.createdAt);
     const recipe=entry.recipeId?getRecipeById(entry.recipeId):undefined;
     if(dishCategory!=='Todos'&&(!recipe||!matchesType(recipe,dishCategory)))return false;
-    if(cuisine&&recipe?.cuisine!==cuisine)return false;
+    if(cuisine&&(!recipe||!matchesCuisineFilter(recipe.cuisine,cuisine)))return false;
     if(alcohol!=='all'&&(!recipe||recipe.recipeKind!=='cocktail'||recipe.alcohol!==(alcohol==='yes')))return false;
     if(query.trim()&&!foodTextMatches([recipe?.title??entry.label,...(recipe?.ingredients.map(i=>i.name)??[])].join(' '),query))return false;
     if(historyPeriod!=='all'&&date.getTime()<Date.now()-Number(historyPeriod)*86400000)return false;
@@ -134,7 +136,7 @@ export function MyRecipesPage() {
             {voice.error && <div className="voice-status error">{voice.error}</div>}
             <div className="library-filters">
               <label>Tipo<select aria-label="Tipo de receta" value={dishCategory} onChange={e=>{if(e.target.value==='__add_type__'){setTypeError('');setAddingType(true);}else{setDishCategory(e.target.value);setAlcohol('all')}}}>{categories.map(c=><option key={c}>{c}</option>)}<option value="__add_type__">Añadir tipo…</option></select></label>
-              <label>Cocina<select aria-label="Filtrar por cocina" value={cuisine} onChange={e=>setCuisine(e.target.value)}><option value="">Todas las cocinas</option>{Array.from(new Set(libraryRecipes.map(r=>r.cuisine))).sort().map(c=><option key={c}>{c}</option>)}</select></label>
+              <label>Cocina<select aria-label="Filtrar por cocina" value={cuisine} onChange={e=>setCuisine(e.target.value)}><option value="">Todas las cocinas</option>{[...CUISINES,'Otras cocinas'].map(c=><option key={c}>{c}</option>)}</select></label>
               {dishCategory==='Cócteles'&&<label>Alcohol<select aria-label="Filtrar por alcohol" value={alcohol} onChange={e=>setAlcohol(e.target.value)}><option value="all">Todos</option><option value="yes">Con alcohol</option><option value="no">Sin alcohol</option></select></label>}
 
             </div>
