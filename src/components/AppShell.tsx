@@ -19,7 +19,7 @@ export function AppShell({children,hideProfile=false,hideBack=false,onBack}: {ch
   ['/mis-recetas?tab=favorites','Favoritos',Heart],
   ['/mis-recetas','Mis recetas',BookOpen],
   ['/tecnicas','Técnicas',CookingPot],
-  ['/despensa','Despensa',PackageOpen],
+  ['/inventario','Despensa',PackageOpen],
   ['/lista-compra','Lista de la compra',ShoppingBasket],
   ['/ajustes','Ajustes',Settings],
   ['/tutorial','Tutorial',CircleHelp],
