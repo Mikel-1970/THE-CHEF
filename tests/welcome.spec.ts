@@ -140,13 +140,24 @@ test('home has dish search and photo recipe with an upper-right hat', async ({ p
   await expect(page.locator('.reference-secondary-card')).toHaveCount(1);
   await expect(page.getByText('Crear tu receta', { exact:true })).toHaveCount(0);
   await expect(page.getByText('Abre la despensa', {exact:true})).toHaveCount(0);
-  const hero = await page.locator('.reference-action-card').boundingBox();
-  const hat = await page.locator('.reference-card-icon').boundingBox();
+  const hero = await page.locator('.reference-desire-card').boundingBox();
+  const hat = await page.locator('.reference-desire-card .reference-card-icon').boundingBox();
   expect(hat!.x).toBeGreaterThan(hero!.x + hero!.width/2);
   expect(hat!.y - hero!.y).toBeLessThan(20);
   for (const card of await page.locator('.reference-secondary-card').all()) {
     expect((await card.boundingBox())!.height).toBeGreaterThanOrEqual(240);
   }
+  for (const card of await page.locator('.home-split-card').all()) {
+    const text = await card.locator('.reference-action-text').boundingBox();
+    const photo = await card.locator('.home-split-photo').boundingBox();
+    expect(text!.x + text!.width).toBeLessThanOrEqual(photo!.x + 1);
+  }
+  const shortcuts = await page.locator('.reference-quick-grid button').all();
+  const boxes = await Promise.all(shortcuts.map(button => button.boundingBox()));
+  expect(boxes).toHaveLength(4);
+  expect(boxes[0]!.y).toBeCloseTo(boxes[1]!.y, 0);
+  expect(boxes[2]!.y).toBeCloseTo(boxes[3]!.y, 0);
+  expect(boxes[2]!.y).toBeGreaterThan(boxes[0]!.y);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({path:info.outputPath('home.png'),fullPage:true});
   await page.getByRole('button', { name:/Foto Receta/ }).click();
