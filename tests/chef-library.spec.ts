@@ -63,8 +63,8 @@ test('general library includes personal recipes once and keeps saved and favorit
  await page.goto('./#/mis-recetas');
  await expect(page.locator('.library-tabs button')).toHaveText(['Favoritos','Historial']);
  await expect(page.locator('.library-photo-card')).toHaveCount(181);
- await page.getByLabel('Filtrar por cocina').selectOption('Familiar');
- await expect(page.locator('.library-photo-card')).toHaveCount(1);
+ await page.getByLabel('Filtrar por cocina').selectOption('Otras cocinas');
+ await expect(page.getByRole('button',{name:'Abrir Arroz de mi familia',exact:true})).toBeVisible();
  await page.getByLabel('Filtrar por cocina').selectOption('');
  await page.goto('./#/mis-recetas?tab=all');
  await expect(page.locator('.library-photo-card')).toHaveCount(2);
