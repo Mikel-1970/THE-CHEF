@@ -8,6 +8,6 @@ export function shoppingIcon(name:string):string {
  return rules.find(([pattern])=>pattern.test(n))?.[1]??'🛒';
 }
 export function buildShoppingShareText(items:ShoppingListItem[],avatar?:string):string {
- return [`${avatarIcons[avatar??'chef-man']??'👨‍🍳'} ${avatarName(avatar)} · The Chef`,'','¡Hola! ¿Me ayudas con la compra? Para ponernos a cocinar, necesitamos:','',...items.filter(i=>!i.checked).map(i=>`${shoppingIcon(i.name)} ${i.name} — ${i.quantity!==undefined?`${formatQuantity(i.quantity)} ${i.unit??''}`.trim():'cantidad por confirmar'}`),'','¡Gracias! Yo me encargo de los fogones. 🍳'].join('\n');
+ return [`${avatarIcons[avatar??'chef-man']??'👨‍🍳'} ${avatarName(avatar)} · ¡A la mesa!`,'','¡Hola! ¿Me ayudas con la compra? Para ponernos a cocinar, necesitamos:','',...items.filter(i=>!i.checked).map(i=>`${shoppingIcon(i.name)} ${i.name} — ${i.quantity!==undefined?`${formatQuantity(i.quantity)} ${i.unit??''}`.trim():'cantidad por confirmar'}`),'','¡Gracias! Yo me encargo de los fogones. 🍳'].join('\n');
 }
 export function isDefaultWater(name:string):boolean {return /^agua(?:\s+(?:potable|del grifo|fria|caliente|templada|hirviendo))?$/i.test(name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim());}
