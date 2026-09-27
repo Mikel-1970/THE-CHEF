@@ -13,3 +13,14 @@ export function loadFoodPreferences():FoodPreferences{
  };}catch{return DEFAULT_FOOD_PREFERENCES;}
 }
 export function saveFoodPreferences(value:FoodPreferences){localStorage.setItem(KEY,JSON.stringify(value));window.dispatchEvent(new CustomEvent('chef:food-preferences'))}
+
+const ALLERGY_RESTRICTIONS:Record<string,string>={
+ Gluten:'Sin gluten',Crustáceos:'Sin crustáceos',Huevos:'Sin huevo',Pescado:'Sin pescado',Cacahuetes:'Sin cacahuete',Soja:'Sin soja',Leche:'Sin lácteos','Frutos de cáscara':'Sin frutos secos',Apio:'Sin apio',Mostaza:'Sin mostaza',Sésamo:'Sin sésamo',Sulfitos:'Sin sulfitos',Altramuces:'Sin altramuces',Moluscos:'Sin moluscos'
+};
+export function foodPreferenceRestrictions(value:FoodPreferences=loadFoodPreferences()):string[]{
+ return Array.from(new Set([
+  ...value.allergies.map(a=>ALLERGY_RESTRICTIONS[a]??`Alergia a ${a}`),
+  ...value.intolerances.map(v=>`Intolerancia a ${v}`),
+  ...value.avoidIngredients.map(v=>`Evitar ${v}`)
+ ]));
+}
