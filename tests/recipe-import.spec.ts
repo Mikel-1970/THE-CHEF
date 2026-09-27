@@ -18,6 +18,7 @@ test('import parser preserves missing fields and public social URLs',()=>{
  for(const url of ['https://www.youtube.com/watch?v=test','https://youtu.be/test','https://www.instagram.com/reel/test/','https://www.tiktok.com/@chef/video/1'])expect(()=>publicImportUrl(url)).not.toThrow();
  expect(sourcePlatformFromUrl('https://youtu.be/test')).toBe('youtube');
  expect(sourcePlatformFromUrl('https://www.instagram.com/reel/test')).toBe('instagram');
+ const social=buildImportedRecipe({...d,prep:'0',cook:'20',sourceUrl:'https://youtu.be/test',sourceLabel:'YouTube'},'metric');expect(social.source?.kind).toBe('social');expect(social.source?.platform).toBe('youtube');
 });
 
 test('metric import converts safe units and keeps originals',()=>{
