@@ -1,4 +1,4 @@
-name: Validar The Chef
+name: Validar A la mesa
 on:
   push:
     branches-ignore: [main]
