@@ -8,7 +8,6 @@ import { AppShell } from '../components/AppShell';
 import { RecipeThumbnail } from '../components/RecipeThumbnail';
 import { getAllRecipes } from '../services/recipeCatalog';
 import { formatDuration } from '../utils/time';
-import '../a-la-mesa-beta.css';
 
 export function HomePage() {
   const navigate = useNavigate();
