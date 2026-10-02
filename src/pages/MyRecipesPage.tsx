@@ -8,6 +8,7 @@ import { Check, Clock3, Heart, Mic, MicOff, Search, Sparkles, Trash2, X } from '
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
+import { AlmPageHeader } from '../components/AlmPageHeader';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { RecipeThumbnail } from '../components/RecipeThumbnail';
 import { useApp } from '../AppContext';
@@ -128,7 +129,7 @@ export function MyRecipesPage() {
   return (
     <AppShell>
       <ChefLoadingOverlay active={isRepeating} title="Preparando tu receta" messages={['Recuperando tus preferencias…','Preparando la receta completa…','Preparando la imagen…']} />
-      <div className="simple-page-header light-header"><span className="eyebrow">TU COCINA</span><h1>Mis recetas</h1><p>{libraryRecipes.filter(r=>r.recipeKind!=='cocktail').length} recetas y {libraryRecipes.filter(r=>r.recipeKind==='cocktail').length} cócteles listos para preparar. Guarda tus favoritos y tus propias versiones.</p></div>
+      <AlmPageHeader eyebrow="TU COCINA" title="Mis recetas" subtitle={`${libraryRecipes.filter(r=>r.recipeKind!=='cocktail').length} recetas y ${libraryRecipes.filter(r=>r.recipeKind==='cocktail').length} cócteles listos para preparar. Guarda tus favoritos y tus propias versiones.`} accent="Recetas de hoy, recuerdos de siempre"/>
       <div className="page-content nav-safe recipe-library-content">
             <div className="search-box"><Search size={18} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar recetas y cócteles…" /><div className="voice-inline-actions"><button type="button" className="clear-input-button" onClick={() => { voice.stop(); setQuery(''); }} disabled={!query.trim() && !voice.isListening} aria-label="Borrar búsqueda"><X size={17} /></button><button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar búsqueda'}>{voice.isListening ? <MicOff size={18} /> : <Mic size={18} />}</button><button type="button" className="voice-confirm-button" onClick={confirmQuery} disabled={!query.trim() || voice.isListening || voice.isTranscribing} aria-label="Confirmar búsqueda"><Check size={18} /></button></div></div>
             {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
