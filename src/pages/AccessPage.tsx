@@ -118,7 +118,7 @@ export function AccessPage({ onAuthenticated }: Props) {
     return (
       <div className="entry-page">
         <section className="entry-card microphone-entry-card">
-          <div className="entry-logo"><span>THE</span><strong>CHEF</strong></div>
+          <div className="entry-brand-mark"><BrandMark/></div>
           <div className="entry-round-icon"><Mic size={34} /></div>
           <span className="entry-eyebrow">CONFIGURACIÓN INICIAL</span>
           <h1>¿Permitir el micrófono?</h1>
