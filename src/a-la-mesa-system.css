@@ -181,3 +181,28 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
 .social-share-preview{border-radius:18px!important;border:1px solid rgba(15,61,46,.09)!important;background:#f5f1e8!important}
 .voice-status.error,.recipe-revision-error,.dish-evaluation-error{border-radius:14px!important;background:#fae3dc!important;color:#8f3725!important;border:1px solid rgba(185,67,47,.14)!important}
 .voice-status.listening,.visual-status{border-radius:14px!important;background:var(--alm-green-soft)!important;color:var(--alm-green)!important}
+
+/* Legacy-class normalization: all active secondary screens inherit the official system */
+.library-type-tabs button,.dish-category-row button,.technique-guide footer button,.techniques-library>input,.techniques-library>select,.technique-filter-row select,
+.entry-input,.registration-avatar-grid button,.recipe-panel-header button,.panel-advice p,.recipe-revision-input textarea,
+.pantry-source-tabs button,.pantry-ingredient-grid button,.pantry-review-row input:not([type=checkbox]),.pantry-photo-review select,
+.visual-voice-actions button,.visual-multiselect input:not([type=checkbox]),.visual-option-enable,
+.step-timer-trigger,.step-timer-panel,.step-timer-inputs input,.step-timer-actions button,.social-share-dialog,.social-caption textarea,
+.tips-filter-label select,.tips-intro input{
+  border-color:rgba(15,61,46,.11)!important;background:var(--alm-paper)!important;color:var(--alm-green)!important;
+}
+.library-type-tabs button,.pantry-source-tabs button,.pantry-ingredient-grid button,.visual-option-enable,.step-timer-trigger,.step-timer-actions button{box-shadow:none!important}
+.library-type-tabs button,.pantry-source-tabs button,.pantry-ingredient-grid button{border-radius:16px!important}
+.pantry-source-tabs button[aria-pressed=true],.pantry-ingredient-grid button[aria-pressed=true]{background:var(--alm-green)!important;color:#fff!important;border-color:var(--alm-green)!important}
+.pantry-photo-actions label{border-color:rgba(15,61,46,.18)!important;background:var(--alm-olive-soft)!important;color:var(--alm-green)!important}
+.pantry-selection-summary,.pantry-photo-review h2,.pantry-photo-review>label,.visual-option-title,.registration-avatar-picker summary{color:var(--alm-green)!important}
+.pantry-review-row input[type=checkbox],.visual-multiselect input[type=checkbox],.tutorial-welcome-check input{accent-color:var(--alm-green)!important}
+.visual-voice-actions .confirm-request,.revision-confirm-button{background:var(--alm-green)!important;color:#fff!important;border-color:var(--alm-green)!important}
+.recipe-expand-panel summary{color:var(--alm-green)!important}.recipe-expand-panel[open] summary,.panel-intro,.recipe-revision-launch{background:var(--alm-olive-soft)!important;color:var(--alm-green)!important}
+.whatsapp-share-button{background:var(--alm-green)!important;border-color:var(--alm-green)!important}
+.entry-round-icon,.notices-empty span{background:var(--alm-green-soft)!important;color:var(--alm-green)!important}
+.entry-input button{color:var(--alm-green)!important}.registration-avatar-grid button[aria-pressed=true]{border-color:var(--alm-green)!important;background:var(--alm-green-soft)!important}
+.step-timer-panel{border-radius:20px!important;box-shadow:var(--alm-shadow-sm)!important}.step-timer-trigger{border-radius:18px!important}
+.step-timer-actions button:first-child{background:var(--alm-green)!important;color:#fff!important}
+.global-timer{border:1px solid rgba(15,61,46,.18)!important;border-radius:18px!important;background:var(--alm-paper)!important;color:var(--alm-green)!important;box-shadow:var(--alm-shadow-lg)!important}
+.social-share-dialog{background:var(--alm-paper)!important;color:var(--alm-ink)!important}
