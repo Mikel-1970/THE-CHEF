@@ -160,3 +160,10 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
 .alm-derived-header .eyebrow{display:block;margin-bottom:4px}.alm-derived-header h1{margin:0;font:800 clamp(2rem,8.5vw,3.1rem)/.98 var(--alm-font-display);color:var(--alm-green)}
 .alm-derived-header p{margin:7px 0 0;max-width:36rem;color:var(--alm-muted);font-size:.88rem;line-height:1.45}
 @media(max-width:390px){.alm-derived-header{padding-left:14px;padding-right:14px}.alm-derived-brand-row{grid-template-columns:94px 1fr;padding-right:58px}.alm-derived-brand-row .brand-mark{width:92px}.alm-derived-brand-row .alm-hand{font-size:.8rem}}
+
+/* Utility / entry refinements */
+.entry-brand-mark{width:min(280px,82vw);margin:0 auto 14px}.entry-brand-mark .brand-mark{width:100%}
+.settings-master-action{display:flex;justify-content:flex-end;margin:0 0 12px}.settings-master-action .settings-save{min-height:44px;border:0;border-radius:16px;padding:0 14px;display:inline-flex;align-items:center;gap:8px;background:var(--alm-terracotta)!important;color:#fff!important;font-weight:750}
+.settings-card{padding:16px!important}.settings-card+.settings-card,.control-card+.settings-card,.settings-card+.control-card{margin-top:10px!important}
+.settings-card-title{color:var(--alm-green)!important}.settings-profile-heading strong{font:700 1.2rem var(--alm-font-display);color:var(--alm-green)}
+.notices-empty{border:1px solid rgba(15,61,46,.08)!important;border-radius:20px!important;background:linear-gradient(145deg,#fffdf8,#f1f2e8)!important;box-shadow:var(--alm-shadow-sm)!important}
