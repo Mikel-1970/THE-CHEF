@@ -206,3 +206,16 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
 .step-timer-actions button:first-child{background:var(--alm-green)!important;color:#fff!important}
 .global-timer{border:1px solid rgba(15,61,46,.18)!important;border-radius:18px!important;background:var(--alm-paper)!important;color:var(--alm-green)!important;box-shadow:var(--alm-shadow-lg)!important}
 .social-share-dialog{background:var(--alm-paper)!important;color:var(--alm-ink)!important}
+
+/* Master top-row alignment: back, centered mark and avatar share the same visual band */
+.alm-derived-header{margin-top:-66px;padding-top:4px!important}
+.alm-derived-brand-row .alm-hand{right:70px!important;max-width:112px!important}
+.alm-recipe-top{margin-top:-66px}
+.cook-header{margin-top:-66px!important;padding-right:74px!important}
+@media(max-width:390px){
+  .alm-derived-header{margin-top:-62px}
+  .alm-derived-brand-row .alm-hand{right:58px!important;max-width:92px!important;font-size:.68rem!important}
+  .alm-recipe-top{margin-top:-62px}
+  .cook-header{margin-top:-62px!important;padding-right:65px!important}
+  .cook-header>.alm-hand{display:none}
+}
