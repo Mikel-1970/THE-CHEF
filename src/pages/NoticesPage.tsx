@@ -1,12 +1,12 @@
 import { Bell, CheckCircle2 } from 'lucide-react';
 import { AppShell } from '../components/AppShell';
-import { TopBar } from '../components/TopBar';
+import { AlmPageHeader } from '../components/AlmPageHeader';
 import '../notices.css';
 
 export function NoticesPage() {
   return (
     <AppShell>
-      <TopBar eyebrow="TU ACTIVIDAD" title="Avisos" />
+      <AlmPageHeader eyebrow="TU ACTIVIDAD" title="Avisos" subtitle="Recordatorios y novedades relacionadas con tu cocina." accent="Todo al día, sin complicaciones"/>
       <main className="page-content nav-safe">
         <section className="editorial-card olive-intro notices-intro">
           <Bell size={28} strokeWidth={1.7} />
