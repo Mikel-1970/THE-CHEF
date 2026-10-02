@@ -6,7 +6,7 @@ import { StepTimer } from '../components/StepTimer';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { TechniqueThumbnail } from '../components/TechniqueThumbnail';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { TopBar } from '../components/TopBar';
+import { AlmPageHeader } from '../components/AlmPageHeader';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { getTechniqueLibrary, removeTechnique, saveTechnique } from '../services/techniqueCatalog';
 import { generateTechnique, type Technique } from '../services/techniqueGateway';
@@ -70,7 +70,7 @@ export function TechniquesPage() {
   return (
     <AppShell onBack={back}>
       <ChefLoadingOverlay active={isGenerating} title="Preparando la técnica" messages={['Afinando la técnica…']} />
-      <TopBar eyebrow="BASE CULINARIA" title="Técnicas" />
+      <AlmPageHeader eyebrow="BASE CULINARIA" title="Técnicas" subtitle="Aprende, consulta y aplica técnicas de cocina dentro de tus recetas." accent="La técnica también se cocina"/>
       <div className="page-content nav-safe techniques-page">
         <nav className="culinary-tabs" aria-label="Técnicas y tips"><Link aria-current="page" className="active" replace to="/tecnicas">Técnicas</Link><Link replace to="/consejos">Tips</Link></nav>
         {!current&&<section className="editorial-card olive-intro"><span className="eyebrow">BIBLIOTECA DE TÉCNICAS</span><h2>{saved.length} técnicas para cocinar y aprender.</h2><p>Preparación, cortes, cocciones, salsas, panadería, pastelería y alta cocina. La misma ficha se reutiliza en recetas y en Elaboración.</p></section>}
