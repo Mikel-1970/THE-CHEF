@@ -17,7 +17,7 @@ export function TopBar({ eyebrow, title }: { eyebrow?: string; title: string; ba
       <div className="top-bar-copy">
         <BrandMark compact/>
         {visibleEyebrow && <span className="eyebrow">{visibleEyebrow}</span>}
-        <h1>{visibleTitle}</h1>
+        {visibleTitle.trim() && <h1>{visibleTitle}</h1>}
       </div>
       <span className="icon-spacer" />
     </header>
