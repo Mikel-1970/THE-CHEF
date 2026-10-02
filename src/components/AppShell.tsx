@@ -28,7 +28,7 @@ export function AppShell({children,hideProfile=false,hideBack=false,onBack}: {ch
   <div className="ambient ambient-one"/><div className="ambient ambient-two"/><div className="grain"/>
   <main className="phone-shell without-bottom-nav">{children}</main>
   {createPortal(<div className="chef-navigation">
-   {!hideBack&&location.pathname!=='/'&&<button className="chef-nav-control chef-back" aria-label="Volver" onClick={back}><ArrowLeft size={23}/></button>}
+   {!hideBack&&location.pathname!=='/'&&<button className="chef-nav-control chef-back" aria-label="Volver" onClick={back}><ArrowLeft size={21}/><span>Volver</span></button>}
    {!hideProfile&&<button ref={button} className="chef-draggable-avatar" aria-label={open?'Cerrar menú':'Abrir menú'} aria-expanded={open} aria-controls="chef-navigation-panel" title="Tu menú" onClick={()=>setOpen(v=>!v)}><ChefAvatar avatar={settings.avatarEmoji} size={54} showHat={false}/></button>}
    {open&&<><button className="chef-menu-backdrop" aria-label="Cerrar navegación" onClick={()=>setOpen(false)}/><nav id="chef-navigation-panel" className="chef-navigation-panel" aria-label="Menú de navegación"><div className="chef-menu-heading"><strong>Tu cocina</strong><button aria-label="Cerrar menú de navegación" onClick={()=>{setOpen(false);button.current?.focus()}}><X size={20}/></button></div><div className="chef-menu-grid">{items.map(([path,label,Icon])=><button key={path} aria-label={label} onClick={()=>go(path)}><Icon size={23}/><span>{label}</span></button>)}</div></nav></>}
   </div>,document.body)}
