@@ -66,8 +66,8 @@ test('recipe uses real technique cards and returns to the same recipe',async({pa
 test('optional manual timer and cooking step survive technique round trip',async({page},info)=>{
  await page.goto('./#/cocinar/arroz-pollo-calabacin?servings=2');
  const backBox=await page.locator('.cook-return-recipe').boundingBox();
- const titleBox=await page.locator('.cook-header>div').boundingBox();
- expect(backBox!.y+backBox!.height).toBeLessThanOrEqual(titleBox!.y);
+ const brandBox=await page.locator('.cook-header>.brand-mark').boundingBox();
+ expect(backBox!.x+backBox!.width).toBeLessThanOrEqual(brandBox!.x);
  await expect(page.getByRole('button',{name:'Volver',exact:true})).toHaveCount(0);
  await page.getByRole('button',{name:'Abrir temporizador',exact:true}).click();
  await expect(page.getByLabel('Minutos del temporizador')).toBeVisible();
