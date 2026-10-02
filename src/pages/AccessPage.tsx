@@ -1,5 +1,6 @@
 import { AvatarPicker } from '../components/AvatarPicker';
 import { WelcomeSplash } from '../components/WelcomeSplash';
+import { BrandMark } from '../components/BrandMark';
 import { Eye, EyeOff, KeyRound, LockKeyhole, Mic, UserRound } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
 import { useApp } from '../AppContext';
