@@ -47,7 +47,7 @@ test('empty request asks for cuisine without calling AI',async({page})=>{let ext
 test('chef choice opens a Peruvian library recipe for five without AI',async({page})=>{
  const external:string[]=[];await page.route('**/*',r=>{const url=new URL(r.request().url());if(url.hostname==='127.0.0.1')return r.continue();external.push(url.pathname);return r.abort()});
  await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill('Cocina peruana para 5 personas');await page.getByRole('button',{name:'Confirmar petición'}).click();await expect(page.getByRole('button',{name:'Personalizar',exact:true})).toHaveCount(0);
- await page.getByRole('button',{name:'Buscar receta',exact:true}).click();await expect(page).toHaveURL(/receta\/lib-\d+\?servings=5/);await expect(page.locator('.hero-meta')).toContainText('5 comensales');await expect(page.locator('.hero-meta')).toContainText('Peruana');expect(external.filter(path=>path.includes('/recipes/')||path.includes('/chef-media/'))).toEqual([]);
+ await page.getByRole('button',{name:'Buscar receta',exact:true}).click();await expect(page).toHaveURL(/receta\/lib-\d+\?servings=5/);await expect(page.locator('.alm-recipe-servings')).toContainText('5');await expect(page.locator('.hero-meta')).toContainText('Peruana');expect(external.filter(path=>path.includes('/recipes/')||path.includes('/chef-media/'))).toEqual([]);
 });
 test('creative requests tolerate descriptive wording but preserve pork and technique',()=>{
  const request={mode:'desire' as const,generationMode:'ai' as const,servings:4,desireText:'Me apetece un solomillo de cerdo a baja temperatura con alguna salsa especial y alguna tecnica de alta cocina para el aderezo y el acompañamiento'};
