@@ -18,7 +18,7 @@ export function HomePage() {
 
   if(greet)return <WelcomeSplash greeting={`¡Hola${settings.displayName?', '+settings.displayName:''}!`} notice={notice} onComplete={mode=>{if(mode==='register'){setNotice('Tu cuenta ya está registrada. Pulsa Login para entrar.');return}sessionStorage.setItem('chef:home-greeted:v2','1');setGreet(false)}}>{null}</WelcomeSplash>;
 
-  const pantryImage=`${import.meta.env.BASE_URL}home-pantry.jpg`;
+  const pantryImage=`${import.meta.env.BASE_URL}home-pantry-traditional.jpg`;
   const photoImage=`${import.meta.env.BASE_URL}home-photo-recipe.png`;
 
   return <AppShell>
