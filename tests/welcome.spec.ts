@@ -64,7 +64,7 @@ test('manual entry opens login and registration retains permissions and tutorial
   await page.getByRole('button', { name: 'Registro', exact: true }).click();
   await expect(page.getByRole('heading', { name: '¿Permitir el micrófono?' })).toBeVisible();
   await page.getByRole('button', { name: 'Ahora no', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '¿Quieres que El Chef te enseñe la app?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '¿Quieres que ¡A la mesa! te enseñe la app?' })).toBeVisible();
   await page.getByRole('button', { name: 'Ahora no', exact: true }).click();
   await page.evaluate(() => sessionStorage.removeItem('chef:auth:session:v1'));
   await page.reload();
