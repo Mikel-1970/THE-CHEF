@@ -15,7 +15,7 @@ ok('Navegación principal desde avatar',shell.includes('chef-draggable-avatar')&
 ok('Receta directa sin pantalla de propuesta',pantry.includes('generateDirectRecipe')&&read('src/pages/DesirePage.tsx').includes('generateDirectRecipe')&&hybrid.includes('PROPOSAL_COUNT=1')&&!results.includes('ProposalCard'));
 ok('Tiempo máximo 120',read('src/components/CookingOptions.tsx').includes('max={120}')&&directRecipe.includes('recipe.prepMinutes+recipe.cookMinutes>request.maxMinutes'));
 ok('Recipe sin panel elaboración duplicado',!recipe.includes("'elaboration'"));
-ok('CTA Elaboración',recipe.includes('> Elaboración</button>'));
+ok('CTA Elaboración',recipe.includes('Ver elaboración')&&recipe.includes('Paso a paso de la receta'));
 ok('Ficha foto-título-resumen-nutrición',recipe.indexOf('recipe-hero')<recipe.indexOf('recipe-title-block')&&recipe.indexOf('recipe-title-block')<recipe.indexOf('recipe-summary-content')&&recipe.indexOf('recipe-summary-content')<recipe.indexOf('nutrition-card nutrition-card-priority'));
 ok('Imagen preparada antes de abrir ficha',directRecipe.includes('await getRecipeImage(recipe)')&&read('src/pages/DesirePage.tsx').includes('navigate(`/receta/${result.recipe.id}?servings=${request.servings}`)'));
 ok('Reintento de imagen sin regenerar receta',directRecipe.includes('getRecipeImage(recipe).catch')&&recipe.includes('Reintentar imagen'));
