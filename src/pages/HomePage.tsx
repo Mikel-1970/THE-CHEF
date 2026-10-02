@@ -24,7 +24,7 @@ export function HomePage() {
   return <AppShell>
     <section className="alm-home">
       <header className="alm-home-brand">
-        <BrandMark/>
+        <div className="alm-home-logo-row"><BrandMark/><span className="alm-home-note alm-hand">Buenas recetas,<br/>mejores momentos ♡</span></div>
         <p className="alm-kicker">Tu cocina, siempre contigo</p>
         <h1>¿Qué comemos hoy?</h1>
         <p className="alm-subtitle">Busca, aprovecha lo que tienes o convierte una foto o vídeo en una receta.</p>
@@ -68,6 +68,7 @@ export function HomePage() {
           </article>)}
         </div>
       </section>
+      <footer className="alm-home-footer"><span className="alm-hand">Cocinar bien también es vivir mejor ♡</span><span className="alm-hand">¡A la buena mesa, mejores historias! ♡</span></footer>
     </section>
   </AppShell>;
 }
