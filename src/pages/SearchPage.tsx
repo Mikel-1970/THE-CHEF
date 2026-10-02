@@ -9,6 +9,7 @@ import {recipeViolatesRestrictions} from '../services/restrictionGuard';
 import {generateDirectRecipe} from '../services/directRecipeGateway';
 import '../my-recipes.css';
 import { AppShell } from '../components/AppShell';
+import { AlmPageHeader } from '../components/AlmPageHeader';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import type { Difficulty } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
@@ -86,7 +87,7 @@ export function SearchPage() {
   return (
     <AppShell>
       <ChefLoadingOverlay active={isSearchingExternal||generating} title={generating?"Creando tu receta":"Buscando recetas"} messages={['¡Oído cocina!', 'Buscando nuevas recetas…', 'Revisando opciones…', 'Comprobando resultados…']} />
-      <div className="simple-page-header light-header"><span className="eyebrow">BUSCAR RECETAS</span><h1>Encuentra un plato</h1><p>Busca por nombre, ingrediente, estilo o tipo de cocina.</p></div>
+      <AlmPageHeader eyebrow="BUSCAR RECETAS" title="Encuentra un plato" subtitle="Busca por nombre, ingrediente, estilo o tipo de cocina." accent="Ideas hoy, mejores recetas mañana"/>
       <div className="page-content nav-safe">
         <div className="search-box">
           <Search size={18} />
