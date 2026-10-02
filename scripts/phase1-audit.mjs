@@ -54,4 +54,16 @@ ok('Picante sin aplicar por defecto',options.includes('spiceLevel:previous?.spic
 ok('Fallback conserva intención culinaria',hybrid.includes('proposalMatchesDesireIntent')&&mock.includes('recipeMatchesDesireIntent')&&intent.includes('No se mostrará otra receta')===false&&intent.includes('foodTextMatches(candidateText,query)'));
 ok('Ingredientes empiezan en estado neutro',recipe.includes('Ningún ingrediente se marca automáticamente')&&!recipe.includes('isDefaultWater')&&!recipe.includes('ingredientNamesMatch')&&recipe.includes("status:'have'|'missing'|'neutral'"));
 
+
+const mainTs=read('src/main.tsx'),pantryPage=read('src/pages/PantryPage.tsx'),shoppingPage=read('src/pages/ShoppingListPage.tsx'),myRecipes=read('src/pages/MyRecipesPage.tsx'),searchPage=read('src/pages/SearchPage.tsx'),techniquesPage=read('src/pages/TechniquesPage.tsx'),settingsPage=read('src/pages/SettingsPage.tsx'),tutorialPage=read('src/pages/TutorialPage.tsx'),accessPage=read('src/pages/AccessPage.tsx'),tutorialWelcome=read('src/pages/TutorialWelcomePage.tsx'),designSystem=read('src/a-la-mesa-system.css');
+ok('UI oficial sustituye beta stylesheet',mainTs.includes("import './a-la-mesa-system.css'")&&!mainTs.includes("a-la-mesa-beta.css"));
+ok('Design System fija tres roles tipograficos',designSystem.includes('--alm-font-display')&&designSystem.includes('--alm-font-body')&&designSystem.includes('--alm-font-hand'));
+ok('Home aplica patron maestro',home.includes('alm-primary-actions')&&home.includes('alm-daily-strip')&&home.includes('alm-home-footer')&&home.includes('home-pantry-traditional.jpg'));
+ok('Despensa y compra comparten patron maestro',pantryPage.includes('alm-segmented')&&shoppingPage.includes('alm-segmented')&&pantryPage.includes('alm-shopping-preview'));
+ok('Foto Video aplica patron maestro',photo.includes('AlmPageHeader')&&photo.includes('alm-photo-identification-grid')&&photo.includes('alm-draft-summary'));
+ok('Ficha aplica patron maestro',recipe.includes('alm-recipe-metrics')&&recipe.includes('alm-recipe-servings')&&recipe.includes('Ver elaboración'));
+ok('Modo cocina aplica patron maestro',cook.includes('alm-cook-recipe-card')&&cook.includes('alm-cook-tabs')&&cook.includes('alm-cook-step-image'));
+ok('Pantallas derivadas usan cabecera editorial',myRecipes.includes('AlmPageHeader')&&searchPage.includes('AlmPageHeader')&&techniquesPage.includes('AlmPageHeader')&&settingsPage.includes('AlmPageHeader')&&tutorialPage.includes('AlmPageHeader'));
+ok('Acceso y tutorial usan marca A la mesa',accessPage.includes('<BrandMark')&&tutorialWelcome.includes('<BrandMark')&&!tutorialWelcome.includes('THE</span><strong>CHEF'));
+
 const failed=checks.filter(c=>!c.condition);for(const c of checks)console.log(`${c.condition?'✓':'✗'} ${c.name}`);if(failed.length){console.error(`\n${failed.length} comprobaciones fallidas.`);process.exit(1)}console.log(`\n${checks.length} comprobaciones de Fase 1 superadas.`);
