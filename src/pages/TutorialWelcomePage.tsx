@@ -1,4 +1,5 @@
 import { ChefHat } from 'lucide-react';
+import { BrandMark } from '../components/BrandMark';
 import { useState } from 'react';
 import { requestGuidedTourReplay } from '../components/GuidedTour';
 import '../entry-flow.css';
