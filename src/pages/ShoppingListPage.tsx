@@ -3,7 +3,7 @@ import { ArrowLeft, Check, Circle, Mic, MicOff, PackageOpen, Share2, ShoppingBas
 import { FormEvent, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
-import { TopBar } from '../components/TopBar';
+import { AlmPageHeader } from '../components/AlmPageHeader';
 import { useApp } from '../AppContext';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { parseIngredientInput } from '../utils/ingredientInput';
@@ -43,7 +43,7 @@ export function ShoppingListPage() {
   const shareList = async () => { const text = buildShoppingShareText(shoppingList, settings.avatarEmoji); if (!shoppingList.some(item => !item.checked)) return; if (navigator.share) { try { await navigator.share({ title: 'Lista de compra · ¡A la mesa!', text }); return; } catch (error) { if (error instanceof DOMException && error.name === 'AbortError') return; } } await navigator.clipboard?.writeText(text); window.alert('Lista copiada. Ya puedes pegarla donde quieras.'); };
 
   return <AppShell>
-    <TopBar eyebrow="ORGANIZA TU COCINA" title="Despensa y lista de la compra"/>
+    <AlmPageHeader eyebrow="ORGANIZA TU COCINA" title="Despensa y lista de la compra" subtitle="Organiza lo que tienes y lo que necesitas para seguir cocinando grandes recetas." accent="Todo lo que necesitas, a un toque"/>
     <div className="page-content nav-safe shopping-grouped-page">
       <div className="alm-segmented" role="tablist" aria-label="Despensa y lista de la compra"><button role="tab" aria-selected="false" onClick={()=>navigate('/inventario')}><PackageOpen size={18}/>Despensa</button><button className="active" role="tab" aria-selected="true"><ShoppingBasket size={18}/>Lista de la compra</button></div>
       <section className="editorial-card olive-intro"><ShoppingBasket size={24}/><h2>Lista de la compra</h2><p>Organiza lo que necesitas y añade productos desde tus recetas o manualmente.</p></section>
