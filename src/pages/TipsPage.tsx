@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
-import { TopBar } from '../components/TopBar';
+import { AlmPageHeader } from '../components/AlmPageHeader';
 import { cookingTips, getTipReviews, setTipReview } from '../data/cookingTips';
 import { queueTipReview, synchronizeCulinaryCatalog } from '../services/culinarySync';
 import '../tips.css';
@@ -64,7 +64,7 @@ export function TipsPage(){
  },[filtered]);
 
  return <AppShell onBack={()=>navigate('/tecnicas',{replace:true})}>
-  <TopBar title="Tips de cocina"/>
+  <AlmPageHeader eyebrow="CONSEJOS ÚTILES" title="Tips de cocina" subtitle="Ideas prácticas para cocinar mejor, resolver dudas y sacar más partido a cada receta." accent="Pequeños trucos, grandes resultados"/>
   <div className="page-content nav-safe tips-page">
    <nav className="culinary-tabs" aria-label="Técnicas y tips"><Link replace to="/tecnicas">Técnicas</Link><Link aria-current="page" replace className="active" to="/consejos">Tips</Link></nav>
    <section className="editorial-card tips-intro">
