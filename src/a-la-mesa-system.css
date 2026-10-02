@@ -137,3 +137,8 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
 .alm-cook-step-image img{width:100%;height:245px;display:block;object-fit:cover}.alm-cook-step-placeholder{height:245px;display:grid;place-items:center;font-size:4rem}
 .alm-cook-step-image>.alm-hand{position:absolute;left:14px;bottom:14px;max-width:135px;padding:6px 9px;border-radius:10px;background:rgba(255,253,248,.86);color:var(--alm-green);font-size:.95rem;box-shadow:var(--alm-shadow-sm)}
 @media(max-width:390px){.cook-header{grid-template-columns:auto 88px 1fr!important}.cook-header>.alm-hand{font-size:.78rem}.alm-cook-recipe-card{grid-template-columns:40% 1fr}.alm-cook-recipe-card>img,.alm-cook-card-placeholder{height:96px}.alm-cook-recipe-card strong{font-size:1rem}}
+
+.alm-home-logo-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(95px,135px);align-items:start;gap:10px}
+.alm-home-logo-row .brand-mark{width:min(100%,305px)!important;margin:0!important}.alm-home-note{font-size:1rem;line-height:.95;text-align:right;justify-self:end;margin-top:8px}
+.alm-home-footer{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-top:12px;padding:10px 8px 0}.alm-home-footer .alm-hand{font-size:.92rem;max-width:44%}.alm-home-footer .alm-hand:last-child{text-align:right}
+@media(max-width:390px){.alm-home-logo-row{grid-template-columns:minmax(0,1fr) 104px}.alm-home-note{font-size:.86rem}.alm-home-footer .alm-hand{font-size:.8rem}}
