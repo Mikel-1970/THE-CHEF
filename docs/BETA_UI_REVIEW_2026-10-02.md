@@ -139,3 +139,29 @@ No basta con CI verde ni con una preview funcional. El siguiente gate exige:
 - validación en iPhone / Android / PC.
 
 La preview del commit `9474590...` sigue siendo útil como baseline funcional, pero **queda rechazada como baseline visual final**.
+
+
+## 9. Estado tras remediación en rama UI
+
+**Rama de remediación:** `ui/a-la-mesa-final-2026-10-02`
+
+Se ha ejecutado la remediación de los P0/P1 identificados en esta review:
+
+- `src/a-la-mesa-system.css`: Design System oficial y normalización de clases activas.
+- `AlmPageHeader`: cabecera editorial común para pantallas derivadas.
+- Home: patrón maestro, imagen de despensa tradicional, carrusel y acentos editoriales.
+- Despensa/Compra: selector común, inventario y preview de compra bajo el mismo lenguaje.
+- Foto/Video: jerarquía, identificación visual y “Tu receta lista”.
+- Ficha: marca, acciones, métricas, raciones, módulos y CTA maestro.
+- Paso a paso: resumen de receta, tabs, progreso, hero de paso, facts, temporizador y navegación.
+- Derivadas: Mis recetas, Favoritos/Historial, Búsqueda, Técnicas, Tips, Ajustes, Tutorial, Importar, Avisos, Deseo, Despensa y Compra usan el sistema compartido.
+- Acceso, bienvenida, tour, loading, modales, errores y estados vacíos se han normalizado.
+- Se han añadido checks automáticos que bloquean regresiones de los cinco patrones.
+
+### Nueva clasificación
+
+No se eleva todavía ninguna pantalla a **CONFORME** por documentación o inspección de código. Todas pasan a:
+
+**CANDIDATA IMPLEMENTADA · PENDIENTE DE VALIDACIÓN VISUAL EN PREVIEW**
+
+La validación final debe realizarse sobre el deployment privado real y comparar visualmente con los cinco mockups maestros. Cualquier divergencia observable se corregirá antes del freeze F2.6.
