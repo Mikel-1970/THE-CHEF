@@ -1,5 +1,5 @@
 import {isCountUnit} from '../utils/shoppingQuantity';
-import { ArrowLeft, Check, Circle, Mic, MicOff, Share2, ShoppingBasket, Sparkles, Trash2, X } from 'lucide-react';
+import { ArrowLeft, Check, Circle, Mic, MicOff, PackageOpen, Share2, ShoppingBasket, Sparkles, Trash2, X } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
@@ -45,7 +45,7 @@ export function ShoppingListPage() {
   return <AppShell>
     <TopBar eyebrow="ORGANIZA TU COCINA" title="Despensa y lista de la compra"/>
     <div className="page-content nav-safe shopping-grouped-page">
-      <div className="alm-segmented" role="tablist" aria-label="Despensa y lista de la compra"><button role="tab" aria-selected="false" onClick={()=>navigate('/inventario')}><ShoppingBasket size={18}/>Despensa</button><button className="active" role="tab" aria-selected="true"><ShoppingBasket size={18}/>Lista de la compra</button></div>
+      <div className="alm-segmented" role="tablist" aria-label="Despensa y lista de la compra"><button role="tab" aria-selected="false" onClick={()=>navigate('/inventario')}><PackageOpen size={18}/>Despensa</button><button className="active" role="tab" aria-selected="true"><ShoppingBasket size={18}/>Lista de la compra</button></div>
       <section className="editorial-card olive-intro"><ShoppingBasket size={24}/><h2>Lista de la compra</h2><p>Organiza lo que necesitas y añade productos desde tus recetas o manualmente.</p></section>
       {originRecipeId && <button className="secondary-button return-to-recipe" type="button" onClick={() => navigate(`/receta/${originRecipeId}`)}><ArrowLeft size={17} /> Volver a la receta</button>}
       <section className="form-section"><div className="section-label"><span>Añadir productos</span><small>Texto o voz</small></div><form className="ingredient-input pantry-add-input" onSubmit={addItems}><input value={draft} onChange={event => setDraft(event.target.value)} placeholder="Ej. 2 kg patatas, 1 l leche…" /><button type="button" className="clear-input-button" onClick={() => { voice.stop(); setDraft(''); }} disabled={!draft.trim() && !voice.isListening} aria-label="Borrar"><X size={18} /></button><button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar compra'}>{voice.isListening ? <MicOff size={19} /> : <Mic size={19} />}</button><button type="submit" className="voice-confirm-button" disabled={!draft.trim() || voice.isListening || voice.isTranscribing} aria-label="Añadir a la lista"><Check size={19} /></button></form>{voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando la compra…</div>}{voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando productos y cantidades…</div>}{voice.error && <div className="voice-status error">{voice.error}</div>}</section>
