@@ -7,7 +7,7 @@ import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { cookingRequestOptions, useCookingOptions } from '../components/CookingOptions';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { TopBar } from '../components/TopBar';
+import { AlmPageHeader } from '../components/AlmPageHeader';
 import type { CookingRequest, IngredientInput, StockLocation } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { generateDirectRecipe } from '../services/directRecipeGateway';
@@ -61,7 +61,7 @@ export function PantryCookPage() {
   catch(e){setError(e instanceof Error?e.message:'No se ha podido preparar la receta.')}
   finally{setSearching(false)}
  };
- return <AppShell><ChefLoadingOverlay active={searching} title="Preparando tu receta" messages={['Cocinando con lo que tienes…','Preparando la receta completa…','Revisando cantidades y elaboración…','Preparando la imagen…']}/><TopBar title="Abre la despensa"/>
+ return <AppShell><ChefLoadingOverlay active={searching} title="Preparando tu receta" messages={['Cocinando con lo que tienes…','Preparando la receta completa…','Revisando cantidades y elaboración…','Preparando la imagen…']}/><AlmPageHeader eyebrow="COCINA CON LO QUE TIENES" title="Abre la despensa" subtitle="Elige tus ingredientes y te proponemos qué cocinar aprovechando lo que ya tienes." accent="Lo bueno también se cocina con lo que tienes"/>
   <div className="page-content pantry-cook-visual">
    <p className="visual-hint">Elige los ingredientes con los que quieres cocinar.</p>
    <div className="pantry-source-tabs" aria-label="Ver inventario">
