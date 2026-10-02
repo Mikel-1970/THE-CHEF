@@ -15,8 +15,8 @@ export function WelcomeSplash({ children, avatar, greeting, onComplete, onChoose
       <FoodCollage/><div className="welcome-content">
         <div className="welcome-brand"><BrandMark/></div>
         <div className="welcome-character"><ChefAvatar avatar={avatar ?? settings.avatarEmoji} size={220} showHat={false} /></div>
-        <h1 key={greeting}>{greeting || '¿Qué cocinamos hoy?'}</h1>
-        <p className="welcome-tagline">Tu cocina empieza aquí</p>
+        <h1 key={greeting}>{greeting || '¿Qué comemos hoy?'}</h1>
+        <p className="welcome-tagline">Buenas recetas, mejores momentos</p>
         {!ready && <div className="welcome-entry-actions"><button className="entry-secondary" type="button" onClick={()=>choose('register')}>Regístrate</button><button className="entry-primary" type="button" onClick={()=>choose('login')}>Login</button></div>}
         {notice&&<p role="status" className="welcome-notice">{notice}</p>}
         <div className="welcome-fields" hidden={!ready}>{children}</div>
