@@ -142,3 +142,7 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
 .alm-home-logo-row .brand-mark{width:min(100%,305px)!important;margin:0!important}.alm-home-note{font-size:1rem;line-height:.95;text-align:right;justify-self:end;margin-top:8px}
 .alm-home-footer{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-top:12px;padding:10px 8px 0}.alm-home-footer .alm-hand{font-size:.92rem;max-width:44%}.alm-home-footer .alm-hand:last-child{text-align:right}
 @media(max-width:390px){.alm-home-logo-row{grid-template-columns:minmax(0,1fr) 104px}.alm-home-note{font-size:.86rem}.alm-home-footer .alm-hand{font-size:.8rem}}
+
+.alm-shopping-preview .alm-section-heading{margin-bottom:10px}.alm-shopping-preview .secondary-button{width:auto!important;min-height:38px;padding:0 12px}
+.alm-shopping-preview-row{grid-template-columns:28px minmax(0,1fr) 24px!important}.alm-shopping-check{width:20px;height:20px;border:1.5px solid rgba(15,61,46,.35);border-radius:5px}
+.alm-shopping-preview-row>svg{color:var(--alm-green)}
