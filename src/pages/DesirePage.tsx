@@ -8,7 +8,7 @@ import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { TopBar } from '../components/TopBar';
+import { AlmPageHeader } from '../components/AlmPageHeader';
 import type { CookingRequest } from '../domain/types';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { generateDirectRecipe } from '../services/directRecipeGateway';
@@ -38,7 +38,7 @@ export function DesirePage() {
   finally{setBusy(false)}
  };
  return <AppShell><ChefLoadingOverlay progress={generationPhase} active={busy} title={usingAi?"Creando tu receta con IA":"Buscando en la biblioteca"} messages={['Eligiendo el plato que mejor encaja…','Preparando la receta completa…','Revisando cantidades y elaboración…','Preparando la imagen…']}/>
-  <TopBar title="¿Qué quieres cocinar?"/>
+  <AlmPageHeader eyebrow="INSPÍRAME" title="¿Qué quieres cocinar?" subtitle="Dinos qué te apetece y buscamos primero en la biblioteca; si quieres, la IA crea una receta nueva." accent="Ideas, ingredientes, inspiración"/>
   <div className="page-content desire-visual">
    <p className="visual-hint">Dile al chef qué quieres cocinar o qué ingredientes tienes para preparar un plato especial. Primero buscamos en la biblioteca; tú decides si quieres usar IA.</p>
    <div className={`visual-request ${confirmed?'confirmed':''}`}>
