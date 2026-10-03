@@ -634,7 +634,7 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
 .recipe-content.nav-safe{
   display:grid!important;
   grid-template-columns:minmax(0,1.3fr) minmax(120px,.7fr)!important;
-  gap:10px!important;
+  gap:16px!important;
   padding-top:10px!important;
 }
 .recipe-content.nav-safe>*{min-width:0}
@@ -740,7 +740,7 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
 @media(max-width:390px){
   .alm-derived-header h1{max-width:94%;font-size:1.95rem!important}
   .library-photo-grid,.technique-photo-grid{gap:8px!important}
-  .recipe-content.nav-safe{grid-template-columns:minmax(0,1.18fr) minmax(112px,.82fr)!important;gap:8px!important}
+  .recipe-content.nav-safe{grid-template-columns:minmax(0,1.18fr) minmax(112px,.82fr)!important;gap:16px!important}
   .recipe-complete-photo,.recipe-complete-photo img{min-height:245px!important}
   .alm-recipe-metrics strong{font-size:.7rem!important}
   .recipe-action-grid button{min-height:88px!important;padding:10px!important;grid-template-columns:36px 1fr!important}
