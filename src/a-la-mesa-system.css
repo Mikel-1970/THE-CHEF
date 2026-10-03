@@ -407,3 +407,18 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
   .alm-standard-cta-content>small{font-size:.72rem!important}
   .alm-standard-cta-arrow{right:14px!important;bottom:26px!important;width:42px!important;height:42px!important}
 }
+
+/* Home hero brightness pass — 04/10/2026 */
+.alm-standard-cta-bg{
+  filter:brightness(1.20) saturate(1.04) contrast(.96)!important;
+}
+.alm-standard-cta-overlay{
+  background:
+    linear-gradient(90deg,rgba(8,38,28,.67) 0%,rgba(8,38,28,.48) 54%,rgba(8,38,28,.18) 100%),
+    linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.12))!important;
+}
+.alm-standard-cta-content>strong,
+.alm-standard-cta-content>small,
+.alm-standard-brand-row .alm-hand{
+  text-shadow:0 2px 10px rgba(0,0,0,.38)!important;
+}
