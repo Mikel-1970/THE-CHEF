@@ -750,3 +750,50 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
   .alm-recipe-servings small{display:none}
   .nutrition-card-priority{padding:10px!important}
 }
+
+/* RECIPE MASTER FINISH — 04/10/2026 */
+.recipe-complete-photo{position:relative!important}
+.recipe-complete-photo::before{
+  content:'Cocina lo auténtico,\A disfruta el momento ♡';
+  white-space:pre-line;
+  position:absolute;z-index:2;left:14px;top:14px;
+  max-width:126px;padding:7px 9px;border-radius:10px;
+  background:rgba(255,253,248,.78);
+  color:var(--alm-green);
+  font:600 .92rem/.92 var(--alm-font-hand);
+  transform:rotate(-3deg);
+  box-shadow:0 5px 14px rgba(22,55,44,.10);
+}
+.recipe-complete-photo::after{
+  content:'Una buena receta,\A mejores momentos ♡';
+  white-space:pre-line;
+  position:absolute;z-index:2;right:13px;bottom:13px;
+  max-width:132px;padding:7px 9px;border-radius:9px;
+  background:rgba(255,248,231,.87);
+  color:var(--alm-green);
+  font:600 .86rem/.92 var(--alm-font-hand);
+  transform:rotate(-2deg);
+  box-shadow:0 5px 14px rgba(22,55,44,.10);
+}
+.recipe-action-grid button svg{
+  box-sizing:content-box!important;
+  padding:8px!important;
+  border-radius:50%!important;
+  background:rgba(211,84,47,.12)!important;
+  color:var(--alm-terracotta)!important;
+}
+.recipe-action-grid button:nth-child(2) svg{background:rgba(122,143,63,.15)!important;color:var(--alm-green)!important}
+.recipe-action-grid button:nth-child(3) svg{background:rgba(233,149,25,.14)!important;color:#b96b18!important}
+.recipe-action-grid button:nth-child(4) svg{background:rgba(185,67,47,.14)!important;color:var(--alm-danger)!important}
+.cook-cta::after{
+  content:'¡A la buena mesa, mejores historias! ♡';
+  display:block;margin:10px 8px 0;text-align:right;
+  color:var(--alm-green);
+  font:600 .88rem/.95 var(--alm-font-hand);
+  transform:rotate(-2deg);
+}
+@media(max-width:390px){
+ .recipe-complete-photo::before{font-size:.75rem;max-width:104px}
+ .recipe-complete-photo::after{font-size:.72rem;max-width:108px}
+ .recipe-action-grid button svg{padding:6px!important}
+}
