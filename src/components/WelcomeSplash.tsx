@@ -13,7 +13,7 @@ export function WelcomeSplash({ children, avatar, greeting, onComplete, onChoose
   return (
     <main className={`entry-page welcome-entry ${ready ? 'welcome-ready' : ''}`} aria-label="Acceso a ¡A la mesa!">
       <FoodCollage/><div className="welcome-content">
-        <div className="welcome-brand"><BrandMark/></div>
+        <div className="welcome-brand"><BrandMark variant="light"/></div>
         <div className="welcome-character"><ChefAvatar avatar={avatar ?? settings.avatarEmoji} size={220} showHat={false} /></div>
         <h1 key={greeting}>{greeting || '¿Qué comemos hoy?'}</h1>
         <p className="welcome-tagline">Buenas recetas, mejores momentos</p>
