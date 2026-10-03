@@ -274,3 +274,8 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
   .alm-daily-card{flex-basis:46%!important;min-width:145px!important}
   .alm-daily-image{height:132px!important}
 }
+
+/* Approved transparent brand asset — access/home */
+.entry-brand-mark,.welcome-brand,.reference-brand{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+.entry-brand-mark .brand-mark,.welcome-brand .brand-mark,.reference-brand .brand-mark{background:transparent!important}
+.entry-brand-mark img,.welcome-brand img,.reference-brand img{background:transparent!important}
