@@ -18,16 +18,22 @@ export function HomePage() {
 
   if(greet)return <WelcomeSplash greeting={`¡Hola${settings.displayName?', '+settings.displayName:''}!`} notice={notice} onComplete={mode=>{if(mode==='register'){setNotice('Tu cuenta ya está registrada. Pulsa Login para entrar.');return}sessionStorage.setItem('chef:home-greeted:v2','1');setGreet(false)}}>{null}</WelcomeSplash>;
 
-  const pantryImage=`${import.meta.env.BASE_URL}home-pantry-traditional.jpg`;
-  const photoImage=`${import.meta.env.BASE_URL}home-photo-recipe-master.jpg`;
+  const heroImage=`${import.meta.env.BASE_URL}home-magret.png`;
+  const pantryImage=`${import.meta.env.BASE_URL}home-pantry-v2.png`;
+  const photoImage=`${import.meta.env.BASE_URL}home-photo-recipe.png`;
 
   return <AppShell>
     <section className="alm-home">
-      <header className="alm-home-brand">
-        <div className="alm-home-logo-row"><BrandMark/><span className="alm-home-note alm-hand">Buenas recetas,<br/>mejores momentos ♡</span></div>
-        <h1>¿Qué comemos hoy?</h1>
-        <p className="alm-subtitle">Tu asistente de cocina, siempre contigo.</p>
-      </header>
+      <button className="alm-standard-cta" onClick={()=>navigate('/antojo')} aria-label="¿Qué comemos hoy? Abrir modo receta">
+        <img className="alm-standard-cta-bg" src={heroImage} alt="Plato preparado"/>
+        <span className="alm-standard-cta-overlay"/>
+        <span className="alm-standard-cta-content">
+          <span className="alm-standard-brand-row"><BrandMark variant="light"/><span className="alm-hand">Buenas recetas,<br/>mejores momentos ♡</span></span>
+          <strong>¿Qué comemos hoy?</strong>
+          <small>Tu asistente de cocina, siempre contigo.</small>
+        </span>
+        <span className="alm-standard-cta-arrow" aria-hidden="true"><ChevronRight size={24}/></span>
+      </button>
 
       <button className="alm-search" onClick={()=>navigate('/buscar')} aria-label="Buscar recetas">
         <Search size={21}/><span>Busca recetas, ingredientes, cocinas…</span>
