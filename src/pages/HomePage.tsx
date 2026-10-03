@@ -1,5 +1,5 @@
 import { BrandMark } from '../components/BrandMark';
-import { BookOpen, Camera, ChefHat, ChevronRight, Clock3, CookingPot, Heart, PackageOpen, Play, Search, ShoppingBasket } from 'lucide-react';
+import { BookOpen, Camera, ChefHat, ChevronRight, Clock3, CookingPot, Heart, PackageOpen, Play, ShoppingBasket } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { WelcomeSplash } from '../components/WelcomeSplash';
 import { useNavigate } from 'react-router-dom';
@@ -35,9 +35,6 @@ export function HomePage() {
         <span className="alm-standard-cta-arrow" aria-hidden="true"><ChevronRight size={24}/></span>
       </button>
 
-      <button className="alm-search" onClick={()=>navigate('/buscar')} aria-label="Buscar recetas">
-        <Search size={21}/><span>Busca recetas, ingredientes, cocinas…</span>
-      </button>
 
       <section className="alm-primary-actions" aria-label="Formas principales de cocinar">
         <button className="alm-action-card pantry" onClick={()=>navigate('/despensa')}>
