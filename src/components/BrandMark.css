@@ -1,19 +1,9 @@
-.brand-mark{display:flex;align-items:center;justify-content:center;max-width:100%;margin:auto}
-.alm-brand-mark{color:#113f2f}
-.alm-wordmark{position:relative;display:inline-flex;flex-direction:column;align-items:flex-start;line-height:.72;font-family:'Fraunces','Playfair Display',Georgia,serif;font-weight:800;letter-spacing:-.055em}
-.alm-line{display:flex;align-items:flex-end;white-space:nowrap}
-.alm-line-top{font-size:clamp(2rem,9vw,4.05rem);padding-right:.8em}
-.alm-line-top>span:not(.alm-cloche){font-size:.64em;margin-left:.09em;margin-bottom:.06em}
-.alm-line-bottom{font-size:clamp(2.7rem,12vw,5.5rem);margin-top:.03em}
-.alm-line b{font-weight:900}.alm-line-bottom b{color:#d94820;margin-left:.05em}
-.alm-cloche{position:absolute;right:-.02em;top:-.34em;width:.9em;height:.72em;color:#d94820}
-.alm-cloche svg{width:100%;height:100%;overflow:visible}
-.alm-cloche-lid,.alm-cloche-plate,.alm-cloche-knob{fill:currentColor}
-.alm-cloche-rim,.alm-steam,.alm-rays{fill:none;stroke:currentColor;stroke-linecap:round;stroke-width:4}
-.alm-steam{stroke-width:3.4}
-.brand-mark-compact .alm-line-top{font-size:1.25rem}.brand-mark-compact .alm-line-bottom{font-size:1.7rem}
-.welcome-logo.brand-mark{width:min(100%,390px);margin-bottom:16px}.reference-brand .brand-mark{width:min(100%,390px)}
-.brand-sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.brand-mark{display:inline-flex;align-items:center;justify-content:center;max-width:100%;margin:auto;line-height:0;background:transparent}
+.alm-brand-mark{color:inherit}
+.alm-brand-mark>img{display:block;width:100%;height:auto;max-width:100%;object-fit:contain;object-position:center;user-select:none}
+.brand-mark-compact{width:108px}
+.welcome-logo.brand-mark{width:min(100%,390px);margin-bottom:16px}
+.reference-brand .brand-mark{width:min(100%,390px)}
 .welcome-brand{width:min(100%,400px);margin:0 auto 18px;background:#fffaf2;border-radius:22px;padding:15px}
 .top-bar .brand-mark{width:92px;margin:0 auto 4px}
-[data-theme=dark] .alm-brand-mark{color:#f5efe4}
+@media(max-width:390px){.brand-mark-compact{width:92px}}
