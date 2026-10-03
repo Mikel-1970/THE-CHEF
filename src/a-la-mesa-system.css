@@ -228,3 +228,49 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
 .alm-category-scroll button{white-space:nowrap;min-height:38px;padding:0 12px;border:1px solid rgba(15,61,46,.08);border-radius:999px;background:#f1eee6;color:#596960;font-size:.68rem;font-weight:700}.alm-category-scroll button.active{background:var(--alm-green);color:#fff;border-color:var(--alm-green)}
 
 @media(max-width:420px){.cook-return-recipe span{display:none!important}.cook-return-recipe{width:44px!important;min-width:44px!important;padding:0!important;justify-content:center!important}}
+
+/* Home fidelity pass — approved master mockup 03/10/2026 */
+.alm-home-brand{padding-top:2px!important;padding-bottom:12px!important}
+.alm-home-logo-row{display:grid!important;grid-template-columns:minmax(0,1fr) 132px!important;align-items:start!important;gap:8px!important}
+.alm-home-logo-row .brand-mark{width:min(62vw,290px)!important;max-width:100%!important;margin:0!important}
+.alm-home-note{font-size:1.02rem!important;line-height:.94!important;text-align:center!important;justify-self:end!important;margin-top:18px!important;max-width:126px!important}
+.alm-home-brand h1{margin-top:8px!important}
+.alm-home-brand .alm-subtitle{margin-top:4px!important;font-size:.88rem!important;color:#64716a!important}
+.alm-kicker{display:none!important}
+
+.alm-action-card{min-height:244px!important;border-radius:22px!important}
+.alm-action-card>img{object-fit:cover!important;object-position:center!important}
+.alm-action-card.pantry>img{object-position:center 48%!important}
+.alm-action-card.photo>img{object-position:center!important}
+.alm-action-overlay{background:linear-gradient(180deg,rgba(0,0,0,0) 0 64%,rgba(12,66,47,.96) 64% 100%)!important}
+.alm-action-card.photo .alm-action-overlay{background:linear-gradient(180deg,rgba(0,0,0,0) 0 64%,rgba(205,78,40,.96) 64% 100%)!important}
+.alm-card-note{position:absolute;z-index:2;top:12px;left:12px;max-width:112px;padding:7px 8px;border-radius:10px;background:rgba(255,253,248,.78);color:var(--alm-green)!important;font-size:.92rem!important;line-height:.92!important;text-align:left!important;transform:rotate(-3deg);box-shadow:0 5px 14px rgba(22,55,44,.08)}
+.alm-action-card.photo .alm-card-note{left:13px;max-width:118px}
+.alm-media-actions{position:absolute;z-index:3;top:12px;right:12px;display:flex;gap:8px}
+.alm-media-actions>span{width:42px;height:42px;border-radius:12px;background:rgba(255,253,248,.94);display:grid;place-items:center;color:var(--alm-green);box-shadow:0 5px 14px rgba(22,55,44,.12)}
+.alm-action-copy{z-index:3!important;left:14px!important;right:54px!important;bottom:13px!important;gap:4px!important}
+.alm-action-copy strong{font-size:1.22rem!important;line-height:.98!important}.alm-action-copy small{font-size:.64rem!important;line-height:1.28!important}
+.alm-card-arrow{position:absolute;z-index:4;right:12px;bottom:18px;width:38px;height:38px;border-radius:50%;background:#fffdf8;color:var(--alm-terracotta);display:grid;place-items:center;box-shadow:0 5px 14px rgba(22,55,44,.12)}
+.alm-action-card.pantry .alm-card-arrow{color:var(--alm-terracotta)}
+.alm-media-badge{display:none!important}
+.alm-section-note{font-family:var(--alm-font-hand)!important;font-size:.82rem!important;line-height:.9!important;text-align:right!important;color:var(--alm-green)!important;white-space:normal!important;transform:rotate(-3deg)}
+
+.alm-daily-strip{gap:10px!important;padding-bottom:10px!important}
+.alm-daily-card{flex:0 0 43%!important;min-width:156px!important;border-radius:18px!important;background:#fffdf8!important}
+.alm-daily-image{height:148px!important;position:relative!important;overflow:hidden!important;background:#ece6dc!important}
+.alm-daily-image>.library-emoji,.alm-daily-image>.library-photo{display:block!important;width:100%!important;height:100%!important;min-width:100%!important;min-height:100%!important;border-radius:0!important;background:transparent!important;font-size:3rem!important}
+.alm-daily-image>.library-photo>img,.alm-daily-image .library-photo img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;border-radius:0!important}
+.alm-daily-image>button{z-index:4;width:36px!important;height:36px!important}
+.alm-daily-copy{padding:9px 10px 11px!important;gap:8px!important}.alm-daily-copy>strong{min-height:2.15em;font-size:.83rem!important;line-height:1.05!important}
+.alm-daily-meta{display:flex;justify-content:space-between;gap:6px;align-items:center}.alm-daily-meta>span{display:inline-flex;align-items:center;gap:4px;color:#596960;font-size:.58rem;white-space:nowrap}.alm-daily-meta>span svg{color:var(--alm-terracotta)}
+@media(max-width:390px){
+  .alm-home-logo-row{grid-template-columns:minmax(0,1fr) 112px!important}
+  .alm-home-logo-row .brand-mark{width:min(64vw,250px)!important}
+  .alm-home-note{font-size:.86rem!important;max-width:108px!important;margin-top:14px!important}
+  .alm-action-card{min-height:225px!important}
+  .alm-card-note{font-size:.78rem!important;max-width:96px!important}
+  .alm-media-actions>span{width:38px;height:38px}
+  .alm-action-copy strong{font-size:1.04rem!important}.alm-action-copy small{font-size:.56rem!important}
+  .alm-daily-card{flex-basis:46%!important;min-width:145px!important}
+  .alm-daily-image{height:132px!important}
+}
