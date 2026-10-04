@@ -1,3 +1,4 @@
+import { APPROVED_LOGO_DATA_URI } from '../services/brandLogo';
 import type { ShoppingListItem } from '../domain/types';
 import { formatQuantity } from './scaling';
 
@@ -26,7 +27,7 @@ export async function buildShoppingShareImage(items:ShoppingListItem[]):Promise<
  const ctx=canvas.getContext('2d');if(!ctx)return undefined;
  ctx.fillStyle='#f9f6ef';ctx.fillRect(0,0,width,height);
  ctx.fillStyle='#fffdf8';roundRect(ctx,42,42,width-84,height-84,34);ctx.fill();
- const logo=await loadImage(`${import.meta.env.BASE_URL}brand/a-la-mesa-logo.png`).catch(()=>undefined);
+ const logo=await loadImage(APPROVED_LOGO_DATA_URI).catch(()=>undefined);
  if(logo){
   const maxW=410,maxH=250,scale=Math.min(maxW/logo.naturalWidth,maxH/logo.naturalHeight);
   const w=logo.naturalWidth*scale,h=logo.naturalHeight*scale;
