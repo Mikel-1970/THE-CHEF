@@ -39,6 +39,7 @@ test('daily proposals use the visible library with matching metadata and recipe 
   expect(displayed.sort()).toEqual([...retained,curry,risotto].map(recipe=>recipe.title).sort());
   for(const recipe of [...retained,curry,risotto]){
     const card=cards.filter({has:page.locator('.alm-daily-copy strong',{hasText:recipe.title})});
+    await card.scrollIntoViewIfNeeded();
     await expect(card.locator('.alm-daily-meta')).toContainText(recipe.difficulty);
     await expect(card.locator('.alm-daily-meta')).toContainText(formatDuration(recipe.prepMinutes+recipe.cookMinutes));
     if(retained.includes(recipe)){
