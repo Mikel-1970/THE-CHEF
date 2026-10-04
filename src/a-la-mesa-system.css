@@ -797,3 +797,175 @@ h1,h2,h3,h4,.simple-page-header h1,.editorial-card h2,.recipe-page h1,.library-s
  .recipe-complete-photo::after{font-size:.72rem;max-width:108px}
  .recipe-action-grid button svg{padding:6px!important}
 }
+
+/* MOCKUP FIDELITY PASS — 04/10/2026 02:05 */
+
+/* Typography and palette are global, no legacy visual language */
+:root{
+  --alm-icon-stroke:1.9;
+}
+.chef-app-shell,.phone-shell,.page-content,.recipe-page,.cook-screen,.entry-page{
+  font-family:var(--alm-font-body)!important;
+  color:var(--alm-ink)!important;
+}
+:is(h1,h2,h3,h4,.recipe-page h1,.cook-screen h1,.section-heading-row h2,.settings-card-title,.library-photo-caption strong,.technique-photo-caption strong){
+  font-family:var(--alm-font-display)!important;
+  color:var(--alm-green)!important;
+}
+:is(.alm-hand,.alm-home-note,.alm-section-note,.alm-recipe-title-note,.cook-step-heading .alm-hand,.cook-header .alm-hand){
+  font-family:var(--alm-font-hand)!important;
+}
+
+/* Official icon family */
+.alm-icon-badge,.alm-quick-grid>button>span{
+  color:var(--alm-green)!important;
+}
+.alm-quick-grid>button:nth-child(1)>span{color:var(--alm-terracotta)!important}
+.alm-quick-grid>button:nth-child(3)>span{color:var(--alm-green)!important}
+.alm-quick-grid>button:nth-child(4)>span{color:#b85b1f!important}
+.alm-quick-grid>button:nth-child(5)>span{color:var(--alm-green)!important}
+.chef-menu-grid button svg{
+  width:27px!important;height:27px!important;color:var(--alm-green)!important;
+}
+.chef-menu-grid button:nth-child(2) svg{color:var(--alm-terracotta)!important}
+
+/* Nutrition card: same light card as the master mockup and legible values */
+.nutrition-card-priority{
+  color:var(--alm-green)!important;
+  background:#fffdf8!important;
+  border:1px solid rgba(15,61,46,.10)!important;
+}
+.nutrition-card-priority .eyebrow{color:var(--alm-terracotta)!important}
+.nutrition-card-priority h2{color:var(--alm-green)!important}
+.nutrition-card-priority .nutrition-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:7px!important;
+  margin-top:8px!important;
+}
+.nutrition-card-priority .nutrition-grid>div{
+  min-width:0!important;
+  padding:9px 4px!important;
+  border-radius:14px!important;
+  background:#f4f0e7!important;
+  border:1px solid rgba(15,61,46,.04)!important;
+}
+.nutrition-card-priority .nutrition-grid strong{
+  display:block!important;
+  color:var(--alm-green)!important;
+  font-size:.78rem!important;
+  line-height:1.05!important;
+  font-weight:800!important;
+}
+.nutrition-card-priority .nutrition-grid span{
+  display:block!important;
+  margin-top:3px!important;
+  color:var(--alm-muted)!important;
+  font-size:.5rem!important;
+  line-height:1.15!important;
+}
+.nutrition-card-priority small{color:var(--alm-muted)!important}
+
+/* Recipe modules match the illustrated master cards */
+.recipe-action-grid button{
+  position:relative!important;
+  overflow:hidden!important;
+  border-radius:18px!important;
+  box-shadow:none!important;
+}
+.recipe-action-grid button:nth-child(1){background:#fff1e9!important}
+.recipe-action-grid button:nth-child(2){background:#f0f4e6!important}
+.recipe-action-grid button:nth-child(3){background:#fff7e8!important}
+.recipe-action-grid button:nth-child(4){background:#f9e4dc!important}
+.recipe-action-grid button svg{
+  width:28px!important;height:28px!important;padding:7px!important;
+  box-sizing:content-box!important;border-radius:50%!important;
+}
+.recipe-action-grid button:nth-child(1) svg{background:#f7d8ca!important;color:var(--alm-terracotta)!important}
+.recipe-action-grid button:nth-child(2) svg{background:#dde7c9!important;color:var(--alm-green)!important}
+.recipe-action-grid button:nth-child(3) svg{background:#f7e3bd!important;color:#bd741c!important}
+.recipe-action-grid button:nth-child(4) svg{background:#f3c9bb!important;color:#b9432f!important}
+
+/* Pantry and shopping pages use same icon treatment and compact premium cards */
+.alm-segmented button svg{color:var(--alm-green)!important;width:22px!important;height:22px!important}
+.alm-segmented button.active svg{color:#fff!important}
+.shopping-stock-card>.icon-button:first-child,
+.stock-card-actions .icon-button{
+  border-radius:13px!important;
+  background:#f1f3e8!important;
+  color:var(--alm-green)!important;
+}
+.shopping-share-actions .secondary-button{
+  min-height:52px!important;
+  background:var(--alm-green)!important;
+  color:#fff!important;
+  border-color:var(--alm-green)!important;
+}
+
+/* Photo / Video mockup iconography */
+.photo-recipe-upload>div>svg{
+  color:var(--alm-green)!important;
+  width:50px!important;height:50px!important;
+  padding:10px!important;border-radius:18px!important;
+  background:rgba(255,253,248,.92)!important;
+}
+.photo-recipe-button>svg{
+  width:24px!important;height:24px!important;
+}
+.photo-recipe-button:not(.secondary)>svg{color:#fff!important}
+.photo-recipe-button.secondary>svg{color:var(--alm-green)!important}
+.alm-draft-summary svg{color:var(--alm-terracotta)!important}
+
+/* Cooking mode uses the same green / terracotta / cream system */
+.alm-cook-recipe-card svg,.cook-step-facts svg,.cook-context-tip svg{color:var(--alm-terracotta)!important}
+.cook-context-tip{
+  background:#fff7e8!important;
+  border-color:rgba(211,84,47,.12)!important;
+}
+.cook-technique-context{
+  background:#f1f4e9!important;
+  border-color:rgba(15,61,46,.09)!important;
+}
+.cook-footer .primary{
+  background:var(--alm-green)!important;color:#fff!important;
+}
+.cook-footer .secondary{
+  background:#fffdf8!important;color:var(--alm-green)!important;
+}
+
+/* Library, search and settings cards inherit mockup visual system */
+.library-photo-card,.technique-photo-card,.history-card,.settings-card,.control-card,.editorial-card{
+  background:#fffdf8!important;
+  border-color:rgba(15,61,46,.08)!important;
+  box-shadow:0 7px 20px rgba(22,55,44,.06)!important;
+}
+.search-box,.ingredient-input,.settings-select,.quantity-unit-editor input,.quantity-unit-editor select{
+  background:#fffdf8!important;
+  border-color:rgba(15,61,46,.12)!important;
+  color:var(--alm-ink)!important;
+}
+.library-tabs button.active,.culinary-tabs .active,.alm-segmented .active{
+  background:var(--alm-green)!important;color:#fff!important;
+}
+
+/* Keep handwritten editorial notes subtle and consistent */
+.alm-derived-brand-row .alm-hand,.alm-home-footer .alm-hand,.cook-cta::after{
+  color:var(--alm-green)!important;
+  opacity:.94;
+}
+
+/* Remove remaining legacy blue/system accents */
+:is(.page-content,.recipe-page,.cook-screen,.entry-page) a:not(.secondary-button){
+  color:var(--alm-green);
+}
+:is(.page-content,.recipe-page,.cook-screen) button:focus-visible{
+  outline:3px solid rgba(211,84,47,.28)!important;
+  outline-offset:2px!important;
+}
+
+@media(max-width:390px){
+  .nutrition-card-priority .nutrition-grid{gap:4px!important}
+  .nutrition-card-priority .nutrition-grid>div{padding:8px 2px!important}
+  .nutrition-card-priority .nutrition-grid strong{font-size:.69rem!important}
+  .nutrition-card-priority .nutrition-grid span{font-size:.45rem!important}
+}
