@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 export type AlmIconName =
   | 'home'|'heart'|'book'|'chef'|'pantry'|'cart'|'settings'|'help'
@@ -7,7 +7,7 @@ export type AlmIconName =
 
 export function AlmIcon({name,size=24,className='',style}:{name:AlmIconName;size?:number;className?:string;style?:CSSProperties}){
   const common={width:size,height:size,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.9,strokeLinecap:'round' as const,strokeLinejoin:'round' as const,ariaHidden:true};
-  const p:Record<AlmIconName,React.ReactNode>={
+  const p:Record<AlmIconName,ReactNode>={
     home:<><path d="M3.5 10.8 12 4l8.5 6.8"/><path d="M5.5 10v9h13v-9"/><path d="M9.5 19v-5h5v5"/></>,
     heart:<><path d="M12 20.2 4.3 12.8C.4 9.1 2.4 3.8 7.2 4.1c2 .1 3.3 1.2 4.8 3 1.5-1.8 2.8-2.9 4.8-3 4.8-.3 6.8 5 2.9 8.7L12 20.2Z"/></>,
     book:<><path d="M4 5.2c3.1-.7 5.3-.1 8 1.7v12c-2.7-1.8-4.9-2.4-8-1.7Z"/><path d="M20 5.2c-3.1-.7-5.3-.1-8 1.7v12c2.7-1.8 4.9-2.4 8-1.7Z"/></>,
