@@ -1,5 +1,6 @@
 import { BrandMark } from '../components/BrandMark';
-import { BookOpen, Camera, ChefHat, ChevronRight, Clock3, CookingPot, Heart, PackageOpen, Play, ShoppingBasket } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
+import { AlmIcon } from '../components/AlmIcon';
 import { useMemo, useState } from 'react';
 import { WelcomeSplash } from '../components/WelcomeSplash';
 import { useNavigate } from 'react-router-dom';
@@ -48,7 +49,7 @@ export function HomePage() {
           <img src={photoImage} alt="Plato preparado para analizar por foto o vídeo"/>
           <span className="alm-action-overlay"/>
           <span className="alm-card-note alm-hand">Una foto también<br/>puede ser una receta ♡</span>
-          <span className="alm-media-actions" aria-hidden="true"><span><Camera size={20}/></span><span><Play size={20} fill="currentColor"/></span></span>
+          <span className="alm-media-actions" aria-hidden="true"><span><AlmIcon name="camera" size={20}/></span><span><AlmIcon name="play" size={20}/></span></span>
           <span className="alm-action-copy"><strong>Foto/Video Receta</strong><small>Haz una foto o un vídeo y cocina con ella</small></span>
           <span className="alm-card-arrow" aria-hidden="true"><ChevronRight size={22}/></span>
         </button>
@@ -57,11 +58,11 @@ export function HomePage() {
       <section className="alm-quick" aria-label="Más opciones">
         <div className="alm-section-title"><h2>Más a tu alcance</h2><span className="alm-hand alm-section-note">Todo lo que necesitas,<br/>a un toque ♡</span></div>
         <div className="alm-quick-grid">
-          <button onClick={()=>navigate('/mis-recetas?tab=favorites')}><span><Heart fill="currentColor" size={24}/></span><b>Favoritos</b>{favorites.length>0&&<em>{favorites.length}</em>}</button>
-          <button onClick={()=>navigate('/mis-recetas')}><span><BookOpen size={24}/></span><b>Mis recetas</b></button>
-          <button onClick={()=>navigate('/tecnicas')}><span><CookingPot size={25}/></span><b>Técnicas</b></button>
-          <button onClick={()=>navigate('/inventario')}><span><PackageOpen size={25}/></span><b>Despensa</b></button>
-          <button onClick={()=>navigate('/lista-compra')}><span><ShoppingBasket size={25}/></span><b>Lista de compra</b></button>
+          <button onClick={()=>navigate('/mis-recetas?tab=favorites')}><span><AlmIcon name="heart" size={25}/></span><b>Favoritos</b>{favorites.length>0&&<em>{favorites.length}</em>}</button>
+          <button onClick={()=>navigate('/mis-recetas')}><span><AlmIcon name="book" size={25}/></span><b>Mis recetas</b></button>
+          <button onClick={()=>navigate('/tecnicas')}><span><AlmIcon name="chef" size={25}/></span><b>Técnicas</b></button>
+          <button onClick={()=>navigate('/inventario')}><span><AlmIcon name="pantry" size={25}/></span><b>Despensa</b></button>
+          <button onClick={()=>navigate('/lista-compra')}><span><AlmIcon name="cart" size={25}/></span><b>Lista de compra</b></button>
         </div>
       </section>
 
@@ -69,8 +70,8 @@ export function HomePage() {
         <div className="alm-section-title"><h2>Propuesta del día</h2><span>Desliza para ver más →</span></div>
         <div className="alm-daily-strip">
           {dailyRecipes.map(recipe=><article className="alm-daily-card" key={recipe.id} onClick={()=>navigate(`/receta/${recipe.id}`)}>
-            <div className="alm-daily-image"><RecipeThumbnail recipe={recipe}/><button className={favorites.includes(recipe.id)?'active':''} aria-label={favorites.includes(recipe.id)?'Quitar de favoritos':'Añadir a favoritos'} onClick={e=>{e.stopPropagation();toggleFavorite(recipe.id)}}><Heart size={18} fill={favorites.includes(recipe.id)?'currentColor':'none'}/></button></div>
-            <div className="alm-daily-copy"><strong>{recipe.title}</strong><div className="alm-daily-meta"><span><Clock3 size={14}/>{formatDuration(recipe.prepMinutes+recipe.cookMinutes)}</span><span><ChefHat size={14}/>{recipe.difficulty}</span></div></div>
+            <div className="alm-daily-image"><RecipeThumbnail recipe={recipe}/><button className={favorites.includes(recipe.id)?'active':''} aria-label={favorites.includes(recipe.id)?'Quitar de favoritos':'Añadir a favoritos'} onClick={e=>{e.stopPropagation();toggleFavorite(recipe.id)}}><AlmIcon name="heart" size={18}/></button></div>
+            <div className="alm-daily-copy"><strong>{recipe.title}</strong><div className="alm-daily-meta"><span><AlmIcon name="clock" size={14}/>{formatDuration(recipe.prepMinutes+recipe.cookMinutes)}</span><span><AlmIcon name="chef" size={14}/>{recipe.difficulty}</span></div></div>
           </article>)}
         </div>
       </section>
