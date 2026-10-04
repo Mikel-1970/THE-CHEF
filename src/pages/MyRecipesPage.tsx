@@ -1,6 +1,5 @@
 import {CUISINES} from '../data/cookingOptions';
 import {matchesCuisineFilter} from '../utils/cuisineFilter';
-import {chefLibrary} from '../data/library';
 import {foodTextMatches} from '../utils/recipeSearch';
 import {DISH_CATEGORIES,matchesDishCategory} from '../utils/dishCategories';
 import {CATALOG_EMPTY} from '../services/hybridRecommendationEngine';
@@ -16,7 +15,7 @@ import { useApp } from '../AppContext';
 import { useAiDictation } from '../hooks/useAiDictation';
 import type { CookingRequest, HistoryEntry, Recipe } from '../domain/types';
 import { generateDirectRecipe } from '../services/directRecipeGateway';
-import { getAllRecipes, getRecipeById } from '../services/recipeCatalog';
+import { getAllRecipes, getMyRecipes, getRecipeById, loadRemovedLibraryRecipeIds } from '../services/recipeCatalog';
 import '../my-recipes.css';
 import '../voice-input.css';
 
@@ -27,7 +26,7 @@ export function MyRecipesPage() {
   const { favorites, savedRecipes, history, settings, setSearch, toggleFavorite, removeHistoryEntry } = useApp();
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState('');
-  const [removedIds,setRemovedIds]=useState<string[]>(()=>{try{const v=JSON.parse(localStorage.getItem('chef:removed-library-recipes:v1')??'[]');return Array.isArray(v)?v.filter(id=>typeof id==='string'):[];}catch{return [];}});
+  const [removedIds,setRemovedIds]=useState<string[]>(loadRemovedLibraryRecipeIds);
   const [lastRemoved,setLastRemoved]=useState<Recipe>();
   const [removeError,setRemoveError]=useState('');
   const updateRemoved=(ids:string[])=>{try{localStorage.setItem('chef:removed-library-recipes:v1',JSON.stringify(ids));setRemovedIds(ids);setRemoveError('');return true;}catch{setRemoveError('No se ha podido guardar el cambio.');return false;}};
@@ -65,11 +64,7 @@ export function MyRecipesPage() {
   const [historyMonth, setHistoryMonth] = useState('Todos');
   const voice = useAiDictation(transcript => setQuery(current => current.trim() ? `${current.trim()} ${transcript.trim()}` : transcript.trim()));
   const tab = params.get('tab') ?? 'library';
-  const libraryRecipes = useMemo(() => {
-    const catalog = getAllRecipes();
-    const ids = new Set([...chefLibrary.map(r=>r.id), ...savedRecipes, ...favorites]);
-    return catalog.filter(recipe => ids.has(recipe.id));
-  }, [savedRecipes, favorites]);
+  const libraryRecipes = useMemo(() => getMyRecipes(savedRecipes, favorites, removedIds), [savedRecipes, favorites, removedIds]);
 
   const recipes = useMemo(() => {
     const ids = tab === 'library' ? libraryRecipes.map(r=>r.id) : tab === 'favorites' ? favorites : savedRecipes;
@@ -209,4 +204,3 @@ function buildLegacyRequest(entry: HistoryEntry, servings: number, pantryBasics:
   if (entry.mode === 'pantry') return { mode: 'pantry', servings, maxMinutes: 60, pantryIngredients: entry.label.split(',').map(name => ({ name: name.trim() })).filter(item => item.name), pantryBasics };
   return { mode: 'desire', servings, maxMinutes: 60, desireText: entry.label };
 }
-

@@ -9,7 +9,7 @@ ok('Avatar disponible en Lista de compra',!shopping.includes('hideProfile'));
 ok('Abre la despensa e inventario conservan funciones separadas',home.includes('Abre la despensa')&&home.includes("navigate('/despensa')")&&shell.includes("'/inventario'")&&app.includes('path="/despensa" element={<PantryCookPage/>}')&&app.includes('path="/inventario" element={<PantryPage/>}'));
 ok('Foto/Video Receta',home.includes('Foto/Video Receta')&&app.includes('path="/foto" element={<PhotoRecipePage/>}'));
 ok('Sin boton Crear tu receta',!home.includes('Crear tu receta')&&!shell.includes('Crear tu receta'));
-ok('Propuesta del día horizontal',home.includes('Propuesta del día')&&home.includes('alm-daily-strip')&&home.includes('pickRecipesOfTheDay(getAllRecipes(),4)'));
+ok('Propuesta del día horizontal desde Mis recetas',home.includes('Propuesta del día')&&home.includes('alm-daily-strip')&&home.includes('pickRecipesOfTheDay(getMyRecipes(savedRecipes,favorites),4)'));
 ok('Plan nutricional fuera de la beta actual',app.includes('path="/plan-semanal" element={<Navigate to="/" replace/>}')&&app.includes('path="/plan-comidas" element={<Navigate to="/" replace/>}')&&!home.toLocaleLowerCase('es').includes('plan nutricional')&&!shell.includes('/plan-semanal'));
 ok('Navegación principal desde avatar',shell.includes('chef-draggable-avatar')&&shell.includes("'/mis-recetas?tab=favorites'")&&shell.includes("'/inventario'")&&shell.includes("'/lista-compra'"));
 ok('Receta directa sin pantalla de propuesta',pantry.includes('generateDirectRecipe')&&read('src/pages/DesirePage.tsx').includes('generateDirectRecipe')&&hybrid.includes('PROPOSAL_COUNT=1')&&!results.includes('ProposalCard'));

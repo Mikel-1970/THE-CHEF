@@ -36,6 +36,8 @@ El antiguo `a-la-mesa-beta.css` deja de cargarse.
 - imagen de despensa tradicional;
 - accesos rápidos;
 - propuesta del día horizontal;
+- propuestas obtenidas de la lista visible de Mis recetas (biblioteca, guardadas y favoritas), respetando las recetas quitadas;
+- miniaturas vinculadas al ID de cada receta; si no existe foto o no carga, se muestra “Sin foto”, sin fotografías genéricas de otros platos;
 - acentos manuscritos.
 
 **Despensa + Lista de compra**

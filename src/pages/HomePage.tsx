@@ -7,15 +7,15 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
 import { AppShell } from '../components/AppShell';
 import { RecipeThumbnail } from '../components/RecipeThumbnail';
-import { getAllRecipes } from '../services/recipeCatalog';
+import { getMyRecipes } from '../services/recipeCatalog';
 import { formatDuration } from '../utils/time';
 
 export function HomePage() {
   const navigate = useNavigate();
-  const { favorites, toggleFavorite, settings } = useApp();
+  const { favorites, savedRecipes, toggleFavorite, settings } = useApp();
   const [greet,setGreet]=useState(()=>sessionStorage.getItem('chef:home-greeted:v2')!=='1');
   const [notice,setNotice]=useState('');
-  const dailyRecipes=useMemo(()=>pickRecipesOfTheDay(getAllRecipes(),4),[]);
+  const dailyRecipes=useMemo(()=>pickRecipesOfTheDay(getMyRecipes(savedRecipes,favorites),4),[savedRecipes,favorites]);
 
   if(greet)return <WelcomeSplash greeting={`¡Hola${settings.displayName?', '+settings.displayName:''}!`} notice={notice} onComplete={mode=>{if(mode==='register'){setNotice('Tu cuenta ya está registrada. Pulsa Login para entrar.');return}sessionStorage.setItem('chef:home-greeted:v2','1');setGreet(false)}}>{null}</WelcomeSplash>;
 
@@ -69,6 +69,7 @@ export function HomePage() {
       <section className="alm-daily" aria-label="Propuesta del día">
         <div className="alm-section-title"><h2>Propuesta del día</h2><span>Desliza para ver más →</span></div>
         <div className="alm-daily-strip">
+          {dailyRecipes.length===0&&<p>No tienes recetas disponibles. Añade una en Mis recetas para ver propuestas.</p>}
           {dailyRecipes.map(recipe=><article className="alm-daily-card" key={recipe.id} onClick={()=>navigate(`/receta/${recipe.id}`)}>
             <div className="alm-daily-image"><RecipeThumbnail recipe={recipe}/><button className={favorites.includes(recipe.id)?'active':''} aria-label={favorites.includes(recipe.id)?'Quitar de favoritos':'Añadir a favoritos'} onClick={e=>{e.stopPropagation();toggleFavorite(recipe.id)}}><AlmIcon name="heart" size={18}/></button></div>
             <div className="alm-daily-copy"><strong>{recipe.title}</strong><div className="alm-daily-meta"><span><AlmIcon name="clock" size={14}/>{formatDuration(recipe.prepMinutes+recipe.cookMinutes)}</span><span><AlmIcon name="chef" size={14}/>{recipe.difficulty}</span></div></div>

@@ -27,6 +27,24 @@ export function getAllRecipes(): Recipe[] {
   return [...merged.values()].map(cleanRecipeAdvice);
 }
 
+export function loadRemovedLibraryRecipeIds(): string[] {
+  if (typeof localStorage === 'undefined') return [];
+  try {
+    const value: unknown = JSON.parse(localStorage.getItem('chef:removed-library-recipes:v1') ?? '[]');
+    return Array.isArray(value) ? value.filter((id): id is string => typeof id === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+// Shared source for Mis recetas and the daily proposals. The broader catalog also
+// contains development recipes and transient search results that are not saved.
+export function getMyRecipes(savedRecipeIds: string[], favoriteRecipeIds: string[], removedIds = loadRemovedLibraryRecipeIds()): Recipe[] {
+  const included = new Set([...chefLibrary.map(recipe => recipe.id), ...savedRecipeIds, ...favoriteRecipeIds]);
+  const removed = new Set(removedIds);
+  return getAllRecipes().filter(recipe => included.has(recipe.id) && !removed.has(recipe.id));
+}
+
 export function getRecipeById(id?: string): Recipe | undefined {
   if (!id) return undefined;
   return getAllRecipes().find(recipe => recipe.id === id) ?? getActiveRecipe(id);
