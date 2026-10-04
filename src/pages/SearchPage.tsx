@@ -1,5 +1,6 @@
 import {foodTextMatches,foodTitleScore} from '../utils/recipeSearch';
-import { Check, ChevronDown, ChevronUp, Clock3, Globe2, Mic, MicOff, Search, SlidersHorizontal, Sparkles, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Globe2, Mic, MicOff, SlidersHorizontal, Sparkles, X } from 'lucide-react';
+import { AlmIcon } from '../components/AlmIcon';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {useApp} from '../AppContext';
@@ -90,7 +91,7 @@ export function SearchPage() {
       <AlmPageHeader eyebrow="BUSCAR RECETAS" title="Encuentra un plato" subtitle="Busca por nombre, ingrediente, estilo o tipo de cocina." accent="Ideas hoy, mejores recetas mañana"/>
       <div className="page-content nav-safe">
         <div className="search-box">
-          <Search size={18} />
+          <AlmIcon name="search" size={20}/>
           <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Ej. pasta pollo, italiana, calabacín…" />
           <div className="voice-inline-actions">
             <button type="button" className="clear-input-button" onClick={() => { voice.stop(); setQuery(''); }} disabled={!query.trim() && !voice.isListening} aria-label="Borrar búsqueda"><X size={17} /></button>
@@ -112,7 +113,7 @@ export function SearchPage() {
         {query.trim()?<section className="library-section">
           <div className="section-heading-row"><div><span className="eyebrow">RECETAS</span><h2>{recipes.length?`${recipes.length} disponibles`:'No hay coincidencias'}</h2></div></div>
           {spiceLevel&&spiceLevel!=='Nada'&&<p>Recetas con ingredientes picantes. La intensidad se ajusta al personalizar o generar la receta.</p>}
-          <div className="library-photo-grid">{recipes.map(recipe=><article className="library-photo-card" key={recipe.id}><Link className="library-photo-open" to={`/receta/${recipe.id}`} aria-label={`Abrir receta ${recipe.title}`}><RecipeThumbnail recipe={recipe}/><div className="library-photo-caption"><strong>{recipe.title}</strong><small><Clock3 size={13}/> {formatDuration(recipe.prepMinutes+recipe.cookMinutes)} · {recipe.cuisine}</small></div></Link></article>)}</div>
+          <div className="library-photo-grid">{recipes.map(recipe=><article className="library-photo-card" key={recipe.id}><Link className="library-photo-open" to={`/receta/${recipe.id}`} aria-label={`Abrir receta ${recipe.title}`}><RecipeThumbnail recipe={recipe}/><div className="library-photo-caption"><strong>{recipe.title}</strong><small><AlmIcon name="clock" size={14}/> {formatDuration(recipe.prepMinutes+recipe.cookMinutes)} · {recipe.cuisine}</small></div></Link></article>)}</div>
           {!recipes.length&&<p className="empty-card">Prueba otros términos o genera una receta con tus preferencias.</p>}
           <button className="secondary-button" style={{marginTop:16}} disabled={generating||isSearchingExternal} onClick={()=>void generate()}><Sparkles size={18}/> Generar una receta con IA</button>
         </section>:<p className="empty-card">Escribe un plato o ingrediente para encontrar recetas.</p>}
