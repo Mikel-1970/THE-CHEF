@@ -8,7 +8,7 @@ import { useApp } from '../AppContext';
 import { useAiDictation } from '../hooks/useAiDictation';
 import { parseIngredientInput } from '../utils/ingredientInput';
 import { groupShopping, inferPantryCategory } from '../utils/pantryCategories';
-import { buildShoppingShareText } from '../utils/shoppingShare';
+import { buildShoppingShareImage, buildShoppingShareText } from '../utils/shoppingShare';
 import '../recipe-enhancements.css';
 import '../voice-input.css';
 
@@ -40,7 +40,7 @@ export function ShoppingListPage() {
     upsertShoppingItem({ ...item, quantity: Number.isFinite(parsed) ? parsed : undefined });
   };
   const updateUnit = (id: string, unit: string) => { const item = shoppingList.find(entry => entry.id === id); if (item) upsertShoppingItem({ ...item, unit: unit || undefined }); };
-  const shareList = async () => { const text = buildShoppingShareText(shoppingList, settings.avatarEmoji); if (!shoppingList.some(item => !item.checked)) return; if (navigator.share) { try { await navigator.share({ title: 'Lista de compra · ¡A la mesa!', text }); return; } catch (error) { if (error instanceof DOMException && error.name === 'AbortError') return; } } await navigator.clipboard?.writeText(text); window.alert('Lista copiada. Ya puedes pegarla donde quieras.'); };
+  const shareList = async () => { const text = buildShoppingShareText(shoppingList, settings.avatarEmoji); if (!shoppingList.some(item => !item.checked)) return; const file=await buildShoppingShareImage(shoppingList).catch(()=>undefined); if (navigator.share) { try { if(file&&navigator.canShare?.({files:[file]})){await navigator.share({ title: 'Lista de compra · ¡A la mesa!', text:'Lista de la compra', files:[file] });return;} await navigator.share({ title: 'Lista de compra · ¡A la mesa!', text }); return; } catch (error) { if (error instanceof DOMException && error.name === 'AbortError') return; } } await navigator.clipboard?.writeText(text); window.alert('Lista copiada. Ya puedes pegarla donde quieras.'); };
 
   return <AppShell>
     <AlmPageHeader eyebrow="ORGANIZA TU COCINA" title="Despensa y lista de la compra" subtitle="Organiza lo que tienes y lo que necesitas para seguir cocinando grandes recetas." accent="Todo lo que necesitas, a un toque"/>
