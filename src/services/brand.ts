@@ -7,6 +7,12 @@ export async function loadBrandImage(){
  const image=new Image();image.src=APPROVED_LOGO_DATA_URI;await image.decode();return image;
 }
 
+export function drawBrand(ctx:CanvasRenderingContext2D,image:HTMLImageElement,x:number,y:number,width:number){
+ const scale=width/image.naturalWidth;
+ const height=image.naturalHeight*scale;
+ ctx.drawImage(image,x,y,width,height);
+}
+
 export async function brandHeaderData(){
  await document.fonts?.ready;
  const image=await loadBrandImage(),canvas=document.createElement('canvas');
