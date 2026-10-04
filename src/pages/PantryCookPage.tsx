@@ -1,5 +1,6 @@
 import {CATALOG_EMPTY} from '../services/hybridRecommendationEngine';
-import { Camera, Check, ImagePlus, Mic, MicOff, PackageOpen, Refrigerator, Star, X } from 'lucide-react';
+import { Check, ImagePlus, Mic, MicOff, Refrigerator, Star, X } from 'lucide-react';
+import { AlmIcon } from '../components/AlmIcon';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
@@ -65,14 +66,14 @@ export function PantryCookPage() {
   <div className="page-content pantry-cook-visual">
    <p className="visual-hint">Elige los ingredientes con los que quieres cocinar.</p>
    <div className="pantry-source-tabs" aria-label="Ver inventario">
-    <button aria-pressed={source==='all'} onClick={()=>setSource('all')}><PackageOpen/>Todo<span>{pantry.length}</span></button>
+    <button aria-pressed={source==='all'} onClick={()=>setSource('all')}><AlmIcon name="pantry" size={22}/>Todo<span>{pantry.length}</span></button>
     <button aria-pressed={source==='fridge'} onClick={()=>setSource('fridge')}><Refrigerator/>Nevera<span>{pantry.filter(i=>locationOf(i)==='fridge').length}</span></button>
-    <button aria-pressed={source==='pantry'} onClick={()=>setSource('pantry')}><PackageOpen/>Despensa<span>{pantry.filter(i=>locationOf(i)==='pantry').length}</span></button>
+    <button aria-pressed={source==='pantry'} onClick={()=>setSource('pantry')}><AlmIcon name="pantry" size={22}/>Despensa<span>{pantry.filter(i=>locationOf(i)==='pantry').length}</span></button>
    </div>
-   <div className="pantry-ingredient-grid" aria-label="Ingredientes disponibles">{visible.map(item=>{const active=selected.has(normalize(item.name));return <button key={normalize(item.name)} aria-pressed={active} onClick={()=>toggle(item.name)}><span className="pantry-food-icon">{locationOf(item)==='fridge'?<Refrigerator/>:<PackageOpen/>}</span><strong>{item.name}</strong>{item.quantity!==undefined&&<small>{item.quantity} {item.unit}</small>}<span className="pantry-choice-mark">{active?<Check size={18}/>:<Star size={18}/>}</span></button>})}</div>
+   <div className="pantry-ingredient-grid" aria-label="Ingredientes disponibles">{visible.map(item=>{const active=selected.has(normalize(item.name));return <button key={normalize(item.name)} aria-pressed={active} onClick={()=>toggle(item.name)}><span className="pantry-food-icon">{locationOf(item)==='fridge'?<Refrigerator/>:<AlmIcon name="pantry" size={22}/>}</span><strong>{item.name}</strong>{item.quantity!==undefined&&<small>{item.quantity} {item.unit}</small>}<span className="pantry-choice-mark">{active?<Check size={18}/>:<Star size={18}/>}</span></button>})}</div>
    {!visible.length&&<p className="pantry-empty">No hay productos guardados aquí. Añádelos o usa una foto.</p>}
    <div className="pantry-photo-actions">
-    <label><Camera/><strong>Hacer foto</strong><input aria-label="Fotografiar nevera o despensa" type="file" accept="image/*" capture="environment" disabled={analysing} onChange={e=>{void analyse(e.target.files?.[0]);e.target.value=''}}/></label>
+    <label><AlmIcon name="camera" size={22}/><strong>Hacer foto</strong><input aria-label="Fotografiar nevera o despensa" type="file" accept="image/*" capture="environment" disabled={analysing} onChange={e=>{void analyse(e.target.files?.[0]);e.target.value=''}}/></label>
     <label><ImagePlus/><strong>Subir foto</strong><input aria-label="Subir foto de nevera o despensa" type="file" accept="image/*" disabled={analysing} onChange={e=>{void analyse(e.target.files?.[0]);e.target.value=''}}/></label>
    </div>
    {analysing&&<p role="status">Identificando ingredientes…</p>}
