@@ -55,3 +55,12 @@
   .entry-card { padding:24px 18px;border-radius:25px; }
   .entry-card h1 { font-size:2rem; }
 }
+
+.registration-avatar-picker { border:1px solid #dedbce; border-radius:16px; background:#fffaf0; }
+.registration-avatar-picker summary { display:flex; align-items:center; gap:10px; padding:10px; cursor:pointer; list-style:none; color:#405626; }
+.registration-avatar-picker summary::-webkit-details-marker { display:none; }
+.registration-avatar-picker summary>span:not(.chef-avatar) { flex:1;display:grid;gap:4px; }
+.registration-avatar-picker summary small { font-size:.75rem; }
+.registration-avatar-grid { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:10px;max-height:310px;overflow:auto; }
+.registration-avatar-grid button { display:grid;justify-items:center;gap:5px;min-width:0;border:1px solid #e0dccd;border-radius:12px;background:#f7f2e6;padding:7px 2px;color:#405626;font:inherit;font-size:.65rem; }
+.registration-avatar-grid button[aria-pressed=true] { border:2px solid #405626;background:#e6ecd9; }

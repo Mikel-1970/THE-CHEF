@@ -60,8 +60,11 @@ function parseTime(text: string): number | undefined {
 function parseStyle(text: string): string | undefined {
   if (/(rapida|rapido|poco tiempo|sin complicarme)/.test(text)) return 'Rápida';
   if (/(saludable|ligera|ligero|sana|sano)/.test(text)) return 'Saludable';
-  if (/(casera|casero|tradicional)/.test(text)) return 'Casera';
-  if (/(moderna|moderno|creativa|creativo)/.test(text)) return 'Moderna';
+  if (/(tradicional|de toda la vida)/.test(text)) return 'Tradicional';
+  if (/(casera|casero)/.test(text)) return 'Casera';
+  if (/(moderna|moderno)/.test(text)) return 'Moderna';
+  if (/(creativa|creativo)/.test(text)) return 'Creativa';
+  if (/(alta cocina|gourmet)/.test(text)) return 'Alta cocina';
   return undefined;
 }
 

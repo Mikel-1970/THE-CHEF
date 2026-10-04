@@ -1,3 +1,5 @@
+import {cleanRecipeAdvice} from '../utils/recipeAdvice';
+import {chefLibrary} from '../data/library';
 import { mockRecipes } from '../data/mockRecipes';
 import type { Difficulty, MealType, Recipe, RecipeIngredient, RecipeSource, RecipeStep } from '../domain/types';
 import { validRecipes } from './recipeValidator';
@@ -12,7 +14,7 @@ const localSource: RecipeSource = {
   label: 'Catálogo El Chef'
 };
 
-const localRecipes = validRecipes(mockRecipes).map(recipe => ({
+const localRecipes = validRecipes([...chefLibrary,...mockRecipes]).map(recipe => ({
   ...recipe,
   source: recipe.source ?? localSource
 }));
@@ -22,7 +24,7 @@ export function getAllRecipes(): Recipe[] {
   localRecipes.forEach(recipe => merged.set(recipe.id, recipe));
   loadExternalRecipes().forEach(recipe => merged.set(recipe.id, recipe));
   loadLibraryRecipes().forEach(recipe => merged.set(recipe.id, recipe));
-  return [...merged.values()];
+  return [...merged.values()].map(cleanRecipeAdvice);
 }
 
 export function getRecipeById(id?: string): Recipe | undefined {
@@ -41,6 +43,7 @@ export function rememberActiveRecipe(recipe: Recipe): void {
 }
 
 export function rememberLibraryRecipe(recipe: Recipe): void {
+  if(chefLibrary.some(item=>item.id===recipe.id))return;
   const normalized = normalizeStoredRecipe(recipe);
   if (!normalized || !validRecipes([normalized]).length || typeof localStorage === 'undefined') return;
 
@@ -153,13 +156,15 @@ function normalizeStoredRecipe(value: unknown): Recipe | undefined {
   const id = text(value.id);
   const title = text(value.title);
   if (!id || !title) return undefined;
+  const builtin=chefLibrary.find(recipe=>recipe.id===id);
+  if(builtin)return builtin;
 
   const ingredients = normalizeIngredients(value.ingredients);
   const steps = normalizeSteps(value.steps);
   if (!ingredients.length || !steps.length) return undefined;
 
   const nutrition = normalizeNutrition(value.nutritionPerServing);
-  if (!nutrition) return undefined;
+  if (!nutrition && value.nutritionStatus !== 'unavailable') return undefined;
 
   const baseServings = positiveNumber(value.baseServings);
   const prepMinutes = nonNegativeNumber(value.prepMinutes);
@@ -167,7 +172,7 @@ function normalizeStoredRecipe(value: unknown): Recipe | undefined {
   const difficulty = asDifficulty(value.difficulty);
   if (baseServings === undefined || prepMinutes === undefined || cookMinutes === undefined || !difficulty) return undefined;
 
-  return {
+  return cleanRecipeAdvice({
     id,
     title,
     description: text(value.description) ?? '',
@@ -185,9 +190,13 @@ function normalizeStoredRecipe(value: unknown): Recipe | undefined {
     criticalPoints: strings(value.criticalPoints),
     substitutions: strings(value.substitutions),
     storage: text(value.storage) ?? '',
+    imageOrigin: value.imageOrigin === 'user-photo' ? 'user-photo' : undefined,
     nutritionPerServing: nutrition,
-    source: normalizeStoredSource(value.source)
-  };
+    nutritionStatus: value.nutritionStatus === 'unavailable' ? 'unavailable' : value.nutritionStatus === 'estimated' ? 'estimated' : undefined,
+    recipeKind: value.recipeKind==='dish'||value.recipeKind==='dessert'||value.recipeKind==='cocktail'?value.recipeKind:undefined,
+    libraryCategory: text(value.libraryCategory),
+    source: normalizeStoredSource(value.source), techniqueIds: strings(value.techniqueIds)
+  });
 }
 
 function normalizeIngredients(value: unknown): RecipeIngredient[] {
@@ -227,7 +236,7 @@ function normalizeSteps(value: unknown): RecipeStep[] {
       instruction,
       minutes,
       temperatureC,
-      cue: text(item.cue)
+      cue: text(item.cue), techniqueIds: strings(item.techniqueIds), timerLabel: text(item.timerLabel), successSignals: strings(item.successSignals), criticalPoint: text(item.criticalPoint)
     }];
   });
 }

@@ -35,14 +35,12 @@
 .reference-decor-left {
   left: -98px;
   top: 48px;
-  background-image: url('./home-pantry.jpg');
   border-radius: 48% 52% 44% 56%;
 }
 
 .reference-decor-right {
   right: -102px;
   top: 138px;
-  background-image: url('./home-desire.jpg');
   border-radius: 52% 48% 56% 44%;
 }
 
@@ -245,15 +243,13 @@
 
 .reference-pantry-photo {
   background-image:
-    linear-gradient(90deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.84) 38%, rgba(255,253,248,.18) 66%, rgba(255,253,248,0) 100%),
-    url('./home-pantry.jpg');
+    linear-gradient(90deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.84) 38%, rgba(255,253,248,.18) 66%, rgba(255,253,248,0) 100%);
   background-position: 63% center;
 }
 
 .reference-desire-photo {
   background-image:
-    linear-gradient(90deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.88) 38%, rgba(255,253,248,.14) 68%, rgba(255,253,248,0) 100%),
-    url('./home-desire.jpg');
+    linear-gradient(90deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.88) 38%, rgba(255,253,248,.14) 68%, rgba(255,253,248,0) 100%);
   background-position: 63% center;
 }
 
@@ -304,7 +300,7 @@
 
 .reference-quick-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 9px;
 }
 
@@ -323,6 +319,11 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
+  grid-column: span 2;
+}
+
+.reference-quick-grid button:nth-last-child(-n+2) {
+  grid-column: span 3;
 }
 
 .reference-quick-grid strong {

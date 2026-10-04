@@ -1,0 +1,1 @@
+export function ChiliIcon(){return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M17 7c1-3 0-5-2-5M15 7c-3 0-5 3-6 6s-3 5-6 7c7 1 15-3 16-9 0-2-2-4-4-4Z"/><path d="m12 9 3 1 3-1"/></svg>}

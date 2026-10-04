@@ -1,0 +1,9 @@
+import {test,expect} from '@playwright/test';
+import {inferStockLocation} from '../src/utils/stockLocation';
+import {techniqueBasics} from '../src/data/techniqueBasics';
+test('new stock suggestions distinguish staples and preserve freshness clues',()=>{for(const n of ['harina','arroz','aceite','lata de atún'])expect(inferStockLocation(n)).toBe('pantry');for(const n of ['pollo','leche','arroz cocido','lata de atún abierta'])expect(inferStockLocation(n)).toBe('fridge');expect(new Set(techniqueBasics.map(t=>t.id)).size).toBe(15);expect(techniqueBasics.every(t=>t.steps.length&&t.sources?.length)).toBe(true)});
+test.beforeEach(async({page})=>{await page.route('**/*',r=>new URL(r.request().url()).hostname==='127.0.0.1'?r.continue():r.abort());await page.addInitScript(()=>{sessionStorage.setItem('chef:auth:session:v1','1');sessionStorage.setItem('chef:entry-tutorial:seen-session:v1','1');sessionStorage.setItem('chef:tutorial:invite-dismissed-session:v2','1')})});
+test('master techniques available without generation and filter by type and use',async({page})=>{await page.goto('./#/tecnicas');await expect(page.locator('.technique-photo-card')).toHaveCount(180);await page.getByLabel('Buscar técnica o uso').fill('emulsion');expect(await page.locator('.technique-photo-card').count()).toBeGreaterThan(0);await page.locator('.technique-photo-open').first().click();await expect(page.locator('.technique-card')).toBeVisible();});
+test('shopping no longer transfers bought items to pantry',async({page})=>{
+ await page.goto('./#/lista-compra');await page.getByPlaceholder('Ej. 2 kg patatas, 1 l leche…').fill('1 kg arroz');await page.getByRole('button',{name:'Añadir a la lista'}).click();await page.getByRole('button',{name:'Marcar comprado'}).click();await expect(page.getByRole('button',{name:/Guardar en nevera|Guardar en despensa/})).toHaveCount(0);
+});
