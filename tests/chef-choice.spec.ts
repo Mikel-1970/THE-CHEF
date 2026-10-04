@@ -24,13 +24,19 @@ test('advice is deduplicated across sections while distinct safety temperatures 
  expect(cleanRecipeAdvice(clean)).toEqual(clean);
 });
 
-test('search finds pil pil despite default difficulty and never calls AI first',async({page})=>{
+test('search offers the exact pil pil recipe from Mis recetas without calling AI',async({page})=>{
  let calls=0;await page.route('**/recipes/**',r=>{calls++;return r.abort()});
  await page.addInitScript(()=>localStorage.setItem('chef:settings',JSON.stringify({defaultDifficulty:'Fácil'})));
  await page.goto('./#/antojo');await expect(page.getByRole('button',{name:'Personalizar',exact:true})).toHaveCount(0);
  await page.getByLabel('Tu petición').fill('bacalao al pil pil');await page.getByRole('button',{name:'Confirmar petición'}).click();await page.getByRole('button',{name:'Buscar receta',exact:true}).click();
- await expect(page.getByRole('heading',{name:'Bacalao al pilpil',exact:true})).toBeVisible();expect(calls).toBe(0);
+ await expect(page).toHaveURL(/mis-recetas/);await expect(page.locator('.recipe-choice-panel')).toContainText('Bacalao al pilpil');await expect(page.locator('.recipe-choice-card')).toHaveCount(1);expect(calls).toBe(0);
+ await page.getByRole('button',{name:/Bacalao al pilpil/}).first().click();await expect(page).toHaveURL(/receta\/lib-\d+/);
  await page.goto('./#/buscar');await page.getByPlaceholder('Ej. pasta pollo, italiana, calabacín…').fill('bacalao al pil pil');await expect(page.locator('.library-photo-card')).toHaveCount(1);await expect(page.locator('.library-photo-card')).toContainText('Bacalao al pilpil');
+});
+test('missing Pasta alla Norma offers only library alternatives and keeps AI explicit',async({page})=>{
+ let aiCalls=0;await page.route('**/*',route=>{const url=new URL(route.request().url());if(url.hostname==='127.0.0.1')return route.continue();if(url.pathname.includes('/recipes/')||url.pathname.includes('/chef-media/'))aiCalls++;return route.abort()});
+ await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill('Pasta alla Norma');await page.getByRole('button',{name:'Confirmar petición'}).click();await page.getByRole('button',{name:'Buscar receta',exact:true}).click();
+ await expect(page).toHaveURL(/mis-recetas/);await expect(page.locator('.recipe-choice-panel')).toContainText('No tengo exactamente');await expect(page.locator('.recipe-choice-card')).toHaveCount(3);await expect(page.locator('.recipe-choice-panel')).toContainText('Pasta alla puttanesca');await expect(page.getByRole('button',{name:'Generar receta nueva con IA'})).toBeVisible();expect(aiCalls).toBe(0);
 });
 for(const text of ['', 'Lo que tú quieras.', 'Lo que el chef quiera', 'Sorpréndeme', 'Algo peruano', 'Cocina peruana para cinco personas'])test('chef choice: '+text,()=>{
  const request={mode:'desire' as const,desireText:text,cuisine:'Peruana',servings:5,restrictions:['Sin gluten']};expect(isChefChoice(request)).toBe(true);const prepared=prepareDesireRequest(request);expect(prepared.desireText).toContain('plato típico');expect(prepared.servings).toBe(5);expect(prepared.restrictions).toEqual(['Sin gluten']);expect(textMatchesDesireIntent('Lomo saltado con arroz',prepared)).toBe(true);
@@ -47,7 +53,7 @@ test('empty request asks for cuisine without calling AI',async({page})=>{let ext
 test('chef choice opens a Peruvian library recipe for five without AI',async({page})=>{
  const external:string[]=[];await page.route('**/*',r=>{const url=new URL(r.request().url());if(url.hostname==='127.0.0.1')return r.continue();external.push(url.pathname);return r.abort()});
  await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill('Cocina peruana para 5 personas');await page.getByRole('button',{name:'Confirmar petición'}).click();await expect(page.getByRole('button',{name:'Personalizar',exact:true})).toHaveCount(0);
- await page.getByRole('button',{name:'Buscar receta',exact:true}).click();await expect(page).toHaveURL(/receta\/lib-\d+\?servings=5/);await expect(page.locator('.alm-recipe-servings')).toContainText('5');await expect(page.locator('.hero-meta')).toContainText('Peruana');expect(external.filter(path=>path.includes('/recipes/')||path.includes('/chef-media/'))).toEqual([]);
+ await page.getByRole('button',{name:'Buscar receta',exact:true}).click();await expect(page).toHaveURL(/mis-recetas/);await expect(page.locator('.recipe-choice-card')).toHaveCount(3);await page.locator('.recipe-choice-card').first().click();await expect(page).toHaveURL(/receta\/lib-\d+\?servings=5/);await expect(page.locator('.alm-recipe-servings')).toContainText('5');await expect(page.locator('.hero-meta')).toContainText('Peruana');expect(external.filter(path=>path.includes('/recipes/')||path.includes('/chef-media/'))).toEqual([]);
 });
 test('creative requests tolerate descriptive wording but preserve pork and technique',()=>{
  const request={mode:'desire' as const,generationMode:'ai' as const,servings:4,desireText:'Me apetece un solomillo de cerdo a baja temperatura con alguna salsa especial y alguna tecnica de alta cocina para el aderezo y el acompañamiento'};
@@ -75,7 +81,8 @@ test('AI retries malformed output and corrects an unrelated creative proposal',a
  });
  await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill(desire);
  await page.getByRole('button',{name:'Confirmar petición'}).click();await page.getByRole('button',{name:'Buscar receta',exact:true}).click();
- await page.getByRole('button',{name:'Crear receta con IA',exact:true}).click();
+ await expect(page).toHaveURL(/mis-recetas/);await expect(page.locator('.recipe-choice-panel')).toContainText('No tengo exactamente');expect(suggestions).toBe(0);expect(generated).toBe(0);
+ await page.getByRole('button',{name:'Generar receta nueva con IA',exact:true}).click();
  await expect(page).toHaveURL(/receta\/ai-creative-pork/);expect(suggestions).toBe(5);expect(generated).toBe(1);
 });
 import {cookingTips,selectContextualCookingTip} from '../src/data/cookingTips';
@@ -97,7 +104,7 @@ test('generation shows ongoing motion and elapsed time',async({page})=>{
  let release!:()=>void;const gate=new Promise<void>(resolve=>release=resolve);
  await page.route('**/recipes/suggest',async r=>{await gate;await r.fulfill({status:502,body:'{}',contentType:'application/json'});});
  await page.goto('./#/antojo');await page.getByLabel('Tu petición').fill('Solomillo de cerdo a baja temperatura');
- await page.getByRole('button',{name:'Confirmar petición'}).click();await page.getByRole('button',{name:'Buscar receta',exact:true}).click();await page.getByRole('button',{name:'Crear receta con IA',exact:true}).click();
+ await page.getByRole('button',{name:'Confirmar petición'}).click();await page.getByRole('button',{name:'Buscar receta',exact:true}).click();await page.getByRole('button',{name:'Generar receta nueva con IA',exact:true}).click();
  const avatar=page.locator('.personalized-chef-spinner');await expect(avatar).toBeVisible();
  const first=await avatar.evaluate(el=>getComputedStyle(el).transform);
  await expect.poll(()=>avatar.evaluate(el=>getComputedStyle(el).transform)).not.toBe(first);

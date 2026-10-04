@@ -1,12 +1,12 @@
 import {CUISINES} from '../data/cookingOptions';
 import {matchesCuisineFilter} from '../utils/cuisineFilter';
-import {foodTextMatches} from '../utils/recipeSearch';
+import {foodTextMatches,foodSearchTerms,foodTitleScore} from '../utils/recipeSearch';
 import {DISH_CATEGORIES,matchesDishCategory} from '../utils/dishCategories';
 import {CATALOG_EMPTY} from '../services/hybridRecommendationEngine';
 import { Check, Mic, MicOff, Sparkles, Trash2, X } from 'lucide-react';
 import { AlmIcon } from '../components/AlmIcon';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
 import { AlmPageHeader } from '../components/AlmPageHeader';
 import { ChefLoadingOverlay } from '../components/ChefLoadingOverlay';
@@ -23,7 +23,11 @@ const MONTHS = ['Todos los meses','Enero','Febrero','Marzo','Abril','Mayo','Juni
 
 export function MyRecipesPage() {
   const navigate = useNavigate();
+  const location=useLocation();
   const { favorites, savedRecipes, history, settings, setSearch, toggleFavorite, removeHistoryEntry } = useApp();
+  const choiceState=location.state as {recipeSearchRequest?:CookingRequest;requestedDish?:string}|null;
+  const recipeSearchRequest=choiceState?.recipeSearchRequest;
+  const requestedDish=choiceState?.requestedDish??recipeSearchRequest?.desireText??'';
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState('');
   const [removedIds,setRemovedIds]=useState<string[]>(loadRemovedLibraryRecipeIds);
@@ -31,6 +35,8 @@ export function MyRecipesPage() {
   const [removeError,setRemoveError]=useState('');
   const updateRemoved=(ids:string[])=>{try{localStorage.setItem('chef:removed-library-recipes:v1',JSON.stringify(ids));setRemovedIds(ids);setRemoveError('');return true;}catch{setRemoveError('No se ha podido guardar el cambio.');return false;}};
   const [isRepeating, setIsRepeating] = useState(false);
+  const [isGeneratingChoice,setIsGeneratingChoice]=useState(false);
+  const [choiceError,setChoiceError]=useState('');
   const [repeatError,setRepeatError]=useState('');
   const [repeatEntry,setRepeatEntry]=useState<HistoryEntry>();
   const [dishCategory, setDishCategory] = useState('Todos');
@@ -65,6 +71,21 @@ export function MyRecipesPage() {
   const voice = useAiDictation(transcript => setQuery(current => current.trim() ? `${current.trim()} ${transcript.trim()}` : transcript.trim()));
   const tab = params.get('tab') ?? 'library';
   const libraryRecipes = useMemo(() => getMyRecipes(savedRecipes, favorites, removedIds), [savedRecipes, favorites, removedIds]);
+  const choices=useMemo(()=>{
+    if(!recipeSearchRequest||!requestedDish)return [];
+    const terms=foodSearchTerms(requestedDish);
+    const ranked=libraryRecipes.map(recipe=>{
+      const searchable=[recipe.title,recipe.description,recipe.cuisine,...recipe.ingredients.map(i=>i.name)].join(' ');
+      const titleTerms=foodSearchTerms(recipe.title);
+      const exact=terms.length>0&&titleTerms.join(' ')===terms.join(' ');
+      const titleRelatedTerms=terms.filter(term=>foodTextMatches(recipe.title,term)).length;
+      const relatedTerms=terms.filter(term=>foodTextMatches(searchable,term)).length;
+      const score=titleRelatedTerms*1000+relatedTerms*20+foodTitleScore(recipe.title,requestedDish)*3+foodTitleScore(searchable,requestedDish);
+      return {recipe,exact,score};
+    }).sort((a,b)=>Number(b.exact)-Number(a.exact)||b.score-a.score||a.recipe.title.localeCompare(b.recipe.title,'es'));
+    const exact=ranked.find(x=>x.exact);
+    return exact?[exact.recipe]:ranked.filter(x=>x.score>0).slice(0,3).map(x=>x.recipe);
+  },[libraryRecipes,recipeSearchRequest,requestedDish]);
 
   const recipes = useMemo(() => {
     const ids = tab === 'library' ? libraryRecipes.map(r=>r.id) : tab === 'favorites' ? favorites : savedRecipes;
@@ -110,6 +131,26 @@ export function MyRecipesPage() {
     }
   };
 
+  const openChoice=(recipe:Recipe)=>{
+    if(!recipeSearchRequest)return;
+    const request={...recipeSearchRequest,generationMode:'catalog' as const};
+    const proposal={id:`library-${recipe.id}`,title:recipe.title,subtitle:recipe.description,emoji:recipe.emoji,minutes:recipe.prepMinutes+recipe.cookMinutes,difficulty:recipe.difficulty,style:recipe.style,usedIngredients:recipe.ingredients.slice(0,4).map(i=>i.name),missingIngredients:[],reason:'Una receta de Mis recetas parecida a lo que buscas.',recipeId:recipe.id};
+    setSearch(request,[proposal]);
+    navigate(`/receta/${recipe.id}?servings=${request.servings}`);
+  };
+
+  const generateNewRecipe=async()=>{
+    if(!recipeSearchRequest||isGeneratingChoice)return;
+    setIsGeneratingChoice(true);setChoiceError('');
+    const request={...recipeSearchRequest,generationMode:'ai' as const};
+    try{
+      const result=await generateDirectRecipe(request);
+      setSearch(request,[result.proposal]);
+      navigate(`/receta/${result.recipe.id}?servings=${request.servings}`);
+    }catch(error){setChoiceError(error instanceof Error?error.message:'No se ha podido generar la receta.');}
+    finally{setIsGeneratingChoice(false);}
+  };
+
   const deleteRecipe = (recipe: Recipe) => {
     if (!window.confirm(`¿Quitar “${recipe.title}” de Mis recetas? El historial se conservará y podrás recuperar las recetas quitadas.`)) return;
     if(updateRemoved([...removedIds,recipe.id]))setLastRemoved(recipe);
@@ -124,10 +165,17 @@ export function MyRecipesPage() {
 
   return (
     <AppShell>
-      <ChefLoadingOverlay active={isRepeating} title="Preparando tu receta" messages={['Recuperando tus preferencias…','Preparando la receta completa…','Preparando la imagen…']} />
+      <ChefLoadingOverlay active={isRepeating||isGeneratingChoice} title={isGeneratingChoice?'Empezando a generar tu receta con IA':'Preparando tu receta'} messages={isGeneratingChoice?['Creando una receta nueva con IA…','Revisando ingredientes y elaboración…','Preparando la imagen…']:['Recuperando tus preferencias…','Preparando la receta completa…','Preparando la imagen…']} />
       <AlmPageHeader eyebrow="TU COCINA" title="Mis recetas" subtitle={`${libraryRecipes.filter(r=>r.recipeKind!=='cocktail').length} recetas y ${libraryRecipes.filter(r=>r.recipeKind==='cocktail').length} cócteles listos para preparar. Guarda tus favoritos y tus propias versiones.`} accent="Recetas de hoy, recuerdos de siempre"/>
       <div className="page-content nav-safe recipe-library-content">
             <div className="search-box"><AlmIcon name="search" size={20}/><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar recetas y cócteles…" /><div className="voice-inline-actions"><button type="button" className="clear-input-button" onClick={() => { voice.stop(); setQuery(''); }} disabled={!query.trim() && !voice.isListening} aria-label="Borrar búsqueda"><X size={17} /></button><button type="button" className={`voice-button ${voice.isListening ? 'listening' : ''}`} onClick={voice.toggle} disabled={!voice.isSupported || voice.isTranscribing} aria-label={voice.isListening ? 'Detener dictado' : 'Dictar búsqueda'}>{voice.isListening ? <MicOff size={18} /> : <Mic size={18} />}</button><button type="button" className="voice-confirm-button" onClick={confirmQuery} disabled={!query.trim() || voice.isListening || voice.isTranscribing} aria-label="Confirmar búsqueda"><Check size={18} /></button></div></div>
+            {recipeSearchRequest&&<section className="recipe-choice-panel" aria-live="polite">
+              <span className="eyebrow">PARA LO QUE TE APETECE</span>
+              <h2>{choices.length===1&&foodSearchTerms(choices[0].title).join(' ')===foodSearchTerms(requestedDish).join(' ')?`Sí tengo “${choices[0].title}” en Mis recetas`:`No tengo exactamente “${requestedDish}”, pero te puedo ofrecer estas opciones. ¿O prefieres que te genere una nueva?`}</h2>
+              {choices.length>0?<div className="recipe-choice-grid">{choices.map(recipe=><button type="button" className="recipe-choice-card" key={recipe.id} onClick={()=>openChoice(recipe)}><RecipeThumbnail recipe={recipe}/><span><strong>{recipe.title}</strong><small>{recipe.prepMinutes+recipe.cookMinutes} min · {recipe.difficulty}</small></span></button>)}</div>:<p>No hay recetas disponibles en tu recetario para mostrar alternativas.</p>}
+              {choiceError&&<p role="alert" className="voice-status error">{choiceError}</p>}
+              <button type="button" className="secondary-button recipe-choice-generate" disabled={isGeneratingChoice} onClick={()=>void generateNewRecipe()}>{isGeneratingChoice?'Generando receta con IA…':'Generar receta nueva con IA'}</button>
+            </section>}
             {voice.isListening && <div className="voice-status listening"><Mic size={14} /> Escuchando… toca de nuevo cuando termines.</div>}
             {voice.isTranscribing && <div className="voice-status listening"><Sparkles size={14} /> Interpretando el dictado…</div>}
             {voice.error && <div className="voice-status error">{voice.error}</div>}

@@ -12,12 +12,12 @@ ok('Sin boton Crear tu receta',!home.includes('Crear tu receta')&&!shell.include
 ok('Propuesta del día horizontal desde Mis recetas',home.includes('Propuesta del día')&&home.includes('alm-daily-strip')&&home.includes('pickRecipesOfTheDay(getMyRecipes(savedRecipes,favorites),4)'));
 ok('Plan nutricional fuera de la beta actual',app.includes('path="/plan-semanal" element={<Navigate to="/" replace/>}')&&app.includes('path="/plan-comidas" element={<Navigate to="/" replace/>}')&&!home.toLocaleLowerCase('es').includes('plan nutricional')&&!shell.includes('/plan-semanal'));
 ok('Navegación principal desde avatar',shell.includes('chef-draggable-avatar')&&shell.includes("'/mis-recetas?tab=favorites'")&&shell.includes("'/inventario'")&&shell.includes("'/lista-compra'"));
-ok('Receta directa sin pantalla de propuesta',pantry.includes('generateDirectRecipe')&&read('src/pages/DesirePage.tsx').includes('generateDirectRecipe')&&hybrid.includes('PROPOSAL_COUNT=1')&&!results.includes('ProposalCard'));
+ok('Cocina con lo que hay directa y ¿Qué comemos? abre Mis recetas',pantry.includes('generateDirectRecipe')&&read('src/pages/DesirePage.tsx').includes("navigate('/mis-recetas'")&&read('src/pages/MyRecipesPage.tsx').includes('recipe-choice-panel')&&hybrid.includes('PROPOSAL_COUNT=1')&&!results.includes('ProposalCard'));
 ok('Tiempo máximo 120',read('src/components/CookingOptions.tsx').includes('max={120}')&&directRecipe.includes('recipe.prepMinutes+recipe.cookMinutes>request.maxMinutes'));
 ok('Recipe sin panel elaboración duplicado',!recipe.includes("'elaboration'"));
 ok('CTA Elaboración',recipe.includes('Ver elaboración')&&recipe.includes('Paso a paso de la receta'));
 ok('Ficha foto-título-resumen-nutrición',recipe.indexOf('recipe-hero')<recipe.indexOf('recipe-title-block')&&recipe.indexOf('recipe-title-block')<recipe.indexOf('recipe-summary-content')&&recipe.indexOf('recipe-summary-content')<recipe.indexOf('nutrition-card nutrition-card-priority'));
-ok('Imagen preparada antes de abrir ficha',directRecipe.includes('await getRecipeImage(recipe)')&&read('src/pages/DesirePage.tsx').includes('navigate(`/receta/${result.recipe.id}?servings=${request.servings}`)'));
+ok('Imagen preparada antes de abrir ficha',directRecipe.includes('await getRecipeImage(recipe)')&&read('src/pages/MyRecipesPage.tsx').includes('navigate(`/receta/${result.recipe.id}?servings=${request.servings}`)'));
 ok('Reintento de imagen sin regenerar receta',directRecipe.includes('getRecipeImage(recipe).catch')&&recipe.includes('Reintentar imagen'));
 ok('Variantes versionadas',recipe.includes('· v${version}'));
 ok('Timer con deadline real',read('src/components/timerStore.ts').includes('deadline')&&read('src/components/timerStore.ts').includes('Date.now()')&&stepTimer.includes('role="timer"'));

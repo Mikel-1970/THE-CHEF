@@ -19,14 +19,14 @@ export function HomePage() {
 
   if(greet)return <WelcomeSplash greeting={`¡Hola${settings.displayName?', '+settings.displayName:''}!`} notice={notice} onComplete={mode=>{if(mode==='register'){setNotice('Tu cuenta ya está registrada. Pulsa Login para entrar.');return}sessionStorage.setItem('chef:home-greeted:v2','1');setGreet(false)}}>{null}</WelcomeSplash>;
 
-  const heroImage=`${import.meta.env.BASE_URL}home-magret.png`;
+  const heroImage=`${import.meta.env.BASE_URL}home-pasta-alla-norma.webp`;
   const pantryImage=`${import.meta.env.BASE_URL}home-pantry-v2.png`;
   const photoImage=`${import.meta.env.BASE_URL}home-photo-recipe.png`;
 
   return <AppShell>
     <section className="alm-home">
       <button className="alm-standard-cta" onClick={()=>navigate('/antojo')} aria-label="¿Qué comemos hoy? Abrir modo receta">
-        <img className="alm-standard-cta-bg" src={heroImage} alt="Plato preparado"/>
+        <img className="alm-standard-cta-bg" src={heroImage} alt="Pasta alla Norma con berenjena, tomate, albahaca y queso"/>
         <span className="alm-standard-cta-overlay"/>
         <span className="alm-standard-cta-content">
           <span className="alm-standard-brand-row"><BrandMark variant="light"/><span className="alm-hand">Buenas recetas,<br/>mejores momentos ♡</span></span>

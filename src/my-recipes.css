@@ -65,6 +65,16 @@
 .library-photo-heart[aria-pressed=true]{color:#ffcfbd}
 .library-photo-card .library-delete{position:absolute;right:6px;bottom:7px;width:30px;height:30px;background:#0006;color:white;border:0;border-radius:50%;padding:6px}
 .library-photo-grid>.empty-card{grid-column:1/-1}
+.recipe-choice-panel{margin:16px 0 22px;padding:20px;border:1px solid rgba(63,84,36,.14);border-radius:20px;background:linear-gradient(145deg,#fffdf8,#f4f0e5);box-shadow:0 8px 24px rgba(38,48,30,.06)}
+.recipe-choice-panel h2{margin:5px 0 16px;color:var(--alm-green,#123f2e);font-size:clamp(1.25rem,3vw,1.8rem);line-height:1.25}
+.recipe-choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.recipe-choice-card{min-width:0;padding:0;overflow:hidden;border:1px solid rgba(15,61,46,.12);border-radius:16px;background:#fff;text-align:left;cursor:pointer;box-shadow:0 4px 14px rgba(38,48,30,.06)}
+.recipe-choice-card img{display:block;width:100%;height:140px;object-fit:cover}
+.recipe-choice-card>span{display:grid;gap:5px;padding:11px}
+.recipe-choice-card strong{color:var(--alm-green,#123f2e);font-size:.92rem}
+.recipe-choice-card small{color:#72766d;font-size:.78rem}
+.recipe-choice-generate{max-width:360px;margin:16px 0 0!important}
+@media(max-width:650px){.recipe-choice-panel{padding:15px}.recipe-choice-grid{grid-template-columns:1fr}.recipe-choice-card{display:grid;grid-template-columns:100px 1fr;min-height:90px}.recipe-choice-card img{height:100%;min-height:90px}.recipe-choice-card>span{align-content:center}}
 .library-photo-card button:focus-visible{outline:3px solid #e8b957;outline-offset:-4px}
 
 .library-filters{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}.library-filters label{display:grid;gap:5px;font-size:13px;flex:1;min-width:130px}.library-filters select,.library-servings select{border:1px solid #d8d7ca;background:#fffef8;border-radius:10px;padding:10px;color:#344529;max-width:100%}.library-servings{display:flex;align-items:center;gap:12px;margin-top:14px}.library-tabs{flex-wrap:wrap}.library-photo-grid img{object-fit:cover}
@@ -113,4 +123,3 @@
 
 .library-photo-card:has(.recipe-card-type){aspect-ratio:auto}
 .library-photo-card:has(.recipe-card-type) .library-photo-open{position:relative;display:block;aspect-ratio:3/4;height:auto}
-
