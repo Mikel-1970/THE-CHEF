@@ -104,16 +104,3 @@ jobs:
 
           echo "ERROR: la versión publicada no coincide con la esperada tras los reintentos."
           exit 1
-
-  notify:
-    name: Notificar resultado
-    needs: [build, deploy, validate]
-    if: ${{ always() }}
-    uses: Mikel-1970/CURSO-IA-CHAT-GPT/.github/workflows/notify-app-central.yml@main
-    with:
-      project: THE-CHEF
-      version: ${{ needs.build.outputs.version }}
-      app_url: ${{ needs.deploy.outputs.page_url }}
-      build_result: ${{ needs.build.result }}
-      deploy_result: ${{ needs.deploy.result }}
-      validate_result: ${{ needs.validate.result }}
