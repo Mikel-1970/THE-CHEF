@@ -1,0 +1,23 @@
+.tips-page{display:grid;gap:16px}
+.tips-intro{display:grid;gap:11px}
+.tips-intro h2{margin:0}
+.tips-filter-label{display:grid;gap:6px;font-weight:700;color:#46533b}
+.tips-filter-label span{font-size:.78rem}
+.tips-filter-label select,.tips-intro input{width:100%;min-height:46px;border:1px solid rgba(64,79,44,.18);border-radius:14px;background:#fffdf8;color:#2e352a;padding:0 13px;font:inherit}
+.tips-category-strip{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 7px;scrollbar-width:none}
+.tips-category-strip::-webkit-scrollbar{display:none}
+.tips-category-strip button{flex:0 0 auto;max-width:260px;border:1px solid rgba(65,83,45,.17);border-radius:999px;background:rgba(255,253,248,.92);padding:9px 12px;color:#3b4932;font-weight:700;font-size:.76rem;white-space:nowrap}
+.tips-category-strip button span{margin-left:5px;color:#8b6d2c}
+.tips-category-strip button.active{background:#405b2a;color:#fff;border-color:#405b2a}
+.tips-category-strip button.active span{color:#f4d98e}
+.tips-category-section{display:grid;gap:10px}
+.tips-category-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:0 3px}
+.tips-category-heading h2{margin:2px 0 0;font-family:'Playfair Display',Georgia,serif;font-size:1.35rem;line-height:1.05;color:#314720}
+.tips-category-heading>strong{min-width:34px;height:34px;border-radius:999px;background:#eee4d0;color:#765d2c;display:grid;place-items:center;font-size:.8rem}
+.tips-category-list{display:grid;gap:11px}
+.tip-card-heading{display:flex;align-items:flex-start;gap:11px}
+.cooking-tip-icon{font-size:1.6rem;line-height:1}
+.tip-card-heading h3{margin:2px 0 0}
+.tip-review-card details{margin-top:9px}
+.tip-review-card details summary{cursor:pointer;font-weight:800;color:#49622f}
+@media (min-width:700px){.tips-category-list{grid-template-columns:repeat(2,minmax(0,1fr))}}

@@ -1,0 +1,226 @@
+[
+  {
+    "id": "shrimp",
+    "source": "Prawny.png",
+    "archive": "The_Chef_Avatares_01_10_Transparentes(1).zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "d986e26f221b9cf2c74e1b981a7f7c50258f0d5b2cf41956e143beaee8945f9b",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "dachshund",
+    "source": "Voldi.png",
+    "archive": "The_Chef_Avatares_01_10_Transparentes(1).zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "7e64dd305789a36926b25ebb955e55b6632014dc62827f65d2805ef5fccb9ab4",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "tomato",
+    "source": "Tom.png",
+    "archive": "The_Chef_Avatares_01_10_Transparentes(1).zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "4c41568536f430674557dc92aad29c7c1996cd1494e812ee8e4a82290b83dc67",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "chef-woman",
+    "source": "La Chef.png",
+    "archive": "The_Chef_Avatares_01_10_Transparentes(1).zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "57aae0de2abe0db64c0aa1acd9af07669e1174085973073f4ff0c3e4dd736106",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "chef-man",
+    "source": "El Chef.png",
+    "archive": "The_Chef_Avatares_01_10_Transparentes(1).zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "4bd1c7cb294cfff31607b3669ca0b3876a074a8f425876715b34312461bb0a6d",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "avocado",
+    "source": "Avo.png",
+    "archive": "The_Chef_Avatares_01_10_Transparentes(1).zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "406278cc2150e2ff28b75a5488797d5c16e9653d49a765446cdd6abe6ece1cd3",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "teapot",
+    "source": "Ketty.png",
+    "archive": "The_Chef_Avatares_01_10_Transparentes(1).zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "961480c84df77c8f1185b15546c8d81fc3cb4e66748d3b0740473fe48b4bc2a8",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "chili",
+    "source": "Chilly.png",
+    "archive": "The_Chef_Avatares_01_10_Transparentes(1).zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "8baaf3928ea98a1bff3fd1de70f1d51b5f55c2cf9e89dda0fe86cb1e492c526f",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "banana",
+    "source": "Platanito.png",
+    "archive": "The_Chef_Avatares_01_10_Transparentes(1).zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "ca0abe401478df0790228e94489312ac8cb7fedbce72a3bff10eb29bebe11452",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "mushroom",
+    "source": "Champi.png",
+    "archive": "The_Chef_Avatares_01_10_Transparentes(1).zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "24c035eb4510d0c8c9f96fe489a7331dbfdd0b0135cdf79df570be03f281b2aa",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "lemon",
+    "source": "chef_limón_en_celebración.png",
+    "archive": "The_Chef_Avatares_11_16_Transparentes.zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "306227ddb6c1108fd31c5c7907e32a62236cfcc740a2181a2ab193988240ff59",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "crab",
+    "source": "cangrejo_chef_celebrando_en_3d.png",
+    "archive": "The_Chef_Avatares_11_16_Transparentes.zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "b1a05ef56012a8acaa982163ed0d59c735faae9c8207dfe1def3b8f51f5b3c1e",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "moka",
+    "source": "cafetín_la_chef_del_café.png",
+    "archive": "The_Chef_Avatares_11_16_Transparentes.zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "5eb7a1a79fab291a1b8e5146087bf2b6d4a9c03bcdc56a0cd4e846d7672b75a6",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "potato",
+    "source": "mascota_patata_chef_sonriente.png",
+    "archive": "The_Chef_Avatares_11_16_Transparentes.zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "58a53f54b8194ba12ab7592df50eaaff308e150287d20262371e39233d567a6f",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "cupcake",
+    "source": "cupcake_chef_saltando_de_alegría.png",
+    "archive": "The_Chef_Avatares_11_16_Transparentes.zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "e2cb7213e65eba5f8a90418038958042f8dd59e14a13a9217841e07e7c4d914c",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "id": "pan",
+    "source": "chef_sartén_en_aventura.png",
+    "archive": "The_Chef_Avatares_11_16_Transparentes.zip",
+    "size": [
+      1122,
+      1402
+    ],
+    "sha256": "d402c1a4d6cfedc079d2fd7206457d640914d244190bbe56652f50433c91d3f6",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  }
+]

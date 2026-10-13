@@ -18,6 +18,10 @@ export type TechniqueStep = {
 };
 
 export type Technique = {
+  temperatureGuide?: {conditions:string;rows:{product:string;temperatureC:number;minutes:number}[]};
+  builtin?: boolean;
+  timeLabel?: string;
+  sources?: {label:string;url:string}[];
   id: string;
   title: string;
   description: string;
@@ -25,12 +29,34 @@ export type Technique = {
   timeMinutes: number;
   difficulty: 'Fácil' | 'Media' | 'Avanzada';
   equipment: string[];
+  miseEnPlace?: string[];
   ingredients: TechniqueIngredient[];
   steps: TechniqueStep[];
   criticalPoints: string[];
   storage: string;
   uses: string[];
   createdAt: string;
+  aliases?: string[];
+  keywords?: string[];
+  family?: string;
+  subfamily?: string;
+  shortDefinition?: string;
+  fullDefinition?: string;
+  objective?: string;
+  whenToUse?: string;
+  whenNotToUse?: string;
+  successSignals?: string[];
+  frequentErrors?: string[];
+  corrections?: string[];
+  safety?: string[];
+  timerRecommended?: boolean;
+  timerTitle?: string;
+  requiresValidatedRecipe?: boolean;
+  chefTip?: string;
+  professionalTip?: string;
+  relatedTechniqueIds?: string[];
+  legacyId?: string;
+  imagePrompt?: string;
 };
 
 const techniqueTemplate = {
@@ -104,6 +130,7 @@ function fromRecipe(recipe: Record<string, any>): Technique {
     timeMinutes: Math.max(1, prep + cook),
     difficulty: recipe.difficulty === 'Media' || recipe.difficulty === 'Avanzada' ? recipe.difficulty : 'Fácil',
     equipment: strings(recipe.miseEnPlace),
+    miseEnPlace: strings(recipe.miseEnPlace),
     ingredients: Array.isArray(recipe.ingredients) ? recipe.ingredients.filter(isRecord).map(item => ({
       name: text(item.name),
       quantity: finiteNumber(item.quantity),

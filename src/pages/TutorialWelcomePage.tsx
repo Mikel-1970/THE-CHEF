@@ -1,4 +1,5 @@
 import { ChefHat } from 'lucide-react';
+import { BrandMark } from '../components/BrandMark';
 import { useState } from 'react';
 import { requestGuidedTourReplay } from '../components/GuidedTour';
 import '../entry-flow.css';
@@ -33,10 +34,10 @@ export function TutorialWelcomePage({ onContinue }: Props) {
   return (
     <div className="entry-page">
       <section className="entry-card tutorial-welcome-card">
-        <div className="entry-logo"><span>THE</span><strong>CHEF</strong></div>
+        <div className="entry-brand-mark"><BrandMark/></div>
         <div className="entry-round-icon"><ChefHat size={36} /></div>
         <span className="entry-eyebrow">GUÍA / TUTORIAL</span>
-        <h1>¿Quieres que El Chef te enseñe la app?</h1>
+        <h1>¿Quieres que ¡A la mesa! te enseñe la app?</h1>
         <p>La guía te irá explicando cada zona mientras navegas. Puedes iniciarla ahora, dejarla para otro momento o hacer que no vuelva a aparecer.</p>
         <label className="tutorial-welcome-check"><input type="checkbox" checked={dontShowAgain} onChange={event => setDontShowAgain(event.target.checked)} /><span>No volver a mostrar esta pantalla</span></label>
         <div className="entry-actions stacked">

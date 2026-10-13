@@ -71,9 +71,9 @@ export function validateRecipe(recipe: Recipe): RecipeValidation {
   if (typeof recipe.storage !== 'string' || !recipe.storage.trim()) warnings.push('La receta no incluye indicaciones de conservación.');
 
   const nutrition = recipe.nutritionPerServing;
-  if (!nutrition || typeof nutrition !== 'object') {
+  if ((!nutrition || typeof nutrition !== 'object') && recipe.nutritionStatus !== 'unavailable') {
     errors.push('La receta no incluye información nutricional válida.');
-  } else {
+  } else if(nutrition) {
     const nutritionValues = Object.values(nutrition);
     if (nutritionValues.some(value => !Number.isFinite(value) || value < 0)) {
       errors.push('Los valores nutricionales contienen datos no válidos.');

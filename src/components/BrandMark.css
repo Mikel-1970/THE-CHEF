@@ -1,0 +1,10 @@
+.brand-mark{display:inline-flex;align-items:center;justify-content:center;max-width:100%;margin:auto;line-height:0;background:transparent}
+.alm-brand-mark{color:inherit;background:transparent}
+.alm-brand-mark>img{display:block;width:100%;height:auto;max-width:100%;object-fit:contain;object-position:center;user-select:none;background:transparent}
+.brand-mark-compact{width:108px}
+.welcome-logo.brand-mark{width:min(100%,390px);margin-bottom:16px}
+.reference-brand .brand-mark{width:min(100%,390px)}
+.welcome-brand{width:min(100%,400px);margin:0 auto 18px;background:transparent;border:0;border-radius:0;padding:0;box-shadow:none}
+.welcome-brand .brand-mark{width:min(100%,390px)}
+.top-bar .brand-mark{width:92px;margin:0 auto 4px}
+@media(max-width:390px){.brand-mark-compact{width:92px}}

@@ -1,0 +1,19 @@
+.welcome-entry { align-items:start; text-align:center; padding-top:max(24px,env(safe-area-inset-top)); }
+.welcome-content { width:min(100%,430px); margin-inline:auto; }
+.welcome-logo { margin-bottom:8px; animation:welcome-appear .45s ease-out both; }
+.welcome-character { position:relative; display:grid; place-items:center; margin:0 auto 12px; animation:welcome-appear .65s ease-out .12s both; }
+.welcome-character::before { content:''; position:absolute; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle,#e1e8cc,rgba(225,232,204,0)); }
+.welcome-character .chef-avatar { max-width:72vw; }
+.welcome-content>h1 { margin:0 0 10px; font-family:Georgia,serif; font-size:clamp(1.6rem,6vw,2.2rem); line-height:1.15; animation:welcome-appear .5s ease-out .3s both; }
+.welcome-tagline { margin:0 0 20px; color:#65704f; animation:welcome-appear .5s ease-out .42s both; }
+.welcome-skip { min-height:44px; padding:10px 22px; border:1px solid #788565; border-radius:999px; background:transparent; color:#405626; font:inherit; cursor:pointer; }
+.welcome-skip:focus-visible { outline:3px solid #405626; outline-offset:4px; }
+.welcome-fields:not([hidden]) { animation:welcome-appear .4s ease-out both; }
+.welcome-fields .access-card>p { margin:8px 0 18px; color:#65704f; font-size:.85rem; }
+.welcome-fields .entry-form>label { animation:welcome-appear .4s ease-out both; }
+.welcome-fields .entry-form>label:nth-child(2) { animation-delay:.12s; }
+.welcome-fields .entry-primary { animation:welcome-appear .4s ease-out .24s both; }
+@keyframes welcome-appear { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@media (prefers-reduced-motion:reduce) {
+ .welcome-entry *, .welcome-fields .entry-form>label, .welcome-fields .entry-primary { animation:none!important; }
+}

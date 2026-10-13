@@ -1,4 +1,6 @@
+import {libraryImage} from '../data/library';
 import type { Recipe } from '../domain/types';
+import type { Technique } from './techniqueGateway';
 
 const API_URL = (import.meta.env.VITE_RECIPE_API_URL || 'https://nrtmmepynzczfdddvohh.supabase.co/functions/v1').trim().replace(/\/+$/, '');
 const API_KEY = (import.meta.env.VITE_RECIPE_API_KEY || 'sb_publishable_b08-tfZCh2pEBGK0lBH-1g_oB3RwvV8').trim();
@@ -6,6 +8,7 @@ const IMAGE_CACHE = 'chef-recipe-images-v1';
 const THUMBNAIL_CACHE = 'chef-recipe-thumbnails-v1';
 const SOURCE_PHOTO_CACHE = 'chef-recipe-source-photos-v1';
 const RESULT_PHOTO_CACHE = 'chef-recipe-result-photos-v1';
+const TECHNIQUE_IMAGE_CACHE = 'chef-technique-images-v1';
 
 export type DishEvaluation = {
   score: number;
@@ -16,6 +19,14 @@ export type DishEvaluation = {
 };
 
 export async function getRecipeImage(recipe: Recipe): Promise<string | undefined> {
+  // La foto aportada es la referencia también para recetas anteriores a imageOrigin.
+  let source: string | undefined;
+  try { source = sessionStorage.getItem(`chef:source-photo:${recipe.id}`) || undefined; } catch { /* almacenamiento restringido */ }
+  source ??= await getRecipeSourcePhoto(recipe.id).catch(() => undefined);
+  if (source) return source;
+  if (recipe.imageOrigin === 'user-photo'||recipe.id.startsWith('import-')) return undefined;
+  const staticImage=libraryImage(recipe.id);
+  if(staticImage)return staticImage;
   const cacheKey = imageRequest(recipe.id);
   if ('caches' in window) {
     const cache = await caches.open(IMAGE_CACHE);
@@ -57,7 +68,7 @@ export async function getRecipeImage(recipe: Recipe): Promise<string | undefined
 }
 
 export async function getRecipeThumbnail(recipeId: string): Promise<string | undefined> {
-  return getCachedImage(THUMBNAIL_CACHE, thumbnailRequest(recipeId));
+  return libraryImage(recipeId,true) ?? getCachedImage(THUMBNAIL_CACHE, thumbnailRequest(recipeId));
 }
 
 export async function saveRecipeThumbnail(recipeId: string, imageUrl: string): Promise<void> {
@@ -78,6 +89,46 @@ export async function saveRecipeResultPhoto(recipeId: string, imageUrl: string):
 
 export async function getRecipeResultPhoto(recipeId: string): Promise<string | undefined> {
   return getCachedImage(RESULT_PHOTO_CACHE, resultPhotoRequest(recipeId));
+}
+
+export async function getCachedTechniqueImage(techniqueId: string): Promise<string | undefined> {
+  return getCachedImage(TECHNIQUE_IMAGE_CACHE, techniqueImageRequest(techniqueId));
+}
+
+export async function getTechniqueImage(technique: Technique): Promise<string | undefined> {
+  const cacheKey = techniqueImageRequest(technique.id);
+  if ('caches' in window) {
+    const cache = await caches.open(TECHNIQUE_IMAGE_CACHE);
+    const hit = await cache.match(cacheKey);
+    if (hit) return URL.createObjectURL(await hit.blob());
+  }
+
+  const response = await fetch(`${API_URL}/chef-media/image`, {
+    method: 'POST',
+    headers: headers('application/json'),
+    body: JSON.stringify({
+      recipe: {
+        title: `Técnica culinaria: ${technique.title}`,
+        description: technique.imagePrompt || technique.description,
+        cuisine: 'Técnica culinaria',
+        style: 'Fotografía didáctica premium, proceso visible, sin texto',
+        ingredients: technique.ingredients.slice(0, 8).map(item => ({ name: item.name }))
+      }
+    })
+  });
+  const payload = await response.json().catch(() => undefined);
+  if (!response.ok) throw new Error(readError(payload, 'No se ha podido generar la imagen de la técnica.'));
+
+  if (payload?.imageBase64) {
+    const blob = base64ToBlob(payload.imageBase64, payload.mimeType || 'image/webp');
+    if ('caches' in window) {
+      const cache = await caches.open(TECHNIQUE_IMAGE_CACHE);
+      await cache.put(cacheKey, new Response(blob, { headers: { 'Content-Type': blob.type } }));
+    }
+    return URL.createObjectURL(blob);
+  }
+  if (typeof payload?.imageUrl === 'string') return payload.imageUrl;
+  return undefined;
 }
 
 export async function transcribeCookingAudio(audio: Blob): Promise<string> {
@@ -173,6 +224,7 @@ function imageRequest(recipeId: string) { return new Request(`https://the-chef.l
 function thumbnailRequest(recipeId: string) { return new Request(`https://the-chef.local/recipe-thumbnails/${encodeURIComponent(recipeId)}`); }
 function sourcePhotoRequest(recipeId: string) { return new Request(`https://the-chef.local/source-photos/${encodeURIComponent(recipeId)}`); }
 function resultPhotoRequest(recipeId: string) { return new Request(`https://the-chef.local/result-photos/${encodeURIComponent(recipeId)}`); }
+function techniqueImageRequest(techniqueId: string) { return new Request(`https://the-chef.local/technique-images/${encodeURIComponent(techniqueId)}`); }
 
 function headers(contentType?: string): HeadersInit {
   return {
