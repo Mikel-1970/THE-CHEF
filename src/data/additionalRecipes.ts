@@ -310,5 +310,153 @@ export const additionalRecipes: Recipe[] = [
     substitutions:['Pollo puede sustituir a la ternera.','Tortillas de maíz pueden sustituir a las de trigo.'],
     storage:'Conservar el relleno refrigerado hasta 48 horas; calentar las tortillas al servir.',
     nutritionPerServing:{kcal:510,proteinG:34,carbsG:49,fatG:20}
+  },
+  {
+    id:'okonomiyaki-osaka', title:'Okonomiyaki de Osaka',
+    description:'Tortita japonesa salada de col, tierna por dentro y dorada por fuera, con salsa y mayonesa.',
+    emoji:'🥬', baseServings:2, prepMinutes:15, cookMinutes:20,
+    difficulty:'Media', mealType:'Comida', style:'Tradicional', cuisine:'Japonesa',
+    ingredients:[
+      {name:'Col blanca',quantity:300,unit:'g',section:'Masa',scalingMode:'linear'},
+      {name:'Harina de trigo',quantity:100,unit:'g',section:'Masa',scalingMode:'linear'},
+      {name:'Agua',quantity:120,unit:'ml',section:'Masa',scalingMode:'culinary'},
+      {name:'Huevos',quantity:2,unit:'ud',section:'Masa',scalingMode:'discrete'},
+      {name:'Cebolleta',quantity:40,unit:'g',section:'Masa',scalingMode:'linear'},
+      {name:'Panceta fresca en lonchas finas',quantity:120,unit:'g',section:'Cobertura',scalingMode:'linear'},
+      {name:'Aceite vegetal',quantity:15,unit:'ml',section:'Cocción',scalingMode:'culinary'},
+      {name:'Salsa okonomiyaki',quantity:40,unit:'g',section:'Acabado',scalingMode:'culinary'},
+      {name:'Mayonesa japonesa',quantity:30,unit:'g',section:'Acabado',scalingMode:'culinary'}
+    ],
+    miseEnPlace:[
+      'Cortar la col en tiras muy finas y picar la cebolleta.',
+      'Mezclar harina y agua hasta eliminar grumos; incorporar los huevos sin batir en exceso.',
+      'Preparar la panceta y las salsas antes de calentar la sartén.'
+    ],
+    steps:[
+      {number:1,instruction:'Mezcla la col y la cebolleta con la masa de harina, agua y huevos; remueve solo hasta integrar.',minutes:3,cue:'La mezcla debe contener mucha col y quedar ligada, no líquida.'},
+      {number:2,instruction:'Calienta la mitad del aceite vegetal en sartén antiadherente a fuego medio. Forma una tortita gruesa con la mitad de la mezcla y coloca encima la mitad de la panceta.',minutes:2},
+      {number:3,instruction:'Cocina 5 minutos a fuego medio-bajo; gira con dos espátulas y cocina otros 5 minutos hasta que la panceta se dore y el centro quede cuajado.',minutes:10,cue:'Exterior dorado y centro firme; no aplastar la tortita.'},
+      {number:4,instruction:'Repite con el resto de la mezcla, el aceite y la panceta, manteniendo caliente la primera tortita.',minutes:10},
+      {number:5,instruction:'Sirve con salsa okonomiyaki y mayonesa japonesa distribuidas por encima.',minutes:1}
+    ],
+    criticalPoints:[
+      'No comprimas la masa durante la cocción: perdería su textura ligera.',
+      'La panceta debe cocinarse completamente y el centro no debe quedar crudo.',
+      'Si la tortita se dora antes de cuajar, reduce el fuego.'
+    ],
+    substitutions:[
+      'La mayonesa convencional puede reemplazar a la japonesa, con sabor menos dulce.',
+      'Para una versión sin panceta, usar setas salteadas; se trata de una adaptación.'
+    ],
+    storage:'Refrigerar en recipiente cerrado hasta 24 horas; recalentar en sartén hasta que el centro esté caliente.',
+    nutritionPerServing:{kcal:670,proteinG:24,carbsG:59,fatG:37}
+  },
+  {
+    id:'ratatouille-provenzal', title:'Ratatouille provenzal', description:'Verduras mediterráneas guisadas por separado y reunidas en una salsa de tomate aromática.', emoji:'🍆', baseServings:4,
+    prepMinutes:20, cookMinutes:40, difficulty:'Media', mealType:'Comida', style:'Tradicional', cuisine:'Francesa',
+    ingredients:[
+      {name:'Berenjena',quantity:300,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Calabacín',quantity:300,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Pimiento rojo',quantity:180,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Tomate maduro',quantity:450,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Cebolla',quantity:150,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Ajo',quantity:12,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Aceite de oliva',quantity:55,unit:'ml',section:'Preparación',scalingMode:'culinary'},
+      {name:'Tomillo',quantity:2,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Sal',quantity:6,unit:'g',section:'Preparación',scalingMode:'linear'}
+    ],
+    miseEnPlace:["Cortar berenjena, calabacín y pimiento en dados de unos 2 cm.","Picar cebolla y ajo; rallar o trocear el tomate."],
+    steps:[
+      {number:1,instruction:'Dora la berenjena con 20 ml de aceite a fuego medio-alto durante 7 minutos y reserva.',minutes:7},
+      {number:2,instruction:'Saltea calabacín y pimiento con otros 15 ml de aceite durante 7 minutos; reserva.',minutes:7},
+      {number:3,instruction:'Pocha cebolla con el resto del aceite a fuego medio 8 minutos; añade ajo y cocina 1 minuto.',minutes:9},
+      {number:4,instruction:'Incorpora tomate, tomillo y sal; cocina a fuego suave 12 minutos hasta reducir.',minutes:12},
+      {number:5,instruction:'Devuelve todas las verduras a la cazuela y cocina a fuego bajo 8 minutos sin deshacerlas.',minutes:8}
+    ],
+    criticalPoints:["No cocer todas las verduras desde el principio: perderían textura.","Ajustar el fuego para reducir el tomate sin quemarlo."],
+    substitutions:["Puede utilizarse pimiento amarillo en lugar de rojo."],
+    storage:'Refrigerar hasta 3 días; recalentar suavemente.',
+    nutritionPerServing:{kcal:190,proteinG:4,carbsG:19,fatG:11}
+  },
+  {
+    id:'pasta-alla-norma', title:'Pasta alla Norma', description:'Pasta siciliana con berenjena dorada, tomate, albahaca y ricotta salata.', emoji:'🍝', baseServings:4,
+    prepMinutes:15, cookMinutes:30, difficulty:'Media', mealType:'Comida', style:'Tradicional', cuisine:'Italiana',
+    ingredients:[
+      {name:'Pasta seca',quantity:320,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Berenjena',quantity:450,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Tomate triturado',quantity:500,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Ajo',quantity:12,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Aceite de oliva',quantity:50,unit:'ml',section:'Preparación',scalingMode:'culinary'},
+      {name:'Ricotta salata',quantity:80,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Albahaca fresca',quantity:12,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Sal',quantity:6,unit:'g',section:'Preparación',scalingMode:'linear'}
+    ],
+    miseEnPlace:["Cortar la berenjena en dados y secarla.","Laminar el ajo, rallar el queso y separar las hojas de albahaca."],
+    steps:[
+      {number:1,instruction:'Dora la berenjena por tandas con 35 ml de aceite a fuego medio-alto durante 10 minutos; reserva.',minutes:10},
+      {number:2,instruction:'Calienta el aceite restante, perfuma con el ajo 1 minuto y añade el tomate; cuece 15 minutos a fuego medio-bajo.',minutes:16},
+      {number:3,instruction:'Hierve la pasta en abundante agua con sal según el tiempo del envase, reservando 100 ml de agua de cocción.',minutes:11},
+      {number:4,instruction:'Mezcla pasta, salsa y berenjena 2 minutos, añadiendo un poco del agua reservada si hace falta.',minutes:2},
+      {number:5,instruction:'Sirve con ricotta salata rallada y albahaca fresca.',minutes:1}
+    ],
+    criticalPoints:["No quemar el ajo.","Reservar agua de cocción para ligar la salsa."],
+    substitutions:["Pecorino curado puede sustituir a ricotta salata, aunque cambia el perfil tradicional."],
+    storage:'Refrigerar hasta 2 días; recalentar con una cucharada de agua.',
+    nutritionPerServing:{kcal:570,proteinG:19,carbsG:76,fatG:21}
+  },
+  {
+    id:'dal-tadka-lentejas-rojas', title:'Dal tadka de lentejas rojas', description:'Lentejas especiadas indias terminadas con aceite aromatizado con comino y ajo.', emoji:'🥣', baseServings:4,
+    prepMinutes:10, cookMinutes:30, difficulty:'Media', mealType:'Comida', style:'Tradicional', cuisine:'India',
+    ingredients:[
+      {name:'Lentejas rojas secas',quantity:280,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Agua',quantity:850,unit:'ml',section:'Preparación',scalingMode:'culinary'},
+      {name:'Cebolla',quantity:140,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Tomate',quantity:220,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Ajo',quantity:15,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Jengibre fresco',quantity:15,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Aceite vegetal',quantity:35,unit:'ml',section:'Preparación',scalingMode:'culinary'},
+      {name:'Comino en grano',quantity:4,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Cúrcuma molida',quantity:3,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Sal',quantity:6,unit:'g',section:'Preparación',scalingMode:'linear'}
+    ],
+    miseEnPlace:["Lavar las lentejas hasta que el agua salga casi clara.","Picar cebolla, tomate, ajo y jengibre."],
+    steps:[
+      {number:1,instruction:'Cuece las lentejas con el agua y la cúrcuma a fuego medio-bajo durante 18-22 minutos, retirando la espuma.',minutes:22},
+      {number:2,instruction:'En sartén, cocina la cebolla con 20 ml de aceite durante 7 minutos; añade jengibre y tomate y cocina 5 minutos.',minutes:12},
+      {number:3,instruction:'Incorpora el sofrito a las lentejas y cocina 3 minutos; ajusta de sal y agua para textura cremosa.',minutes:3},
+      {number:4,instruction:'Calienta el aceite restante y tuesta el comino 20 segundos; añade el ajo y dora ligeramente 30-40 segundos sin quemarlo.',minutes:1},
+      {number:5,instruction:'Vierte el aceite aromático sobre el dal y sirve de inmediato.',minutes:1}
+    ],
+    criticalPoints:["Vigilar el ajo del tadka: se quema en segundos.","Añadir agua si espesa demasiado durante el reposo."],
+    substitutions:["Las lentejas amarillas partidas son alternativa, ajustando el tiempo de cocción."],
+    storage:'Refrigerar hasta 3 días; hervir al recalentar y ajustar con agua.',
+    nutritionPerServing:{kcal:340,proteinG:18,carbsG:49,fatG:9}
+  },
+  {
+    id:'pollo-cacciatore', title:'Pollo alla cacciatora', description:'Pollo italiano guisado con tomate, vino y hierbas aromáticas.', emoji:'🍗', baseServings:4,
+    prepMinutes:15, cookMinutes:50, difficulty:'Media', mealType:'Comida', style:'Tradicional', cuisine:'Italiana',
+    ingredients:[
+      {name:'Muslos de pollo con hueso',quantity:900,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Tomate triturado',quantity:450,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Cebolla',quantity:180,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Zanahoria',quantity:120,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Vino blanco',quantity:120,unit:'ml',section:'Preparación',scalingMode:'culinary'},
+      {name:'Aceite de oliva',quantity:35,unit:'ml',section:'Preparación',scalingMode:'culinary'},
+      {name:'Ajo',quantity:12,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Romero',quantity:3,unit:'g',section:'Preparación',scalingMode:'linear'},
+      {name:'Sal',quantity:7,unit:'g',section:'Preparación',scalingMode:'linear'}
+    ],
+    miseEnPlace:["Secar el pollo y sazonarlo.","Picar cebolla, zanahoria y ajo."],
+    steps:[
+      {number:1,instruction:'Dora el pollo con el aceite a fuego medio-alto durante 8 minutos, girando las piezas; reserva.',minutes:8},
+      {number:2,instruction:'Sofríe cebolla y zanahoria en la misma cazuela durante 8 minutos; incorpora el ajo 1 minuto.',minutes:9},
+      {number:3,instruction:'Añade vino blanco y deja reducir 3 minutos, raspando el fondo.',minutes:3},
+      {number:4,instruction:'Incorpora tomate y romero; devuelve el pollo, tapa parcialmente y cocina a fuego bajo 30-35 minutos.',minutes:35},
+      {number:5,instruction:'Comprueba que el pollo alcance al menos 74 °C en su parte más gruesa, sin tocar el hueso, y ajusta la salsa.',minutes:2}
+    ],
+    criticalPoints:["Comprobar la cocción interior del pollo con termómetro.","No hervir violentamente para evitar endurecer la carne."],
+    substitutions:["Se puede utilizar vino tinto seco, con un sabor más intenso."],
+    storage:'Enfriar pronto y refrigerar hasta 2 días; recalentar completamente.',
+    nutritionPerServing:{kcal:510,proteinG:43,carbsG:13,fatG:29}
   }
 ];
