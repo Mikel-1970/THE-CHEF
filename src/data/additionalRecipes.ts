@@ -310,5 +310,45 @@ export const additionalRecipes: Recipe[] = [
     substitutions:['Pollo puede sustituir a la ternera.','Tortillas de maíz pueden sustituir a las de trigo.'],
     storage:'Conservar el relleno refrigerado hasta 48 horas; calentar las tortillas al servir.',
     nutritionPerServing:{kcal:510,proteinG:34,carbsG:49,fatG:20}
+  },
+  {
+    id:'okonomiyaki-osaka', title:'Okonomiyaki de Osaka',
+    description:'Tortita japonesa salada de col, tierna por dentro y dorada por fuera, con salsa y mayonesa.',
+    emoji:'🥬', baseServings:2, prepMinutes:15, cookMinutes:20,
+    difficulty:'Media', mealType:'Comida', style:'Tradicional', cuisine:'Japonesa',
+    ingredients:[
+      {name:'Col blanca',quantity:300,unit:'g',section:'Masa',scalingMode:'linear'},
+      {name:'Harina de trigo',quantity:100,unit:'g',section:'Masa',scalingMode:'linear'},
+      {name:'Agua',quantity:120,unit:'ml',section:'Masa',scalingMode:'culinary'},
+      {name:'Huevos',quantity:2,unit:'ud',section:'Masa',scalingMode:'discrete'},
+      {name:'Cebolleta',quantity:40,unit:'g',section:'Masa',scalingMode:'linear'},
+      {name:'Panceta fresca en lonchas finas',quantity:120,unit:'g',section:'Cobertura',scalingMode:'linear'},
+      {name:'Aceite vegetal',quantity:15,unit:'ml',section:'Cocción',scalingMode:'culinary'},
+      {name:'Salsa okonomiyaki',quantity:40,unit:'g',section:'Acabado',scalingMode:'culinary'},
+      {name:'Mayonesa japonesa',quantity:30,unit:'g',section:'Acabado',scalingMode:'culinary'}
+    ],
+    miseEnPlace:[
+      'Cortar la col en tiras muy finas y picar la cebolleta.',
+      'Mezclar harina y agua hasta eliminar grumos; incorporar los huevos sin batir en exceso.',
+      'Preparar la panceta y las salsas antes de calentar la sartén.'
+    ],
+    steps:[
+      {number:1,instruction:'Mezcla la col y la cebolleta con la masa de harina, agua y huevos; remueve solo hasta integrar.',minutes:3,cue:'La mezcla debe contener mucha col y quedar ligada, no líquida.'},
+      {number:2,instruction:'Calienta la mitad del aceite vegetal en sartén antiadherente a fuego medio. Forma una tortita gruesa con la mitad de la mezcla y coloca encima la mitad de la panceta.',minutes:2},
+      {number:3,instruction:'Cocina 5 minutos a fuego medio-bajo; gira con dos espátulas y cocina otros 5 minutos hasta que la panceta se dore y el centro quede cuajado.',minutes:10,cue:'Exterior dorado y centro firme; no aplastar la tortita.'},
+      {number:4,instruction:'Repite con el resto de la mezcla, el aceite y la panceta, manteniendo caliente la primera tortita.',minutes:10},
+      {number:5,instruction:'Sirve con salsa okonomiyaki y mayonesa japonesa distribuidas por encima.',minutes:1}
+    ],
+    criticalPoints:[
+      'No comprimas la masa durante la cocción: perdería su textura ligera.',
+      'La panceta debe cocinarse completamente y el centro no debe quedar crudo.',
+      'Si la tortita se dora antes de cuajar, reduce el fuego.'
+    ],
+    substitutions:[
+      'La mayonesa convencional puede reemplazar a la japonesa, con sabor menos dulce.',
+      'Para una versión sin panceta, usar setas salteadas; se trata de una adaptación.'
+    ],
+    storage:'Refrigerar en recipiente cerrado hasta 24 horas; recalentar en sartén hasta que el centro esté caliente.',
+    nutritionPerServing:{kcal:670,proteinG:24,carbsG:59,fatG:37}
   }
 ];
